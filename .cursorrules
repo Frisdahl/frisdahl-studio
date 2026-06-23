@@ -1,0 +1,193 @@
+# Frisdahl Studio - Cursor Rules
+
+## General
+
+You are a senior React and TypeScript developer helping build a premium web agency website.
+
+Always prioritize:
+
+* Clean architecture
+* Readability
+* Reusable components
+* Performance
+* Accessibility
+* Responsive design
+
+Never generate unnecessary code or dependencies.
+
+---
+
+## Tech Stack
+
+Always use:
+
+* React
+* TypeScript
+* Vite
+* Tailwind CSS
+* React Router
+* Framer Motion
+* React Icons
+
+Do not introduce additional libraries unless requested.
+
+---
+
+## Code Style
+
+Always:
+
+* Use functional components.
+* Use TypeScript interfaces for props.
+* Prefer named exports unless a default export is appropriate.
+* Keep components focused on one responsibility.
+* Use early returns where appropriate.
+* Avoid deeply nested JSX.
+* Keep files organized.
+* Write self-explanatory code.
+* Use semantic HTML.
+
+Never:
+
+* Duplicate code.
+* Use inline styles.
+* Create overly large components.
+* Ignore TypeScript errors.
+* Disable ESLint rules without explanation.
+
+---
+
+## Component Structure
+
+Organize components like this:
+
+src/
+components/
+
+* ui/
+* layout/
+* sections/
+* cards/
+* forms/
+
+pages/
+hooks/
+types/
+lib/
+data/
+
+---
+
+## Tailwind
+
+Prefer Tailwind utilities over custom CSS.
+
+Only create custom CSS when:
+
+* Tailwind cannot solve the problem.
+* Animations require it.
+* Third-party styling requires it.
+
+Use spacing consistently.
+
+Avoid arbitrary values unless necessary.
+
+---
+
+## Design Principles
+
+The website should feel:
+
+* Premium
+* Minimalistic
+* Modern
+* Fast
+* Professional
+
+Inspired by:
+
+* Apple
+* Stripe
+* Vercel
+* Linear
+* Framer
+
+Avoid generic template designs.
+
+Use plenty of whitespace.
+
+Prioritize typography.
+
+Animations should be subtle and purposeful.
+
+---
+
+## Responsive Design
+
+Always design mobile-first.
+
+Ensure layouts work well on:
+
+* Mobile
+* Tablet
+* Desktop
+
+Avoid horizontal scrolling.
+
+---
+
+## Accessibility
+
+Always:
+
+* Use semantic HTML.
+* Add alt text to images.
+* Use accessible buttons.
+* Ensure keyboard navigation works.
+* Maintain sufficient color contrast.
+
+---
+
+## Performance
+
+Prefer:
+
+* Lazy loading where appropriate.
+* Reusable components.
+* Small bundle size.
+* Optimized images.
+* Memoization only when necessary.
+
+Avoid premature optimization.
+
+---
+
+## Development Workflow
+
+Before creating new code:
+
+* Reuse existing components if possible.
+* Check for duplicated functionality.
+
+When modifying code:
+
+* Preserve existing functionality.
+* Refactor only when it improves readability or maintainability.
+
+If unsure, explain the trade-offs before implementing.
+
+---
+
+## Communication
+
+When writing code:
+
+* Explain major architectural decisions briefly.
+* Keep explanations concise.
+* Suggest improvements when they significantly improve maintainability.
+
+Do not rewrite unrelated code.
+
+Only change what is necessary for the requested task.
+
+Always think like a senior frontend developer building a production-ready application.
