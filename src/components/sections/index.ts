@@ -1,1 +1,5 @@
-export {};
+export { Hero } from './Hero'
+export { PromoSection } from './PromoSection'
+export { FeatureSection } from './FeatureSection'
+export { CasesSection } from './CasesSection'
+export { PartnershipSection } from './PartnershipSection'
