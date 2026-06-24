@@ -11,7 +11,7 @@ export function ConceptSection() {
   const { concept } = getHomeContent(locale)
 
   return (
-    <section className="py-section-sm lg:py-section">
+    <section id="om-os" className="py-section-sm lg:py-section">
       <Container>
         <div className="grid gap-12 lg:grid-cols-2 lg:items-start lg:gap-16">
           <div className="min-w-0">

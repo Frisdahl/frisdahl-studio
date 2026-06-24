@@ -317,6 +317,10 @@
     color: #fffefe;
   }
 
+  .contact-section .btn {
+    @apply cursor-pointer;
+  }
+
   .eyebrow {
     @apply text-body-sm font-semibold tracking-wide text-muted uppercase;
   }
@@ -330,7 +334,7 @@
   }
 
   .nav-link {
-    @apply relative inline-block text-body font-medium text-primary;
+    @apply relative inline-block text-body-sm font-semibold text-primary;
     transition: color 0.6s var(--ease-smooth);
   }
 
@@ -354,6 +358,83 @@
   .nav-link.underline-exiting::after {
     transform: scaleX(0);
     transform-origin: right;
+  }
+
+  .nav-dropdown-overlay {
+    @apply fixed inset-0 z-40 bg-background/55;
+    pointer-events: none;
+  }
+
+  .nav-dropdown {
+    @apply relative;
+  }
+
+  .nav-dropdown-trigger {
+    @apply inline-flex items-center gap-1;
+  }
+
+  .nav-dropdown-arrow {
+    @apply h-3 w-3 text-primary transition-transform duration-200;
+  }
+
+  .nav-dropdown-arrow-open {
+    transform: rotate(180deg);
+  }
+
+  .nav-mega-menu-shell {
+    @apply absolute inset-x-0 top-full z-[60];
+  }
+
+  .nav-mega-menu {
+    @apply pt-6;
+  }
+
+  .nav-mega-panel {
+    @apply relative rounded-panel border border-border-light bg-surface p-2 sm:p-3;
+    box-shadow:
+      0 4px 16px rgb(0 0 0 / 0.08),
+      0 20px 48px rgb(0 0 0 / 0.12);
+  }
+
+  .nav-mega-caret {
+    @apply absolute -top-[0.8rem] left-[var(--nav-caret-left,50%)] h-6 w-6 -translate-x-1/2 rotate-45 border-t border-l border-border-light bg-surface;
+  }
+
+  .nav-mega-grid {
+    @apply grid grid-cols-2 gap-2 lg:grid-cols-4;
+  }
+
+  .nav-mega-item {
+    @apply flex flex-col rounded-control-sm p-5 text-left transition-colors hover:bg-surface-muted;
+  }
+
+  .nav-mega-icon {
+    @apply h-6 w-6 text-accent;
+  }
+
+  .nav-mega-title-row {
+    @apply relative mt-4 inline-flex items-center gap-3;
+  }
+
+  .nav-mega-title {
+    @apply text-body font-semibold text-primary;
+  }
+
+  .nav-mega-arrow {
+    @apply pointer-events-none h-[0.6875rem] w-[0.875rem] shrink-0 text-accent opacity-0;
+    transform: translateX(-0.5rem);
+    transition:
+      opacity 450ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .nav-mega-item:hover .nav-mega-arrow {
+    @apply opacity-100;
+    transform: translateX(0);
+  }
+
+  .nav-mega-description {
+    @apply mt-2 text-body-sm leading-relaxed text-secondary;
   }
 
   .site-overlay {
@@ -649,6 +730,50 @@
     @apply shrink-0 rounded-panel px-9 py-4 text-body font-medium whitespace-nowrap;
   }
 
+  .contact-form {
+    @apply flex flex-col gap-6;
+  }
+
+  .contact-form-row {
+    @apply grid grid-cols-1 gap-6 sm:grid-cols-2;
+  }
+
+  .contact-form-field {
+    @apply flex flex-col;
+  }
+
+  .contact-form-label {
+    @apply text-body-sm font-semibold tracking-wide text-primary uppercase;
+  }
+
+  .contact-form-input {
+    @apply mt-2 w-full rounded-control border-2 border-[#e5e5e5] bg-[#f8f8f8] px-4 py-3 text-body text-primary outline-none transition-colors focus-visible:border-accent;
+  }
+
+  .contact-form-input::placeholder {
+    @apply text-[#bababa];
+  }
+
+  .contact-form-textarea {
+    @apply min-h-72 resize-none;
+  }
+
+  .contact-form-checkbox {
+    @apply flex items-start gap-3;
+  }
+
+  .contact-form-checkbox-input {
+    @apply mt-0.5 h-6 w-6 shrink-0 cursor-pointer accent-accent;
+  }
+
+  .contact-form-checkbox-label {
+    @apply cursor-pointer text-body-sm text-secondary;
+  }
+
+  .contact-form-link {
+    @apply text-accent underline underline-offset-2 transition-colors hover:text-accent-hover;
+  }
+
   body.theme-dark .contact-drawer-panel {
     background-color: #010001;
   }
@@ -691,6 +816,24 @@
   body.theme-dark .contact-drawer-panel .booking-time-slot.booking-select-btn-active {
     background-color: #111111;
     border-color: var(--color-accent);
+  }
+
+  body.theme-dark .contact-drawer-panel .contact-form-input {
+    border-color: #333333;
+    background-color: #111111;
+    color: #fffefe;
+  }
+
+  body.theme-dark .contact-drawer-panel .contact-form-input::placeholder {
+    color: #555555;
+  }
+
+  body.theme-dark .contact-drawer-panel .contact-form-label {
+    color: #999999;
+  }
+
+  body.theme-dark .contact-drawer-panel .contact-form-checkbox-label {
+    color: #bababa;
   }
 
   .contact-drawer-panel .btn-secondary {

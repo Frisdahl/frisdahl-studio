@@ -14,10 +14,12 @@ export function useFeatureScrollTheme() {
     let frameId = 0
 
     const updateTheme = () => {
-      const contactSection = document.getElementById('contact')
+      const partnershipSection = document.getElementById('partnership')
       const featureTop = getSectionTop(section)
-      const contactTop = contactSection ? getSectionTop(contactSection) : Number.POSITIVE_INFINITY
-      const isDark = window.scrollY >= featureTop && window.scrollY < contactTop
+      const partnershipTop = partnershipSection
+        ? getSectionTop(partnershipSection)
+        : Number.POSITIVE_INFINITY
+      const isDark = window.scrollY >= featureTop && window.scrollY < partnershipTop
 
       document.body.classList.toggle('theme-dark', isDark)
     }

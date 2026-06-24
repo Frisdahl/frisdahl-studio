@@ -6,6 +6,7 @@ import { BookMeetingPanel } from '../contact/BookMeetingPanel'
 import { ContactDrawer, type ContactDrawerView } from '../contact/ContactDrawer'
 import { ContactWritePanel } from '../contact/ContactWritePanel'
 import { Button, Container } from '../ui'
+import { ContactDecorations } from './ContactDecorations'
 
 export function ContactSection() {
   const { locale } = useLocale()
@@ -16,8 +17,10 @@ export function ContactSection() {
 
   return (
     <>
-      <section id="contact" className="contact-section bg-contact-bg py-section-sm lg:py-section">
-        <Container>
+      <section id="contact" className="contact-section relative overflow-hidden bg-contact-bg py-24 lg:py-32">
+        <ContactDecorations />
+
+        <Container className="relative z-10">
           <div className="mx-auto w-full max-w-[700px] text-center">
             <p className="contact-section-eyebrow eyebrow">{contact.eyebrow}</p>
 

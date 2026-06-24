@@ -8,7 +8,7 @@ export function PartnershipSection() {
   const { partnership } = getHomeContent(locale)
 
   return (
-    <section className="relative overflow-visible py-section-sm lg:py-section">
+    <section id="partnership" className="relative overflow-visible py-24 lg:py-32">
       <Container>
         <div className="relative grid gap-20 lg:grid-cols-[1fr_auto] lg:items-start lg:gap-5xl">
           <div className="min-w-0 max-w-[38rem] lg:max-w-[75%]">
