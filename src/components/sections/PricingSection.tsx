@@ -16,7 +16,7 @@ export function PricingSection() {
   const { locale } = useLocale()
   const { pricing, pricingPage } = getHomeContent(locale)
   const { examplesIntro } = pricingPage
-  const sliderRef = useRef<HTMLDivElement>(null)
+  const themeStartRef = useRef<HTMLHeadingElement>(null)
   const [activeIndex, setActiveIndex] = useState(0)
   const slideCount = pricing.slides.length
   const isFirstSlide = activeIndex === 0
@@ -32,7 +32,7 @@ export function PricingSection() {
   }
 
   useScrollTheme({
-    startRef: sliderRef,
+    startRef: themeStartRef,
     endId: 'priser',
     endAtBottom: true,
   })
@@ -40,12 +40,12 @@ export function PricingSection() {
   return (
     <SplitIntroSection
       id="priser"
+      titleRef={themeStartRef}
       eyebrow={pricing.eyebrow}
       title={pricing.title}
       description={pricing.description}
     >
       <div
-        ref={sliderRef}
         className="pricing-slider mt-4xl lg:mt-5xl"
         aria-label={pricing.sliderAriaLabel}
       >

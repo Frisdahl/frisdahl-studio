@@ -76,7 +76,7 @@ export function Hero({ variant = 'home' }: HeroProps) {
   const isPricing = variant === 'pricing'
 
   return (
-    <section className="relative overflow-hidden">
+    <section className="hero-section">
       <HeroDecorations />
 
       <Container className="relative z-10">
@@ -106,7 +106,9 @@ export function Hero({ variant = 'home' }: HeroProps) {
                 </>
               ) : (
                 <>
-                  <Button href={toAppHref('#contact')}>{content.ctaPrimary}</Button>
+                  <Button href={toAppHref('#contact')}>
+                    {content.ctaPrimary}
+                  </Button>
                   <Button href={toAppHref('#portfolio')} variant="secondary">
                     {content.ctaSecondary}
                   </Button>

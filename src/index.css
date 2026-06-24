@@ -1,9 +1,32 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "PP Neue Montreal";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src:
+    local("PP Neue Montreal Book"),
+    local("PPNeueMontreal-Book"),
+    url("/fonts/PPNeueMontreal-Book.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "PP Neue Montreal";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src:
+    local("PP Neue Montreal Medium"),
+    local("PPNeueMontreal-Medium"),
+    url("/fonts/PPNeueMontreal-Medium.woff2") format("woff2");
+}
+
 @theme {
   /* Typography */
   --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
   --font-heading: "Figtree", ui-sans-serif, system-ui, sans-serif;
+  --font-nav: "PP Neue Montreal", "Figtree", ui-sans-serif, system-ui, sans-serif;
 
   /* Typography - Desktop defaults (>1536px), aligned with Morningtrain */
   --text-display: 4.5rem;
@@ -39,7 +62,7 @@
   --text-caption--line-height: 1.5;
 
   /* Colors */
-  --color-background: #fffefe;
+  --color-background: #f9f9f9;
   --color-background-alt: #f9f9f9;
   --color-surface: #ffffff;
   --color-surface-muted: #f8f8f8;
@@ -81,10 +104,10 @@
   --spacing-section-sm: 4rem;
 
   /* Layout */
-  --container-width: 1280px;
-  --container-width-laptop: 960px;
-  --container-width-tablet: 720px;
-  --container-width-mobile: 480px;
+  --container-width: 1440px;
+  --container-width-laptop: 1200px;
+  --container-width-tablet: 840px;
+  --container-width-mobile: 520px;
   --container-bp-laptop: 1536px;
   --container-bp-tablet: 1088px;
   --container-bp-mobile: 800px;
@@ -265,6 +288,45 @@
     }
   }
 
+  .hero-section {
+    @apply relative overflow-visible;
+  }
+
+  .promo-section {
+    @apply relative;
+  }
+
+  .promo-stage {
+    @apply relative flex min-h-svh items-center justify-center overflow-hidden py-16 lg:py-24;
+  }
+
+  .promo-stage-inner {
+    @apply flex w-full items-center justify-center;
+  }
+
+  .promo-video-mask {
+    @apply flex w-full items-center justify-center overflow-hidden;
+    min-height: min(70svh, 42rem);
+  }
+
+  .promo-video-frame {
+    --promo-reveal: 0;
+    --promo-radius-start: 4rem;
+    box-sizing: border-box;
+    width: calc(46% + 54% * var(--promo-reveal));
+    margin-inline: auto;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: calc(
+      var(--promo-radius-start) * (1 - var(--promo-reveal)) + var(--radius-control-sm) * var(--promo-reveal)
+    );
+    will-change: width, border-radius;
+  }
+
+  .promo-video {
+    @apply block h-auto w-full;
+  }
+
   .section-panel {
     @apply rounded-panel-xl border border-border-light bg-surface p-8 shadow-soft sm:p-10 lg:p-12;
   }
@@ -334,30 +396,46 @@
   }
 
   .nav-link {
-    @apply relative inline-block text-body font-semibold text-primary;
-    transition: color 0.6s var(--ease-smooth);
+    font-family: var(--font-nav);
+    @apply relative inline-flex items-center rounded-pill px-6 py-3.5 text-base font-semibold uppercase tracking-[0.08em] transition-colors;
+    color: #000000;
   }
 
-  .nav-link::after {
-    content: "";
-    @apply absolute -bottom-1 left-0 h-0.5 w-full bg-accent;
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform var(--duration-slow) var(--ease-smooth);
+  .nav-link:hover,
+  .nav-link:focus-visible,
+  .nav-link[aria-expanded='true'] {
+    background-color: #f0ede6;
+    color: #000000;
   }
 
-  .nav-link.underline-visible {
-    @apply text-accent;
+  body.theme-dark .site-header-nav-cluster .nav-link,
+  body.theme-dark .site-header-nav-cluster .nav-link:hover,
+  body.theme-dark .site-header-nav-cluster .nav-link:focus-visible,
+  body.theme-dark .site-header-nav-cluster .nav-link[aria-expanded='true'] {
+    color: #000000;
   }
 
-  .nav-link.underline-visible::after {
-    transform: scaleX(1);
-    transform-origin: left;
+  .nav-link-contact {
+    @apply ml-0.5 border border-transparent bg-[#000000] px-7 text-[#fffefe];
   }
 
-  .nav-link.underline-exiting::after {
-    transform: scaleX(0);
-    transform-origin: right;
+  .nav-link-contact:hover,
+  .nav-link-contact:focus-visible {
+    background-color: transparent;
+    border-color: #000000;
+    color: #000000;
+  }
+
+  body.theme-dark .site-header-nav-cluster .nav-link-contact {
+    background-color: #000000;
+    color: #fffefe;
+  }
+
+  body.theme-dark .site-header-nav-cluster .nav-link-contact:hover,
+  body.theme-dark .site-header-nav-cluster .nav-link-contact:focus-visible {
+    background-color: transparent;
+    border-color: #000000;
+    color: #000000;
   }
 
   .nav-dropdown-overlay {
@@ -366,24 +444,81 @@
     will-change: opacity;
   }
 
+  .site-header {
+    @apply relative px-2 sm:px-3;
+  }
+
+  .site-header-bar {
+    @apply grid grid-cols-[1fr_auto_1fr] items-center gap-4 pt-8 pb-6 sm:pt-10 lg:pt-12 lg:pb-8;
+  }
+
+  .site-header-brand {
+    font-family: var(--font-nav);
+    @apply justify-self-start inline-flex items-center text-base font-semibold tracking-[0.02em];
+    color: #000000;
+  }
+
+  body.theme-dark .site-header-brand {
+    color: #000000;
+  }
+
+  .site-header-nav-slot {
+    @apply flex justify-center justify-self-center;
+  }
+
+  .site-header-nav-cluster {
+    @apply z-50;
+  }
+
+  .site-header-nav-cluster-fixed {
+    @apply fixed left-1/2 z-50 -translate-x-1/2;
+  }
+
+  .site-header-nav {
+    @apply relative;
+  }
+
+  .site-header-actions {
+    @apply flex items-center justify-self-end gap-1 sm:gap-2;
+  }
+
+  @media (max-width: 1023px) {
+    .site-header-bar {
+      @apply flex justify-between;
+    }
+
+    .site-header-nav-slot {
+      @apply hidden;
+    }
+  }
+
+  .site-header-nav-list {
+    @apply flex items-center gap-0.5 rounded-pill border border-transparent bg-transparent p-1 px-1.5;
+    box-shadow: none;
+    transition:
+      background-color 0.3s var(--ease-smooth),
+      border-color 0.3s var(--ease-smooth),
+      box-shadow 0.3s var(--ease-smooth);
+  }
+
+  .site-header-nav-scrolled .site-header-nav-list {
+    @apply border-border-light bg-surface shadow-medium;
+  }
+
+  body.theme-dark .site-header-nav-scrolled .site-header-nav-list {
+    @apply border-border-light bg-surface;
+  }
+
   .nav-dropdown {
     @apply relative;
   }
 
   .nav-dropdown-trigger {
-    @apply inline-flex items-center gap-1;
-  }
-
-  .nav-dropdown-arrow {
-    @apply h-3 w-3 text-primary transition-transform duration-200;
-  }
-
-  .nav-dropdown-arrow-open {
-    transform: rotate(180deg);
+    @apply inline-flex items-center;
   }
 
   .nav-mega-menu-shell {
-    @apply absolute inset-x-0 top-full z-[60];
+    @apply absolute top-full left-1/2 z-[60] w-screen -translate-x-1/2;
   }
 
   .nav-mega-menu {
@@ -491,21 +626,23 @@
   }
 
   .pricing-slider-indicator {
-    @apply h-5 w-px bg-border;
+    @apply h-5 w-px;
+    background-color: #555555;
   }
 
   .pricing-slider-indicator-active {
-    @apply bg-primary;
+    background-color: #fffefe;
   }
 
   .pricing-slider-progress {
     @apply relative min-w-0 flex-1;
     height: 1px;
-    background-color: #e5e5e5;
+    background-color: #555555;
   }
 
   .pricing-slider-progress-fill {
-    @apply absolute inset-y-0 left-0 bg-primary;
+    @apply absolute inset-y-0 left-0;
+    background-color: #fffefe;
     transition: width 450ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
@@ -688,28 +825,50 @@
   }
 
   .language-switcher-trigger {
-    @apply inline-flex items-center gap-1.5 rounded-control px-2 py-2 text-primary hover:bg-peach-hover/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+    font-family: var(--font-nav);
+    @apply inline-flex items-center gap-2 rounded-pill px-6 py-3.5 text-base font-semibold uppercase tracking-[0.08em] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
     transition: background-color var(--duration-base) var(--ease-smooth);
   }
 
-  body.theme-dark .language-switcher-trigger {
-    color: #fffefe;
+  .language-switcher-trigger:hover,
+  .language-switcher-trigger:focus-visible,
+  .language-switcher-trigger[aria-expanded='true'] {
+    background-color: #f0ede6;
+    color: #000000;
   }
 
-  body.theme-dark .language-switcher-trigger:hover {
-    background-color: rgb(255 254 254 / 0.08);
+  body.theme-dark .language-switcher-trigger {
+    color: #000000;
+  }
+
+  body.theme-dark .language-switcher-trigger:hover,
+  body.theme-dark .language-switcher-trigger:focus-visible,
+  body.theme-dark .language-switcher-trigger[aria-expanded='true'] {
+    background-color: #f0ede6;
+    color: #000000;
   }
 
   .language-switcher-flag {
-    @apply inline-flex h-5 w-5 shrink-0 overflow-hidden rounded-sm;
+    @apply inline-flex h-[1.125rem] w-[1.125rem] shrink-0 overflow-hidden rounded-sm;
+  }
+
+  .language-switcher-code {
+    @apply leading-none;
+    color: #000000;
   }
 
   .language-switcher-chevron {
-    @apply h-4 w-4 text-secondary transition-transform duration-200;
+    @apply h-[1.125rem] w-[1.125rem] text-secondary transition-transform duration-200;
+  }
+
+  .language-switcher-trigger:hover .language-switcher-chevron,
+  .language-switcher-trigger:focus-visible .language-switcher-chevron,
+  .language-switcher-trigger[aria-expanded='true'] .language-switcher-chevron {
+    color: #555555;
   }
 
   body.theme-dark .language-switcher-chevron {
-    color: #bababa;
+    color: #555555;
   }
 
   .language-switcher-chevron-open {
@@ -723,11 +882,19 @@
   }
 
   .language-switcher-option {
-    @apply flex w-full items-center gap-2.5 rounded-control-sm px-3 py-2.5 text-left text-body-sm font-medium text-primary transition-[background-color,color] hover:bg-peach-hover/40 hover:text-accent focus-visible:bg-peach-hover/40 focus-visible:text-accent;
+    @apply flex w-full items-center gap-2.5 rounded-control-sm px-3 py-2.5 text-left text-body-sm font-medium transition-[background-color,color];
+    color: #000000;
+  }
+
+  .language-switcher-option:hover,
+  .language-switcher-option:focus-visible {
+    background-color: #f0ede6;
+    color: #000000;
   }
 
   .language-switcher-option-active {
-    @apply bg-primary-soft;
+    background-color: #f0ede6;
+    color: #000000;
   }
 
   body.theme-dark .language-switcher-menu {

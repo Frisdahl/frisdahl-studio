@@ -13,7 +13,6 @@ import {
 } from 'react-icons/hi2'
 import type { NavDropdownColumn, NavDropdownIcon } from '../../data/navigation'
 import { toAppHref } from '../../lib/routes'
-import { NavArrowIcon } from '../ui/NavArrowIcon'
 
 const iconMap: Record<NavDropdownIcon, IconType> = {
   code: HiCodeBracket,
@@ -54,10 +53,7 @@ export function NavMegaMenu({ columns, menuLabel, caretOffset }: NavMegaMenuProp
                 role="menuitem"
               >
                 <Icon className="nav-mega-icon" aria-hidden />
-                <span className="nav-mega-title-row">
-                  <span className="nav-mega-title">{column.title}</span>
-                  <NavArrowIcon className="nav-mega-arrow" />
-                </span>
+                <span className="nav-mega-title">{column.title}</span>
                 <span className="nav-mega-description">{column.description}</span>
               </Link>
             )

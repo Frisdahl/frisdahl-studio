@@ -6,6 +6,11 @@ import { FlagIcon } from './FlagIcon'
 
 const localeOptions: Locale[] = ['da', 'en']
 
+const localeCodes: Record<Locale, string> = {
+  da: 'DK',
+  en: 'EN',
+}
+
 export function LanguageSwitcher() {
   const { locale, setLocale } = useLocale()
   const [isOpen, setIsOpen] = useState(false)
@@ -52,6 +57,7 @@ export function LanguageSwitcher() {
         <span className="language-switcher-flag">
           <FlagIcon locale={locale} className="h-full w-full" />
         </span>
+        <span className="language-switcher-code">{localeCodes[locale]}</span>
         <HiChevronDown
           className={`language-switcher-chevron ${isOpen ? 'language-switcher-chevron-open' : ''}`}
           aria-hidden="true"

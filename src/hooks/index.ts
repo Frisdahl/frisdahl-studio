@@ -1,4 +1,6 @@
+export { useFixedNav } from './useFixedNav'
 export { useFeatureScrollTheme } from './useFeatureScrollTheme'
+export { usePromoVideoReveal } from './usePromoVideoReveal'
 export { useScrollProgress } from './useScrollProgress'
 export { useScrollTheme } from './useScrollTheme'
 export { useUnderlineHover } from './useUnderlineHover'

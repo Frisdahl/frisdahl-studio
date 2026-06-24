@@ -1,4 +1,3 @@
-import { HiChevronDown } from 'react-icons/hi2'
 import { UnderlineLink } from '../ui'
 
 interface NavDropdownProps {
@@ -26,10 +25,6 @@ export function NavDropdown({
         <UnderlineLink href={href} aria-expanded={isOpen} aria-haspopup="true">
           {label}
         </UnderlineLink>
-        <HiChevronDown
-          className={`nav-dropdown-arrow ${isOpen ? 'nav-dropdown-arrow-open' : ''}`}
-          aria-hidden
-        />
       </div>
     </li>
   )

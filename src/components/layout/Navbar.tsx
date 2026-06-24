@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocale } from '../../context/LocaleContext'
 import { getNavigation, getNavDropdownColumns, navDropdownHrefs } from '../../data/navigation'
 import { toAppHref } from '../../lib/routes'
+import { useFixedNav } from '../../hooks/useFixedNav'
 import { Container, LanguageSwitcher, UnderlineLink } from '../ui'
 import { NavDropdown } from './NavDropdown'
 import { NavMegaMenu } from './NavMegaMenu'
@@ -115,19 +116,19 @@ function MenuToggleIcon({ isOpen }: MenuToggleIconProps) {
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
   const [scrollLocked, setScrollLocked] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [caretOffset, setCaretOffset] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
+  const navClusterRef = useRef<HTMLDivElement>(null)
+  const navRef = useRef<HTMLElement>(null)
   const triggerRefs = useRef(new Map<string, HTMLDivElement>())
   const shouldReduceMotion = useReducedMotion()
   const { locale } = useLocale()
+  const { isReady: isNavReady, pinnedTop, navSize, isScrolled: isNavScrolled } = useFixedNav(navRef)
   const { items, mobileGroups, navAriaLabel, menuOpen, menuClose } = getNavigation(locale)
-  const mainNavItems = items.filter((item) => item.href !== '/#contact')
-  const contactItem = items.find((item) => item.href === '/#contact')
   const activeDropdownLabel =
-    mainNavItems.find((item) => item.href === activeDropdown)?.label ?? ''
+    items.find((item) => item.href === activeDropdown)?.label ?? ''
   const activeDropdownColumns = activeDropdown
     ? getNavDropdownColumns(activeDropdown, locale)
     : []
@@ -178,17 +179,6 @@ export function Navbar() {
   useEffect(() => {
     if (isOpen) setScrollLocked(true)
   }, [isOpen])
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0)
-    }
-
-    handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
-
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   useEffect(() => {
     if (!scrollLocked) return
@@ -291,54 +281,77 @@ export function Navbar() {
         )}
       </AnimatePresence>
 
-      <header
-        className={`relative sticky top-0 z-50 overflow-visible bg-background transition-[background-color,box-shadow] duration-600 ${isScrolled ? 'shadow-soft' : ''}`}
-        onMouseLeave={closeDropdown}
-      >
+      <header className="site-header">
         <Container ref={containerRef}>
-          <div className="relative flex h-16 items-center justify-between gap-4 px-2 sm:px-3 lg:h-[100px] lg:px-0">
-            <Link
-              to="/"
-              className="relative z-10 font-heading py-2 text-body-lg font-bold tracking-tight text-primary transition-colors hover:text-accent"
-            >
+          <div className="site-header-bar">
+            <Link to="/" className="site-header-brand">
               Frisdahl Studio
             </Link>
 
-            <nav
-              className="absolute left-1/2 hidden -translate-x-1/2 lg:block"
-              aria-label={navAriaLabel}
-            >
-              <ul className="flex items-center gap-8">
-                {mainNavItems.map(({ label, href }) =>
-                  navDropdownHrefs.has(href) ? (
-                    <NavDropdown
-                      key={href}
-                      label={label}
-                      href={href}
-                      isOpen={activeDropdown === href}
-                      onOpen={() => openDropdown(href)}
-                      triggerRef={(element) => setTriggerRef(href, element)}
-                    />
-                  ) : (
-                    <li key={href} onMouseEnter={closeDropdown}>
-                      <UnderlineLink href={href}>{label}</UnderlineLink>
-                    </li>
-                  ),
+            <div className="site-header-nav-slot">
+              <div
+                className="site-header-nav-placeholder"
+                style={
+                  isNavReady
+                    ? { width: navSize.width, height: navSize.height }
+                    : undefined
+                }
+                aria-hidden="true"
+              />
+
+              <div
+                ref={navClusterRef}
+                className={[
+                  'site-header-nav-cluster hidden lg:block',
+                  isNavReady ? 'site-header-nav-cluster-fixed' : '',
+                  isNavScrolled ? 'site-header-nav-scrolled' : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+                style={isNavReady ? { top: pinnedTop } : undefined}
+                onMouseLeave={closeDropdown}
+              >
+                <nav ref={navRef} className="site-header-nav" aria-label={navAriaLabel}>
+                  <ul className="site-header-nav-list">
+                    {items.map(({ label, href }) =>
+                      navDropdownHrefs.has(href) ? (
+                        <NavDropdown
+                          key={href}
+                          label={label}
+                          href={href}
+                          isOpen={activeDropdown === href}
+                          onOpen={() => openDropdown(href)}
+                          triggerRef={(element) => setTriggerRef(href, element)}
+                        />
+                      ) : (
+                        <li key={href} onMouseEnter={closeDropdown}>
+                          <UnderlineLink
+                            href={href}
+                            className={href === '/#contact' ? 'nav-link-contact' : ''}
+                          >
+                            {label}
+                          </UnderlineLink>
+                        </li>
+                      ),
+                    )}
+                  </ul>
+                </nav>
+
+                {activeDropdown && (
+                  <div className="nav-mega-menu-shell">
+                    <Container>
+                      <NavMegaMenu
+                        columns={activeDropdownColumns}
+                        menuLabel={activeDropdownLabel}
+                        caretOffset={caretOffset}
+                      />
+                    </Container>
+                  </div>
                 )}
-              </ul>
-            </nav>
+              </div>
+            </div>
 
-            <div className="relative z-10 flex items-center gap-1 sm:gap-2 lg:gap-8">
-              {contactItem && (
-                <UnderlineLink
-                  href={contactItem.href}
-                  className="hidden lg:inline-flex"
-                  onMouseEnter={closeDropdown}
-                >
-                  {contactItem.label}
-                </UnderlineLink>
-              )}
-
+            <div className="site-header-actions">
               <LanguageSwitcher />
 
               <button
@@ -354,18 +367,6 @@ export function Navbar() {
             </div>
           </div>
         </Container>
-
-        {activeDropdown && (
-          <div className="nav-mega-menu-shell">
-            <Container>
-              <NavMegaMenu
-                columns={activeDropdownColumns}
-                menuLabel={activeDropdownLabel}
-                caretOffset={caretOffset}
-              />
-            </Container>
-          </div>
-        )}
       </header>
     </>
   )
