@@ -545,7 +545,7 @@
   }
 
   .contact-drawer-panel {
-    @apply fixed top-0 right-0 z-[70] flex h-full w-full max-w-[52rem] flex-col bg-surface shadow-large transition-colors duration-[600ms] ease-[var(--ease-smooth)];
+    @apply fixed top-0 right-0 z-[70] flex h-full w-full max-w-[56rem] flex-col bg-surface shadow-large transition-colors duration-[600ms] ease-[var(--ease-smooth)];
   }
 
   .contact-drawer-eyebrow {
@@ -557,7 +557,7 @@
   }
 
   .contact-drawer-closebar {
-    @apply flex shrink-0 justify-end px-12 pt-8 pb-lg sm:px-16 sm:pt-10;
+    @apply flex shrink-0 justify-end px-8 pt-6 pb-4 sm:px-10 sm:pt-8 sm:pb-5;
   }
 
   .contact-drawer-close {
@@ -565,11 +565,11 @@
   }
 
   .contact-drawer-body {
-    @apply flex-1 overflow-x-visible overflow-y-auto px-12 pb-4 sm:px-16;
+    @apply flex-1 overflow-x-visible overflow-y-auto px-8 pb-4 sm:px-10;
   }
 
   .contact-drawer-footer {
-    @apply shrink-0 px-12 pb-6 sm:px-16;
+    @apply shrink-0 px-8 pb-6 sm:px-10;
   }
 
   .contact-drawer-footer-actions {
@@ -577,7 +577,7 @@
   }
 
   .contact-drawer-divider {
-    @apply border-0 border-t border-border-light transition-colors duration-[600ms] ease-[var(--ease-smooth)];
+    @apply border-0 border-t border-[#e5e5e5] transition-colors duration-[600ms] ease-[var(--ease-smooth)];
   }
 
   .booking-drawer-title {
@@ -589,8 +589,8 @@
   }
 
   .booking-month-btn {
-    @apply cursor-pointer rounded-pill border-2 bg-surface px-5 py-2.5 text-body font-semibold text-primary;
-    border-color: var(--color-border-light);
+    @apply cursor-pointer rounded-pill border-2 bg-[#f8f8f8] px-5 py-2.5 text-body font-semibold text-primary;
+    border-color: #e5e5e5;
     transition: none;
   }
 
@@ -598,14 +598,14 @@
     border-color: var(--color-secondary);
   }
 
-  .booking-month-btn-active,
-  body.theme-dark .contact-drawer-panel .booking-month-btn.booking-month-btn-active {
+  .booking-month-btn-active {
     border-color: var(--color-accent) !important;
+    background-color: #ffffff;
   }
 
   .booking-date-card,
   .booking-time-slot {
-    @apply cursor-pointer border-2 border-border-light bg-surface text-primary;
+    @apply cursor-pointer border-2 border-[#e5e5e5] bg-surface text-primary;
     transition: none;
   }
 
@@ -620,11 +620,11 @@
   }
 
   .booking-scroll-wrap {
-    @apply -mx-12 overflow-hidden sm:-mx-16;
+    @apply -mx-8 overflow-hidden sm:-mx-10;
   }
 
   .booking-scroll-row {
-    @apply flex gap-3 overflow-x-auto pb-2 pl-12 pr-2 sm:pl-16 sm:pr-3;
+    @apply flex gap-3 overflow-x-auto pb-2 pl-8 pr-2 sm:pl-10 sm:pr-3;
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
@@ -634,7 +634,7 @@
   }
 
   .booking-date-card {
-    @apply min-w-[7.5rem] shrink-0 rounded-panel px-7 py-4 text-center;
+    @apply min-w-[7.5rem] shrink-0 rounded-panel px-9 py-4 text-center;
   }
 
   .booking-date-card-date {
@@ -646,7 +646,7 @@
   }
 
   .booking-time-slot {
-    @apply shrink-0 rounded-panel px-7 py-4 text-body font-medium whitespace-nowrap;
+    @apply shrink-0 rounded-panel px-9 py-4 text-body font-medium whitespace-nowrap;
   }
 
   body.theme-dark .contact-drawer-panel {
@@ -680,6 +680,11 @@
   body.theme-dark .contact-drawer-panel .booking-date-card:hover,
   body.theme-dark .contact-drawer-panel .booking-time-slot:hover {
     border-color: #555555;
+  }
+
+  body.theme-dark .contact-drawer-panel .booking-month-btn.booking-month-btn-active {
+    background-color: #111111;
+    border-color: var(--color-accent) !important;
   }
 
   body.theme-dark .contact-drawer-panel .booking-date-card.booking-select-btn-active,
@@ -718,6 +723,103 @@
   .contact-drawer-panel .btn:disabled {
     @apply cursor-not-allowed;
     pointer-events: auto;
+  }
+
+  .site-footer {
+    @apply bg-[#010001] pt-section-sm pb-8 text-[#fffefe] lg:pt-section lg:pb-10;
+  }
+
+  .site-footer-top {
+    @apply flex flex-col gap-10 pb-6 lg:flex-row lg:items-start lg:justify-between lg:pb-8;
+  }
+
+  .site-footer-logo {
+    @apply shrink-0 font-heading text-body-lg font-bold tracking-tight text-[#fffefe] transition-colors hover:text-accent;
+  }
+
+  .site-footer-nav {
+    @apply w-full lg:ml-auto lg:w-auto;
+  }
+
+  .site-footer-columns {
+    @apply grid grid-cols-2 gap-x-8 gap-y-10 sm:gap-x-10 lg:flex lg:flex-row lg:justify-end lg:gap-x-14 xl:gap-x-20;
+  }
+
+  .site-footer-column {
+    @apply shrink-0;
+  }
+
+  .site-footer-column-title {
+    @apply text-body font-semibold text-[#fffefe];
+  }
+
+  .site-footer-links {
+    @apply mt-4 flex flex-col gap-3;
+  }
+
+  .site-footer-link {
+    @apply text-body text-[#bababa] transition-colors hover:text-[#fffefe];
+  }
+
+  .site-footer-divider {
+    @apply border-0 border-t border-[#333333];
+  }
+
+  .site-footer-top + .site-footer-divider {
+    @apply mt-12 mb-4 lg:mt-16 lg:mb-6;
+  }
+
+  .site-footer-middle + .site-footer-divider {
+    @apply mt-4 mb-10 lg:mt-6 lg:mb-12;
+  }
+
+  .site-footer-location {
+    @apply text-right lg:ml-auto;
+  }
+
+  .site-footer-location-title {
+    @apply text-body-sm font-semibold tracking-wide text-[#fffefe] uppercase;
+  }
+
+  .site-footer-address {
+    @apply mt-2 text-body whitespace-nowrap text-[#bababa];
+  }
+
+  .site-footer-middle {
+    @apply flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between;
+  }
+
+  .site-footer-bottom {
+    @apply flex flex-col gap-6 pt-4 lg:flex-row lg:items-center lg:justify-between lg:pt-6;
+  }
+
+  .site-footer-social {
+    @apply flex items-center gap-4;
+  }
+
+  .site-footer-social-link {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-full text-[#fffefe] transition-colors hover:text-accent;
+  }
+
+  .site-footer-meta {
+    @apply flex flex-wrap items-center gap-x-6 gap-y-2 lg:justify-end;
+  }
+
+  .site-footer-copyright,
+  .site-footer-phone {
+    @apply text-body-sm text-[#bababa];
+  }
+
+  .site-footer-phone {
+    @apply transition-colors hover:text-[#fffefe];
+  }
+
+  .site-footer-legal {
+    @apply flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-6 sm:gap-y-2;
+  }
+
+  .site-footer-legal-link {
+    @apply text-body-sm text-[#bababa] transition-colors hover:text-[#fffefe];
   }
 
   @media (prefers-reduced-motion: reduce) {

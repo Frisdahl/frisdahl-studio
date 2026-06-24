@@ -203,7 +203,7 @@ export function Navbar() {
         className={`sticky top-0 z-50 bg-background transition-[background-color,box-shadow] duration-600 ${isScrolled ? 'shadow-soft' : ''}`}
       >
         <Container>
-          <div className="flex h-16 items-center justify-between gap-4 px-2 sm:px-3 lg:h-20 lg:px-0">
+          <div className="flex h-16 items-center justify-between gap-4 px-2 sm:px-3 lg:h-[88px] lg:px-0">
             <a
               href="/"
               className="font-heading py-2 text-body-lg font-bold tracking-tight text-primary transition-colors hover:text-accent"
