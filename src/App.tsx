@@ -1,21 +1,25 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { Footer, Navbar, ScrollProgressButton, ScrollToTop } from './components/layout'
+import { ContactDrawerProvider } from './context/ContactDrawerContext'
 import { LocaleProvider } from './context/LocaleContext'
-import { Footer, Navbar } from './components/layout'
-import { Hero, PromoSection, FeatureSection, CasesSection, PartnershipSection, ConceptSection, ContactSection } from './components/sections'
+import { PRICING_PATH } from './lib/routes'
+import { HomePage, PricingPage } from './pages'
 
 function App() {
   return (
     <LocaleProvider>
-      <Navbar />
-      <main>
-        <Hero />
-        <PromoSection />
-        <FeatureSection />
-        <CasesSection />
-        <ConceptSection />
-        <PartnershipSection />
-        <ContactSection />
-      </main>
-      <Footer />
+      <ContactDrawerProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path={PRICING_PATH} element={<PricingPage />} />
+          </Routes>
+          <Footer />
+          <ScrollProgressButton />
+        </BrowserRouter>
+      </ContactDrawerProvider>
     </LocaleProvider>
   )
 }

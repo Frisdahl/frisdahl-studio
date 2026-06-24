@@ -1,11 +1,19 @@
 import { useState } from 'react'
 import { HiSpeakerWave, HiSpeakerXMark } from 'react-icons/hi2'
+import { useContactDrawer } from '../../context/ContactDrawerContext'
 import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
+import { toAppHref } from '../../lib/routes'
 import { Button, Container } from '../ui'
 import { DecorativeRings } from '../ui/DecorativeRings'
 
 const heroVideoSrc: string | null = null
+
+export type HeroVariant = 'home' | 'pricing'
+
+interface HeroProps {
+  variant?: HeroVariant
+}
 
 interface MuteToggleIconProps {
   muted: boolean
@@ -56,13 +64,16 @@ function HeroVideoRings() {
   return <DecorativeRings />
 }
 
-export function Hero() {
+export function Hero({ variant = 'home' }: HeroProps) {
   const { locale } = useLocale()
-  const { hero } = getHomeContent(locale)
+  const { hero, pricingPage } = getHomeContent(locale)
+  const { openDrawer } = useContactDrawer()
+  const content = variant === 'pricing' ? pricingPage.hero : hero
   const [isMuted, setIsMuted] = useState(true)
   const hasVideo = Boolean(heroVideoSrc)
 
   const muteLabel = isMuted ? hero.muteOn : hero.muteOff
+  const isPricing = variant === 'pricing'
 
   return (
     <section className="relative overflow-hidden">
@@ -71,19 +82,36 @@ export function Hero() {
       <Container className="relative z-10">
         <div className="hero-grid grid min-h-[calc(100svh-4rem)] items-start gap-12 px-2 pb-12 pt-6 max-[1088px]:gap-8 max-[1088px]:pb-8 max-[1088px]:pt-5 min-[1089px]:sm:gap-16 sm:px-3 sm:pt-8 lg:min-h-0 lg:grid-cols-[1.14fr_0.86fr] lg:gap-24 lg:px-0 lg:pb-16 lg:pt-16">
           <div className="min-w-0 self-center lg:max-w-[42rem]">
-            <p className="eyebrow text-secondary">{hero.eyebrow}</p>
+            <p className="eyebrow text-secondary">{content.eyebrow}</p>
             <h1 className="mt-5 max-[1088px]:mt-3">
-              <span className="block min-[801px]:max-[1088px]:whitespace-nowrap">{hero.headlineLine1}</span>
-              <span className="block min-[801px]:max-[1088px]:whitespace-nowrap">{hero.headlineLine2}</span>
+              <span className="block min-[801px]:max-[1088px]:whitespace-nowrap">
+                {content.headlineLine1}
+              </span>
+              <span className="block min-[801px]:max-[1088px]:whitespace-nowrap">
+                {content.headlineLine2}
+              </span>
             </h1>
             <p className="mt-6 max-w-[34rem] text-body-lg text-secondary max-[1088px]:mt-4 min-[1089px]:sm:mt-7 lg:max-w-none">
-              {hero.description}
+              {content.description}
             </p>
             <div className="mt-8 flex flex-col gap-4 max-[1088px]:mt-5 max-[1088px]:gap-3 min-[1089px]:sm:mt-9 sm:flex-row sm:items-center">
-              <Button href="#contact">{hero.ctaPrimary}</Button>
-              <Button href="#portfolio" variant="secondary">
-                {hero.ctaSecondary}
-              </Button>
+              {isPricing ? (
+                <>
+                  <Button type="button" onClick={() => openDrawer('book')}>
+                    {content.ctaPrimary}
+                  </Button>
+                  <Button href="#priser" variant="secondary">
+                    {content.ctaSecondary}
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button href={toAppHref('#contact')}>{content.ctaPrimary}</Button>
+                  <Button href={toAppHref('#portfolio')} variant="secondary">
+                    {content.ctaSecondary}
+                  </Button>
+                </>
+              )}
             </div>
           </div>
 

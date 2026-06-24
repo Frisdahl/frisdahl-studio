@@ -334,7 +334,7 @@
   }
 
   .nav-link {
-    @apply relative inline-block text-body-sm font-semibold text-primary;
+    @apply relative inline-block text-body font-semibold text-primary;
     transition: color 0.6s var(--ease-smooth);
   }
 
@@ -363,6 +363,7 @@
   .nav-dropdown-overlay {
     @apply fixed inset-0 z-40 bg-background/55;
     pointer-events: none;
+    will-change: opacity;
   }
 
   .nav-dropdown {
@@ -435,6 +436,227 @@
 
   .nav-mega-description {
     @apply mt-2 text-body-sm leading-relaxed text-secondary;
+  }
+
+  .pricing-slider {
+    --pricing-slide-width: min(var(--container-current, var(--container-width)), calc(100vw - 2rem));
+  }
+
+  @media (min-width: 640px) {
+    .pricing-slider {
+      --pricing-slide-width: min(var(--container-current, var(--container-width)), calc(100vw - 3rem));
+    }
+  }
+
+  .pricing-slider-viewport {
+    box-sizing: border-box;
+    width: calc((100vw + 100%) / 2);
+    overflow: hidden;
+  }
+
+  .pricing-slider-track {
+    @apply flex w-max gap-6;
+    transform: translateX(
+      calc(-1 * var(--active-index, 0) * (var(--pricing-slide-width) + 1.5rem))
+    );
+    transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  .pricing-slider-slide {
+    @apply m-0 shrink-0 overflow-hidden rounded-panel border border-border-light bg-surface shadow-soft;
+    flex: 0 0 var(--pricing-slide-width);
+    width: var(--pricing-slide-width);
+    aspect-ratio: 16 / 10;
+  }
+
+  .pricing-slider-controls {
+    @apply mt-lg flex items-center gap-5 sm:gap-6;
+  }
+
+  .pricing-slider-btn {
+    @apply shrink-0 cursor-pointer bg-transparent p-0 text-body-sm font-semibold text-primary transition-colors;
+  }
+
+  .pricing-slider-btn:hover:not(:disabled) {
+    @apply text-accent;
+  }
+
+  .pricing-slider-btn:disabled {
+    @apply cursor-not-allowed text-disabled;
+  }
+
+  .pricing-slider-indicators {
+    @apply flex shrink-0 items-center gap-2;
+  }
+
+  .pricing-slider-indicator {
+    @apply h-5 w-px bg-border;
+  }
+
+  .pricing-slider-indicator-active {
+    @apply bg-primary;
+  }
+
+  .pricing-slider-progress {
+    @apply relative min-w-0 flex-1;
+    height: 1px;
+    background-color: #e5e5e5;
+  }
+
+  .pricing-slider-progress-fill {
+    @apply absolute inset-y-0 left-0 bg-primary;
+    transition: width 450ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .pricing-cards-grid {
+    @apply m-0 grid list-none gap-6 p-0;
+  }
+
+  @media (min-width: 1024px) {
+    .pricing-cards-grid {
+      @apply grid-cols-3 items-center gap-8;
+    }
+  }
+
+  .pricing-card {
+    @apply relative flex h-full flex-col rounded-panel-xl border border-white/10 bg-[#111111] p-8 lg:p-9;
+    transition:
+      border-color 0.3s var(--ease-smooth),
+      box-shadow 0.3s var(--ease-smooth),
+      transform 0.3s var(--ease-smooth);
+  }
+
+  .pricing-card-featured {
+    border-color: #ff914d;
+    box-shadow:
+      0 0 0 1px #ff914d,
+      0 24px 48px rgb(0 0 0 / 0.35);
+  }
+
+  @media (min-width: 1024px) {
+    .pricing-cards-item-featured .pricing-card-featured {
+      transform: translateY(-0.5rem);
+    }
+  }
+
+  .pricing-card-badge {
+    @apply absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-pill px-4 py-1.5 text-body-sm font-semibold text-white;
+    background-color: #ff914d;
+  }
+
+  .pricing-card-header {
+    @apply pt-2;
+  }
+
+  .pricing-card-featured .pricing-card-header {
+    @apply pt-4;
+  }
+
+  .pricing-card-title {
+    @apply font-heading text-h4 font-semibold text-[#fffefe];
+  }
+
+  .pricing-card-subtitle {
+    @apply mt-2 text-body-sm font-medium text-[#bababa];
+  }
+
+  .pricing-card-description {
+    @apply mt-5 text-body-sm leading-relaxed text-[#bababa];
+  }
+
+  .pricing-card-price {
+    @apply mt-6 font-heading text-[1.5rem] font-semibold leading-tight text-[#fffefe] lg:text-[1.625rem];
+  }
+
+  .pricing-card-cta {
+    @apply mt-6 w-full;
+    background-color: #ff914d !important;
+  }
+
+  .pricing-card-cta:hover {
+    background-color: #ffa970 !important;
+  }
+
+  .pricing-card-features {
+    @apply mt-8 border-t border-white/10 pt-8;
+  }
+
+  .pricing-card-features-label {
+    @apply text-body-sm font-semibold text-[#fffefe];
+  }
+
+  .pricing-card-features-list {
+    @apply mt-4 flex flex-col gap-3 p-0;
+    list-style: none;
+  }
+
+  .pricing-card-feature {
+    @apply flex items-start gap-3 text-body-sm leading-relaxed text-[#bababa];
+  }
+
+  .pricing-card-feature-icon {
+    @apply mt-0.5 h-5 w-5 shrink-0;
+    color: #ff914d;
+  }
+
+  .scroll-progress-btn {
+    @apply fixed right-6 bottom-6 z-50 flex h-16 w-16 cursor-pointer items-center justify-center rounded-full border-0 bg-surface p-0 shadow-medium transition-[opacity,transform,background-color] duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(0.75rem);
+  }
+
+  .scroll-progress-btn-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .scroll-progress-btn:hover {
+    @apply bg-surface-muted;
+  }
+
+  .scroll-progress-ring {
+    @apply absolute inset-0 h-full w-full;
+  }
+
+  .scroll-progress-fill {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-width: 2;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 120ms linear;
+  }
+
+  .scroll-progress-icon {
+    @apply relative z-[1] h-6 w-6 text-primary;
+  }
+
+  body.theme-dark .scroll-progress-btn {
+    @apply bg-[#111111];
+  }
+
+  body.theme-dark .scroll-progress-btn:hover {
+    background-color: #1a1a1a;
+  }
+
+  body.theme-dark .scroll-progress-icon {
+    @apply text-[#fffefe];
+  }
+
+  body.theme-dark .nav-mega-panel {
+    background-color: #111111;
+    border-color: rgb(255 255 255 / 0.08);
+  }
+
+  body.theme-dark .nav-mega-caret {
+    background-color: #111111;
+    border-color: rgb(255 255 255 / 0.08);
+  }
+
+  body.theme-dark .nav-mega-item:hover {
+    background-color: rgb(255 255 255 / 0.06);
   }
 
   .site-overlay {
@@ -514,7 +736,7 @@
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-7 py-2.5 text-body font-semibold tracking-wide transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:pointer-events-none disabled:opacity-50;
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 px-7 py-2.5 text-body font-semibold tracking-wide transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   @media (max-width: 1088px) {

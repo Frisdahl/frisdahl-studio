@@ -1,3 +1,5 @@
+import { PRICING_PATH } from '../lib/routes'
+
 export type Locale = 'da' | 'en'
 
 export const defaultLocale: Locale = 'da'
@@ -7,7 +9,15 @@ export interface NavItem {
   labels: Record<Locale, string>
 }
 
-export type NavDropdownIcon = 'code' | 'design' | 'content' | 'maintenance'
+export type NavDropdownIcon =
+  | 'code'
+  | 'design'
+  | 'content'
+  | 'maintenance'
+  | 'meet'
+  | 'process'
+  | 'culture'
+  | 'blog'
 
 export interface NavDropdownColumn {
   title: string
@@ -71,25 +81,79 @@ const servicesDropdownColumns = {
   ],
 } as const satisfies Record<Locale, NavDropdownColumn[]>
 
-export const navDropdownHrefs = new Set(['#services', '#om-os'])
+const aboutUsDropdownColumns = {
+  da: [
+    {
+      title: 'Mød os',
+      description: 'Lær teamet bag Frisdahl Studio og vores tilgang til samarbejde.',
+      href: '#om-os',
+      icon: 'meet',
+    },
+    {
+      title: 'Proces',
+      description: 'Sådan arbejder vi — fra første idé til lancering og videre.',
+      href: '#process',
+      icon: 'process',
+    },
+    {
+      title: 'Kultur',
+      description: 'Værdier, mindset og det der driver os i hverdagen.',
+      href: '#kultur',
+      icon: 'culture',
+    },
+    {
+      title: 'Blog',
+      description: 'Indsigt, erfaringer og tanker fra vores hverdag i studiet.',
+      href: '#blog',
+      icon: 'blog',
+    },
+  ],
+  en: [
+    {
+      title: 'Meet us',
+      description: 'Get to know the Frisdahl Studio team and how we work together.',
+      href: '#om-os',
+      icon: 'meet',
+    },
+    {
+      title: 'Process',
+      description: 'How we work — from first idea to launch and beyond.',
+      href: '#process',
+      icon: 'process',
+    },
+    {
+      title: 'Culture',
+      description: 'Values, mindset and what drives us every day.',
+      href: '#kultur',
+      icon: 'culture',
+    },
+    {
+      title: 'Blog',
+      description: 'Insights, learnings and thoughts from life in the studio.',
+      href: '#blog',
+      icon: 'blog',
+    },
+  ],
+} as const satisfies Record<Locale, NavDropdownColumn[]>
+
+export const navDropdownHrefs = new Set(['/#services', '/#om-os'])
 
 export const navItems: NavItem[] = [
-  { href: '#services', labels: { da: 'Services', en: 'Services' } },
-  { href: '#portfolio', labels: { da: 'Cases', en: 'Cases' } },
-  { href: '#om-os', labels: { da: 'Om os', en: 'About us' } },
-  { href: '#process', labels: { da: 'Proces', en: 'Process' } },
-  { href: '#pricing', labels: { da: 'Priser', en: 'Pricing' } },
-  { href: '#contact', labels: { da: 'Kontakt', en: 'Contact' } },
+  { href: '/#services', labels: { da: 'Services', en: 'Services' } },
+  { href: '/#portfolio', labels: { da: 'Cases', en: 'Cases' } },
+  { href: '/#om-os', labels: { da: 'Om os', en: 'About us' } },
+  { href: PRICING_PATH, labels: { da: 'Priser', en: 'Pricing' } },
+  { href: '/#contact', labels: { da: 'Kontakt', en: 'Contact' } },
 ]
 
 const mobileNavGroups = [
   {
     title: { da: 'Samarbejde', en: 'Collaboration' },
-    hrefs: ['#services', '#process', '#pricing'],
+    hrefs: ['/#services', PRICING_PATH],
   },
   {
     title: { da: 'Om os', en: 'About us' },
-    hrefs: ['#portfolio', '#om-os', '#contact'],
+    hrefs: ['/#portfolio', '/#om-os', '/#contact'],
   },
 ] as const
 
@@ -122,12 +186,24 @@ export interface NavigationContent {
   items: { href: string; label: string }[]
   mobileGroups: { title: string; items: { href: string; label: string }[] }[]
   servicesDropdown: NavDropdownColumn[]
+  aboutUsDropdown: NavDropdownColumn[]
   cta: string
   navAriaLabel: string
   menuOpen: string
   menuClose: string
   languageLabel: string
   languages: { da: string; en: string }
+}
+
+export function getNavDropdownColumns(
+  href: string,
+  locale: Locale = defaultLocale,
+): NavDropdownColumn[] {
+  if (href === '/#om-os') {
+    return [...aboutUsDropdownColumns[locale]]
+  }
+
+  return [...servicesDropdownColumns[locale]]
 }
 
 export function getNavigation(locale: Locale = defaultLocale): NavigationContent {
@@ -147,6 +223,7 @@ export function getNavigation(locale: Locale = defaultLocale): NavigationContent
     items,
     mobileGroups,
     servicesDropdown: [...servicesDropdownColumns[locale]],
+    aboutUsDropdown: [...aboutUsDropdownColumns[locale]],
     ...navigationCopy[locale],
   }
 }

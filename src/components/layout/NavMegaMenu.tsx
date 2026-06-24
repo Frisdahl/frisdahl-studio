@@ -1,12 +1,18 @@
 import { type CSSProperties } from 'react'
+import { Link } from 'react-router-dom'
 import type { IconType } from 'react-icons'
 import {
+  HiArrowPath,
   HiCodeBracket,
   HiLightBulb,
+  HiNewspaper,
   HiPaintBrush,
+  HiSparkles,
+  HiUserGroup,
   HiWrenchScrewdriver,
 } from 'react-icons/hi2'
 import type { NavDropdownColumn, NavDropdownIcon } from '../../data/navigation'
+import { toAppHref } from '../../lib/routes'
 import { NavArrowIcon } from '../ui/NavArrowIcon'
 
 const iconMap: Record<NavDropdownIcon, IconType> = {
@@ -14,6 +20,10 @@ const iconMap: Record<NavDropdownIcon, IconType> = {
   design: HiPaintBrush,
   content: HiLightBulb,
   maintenance: HiWrenchScrewdriver,
+  meet: HiUserGroup,
+  process: HiArrowPath,
+  culture: HiSparkles,
+  blog: HiNewspaper,
 }
 
 interface NavMegaMenuProps {
@@ -37,9 +47,9 @@ export function NavMegaMenu({ columns, menuLabel, caretOffset }: NavMegaMenuProp
             const Icon = iconMap[column.icon]
 
             return (
-              <a
+              <Link
                 key={column.href}
-                href={column.href}
+                to={toAppHref(column.href)}
                 className="nav-mega-item"
                 role="menuitem"
               >
@@ -49,7 +59,7 @@ export function NavMegaMenu({ columns, menuLabel, caretOffset }: NavMegaMenuProp
                   <NavArrowIcon className="nav-mega-arrow" />
                 </span>
                 <span className="nav-mega-description">{column.description}</span>
-              </a>
+              </Link>
             )
           })}
         </div>

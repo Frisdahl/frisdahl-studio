@@ -1,12 +1,29 @@
+import { Link } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocale } from '../../context/LocaleContext'
-import { getNavigation, navDropdownHrefs } from '../../data/navigation'
+import { getNavigation, getNavDropdownColumns, navDropdownHrefs } from '../../data/navigation'
+import { toAppHref } from '../../lib/routes'
 import { Container, LanguageSwitcher, UnderlineLink } from '../ui'
 import { NavDropdown } from './NavDropdown'
 import { NavMegaMenu } from './NavMegaMenu'
 
 const menuEase = [0.4, 0, 0.2, 1] as const
+
+const navDropdownOverlayEaseIn = [0.22, 1, 0.36, 1] as const
+const navDropdownOverlayEaseOut = [0.4, 0, 0.2, 1] as const
+
+const navDropdownOverlayVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.65, ease: navDropdownOverlayEaseIn },
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.6, ease: navDropdownOverlayEaseOut },
+  },
+}
 
 const overlayVariants = {
   hidden: { opacity: 0 },
@@ -106,12 +123,14 @@ export function Navbar() {
   const triggerRefs = useRef(new Map<string, HTMLDivElement>())
   const shouldReduceMotion = useReducedMotion()
   const { locale } = useLocale()
-  const { items, mobileGroups, navAriaLabel, menuOpen, menuClose, servicesDropdown } =
-    getNavigation(locale)
-  const mainNavItems = items.filter((item) => item.href !== '#contact')
-  const contactItem = items.find((item) => item.href === '#contact')
+  const { items, mobileGroups, navAriaLabel, menuOpen, menuClose } = getNavigation(locale)
+  const mainNavItems = items.filter((item) => item.href !== '/#contact')
+  const contactItem = items.find((item) => item.href === '/#contact')
   const activeDropdownLabel =
     mainNavItems.find((item) => item.href === activeDropdown)?.label ?? ''
+  const activeDropdownColumns = activeDropdown
+    ? getNavDropdownColumns(activeDropdown, locale)
+    : []
 
   const updateCaretOffset = useCallback((href: string) => {
     const trigger = triggerRefs.current.get(href)
@@ -205,10 +224,11 @@ export function Navbar() {
           <motion.div
             key="nav-dropdown-overlay"
             className="nav-dropdown-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={motionTransition ?? { duration: 0.2, ease: menuEase }}
+            variants={navDropdownOverlayVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            transition={motionTransition}
             aria-hidden="true"
           />
         )}
@@ -252,9 +272,13 @@ export function Navbar() {
                       <ul className="mobile-nav-list">
                         {groupItems.map(({ label, href }) => (
                           <li key={href}>
-                            <a href={href} className="mobile-nav-link" onClick={closeMenu}>
+                            <Link
+                              to={toAppHref(href)}
+                              className="mobile-nav-link"
+                              onClick={closeMenu}
+                            >
                               {label}
-                            </a>
+                            </Link>
                           </li>
                         ))}
                       </ul>
@@ -272,13 +296,13 @@ export function Navbar() {
         onMouseLeave={closeDropdown}
       >
         <Container ref={containerRef}>
-          <div className="relative flex h-16 items-center justify-between gap-4 px-2 sm:px-3 lg:h-[88px] lg:px-0">
-            <a
-              href="/"
+          <div className="relative flex h-16 items-center justify-between gap-4 px-2 sm:px-3 lg:h-[100px] lg:px-0">
+            <Link
+              to="/"
               className="relative z-10 font-heading py-2 text-body-lg font-bold tracking-tight text-primary transition-colors hover:text-accent"
             >
               Frisdahl Studio
-            </a>
+            </Link>
 
             <nav
               className="absolute left-1/2 hidden -translate-x-1/2 lg:block"
@@ -335,7 +359,7 @@ export function Navbar() {
           <div className="nav-mega-menu-shell">
             <Container>
               <NavMegaMenu
-                columns={servicesDropdown}
+                columns={activeDropdownColumns}
                 menuLabel={activeDropdownLabel}
                 caretOffset={caretOffset}
               />

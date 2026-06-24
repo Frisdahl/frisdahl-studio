@@ -1,20 +1,30 @@
-import type { AnchorHTMLAttributes } from 'react'
+import { Link, type LinkProps } from 'react-router-dom'
+import { toAppHref } from '../../lib/routes'
 import { useUnderlineHover } from '../../hooks/useUnderlineHover'
+
+type UnderlineLinkProps = Omit<LinkProps, 'to'> & {
+  href?: string
+  to?: LinkProps['to']
+}
 
 export function UnderlineLink({
   className = '',
   children,
+  href,
+  to,
   onMouseEnter,
   onMouseLeave,
   onFocus,
   onBlur,
   ...props
-}: AnchorHTMLAttributes<HTMLAnchorElement>) {
+}: UnderlineLinkProps) {
   const { ref, underlineProps } = useUnderlineHover()
+  const destination = to ?? toAppHref(href ?? '/')
 
   return (
-    <a
+    <Link
       ref={ref}
+      to={destination}
       className={`nav-link ${className}`.trim()}
       {...props}
       onMouseEnter={(event) => {
@@ -35,6 +45,6 @@ export function UnderlineLink({
       }}
     >
       {children}
-    </a>
+    </Link>
   )
 }

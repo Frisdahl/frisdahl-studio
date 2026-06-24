@@ -3,14 +3,15 @@ import { defaultLocale } from "./navigation";
 
 const homeContent = {
   da: {
+    scrollToTopLabel: "Rul til toppen",
     hero: {
       eyebrow: "FRISDAHL STUDIO",
       headlineLine1: "Digitale l\u00f8sninger,",
       headlineLine2: "der skaber resultater",
       description:
         "Jeg hj\u00e6lper virksomheder med moderne hjemmesider, grafisk design og skr\u00e6ddersyede digitale l\u00f8sninger. Alt bliver kodet fra bunden med fokus p\u00e5 performance, brugeroplevelse og et design, der styrker jeres virksomhed.",
-      ctaPrimary: "Start et projekt",
-      ctaSecondary: "Se portfolio",
+      ctaPrimary: "Start dit projekt",
+      ctaSecondary: "Se cases",
       muteOn: "Sl\u00e5 lyd til",
       muteOff: "Sl\u00e5 lyd fra",
     },
@@ -148,6 +149,22 @@ const homeContent = {
         },
       ],
     },
+    pricing: {
+      eyebrow: "Ikke bare en template",
+      title: "Høj performance med lavere risiko og hurtig time-to-market",
+      description:
+        "I får et unikt website, der performer hurtigere og mere sikkert, fordi vi bygger det på gennemtestede komponenter. Det gør at vi kan fokusere på det, der skaber forretningsværdi, som f.eks. forretningskritiske funktioner og jeres visuelle identitet.",
+      sliderAriaLabel: "Priseksempler",
+      sliderPrev: "Forrige",
+      sliderNext: "N\u00e6ste",
+      sliderStatus: "Billede {current} af {total}",
+      slides: [
+        { imageSrc: null, imageAlt: "Website eksempel 1" },
+        { imageSrc: null, imageAlt: "Website eksempel 2" },
+        { imageSrc: null, imageAlt: "Website eksempel 3" },
+        { imageSrc: null, imageAlt: "Website eksempel 4" },
+      ],
+    },
     contact: {
       eyebrow: "T\u00f8v ikke \u2013 vi er altid klar p\u00e5 en snak",
       title: "Lad os tage en snak om jeres digitale projekt",
@@ -191,16 +208,104 @@ const homeContent = {
         closeLabel: "Luk panel",
       },
     },
+    pricingPage: {
+      hero: {
+        eyebrow: "Priser",
+        headlineLine1: "Pakker tilpasset,",
+        headlineLine2: "jeres virksomhed",
+        description:
+          "Vi tilbyder fleksible l\u00f8sninger, der matcher jeres behov og budget \u2014 fra landingssider til komplette digitale platforme.",
+        ctaPrimary: "Start dit projekt",
+        ctaSecondary: "Se priser",
+      },
+      examplesIntro: {
+        title: "Klar til en hjemmeside, der skaber resultater?",
+        subtitle:
+          "Vi har sammensat tre priseksempler, s\u00e5 I nemt kan f\u00e5 et overblik over vores l\u00f8sninger og priser.",
+      },
+      plans: {
+        includesLabel: "Inkluderer:",
+        items: [
+          {
+            id: "kickstart",
+            title: "Kickstart",
+            subtitle: "Perfekt til mindre virksomheder og iv\u00e6rks\u00e6ttere",
+            description:
+              "En professionel hjemmeside med alt det vigtigste, s\u00e5 I kommer godt fra start. Vi s\u00f8rger for et moderne design, hurtig performance og en l\u00f8sning, der er nem at arbejde videre med.",
+            price: "Fra 9.995 kr.",
+            cta: "Kom i gang",
+            ctaAction: "book",
+            featured: false,
+            badge: null,
+            features: [
+              "Design tilpasset jeres virksomhed",
+              "Op til 5 sider",
+              "Responsivt design",
+              "Kontaktformular",
+              "Basis SEO",
+              "Hastighedsoptimering",
+              "Hj\u00e6lp til lancering",
+              "CMS i WordPress eller Shopify",
+            ],
+          },
+          {
+            id: "business",
+            title: "Business",
+            subtitle: "Til virksomheder, der vil v\u00e6kste online",
+            description:
+              "N\u00e5r hjemmesiden skal v\u00e6re mere end et digitalt visitkort. Vi udvikler en l\u00f8sning med fokus p\u00e5 brugeroplevelse, konverteringer og en st\u00e6rk online tilstedev\u00e6relse.",
+            price: "Fra 19.995 kr.",
+            cta: "V\u00e6lg Business",
+            ctaAction: "book",
+            featured: true,
+            badge: "Mest popul\u00e6re",
+            features: [
+              "Alt fra Kickstart",
+              "Skr\u00e6ddersyet design",
+              "Flere undersider",
+              "Blog eller nyhedssektion",
+              "Avancerede formularer",
+              "Grundl\u00e6ggende SEO-struktur",
+              "Integrationer som nyhedsbrev eller CRM",
+              "Performanceoptimering",
+            ],
+          },
+          {
+            id: "custom",
+            title: "Skr\u00e6ddersyet",
+            subtitle: "Til virksomheder med s\u00e6rlige behov",
+            description:
+              "Har I brug for specialudviklede funktioner, webshop eller integrationer? Vi bygger en l\u00f8sning, der passer pr\u00e6cis til jeres virksomhed.",
+            price: "Kontakt os for tilbud",
+            cta: "F\u00e5 et tilbud",
+            ctaAction: "contact",
+            featured: false,
+            badge: null,
+            features: [
+              "Specialudviklede funktioner",
+              "Webshop",
+              "Booking- eller medlemssystem",
+              "API-integrationer",
+              "Kundelogin",
+              "Flersprogede hjemmesider",
+              "L\u00f8bende udvikling",
+              "Teknisk sparring",
+            ],
+          },
+        ],
+      },
+    },
   },
   en: {
+    scrollToTopLabel: "Scroll to top",
     hero: {
       eyebrow: "FRISDAHL STUDIO",
       headlineLine1: "Digital solutions,",
       headlineLine2: "that deliver results",
       description:
         "I help businesses with modern websites, strong visual identity, and digital experiences built properly from the start.",
-      ctaPrimary: "Start a project",
-      ctaSecondary: "View portfolio",
+      ctaPrimary: "Start your project",
+      ctaSecondary: "View cases",
       muteOn: "Unmute video",
       muteOff: "Mute video",
     },
@@ -336,6 +441,22 @@ const homeContent = {
         },
       ],
     },
+    pricing: {
+      eyebrow: "Not just a template",
+      title: "High performance with lower risk and faster time-to-market",
+      description:
+        "You get a unique website that performs faster and more securely because we build it on proven components. That lets us focus on what creates business value, such as business-critical features and your visual identity.",
+      sliderAriaLabel: "Pricing examples",
+      sliderPrev: "Previous",
+      sliderNext: "Next",
+      sliderStatus: "Image {current} of {total}",
+      slides: [
+        { imageSrc: null, imageAlt: "Website example 1" },
+        { imageSrc: null, imageAlt: "Website example 2" },
+        { imageSrc: null, imageAlt: "Website example 3" },
+        { imageSrc: null, imageAlt: "Website example 4" },
+      ],
+    },
     contact: {
       eyebrow: "Don\u2019t hesitate \u2013 we\u2019re always ready for a chat",
       title: "Let\u2019s talk about your digital project",
@@ -377,6 +498,93 @@ const homeContent = {
         back: "Back",
         next: "Next",
         closeLabel: "Close panel",
+      },
+    },
+    pricingPage: {
+      hero: {
+        eyebrow: "Pricing",
+        headlineLine1: "Packages tailored",
+        headlineLine2: "to your business",
+        description:
+          "We offer flexible solutions that match your needs and budget \u2014 from landing pages to complete digital platforms.",
+        ctaPrimary: "Start your project",
+        ctaSecondary: "See pricing",
+      },
+      examplesIntro: {
+        title: "Ready for a website that delivers results?",
+        subtitle:
+          "We've put together three pricing examples so you can easily get an overview of our solutions and prices.",
+      },
+      plans: {
+        includesLabel: "Includes:",
+        items: [
+          {
+            id: "kickstart",
+            title: "Kickstart",
+            subtitle: "Perfect for smaller businesses and entrepreneurs",
+            description:
+              "A professional website with everything essential, so you get off to a strong start. We deliver modern design, fast performance, and a solution that's easy to build on.",
+            price: "From 9,995 DKK",
+            cta: "Get started",
+            ctaAction: "book",
+            featured: false,
+            badge: null,
+            features: [
+              "Design tailored to your business",
+              "Up to 5 pages",
+              "Responsive design",
+              "Contact form",
+              "Basic SEO",
+              "Speed optimization",
+              "Launch support",
+              "CMS in WordPress or Shopify",
+            ],
+          },
+          {
+            id: "business",
+            title: "Business",
+            subtitle: "For companies ready to grow online",
+            description:
+              "When your website needs to be more than a digital business card. We build a solution focused on user experience, conversions, and a strong online presence.",
+            price: "From 19,995 DKK",
+            cta: "Choose Business",
+            ctaAction: "book",
+            featured: true,
+            badge: "Most popular",
+            features: [
+              "Everything in Kickstart",
+              "Custom design",
+              "More subpages",
+              "Blog or news section",
+              "Advanced forms",
+              "Foundational SEO structure",
+              "Integrations such as newsletter or CRM",
+              "Performance optimization",
+            ],
+          },
+          {
+            id: "custom",
+            title: "Custom",
+            subtitle: "For businesses with specific needs",
+            description:
+              "Need custom features, a webshop, or integrations? We build a solution that fits your business precisely.",
+            price: "Contact us for a quote",
+            cta: "Get a quote",
+            ctaAction: "contact",
+            featured: false,
+            badge: null,
+            features: [
+              "Custom-developed features",
+              "Webshop",
+              "Booking or membership system",
+              "API integrations",
+              "Customer login",
+              "Multilingual websites",
+              "Ongoing development",
+              "Technical consulting",
+            ],
+          },
+        ],
       },
     },
   },
