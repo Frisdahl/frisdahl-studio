@@ -151,7 +151,7 @@ export function Navbar() {
           <>
             <motion.button
               type="button"
-              className="mobile-menu-overlay lg:hidden"
+              className="site-overlay mobile-menu-overlay"
               aria-label={menuClose}
               onClick={closeMenu}
               variants={overlayVariants}
