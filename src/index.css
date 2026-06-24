@@ -5,33 +5,34 @@
   --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
   --font-heading: "Figtree", ui-sans-serif, system-ui, sans-serif;
 
-  --text-display: 3.75rem;
-  --text-display--line-height: 1.08;
-  --text-display--letter-spacing: -0.03em;
+  /* Typography - Desktop defaults (>1536px), aligned with Morningtrain */
+  --text-display: 4.5rem;
+  --text-display--line-height: 1.04;
+  --text-display--letter-spacing: -0.0206em;
 
-  --text-h1: 3rem;
-  --text-h1--line-height: 1.12;
-  --text-h1--letter-spacing: -0.025em;
+  --text-h1: 4.5rem;
+  --text-h1--line-height: 1.04;
+  --text-h1--letter-spacing: -0.0206em;
 
-  --text-h2: 2.25rem;
-  --text-h2--line-height: 1.18;
+  --text-h2: 4rem;
+  --text-h2--line-height: 1.16;
   --text-h2--letter-spacing: -0.02em;
 
-  --text-h3: 1.875rem;
-  --text-h3--line-height: 1.25;
-  --text-h3--letter-spacing: -0.015em;
+  --text-h3: 2.75rem;
+  --text-h3--line-height: 1.16;
+  --text-h3--letter-spacing: -0.02em;
 
-  --text-h4: 1.5rem;
-  --text-h4--line-height: 1.35;
+  --text-h4: 1.75rem;
+  --text-h4--line-height: 1.16;
   --text-h4--letter-spacing: -0.01em;
 
-  --text-body-lg: 1.125rem;
-  --text-body-lg--line-height: 1.75;
+  --text-body-lg: 1.25rem;
+  --text-body-lg--line-height: 1.65;
 
-  --text-body: 1rem;
-  --text-body--line-height: 1.75;
+  --text-body: 1.25rem;
+  --text-body--line-height: 1.65;
 
-  --text-body-sm: 0.875rem;
+  --text-body-sm: 1rem;
   --text-body-sm--line-height: 1.65;
 
   --text-caption: 0.75rem;
@@ -52,6 +53,8 @@
   --color-accent-yellow: #fec627;
   --color-peach: #fdd4ba;
   --color-peach-hover: #f8cfb1;
+  --color-contact-bg: #fef8f3;
+  --color-concept-step-bg: #111111;
   --color-border: #e5e5e5;
   --color-border-light: #f8f8f8;
   --color-overlay: #00000014;
@@ -78,7 +81,13 @@
   --spacing-section-sm: 4rem;
 
   /* Layout */
-  --container-max: 1280px;
+  --container-width: 1280px;
+  --container-width-laptop: 960px;
+  --container-width-tablet: 720px;
+  --container-width-mobile: 480px;
+  --container-bp-laptop: 1536px;
+  --container-bp-tablet: 1088px;
+  --container-bp-mobile: 800px;
 
   /* Border radius */
   --radius-control-sm: 0.75rem;
@@ -139,11 +148,11 @@
   }
 
   h1 {
-    @apply text-h1 font-bold;
+    @apply text-h1 font-semibold;
   }
 
   h2 {
-    @apply font-semibold leading-[1.16] lg:text-[4rem] lg:tracking-[-0.02em];
+    @apply text-h2 font-semibold;
   }
 
   h3 {
@@ -155,7 +164,7 @@
   }
 
   p {
-    @apply text-body text-secondary leading-relaxed;
+    @apply text-body text-secondary;
     transition: color 0.6s var(--ease-smooth);
   }
 
@@ -166,19 +175,73 @@
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-accent;
   }
+
+  @media (max-width: 1536px) {
+    :root {
+      --text-h1: 3.5rem;
+      --text-h2: 3rem;
+      --text-h3: 2rem;
+      --text-h4: 1.625rem;
+      --text-body-lg: 1.25rem;
+      --text-body: 1.25rem;
+      --text-body-sm: 0.9375rem;
+    }
+  }
+
+  @media (max-width: 1088px) {
+    :root {
+      --text-h1: 2.75rem;
+      --text-h2: 2.25rem;
+      --text-h3: 1.75rem;
+      --text-h4: 1.375rem;
+      --text-body-lg: 1.0625rem;
+      --text-body: 1.0625rem;
+      --text-body-sm: 0.875rem;
+    }
+  }
+
+  @media (max-width: 800px) {
+    :root {
+      --text-h1: 2.25rem;
+      --text-h2: 1.75rem;
+      --text-h3: 2rem;
+      --text-h4: 1.25rem;
+      --text-body-lg: 1rem;
+      --text-body: 1rem;
+      --text-body-sm: 0.875rem;
+    }
+  }
 }
 
 @layer components {
-  .container {
+  .site-container {
     box-sizing: border-box;
-    width: min(1280px, calc(100vw - 2rem));
-    max-width: 1280px;
+    width: min(var(--container-current, var(--container-width)), calc(100vw - 2rem));
+    max-width: var(--container-current, var(--container-width));
     margin-inline: auto;
   }
 
+  @media (max-width: 1536px) {
+    .site-container {
+      --container-current: var(--container-width-laptop);
+    }
+  }
+
+  @media (max-width: 1088px) {
+    .site-container {
+      --container-current: var(--container-width-tablet);
+    }
+  }
+
+  @media (max-width: 800px) {
+    .site-container {
+      --container-current: var(--container-width-mobile);
+    }
+  }
+
   @media (min-width: 640px) {
-    .container {
-      width: min(1280px, calc(100vw - 3rem));
+    .site-container {
+      width: min(var(--container-current, var(--container-width)), calc(100vw - 3rem));
     }
   }
 
@@ -212,6 +275,46 @@
 
   .content-panel {
     @apply rounded-panel-lg border border-border-light bg-surface shadow-soft;
+  }
+
+  .contact-section-eyebrow,
+  .contact-section-title {
+    color: #000000;
+  }
+
+  body.theme-dark .contact-section-eyebrow,
+  body.theme-dark .contact-section-title {
+    color: #000000;
+  }
+
+  .contact-section-description {
+    color: #555555;
+    max-width: 468px;
+    margin-inline: auto;
+  }
+
+  body.theme-dark .contact-section-description {
+    color: #555555;
+  }
+
+  .contact-section .btn-secondary {
+    color: #000000;
+    border-color: #000000;
+  }
+
+  .contact-section .btn-secondary:hover {
+    background-color: #000000;
+    color: #fffefe;
+  }
+
+  body.theme-dark .contact-section .btn-secondary {
+    color: #000000;
+    border-color: #000000;
+  }
+
+  body.theme-dark .contact-section .btn-secondary:hover {
+    background-color: #000000;
+    color: #fffefe;
   }
 
   .eyebrow {
@@ -326,7 +429,13 @@
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-7 py-2.5 text-body-sm font-semibold tracking-wide transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:pointer-events-none disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 px-7 py-2.5 text-body font-semibold tracking-wide transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  @media (max-width: 1088px) {
+    .btn {
+      @apply px-3 py-1.5;
+    }
   }
 
   .btn-primary {
@@ -334,7 +443,7 @@
   }
 
   .btn-secondary {
-    @apply rounded-pill border border-primary bg-transparent text-primary hover:bg-primary hover:text-surface;
+    @apply rounded-pill border-2 border-primary bg-transparent text-primary hover:bg-primary hover:text-surface;
   }
 
   .text-link-nav {

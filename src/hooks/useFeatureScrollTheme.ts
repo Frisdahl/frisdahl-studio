@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react'
 
-const SCROLL_THRESHOLD = 0.3
+function getSectionTop(element: HTMLElement) {
+  return window.scrollY + element.getBoundingClientRect().top
+}
 
 export function useFeatureScrollTheme() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -12,11 +14,10 @@ export function useFeatureScrollTheme() {
     let frameId = 0
 
     const updateTheme = () => {
-      const rect = section.getBoundingClientRect()
-      const sectionTop = window.scrollY + rect.top
-      const sectionHeight = section.offsetHeight
-      const progress = (window.scrollY - sectionTop) / sectionHeight
-      const isDark = progress >= SCROLL_THRESHOLD
+      const contactSection = document.getElementById('contact')
+      const featureTop = getSectionTop(section)
+      const contactTop = contactSection ? getSectionTop(contactSection) : Number.POSITIVE_INFINITY
+      const isDark = window.scrollY >= featureTop && window.scrollY < contactTop
 
       document.body.classList.toggle('theme-dark', isDark)
     }

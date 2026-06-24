@@ -32,10 +32,8 @@ export function FeatureSection() {
 
           <div className="min-w-0">
             <p className="eyebrow eyebrow-theme">{feature.eyebrow}</p>
-            <h3 className="mt-md font-semibold leading-[1.16] lg:text-[2.75rem] lg:tracking-[-0.02em]">
-              {feature.title}
-            </h3>
-            <p className="mt-lg text-body leading-[1.65]">
+            <h3 className="mt-md">{feature.title}</h3>
+            <p className="mt-lg text-body">
               {feature.description}
             </p>
             <div className="mt-xl w-full">

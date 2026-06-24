@@ -125,11 +125,38 @@ const homeContent = {
         },
       ],
     },
-    contact: {
-      title: "Klar til at starte dit n\u00e6ste projekt?",
+    concept: {
+      eyebrow: "Vi g\u00f8r det komplekse enkelt",
+      title: "Projektet starter i en konceptfase, s\u00e5 vi ser hele potentialet.",
       description:
-        "Fort\u00e6l os om din id\u00e9 \u2014 vi vender tilbage med en klar plan og et uforpligtende tilbud.",
-      cta: "Start et projekt",
+        "Projektet starter altid med en konceptfase, som sikrer, at indsatsen fokuserer p\u00e5 de afg\u00f8rende succeskrav, og alle parter har en f\u00e6lles forst\u00e5else for, hvor I er nu, og hvor I gerne vil v\u00e6re i fremtiden. Dermed sikrer vi, at de inkluderede tekniske krav og \u00f8nsker til funktioner underst\u00f8tter den rejse, og taler ind i jeres overordnede strategi.",
+      steps: [
+        {
+          title: "1. Hvilken smerte skal fjernes?",
+          description:
+            "Vi starter altid med at diagnosticere jeres smerte, inden vi kommer med r\u00e5d, s\u00e5 vi ikke bare er et fix men giver den rigtige \u201cmedicin\u201d.",
+        },
+        {
+          title: "2. Hvilken v\u00e6rdi kan skabes?",
+          description:
+            "Vi vil forst\u00e5 v\u00e6rdien, der kan skabes, og finde ud af, hvordan vi skaber den st\u00f8rste effekt for jer. Hvad er jeres baseline, og hvor vil I hen?",
+        },
+        {
+          title: "3. Hvordan skaber vi den v\u00e6rdi?",
+          description:
+            "Vi forst\u00e5r nu smerten og v\u00e6rdien og skal nu dele alt arbejdet op i mindre leverancer, s\u00e5 vi sikrer god fremdrift og feedbackmuligheder.",
+        },
+      ],
+    },
+    contact: {
+      eyebrow: "T\u00f8v ikke \u2013 vi er altid klar p\u00e5 en snak",
+      title: "Lad os tage en snak om jeres digitale projekt",
+      description:
+        "Lad os g\u00e5 i detaljer, s\u00e5 vi sammen kan finde l\u00f8sninger, der passer til dine behov.",
+      ctaPrimary: "Kontakt os",
+      ctaSecondary: "Book et m\u00f8de",
+      ctaPrimaryHref: "#contact",
+      ctaSecondaryHref: "#contact",
     },
   },
   en: {
@@ -253,11 +280,38 @@ const homeContent = {
         },
       ],
     },
-    contact: {
-      title: "Ready to start your next project?",
+    concept: {
+      eyebrow: "We make the complex simple",
+      title: "Every project starts with a concept phase, so we see the full potential.",
       description:
-        "Tell us about your idea — we will get back with a clear plan and a no-obligation quote.",
-      cta: "Start a project",
+        "Every project always begins with a concept phase that ensures the effort focuses on the critical success requirements, and all parties share a common understanding of where you are now and where you want to be in the future. This way we ensure that the included technical requirements and functional needs support that journey and align with your overall strategy.",
+      steps: [
+        {
+          title: "1. What pain should be removed?",
+          description:
+            "We always start by diagnosing your pain before giving advice, so we are not just a quick fix but provide the right \u201cmedicine\u201d.",
+        },
+        {
+          title: "2. What value can be created?",
+          description:
+            "We want to understand the value that can be created and find out how we create the greatest effect for you. What is your baseline, and where do you want to go?",
+        },
+        {
+          title: "3. How do we create that value?",
+          description:
+            "We now understand the pain and the value, and we break the work into smaller deliverables to ensure good progress and opportunities for feedback.",
+        },
+      ],
+    },
+    contact: {
+      eyebrow: "Don\u2019t hesitate \u2013 we\u2019re always ready for a chat",
+      title: "Let\u2019s talk about your digital project",
+      description:
+        "Let\u2019s get into the details, so together we can find solutions that fit your needs.",
+      ctaPrimary: "Contact us",
+      ctaSecondary: "Book a meeting",
+      ctaPrimaryHref: "#contact",
+      ctaSecondaryHref: "#contact",
     },
   },
 } as const;

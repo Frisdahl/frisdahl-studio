@@ -14,7 +14,7 @@ export function PartnershipSection() {
           <div className="min-w-0 max-w-[38rem] lg:max-w-[75%]">
             <p className="eyebrow eyebrow-theme">{partnership.eyebrow}</p>
             <h2 className="mt-xl">{partnership.title}</h2>
-            <p className="mt-2xl text-body leading-[1.65]">{partnership.description}</p>
+            <p className="mt-2xl text-body">{partnership.description}</p>
             <div className="mt-3xl">
               <TextLink href={partnership.ctaHref} variant="nav">
                 {partnership.ctaLabel}

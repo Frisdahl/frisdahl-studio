@@ -69,17 +69,17 @@ export function Hero() {
       <HeroDecorations />
 
       <Container className="relative z-10">
-        <div className="grid min-h-[calc(100svh-4rem)] items-start gap-12 px-2 pb-12 pt-6 sm:gap-16 sm:px-3 sm:pt-8 lg:min-h-0 lg:grid-cols-[1.14fr_0.86fr] lg:gap-24 lg:px-0 lg:pb-16 lg:pt-16">
+        <div className="hero-grid grid min-h-[calc(100svh-4rem)] items-start gap-12 px-2 pb-12 pt-6 max-[1088px]:gap-8 max-[1088px]:pb-8 max-[1088px]:pt-5 min-[1089px]:sm:gap-16 sm:px-3 sm:pt-8 lg:min-h-0 lg:grid-cols-[1.14fr_0.86fr] lg:gap-24 lg:px-0 lg:pb-16 lg:pt-16">
           <div className="min-w-0 self-center lg:max-w-[42rem]">
             <p className="eyebrow text-secondary">{hero.eyebrow}</p>
-            <h1 className="mt-5 font-heading text-[clamp(2rem,5.2vw,2.75rem)] font-semibold leading-[1.08] tracking-[-0.01em] text-primary lg:text-[clamp(2.875rem,3.6vw,4.25rem)] lg:leading-[1.06]">
-              <span className="block">{hero.headlineLine1}</span>
-              <span className="block">{hero.headlineLine2}</span>
+            <h1 className="mt-5 max-[1088px]:mt-3">
+              <span className="block min-[801px]:max-[1088px]:whitespace-nowrap">{hero.headlineLine1}</span>
+              <span className="block min-[801px]:max-[1088px]:whitespace-nowrap">{hero.headlineLine2}</span>
             </h1>
-            <p className="mt-6 max-w-[34rem] text-body-lg leading-[1.75] text-secondary sm:mt-7 lg:max-w-none">
+            <p className="mt-6 max-w-[34rem] text-body-lg text-secondary max-[1088px]:mt-4 min-[1089px]:sm:mt-7 lg:max-w-none">
               {hero.description}
             </p>
-            <div className="mt-8 flex flex-col gap-4 sm:mt-9 sm:flex-row sm:items-center">
+            <div className="mt-8 flex flex-col gap-4 max-[1088px]:mt-5 max-[1088px]:gap-3 min-[1089px]:sm:mt-9 sm:flex-row sm:items-center">
               <Button href="#contact">{hero.ctaPrimary}</Button>
               <Button href="#portfolio" variant="secondary">
                 {hero.ctaSecondary}
@@ -87,7 +87,7 @@ export function Hero() {
             </div>
           </div>
 
-          <div className="relative min-w-0 w-full pt-3 pb-12 sm:pt-4 sm:pb-8">
+          <div className="relative min-w-0 w-full pt-3 pb-12 max-[1088px]:pb-6 max-[1088px]:pt-2 sm:pt-4 sm:pb-8">
             <div className="relative mx-auto w-full max-w-[520px] lg:ml-auto lg:mr-0 lg:max-w-[560px]">
               <HeroVideoRings />
 

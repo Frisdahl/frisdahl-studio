@@ -1,22 +1,29 @@
+import { HiCalendar } from 'react-icons/hi2'
+import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
-import { defaultLocale, type Locale } from '../../data/navigation'
 import { Button, Container } from '../ui'
 
-interface ContactSectionProps {
-  locale?: Locale
-}
-
-export function ContactSection({ locale = defaultLocale }: ContactSectionProps) {
+export function ContactSection() {
+  const { locale } = useLocale()
   const { contact } = getHomeContent(locale)
 
   return (
-    <section id="contact" className="py-section-sm lg:py-section">
+    <section id="contact" className="contact-section bg-contact-bg py-section-sm lg:py-section">
       <Container>
-        <div className="rounded-panel-xl border border-border-light bg-surface p-8 text-center shadow-soft sm:p-12 lg:p-16">
-          <h2 className="mx-auto max-w-2xl">{contact.title}</h2>
-          <p className="mx-auto mt-md max-w-xl text-body-lg">{contact.description}</p>
-          <div className="mt-xl flex justify-center">
-            <Button href="#contact">{contact.cta}</Button>
+        <div className="mx-auto w-full max-w-[700px] text-center">
+          <p className="contact-section-eyebrow eyebrow">{contact.eyebrow}</p>
+
+          <div className="mx-auto mt-xl w-fit max-w-full">
+            <h2 className="contact-section-title">{contact.title}</h2>
+            <p className="contact-section-description mt-xl text-body-lg">{contact.description}</p>
+          </div>
+
+          <div className="mt-3xl flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Button href={contact.ctaPrimaryHref}>{contact.ctaPrimary}</Button>
+            <Button href={contact.ctaSecondaryHref} variant="secondary">
+              <HiCalendar className="h-5 w-5 shrink-0" aria-hidden="true" />
+              {contact.ctaSecondary}
+            </Button>
           </div>
         </div>
       </Container>

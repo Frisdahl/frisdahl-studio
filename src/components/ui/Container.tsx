@@ -6,7 +6,7 @@ export interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
 
 export function Container({ children, className = '', ...props }: ContainerProps) {
   return (
-    <div className={`container max-w-[1280px] ${className}`.trim()} {...props}>
+    <div className={`site-container ${className}`.trim()} {...props}>
       {children}
     </div>
   )

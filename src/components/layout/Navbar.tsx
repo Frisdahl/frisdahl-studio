@@ -206,7 +206,7 @@ export function Navbar() {
           <div className="flex h-16 items-center justify-between gap-4 px-2 sm:px-3 lg:h-20 lg:px-0">
             <a
               href="/"
-              className="font-heading py-2 text-lg font-bold tracking-tight text-primary transition-colors hover:text-accent lg:text-xl"
+              className="font-heading py-2 text-body-lg font-bold tracking-tight text-primary transition-colors hover:text-accent"
             >
               Frisdahl Studio
             </a>

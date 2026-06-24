@@ -1,6 +1,6 @@
 import { LocaleProvider } from './context/LocaleContext'
 import { Navbar } from './components/layout'
-import { Hero, PromoSection, FeatureSection, CasesSection, PartnershipSection } from './components/sections'
+import { Hero, PromoSection, FeatureSection, CasesSection, PartnershipSection, ConceptSection, ContactSection } from './components/sections'
 
 function App() {
   return (
@@ -11,7 +11,9 @@ function App() {
         <PromoSection />
         <FeatureSection />
         <CasesSection />
+        <ConceptSection />
         <PartnershipSection />
+        <ContactSection />
       </main>
     </LocaleProvider>
   )
