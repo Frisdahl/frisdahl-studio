@@ -5,7 +5,7 @@ const homeContent = {
   da: {
     scrollToTopLabel: "Rul til toppen",
     hero: {
-      eyebrow: "FRISDAHL STUDIO",
+      eyebrow: "DESIGN & UDVIKLING",
       headlineLine1: "Digitale l\u00f8sninger,",
       headlineLine2: "der skaber resultater",
       description:
@@ -31,7 +31,7 @@ const homeContent = {
       titleLine1: "Udviklet med fokus",
       titleLine2: "p\u00e5 kvalitet",
       ctaLabel: "Se alle cases",
-      ctaHref: "/cases",
+      ctaHref: '/cases',
       items: [
         {
           client: "Nordwear",
@@ -299,7 +299,7 @@ const homeContent = {
   en: {
     scrollToTopLabel: "Scroll to top",
     hero: {
-      eyebrow: "FRISDAHL STUDIO",
+      eyebrow: "DESIGN & DEVELOPMENT",
       headlineLine1: "Digital solutions,",
       headlineLine2: "that deliver results",
       description:
@@ -325,7 +325,7 @@ const homeContent = {
       titleLine1: "Built with a focus",
       titleLine2: "on quality",
       ctaLabel: "View all cases",
-      ctaHref: "/cases",
+      ctaHref: '/cases',
       items: [
         {
           client: "Nordwear",

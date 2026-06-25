@@ -13,6 +13,8 @@ export type HeroVariant = 'home' | 'pricing'
 
 interface HeroProps {
   variant?: HeroVariant
+  showDecorations?: boolean
+  showDecorationDots?: boolean
 }
 
 interface MuteToggleIconProps {
@@ -29,33 +31,46 @@ function MuteToggleIcon({ muted }: MuteToggleIconProps) {
   return <HiSpeakerWave className={className} aria-hidden="true" />
 }
 
-function HeroDecorations() {
+export function HeroDecorationLines() {
+  return (
+    <svg
+      className="hero-decoration-lines"
+      viewBox="0 0 3066 964.24"
+      fill="none"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g transform="translate(576 3.067)">
+        <path
+          d="M-1234.934,470.344S-417.694,862.1-36,673.477C486.858,404.691,1234.5,1235.59,1958.05,863.631s860.108-261.125,860.108-261.125"
+          stroke="currentColor"
+          strokeWidth="0.85"
+        />
+        <path
+          d="M2490.15,18.3C1696.23-159.366,1182.04,833.087,608.333,704.7"
+          stroke="currentColor"
+          strokeWidth="0.85"
+        />
+      </g>
+    </svg>
+  )
+}
+
+function HeroDecorationDots() {
   return (
     <>
-      <svg
-        className="pointer-events-none absolute bottom-[-5rem] left-1/2 z-[1] h-auto w-[1600px] max-w-[220vw] -translate-x-1/2 text-peach opacity-90 sm:bottom-[-6rem] lg:bottom-[-8rem] xl:w-[2500px]"
-        viewBox="0 0 3066 964.24"
-        fill="none"
-        aria-hidden="true"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <g transform="translate(576 3.067)">
-          <path
-            d="M-1234.934,470.344S-417.694,862.1-36,673.477C486.858,404.691,1234.5,1235.59,1958.05,863.631s860.108-261.125,860.108-261.125"
-            stroke="currentColor"
-            strokeWidth="0.5"
-          />
-          <path
-            d="M2490.15,18.3C1696.23-159.366,1182.04,833.087,608.333,704.7"
-            stroke="currentColor"
-            strokeWidth="0.5"
-          />
-        </g>
-      </svg>
+      <span className="hero-decoration-dot hero-decoration-dot-yellow hero-decoration-dot-left" />
+      <span className="hero-decoration-dot hero-decoration-dot-accent hero-decoration-dot-mid hidden sm:block" />
+      <span className="hero-decoration-dot hero-decoration-dot-yellow hero-decoration-dot-right" />
+    </>
+  )
+}
 
-      <span className="pointer-events-none absolute left-[8%] top-[30%] z-[1] h-2.5 w-2.5 rounded-full bg-accent-yellow/70 lg:left-[12%]" />
-      <span className="pointer-events-none absolute bottom-[32%] left-[22%] z-[1] hidden h-2 w-2 rounded-full bg-accent/45 sm:block" />
-      <span className="pointer-events-none absolute bottom-[24%] right-[12%] z-[1] h-2 w-2 rounded-full bg-accent-yellow/50 lg:right-[18%]" />
+export function HeroDecorations() {
+  return (
+    <>
+      <HeroDecorationLines />
+      <HeroDecorationDots />
     </>
   )
 }
@@ -64,7 +79,11 @@ function HeroVideoRings() {
   return <DecorativeRings />
 }
 
-export function Hero({ variant = 'home' }: HeroProps) {
+export function Hero({
+  variant = 'home',
+  showDecorations = true,
+  showDecorationDots = false,
+}: HeroProps) {
   const { locale } = useLocale()
   const { hero, pricingPage } = getHomeContent(locale)
   const { openDrawer } = useContactDrawer()
@@ -77,11 +96,12 @@ export function Hero({ variant = 'home' }: HeroProps) {
 
   return (
     <section className="hero-section">
-      <HeroDecorations />
+      {showDecorations ? <HeroDecorations /> : null}
+      {showDecorationDots ? <HeroDecorationDots /> : null}
 
       <Container className="relative z-10">
-        <div className="hero-grid grid min-h-[calc(100svh-4rem)] items-start gap-12 px-2 pb-12 pt-6 max-[1088px]:gap-8 max-[1088px]:pb-8 max-[1088px]:pt-5 min-[1089px]:sm:gap-16 sm:px-3 sm:pt-8 lg:min-h-0 lg:grid-cols-[1.14fr_0.86fr] lg:gap-24 lg:px-0 lg:pb-16 lg:pt-16">
-          <div className="min-w-0 self-center lg:max-w-[42rem]">
+        <div className="hero-grid grid min-h-[calc(100svh-4rem)] items-start gap-12 px-2 pb-12 pt-6 max-[1088px]:gap-8 max-[1088px]:pb-8 max-[1088px]:pt-5 min-[1089px]:sm:gap-12 sm:px-3 sm:pt-8 lg:min-h-0 lg:grid-cols-[1fr_1.1fr] lg:gap-10 lg:px-0 lg:pb-16 lg:pt-16">
+          <div className="min-w-0 self-center lg:max-w-[50rem]">
             <p className="eyebrow text-secondary">{content.eyebrow}</p>
             <h1 className="mt-5 max-[1088px]:mt-3">
               <span className="block min-[801px]:max-[1088px]:whitespace-nowrap">
@@ -91,7 +111,7 @@ export function Hero({ variant = 'home' }: HeroProps) {
                 {content.headlineLine2}
               </span>
             </h1>
-            <p className="mt-6 max-w-[34rem] text-body-lg text-secondary max-[1088px]:mt-4 min-[1089px]:sm:mt-7 lg:max-w-none">
+            <p className="mt-6 max-w-[38rem] text-body-lg text-secondary max-[1088px]:mt-4 min-[1089px]:sm:mt-7 lg:max-w-[44rem]">
               {content.description}
             </p>
             <div className="mt-8 flex flex-col gap-4 max-[1088px]:mt-5 max-[1088px]:gap-3 min-[1089px]:sm:mt-9 sm:flex-row sm:items-center">
@@ -118,7 +138,7 @@ export function Hero({ variant = 'home' }: HeroProps) {
           </div>
 
           <div className="relative min-w-0 w-full pt-3 pb-12 max-[1088px]:pb-6 max-[1088px]:pt-2 sm:pt-4 sm:pb-8">
-            <div className="relative mx-auto w-full max-w-[520px] lg:ml-auto lg:mr-0 lg:max-w-[560px]">
+            <div className="relative mx-auto w-full max-w-[520px] lg:ml-auto lg:mr-0 lg:max-w-[600px]">
               <HeroVideoRings />
 
               <div className="relative z-[2] rounded-tl-xl rounded-bl-xl rounded-br-xl rounded-tr-[2.75rem] border border-border-light bg-surface shadow-medium lg:rounded-tr-[3rem]">

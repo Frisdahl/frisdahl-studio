@@ -7,8 +7,8 @@ import { FlagIcon } from './FlagIcon'
 const localeOptions: Locale[] = ['da', 'en']
 
 const localeCodes: Record<Locale, string> = {
-  da: 'DK',
-  en: 'EN',
+  da: 'Da',
+  en: 'En',
 }
 
 export function LanguageSwitcher() {

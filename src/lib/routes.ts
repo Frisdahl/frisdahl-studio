@@ -1,4 +1,5 @@
 export const PRICING_PATH = '/priser'
+export const CASES_PATH = '/cases'
 
 export function toAppHref(href: string): string {
   if (href.startsWith('/')) return href

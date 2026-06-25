@@ -1,4 +1,4 @@
-import { PRICING_PATH } from '../lib/routes'
+import { PRICING_PATH, CASES_PATH } from '../lib/routes'
 
 export type Locale = 'da' | 'en'
 
@@ -140,7 +140,7 @@ export const navDropdownHrefs = new Set(['/#services', '/#om-os'])
 
 export const navItems: NavItem[] = [
   { href: '/#services', labels: { da: 'Services', en: 'Services' } },
-  { href: '/#portfolio', labels: { da: 'Cases', en: 'Cases' } },
+  { href: CASES_PATH, labels: { da: 'Cases', en: 'Cases' } },
   { href: '/#om-os', labels: { da: 'Om os', en: 'About us' } },
   { href: PRICING_PATH, labels: { da: 'Priser', en: 'Pricing' } },
   { href: '/#contact', labels: { da: 'Kontakt', en: 'Contact' } },
@@ -153,7 +153,7 @@ const mobileNavGroups = [
   },
   {
     title: { da: 'Om os', en: 'About us' },
-    hrefs: ['/#portfolio', '/#om-os', '/#contact'],
+    hrefs: [CASES_PATH, '/#om-os', '/#contact'],
   },
 ] as const
 

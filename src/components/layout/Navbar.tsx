@@ -5,7 +5,10 @@ import { useLocale } from '../../context/LocaleContext'
 import { getNavigation, getNavDropdownColumns, navDropdownHrefs } from '../../data/navigation'
 import { toAppHref } from '../../lib/routes'
 import { useFixedNav } from '../../hooks/useFixedNav'
-import { Container, LanguageSwitcher, UnderlineLink } from '../ui'
+import { useNavLinkHighlight } from '../../hooks/useNavLinkHighlight'
+import { Container, LanguageSwitcher, NavContactLink, UnderlineLink } from '../ui'
+import { HeaderBrand } from './HeaderBrand'
+import { NavCompactBrand } from './NavCompactBrand'
 import { NavDropdown } from './NavDropdown'
 import { NavMegaMenu } from './NavMegaMenu'
 
@@ -122,10 +125,17 @@ export function Navbar() {
   const containerRef = useRef<HTMLDivElement>(null)
   const navClusterRef = useRef<HTMLDivElement>(null)
   const navRef = useRef<HTMLElement>(null)
+  const navListRef = useRef<HTMLUListElement>(null)
+  const navPlaceholderRef = useRef<HTMLDivElement>(null)
   const triggerRefs = useRef(new Map<string, HTMLDivElement>())
   const shouldReduceMotion = useReducedMotion()
   const { locale } = useLocale()
-  const { isReady: isNavReady, pinnedTop, navSize, isScrolled: isNavScrolled } = useFixedNav(navRef)
+  const { isReady: isNavReady, pinnedTop, navSize, isScrolled: isNavScrolled, isAnimating: isNavAnimating } = useFixedNav({
+    navRef,
+    clusterRef: navClusterRef,
+    placeholderRef: navPlaceholderRef,
+  })
+  const { metrics: navHighlight, updateHighlight, hideHighlight } = useNavLinkHighlight(navListRef)
   const { items, mobileGroups, navAriaLabel, menuOpen, menuClose } = getNavigation(locale)
   const activeDropdownLabel =
     items.find((item) => item.href === activeDropdown)?.label ?? ''
@@ -149,13 +159,36 @@ export function Navbar() {
     (href: string) => {
       updateCaretOffset(href)
       setActiveDropdown(href)
+
+      const trigger = triggerRefs.current.get(href)
+      const link = trigger?.querySelector('a')
+
+      if (link instanceof HTMLElement) {
+        updateHighlight(link)
+      }
     },
-    [updateCaretOffset],
+    [updateCaretOffset, updateHighlight],
   )
 
   const closeDropdown = useCallback(() => {
     setActiveDropdown(null)
   }, [])
+
+  const handleNavClusterLeave = useCallback(() => {
+    closeDropdown()
+    hideHighlight()
+  }, [closeDropdown, hideHighlight])
+
+  const handleNavItemHighlight = useCallback(
+    (target: EventTarget & HTMLElement) => {
+      const link = target.querySelector('a')
+
+      if (link instanceof HTMLElement) {
+        updateHighlight(link)
+      }
+    },
+    [updateHighlight],
+  )
 
   const setTriggerRef = useCallback((href: string, element: HTMLDivElement | null) => {
     if (element) {
@@ -169,12 +202,21 @@ export function Navbar() {
   useEffect(() => {
     if (!activeDropdown) return
 
-    const handleResize = () => updateCaretOffset(activeDropdown)
+    const handleResize = () => {
+      updateCaretOffset(activeDropdown)
+
+      const trigger = triggerRefs.current.get(activeDropdown)
+      const link = trigger?.querySelector('a')
+
+      if (link instanceof HTMLElement && navHighlight.opacity > 0) {
+        updateHighlight(link)
+      }
+    }
 
     window.addEventListener('resize', handleResize)
 
     return () => window.removeEventListener('resize', handleResize)
-  }, [activeDropdown, updateCaretOffset])
+  }, [activeDropdown, navHighlight.opacity, updateCaretOffset, updateHighlight])
 
   useEffect(() => {
     if (isOpen) setScrollLocked(true)
@@ -284,13 +326,12 @@ export function Navbar() {
       <header className="site-header">
         <Container ref={containerRef}>
           <div className="site-header-bar">
-            <Link to="/" className="site-header-brand">
-              Frisdahl Studio
-            </Link>
+            <HeaderBrand />
 
             <div className="site-header-nav-slot">
               <div
                 className="site-header-nav-placeholder"
+                ref={navPlaceholderRef}
                 style={
                   isNavReady
                     ? { width: navSize.width, height: navSize.height }
@@ -303,16 +344,45 @@ export function Navbar() {
                 ref={navClusterRef}
                 className={[
                   'site-header-nav-cluster hidden lg:block',
-                  isNavReady ? 'site-header-nav-cluster-fixed' : '',
-                  isNavScrolled ? 'site-header-nav-scrolled' : '',
+                  isNavReady && isNavScrolled ? 'site-header-nav-cluster-fixed' : '',
+                  isNavScrolled ? 'site-header-nav-surfaced' : '',
+                  isNavAnimating ? 'site-header-nav-scrolled' : '',
                 ]
                   .filter(Boolean)
                   .join(' ')}
-                style={isNavReady ? { top: pinnedTop } : undefined}
-                onMouseLeave={closeDropdown}
+                style={isNavReady && isNavScrolled ? { top: pinnedTop } : undefined}
+                onMouseLeave={handleNavClusterLeave}
               >
                 <nav ref={navRef} className="site-header-nav" aria-label={navAriaLabel}>
-                  <ul className="site-header-nav-list">
+                  <ul ref={navListRef} className="site-header-nav-list">
+                    <NavCompactBrand />
+                    <motion.span
+                      className="nav-link-highlight"
+                      aria-hidden="true"
+                      animate={{
+                        left: navHighlight.left,
+                        width: navHighlight.width,
+                        opacity: navHighlight.opacity,
+                      }}
+                      transition={
+                        shouldReduceMotion
+                          ? { duration: 0 }
+                          : {
+                              left: {
+                                duration: 0.42,
+                                ease: [0.22, 1, 0.36, 1],
+                              },
+                              width: {
+                                duration: 0.42,
+                                ease: [0.22, 1, 0.36, 1],
+                              },
+                              opacity: {
+                                duration: navHighlight.opacity === 0 ? 0.28 : 0.18,
+                                ease: [0.4, 0, 0.2, 1],
+                              },
+                            }
+                      }
+                    />
                     {items.map(({ label, href }) =>
                       navDropdownHrefs.has(href) ? (
                         <NavDropdown
@@ -323,14 +393,25 @@ export function Navbar() {
                           onOpen={() => openDropdown(href)}
                           triggerRef={(element) => setTriggerRef(href, element)}
                         />
+                      ) : href === '/#contact' ? (
+                        <li
+                          key={href}
+                          onMouseEnter={() => {
+                            closeDropdown()
+                            hideHighlight()
+                          }}
+                        >
+                          <NavContactLink label={label} href={href} />
+                        </li>
                       ) : (
-                        <li key={href} onMouseEnter={closeDropdown}>
-                          <UnderlineLink
-                            href={href}
-                            className={href === '/#contact' ? 'nav-link-contact' : ''}
-                          >
-                            {label}
-                          </UnderlineLink>
+                        <li
+                          key={href}
+                          onMouseEnter={(event) => {
+                            closeDropdown()
+                            handleNavItemHighlight(event.currentTarget)
+                          }}
+                        >
+                          <UnderlineLink href={href}>{label}</UnderlineLink>
                         </li>
                       ),
                     )}

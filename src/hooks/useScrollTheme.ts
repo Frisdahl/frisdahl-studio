@@ -1,5 +1,7 @@
 import { useEffect, type RefObject } from 'react'
 
+const THEME_BLEND_DISTANCE = 360
+
 function getElementTop(element: HTMLElement) {
   return window.scrollY + element.getBoundingClientRect().top
 }
@@ -7,6 +9,23 @@ function getElementTop(element: HTMLElement) {
 function getElementBottom(element: HTMLElement) {
   const rect = element.getBoundingClientRect()
   return window.scrollY + rect.top + rect.height
+}
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value))
+}
+
+function getThemeProgress(
+  scrollY: number,
+  startTop: number,
+  endBoundary: number,
+  blend = THEME_BLEND_DISTANCE,
+) {
+  if (scrollY < startTop - blend) return 0
+  if (scrollY < startTop) return (scrollY - (startTop - blend)) / blend
+  if (scrollY < endBoundary - blend) return 1
+  if (scrollY < endBoundary) return 1 - (scrollY - (endBoundary - blend)) / blend
+  return 0
 }
 
 interface UseScrollThemeOptions {
@@ -38,9 +57,14 @@ export function useScrollTheme({
     const updateTheme = () => {
       const startTop = getElementTop(startElement)
       const endBoundary = getEndBoundary()
-      const isDark = window.scrollY >= startTop && window.scrollY < endBoundary
+      const progress = clamp(
+        getThemeProgress(window.scrollY, startTop, endBoundary),
+        0,
+        1,
+      )
 
-      document.body.classList.toggle('theme-dark', isDark)
+      document.body.style.setProperty('--theme-progress', progress.toFixed(4))
+      document.body.classList.toggle('theme-dark', progress > 0.5)
     }
 
     const onScroll = () => {
@@ -57,6 +81,7 @@ export function useScrollTheme({
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
       document.body.classList.remove('theme-dark')
+      document.body.style.removeProperty('--theme-progress')
     }
   }, [startRef, endRef, endId, endAtBottom])
 }

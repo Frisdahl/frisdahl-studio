@@ -6,26 +6,55 @@ import {
   useState,
   type RefObject,
 } from 'react'
+import {
+  applyNavScrollAnimation,
+  getNavScrollAnimation,
+  initialNavScrollAnimation,
+} from './useNavScrollAnimation'
 
 const SCROLL_THRESHOLD = 8
+const SCROLL_ANIMATION_START = 250
 
 interface NavSize {
   width: number
   height: number
 }
 
-export function useFixedNav(navRef: RefObject<HTMLElement | null>) {
+interface UseFixedNavOptions {
+  navRef: RefObject<HTMLElement | null>
+  clusterRef: RefObject<HTMLElement | null>
+  placeholderRef: RefObject<HTMLElement | null>
+}
+
+export function useFixedNav({
+  navRef,
+  clusterRef,
+  placeholderRef,
+}: UseFixedNavOptions) {
   const pinnedTopRef = useRef(0)
+  const wasScrolledRef = useRef(false)
   const [isReady, setIsReady] = useState(false)
   const [pinnedTop, setPinnedTop] = useState(0)
   const [navSize, setNavSize] = useState<NavSize>({ width: 0, height: 0 })
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isAnimating, setIsAnimating] = useState(false)
+
+  const syncPlaceholderSize = useCallback(() => {
+    const nav = navRef.current
+    const placeholder = placeholderRef.current
+
+    if (!nav || !placeholder) return
+
+    placeholder.style.width = `${nav.offsetWidth}px`
+    placeholder.style.height = `${nav.offsetHeight}px`
+  }, [navRef, placeholderRef])
 
   const measurePosition = useCallback(() => {
     const nav = navRef.current
-    if (!nav) return
+    const cluster = clusterRef.current
+    if (!nav || !cluster) return
 
-    const rect = nav.getBoundingClientRect()
+    const rect = cluster.getBoundingClientRect()
 
     pinnedTopRef.current = rect.top
     setPinnedTop(rect.top)
@@ -33,12 +62,38 @@ export function useFixedNav(navRef: RefObject<HTMLElement | null>) {
       width: nav.offsetWidth,
       height: nav.offsetHeight,
     })
-  }, [navRef])
+    syncPlaceholderSize()
+  }, [navRef, clusterRef, syncPlaceholderSize])
+
+  const updateScrollState = useCallback(
+    (scrollY: number) => {
+      const scrolled = scrollY > SCROLL_THRESHOLD
+      const animating = scrollY >= SCROLL_ANIMATION_START
+      const animation = animating
+        ? getNavScrollAnimation(scrollY)
+        : initialNavScrollAnimation
+
+      applyNavScrollAnimation(clusterRef.current, animation)
+
+      if (scrolled) {
+        syncPlaceholderSize()
+      } else if (wasScrolledRef.current) {
+        measurePosition()
+      }
+
+      wasScrolledRef.current = scrolled
+
+      setIsScrolled((current) => (current === scrolled ? current : scrolled))
+      setIsAnimating((current) => (current === animating ? current : animating))
+    },
+    [clusterRef, measurePosition, syncPlaceholderSize],
+  )
 
   useLayoutEffect(() => {
     measurePosition()
+    applyNavScrollAnimation(clusterRef.current, initialNavScrollAnimation)
     setIsReady(true)
-  }, [measurePosition])
+  }, [clusterRef, measurePosition])
 
   useEffect(() => {
     let frameId = 0
@@ -46,45 +101,28 @@ export function useFixedNav(navRef: RefObject<HTMLElement | null>) {
     const onScroll = () => {
       cancelAnimationFrame(frameId)
       frameId = requestAnimationFrame(() => {
-        setIsScrolled(window.scrollY > SCROLL_THRESHOLD)
+        updateScrollState(window.scrollY)
       })
     }
 
     const onResize = () => {
       if (window.scrollY <= SCROLL_THRESHOLD) {
         measurePosition()
-      } else {
-        const nav = navRef.current
-        if (nav) {
-          setNavSize({
-            width: nav.offsetWidth,
-            height: nav.offsetHeight,
-          })
-        }
       }
-      onScroll()
+
+      updateScrollState(window.scrollY)
     }
 
     onScroll()
-
-    const nav = navRef.current
-    const resizeObserver =
-      nav && typeof ResizeObserver !== 'undefined'
-        ? new ResizeObserver(onResize)
-        : null
-
-    resizeObserver?.observe(nav as Element)
-
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onResize)
 
     return () => {
       cancelAnimationFrame(frameId)
-      resizeObserver?.disconnect()
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onResize)
     }
-  }, [measurePosition, navRef])
+  }, [measurePosition, updateScrollState])
 
-  return { isReady, pinnedTop, navSize, isScrolled }
+  return { isReady, pinnedTop, navSize, isScrolled, isAnimating }
 }
