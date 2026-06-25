@@ -17,6 +17,7 @@ export function ConceptSection() {
       title={concept.title}
       description={concept.description}
       eyebrowTheme
+      alignDescriptionEnd
     >
       <div className="mt-4xl grid gap-xl md:grid-cols-3 lg:mt-5xl">
         {concept.steps.map((step, index) => {
@@ -25,13 +26,25 @@ export function ConceptSection() {
           return (
             <article
               key={step.title}
-              className="flex h-full flex-col rounded-panel-lg bg-concept-step-bg px-8 py-10 text-surface lg:px-10 lg:py-12"
+              className="concept-step-card relative flex min-h-[22rem] flex-col overflow-hidden rounded-panel-lg px-8 py-10 lg:min-h-[24rem] lg:px-10 lg:py-12"
             >
-              <Icon className="h-8 w-8 text-surface" aria-hidden="true" />
-              <h4 className="mt-lg text-[1.375rem] font-semibold leading-[1.3] text-surface lg:text-[1.5rem]">
-                {step.title}
-              </h4>
-              <p className="mt-sm text-disabled">{step.description}</p>
+              <img
+                src={step.imageSrc}
+                alt=""
+                className="concept-step-card-media"
+                aria-hidden="true"
+                loading="lazy"
+                decoding="async"
+              />
+              <div className="concept-step-card-overlay" aria-hidden="true" />
+
+              <div className="relative z-10 flex h-full flex-col">
+                <Icon className="h-8 w-8 text-surface" aria-hidden="true" />
+                <h4 className="mt-lg text-[1.375rem] font-semibold leading-[1.3] text-surface lg:text-[1.5rem]">
+                  {step.title}
+                </h4>
+                <p className="mt-sm text-disabled">{step.description}</p>
+              </div>
             </article>
           )
         })}

@@ -107,6 +107,7 @@
   --text-caption--line-height: 1.5;
 
   /* Colors */
+  --color-page-cream: #f0ede5;
   --color-background: #f9f9f9;
   --color-background-alt: #f9f9f9;
   --color-surface: #ffffff;
@@ -182,7 +183,7 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
     overflow-x: clip;
   }
 
@@ -747,7 +748,9 @@
 
   .site-header-nav-list {
     @apply relative flex items-center gap-0.5 rounded-pill border border-transparent bg-transparent px-2 py-2.5;
-    box-shadow: none;
+    box-shadow:
+      0 2px 8px rgb(0 0 0 / 0),
+      0 12px 32px rgb(0 0 0 / 0);
   }
 
   .nav-compact-brand-item {
@@ -808,12 +811,12 @@
   }
 
   .nav-compact-brand-mark {
-    margin-left: 0.12em;
-    font-size: 0.72em;
+    margin-left: 0.1em;
+    font-size: 0.9em;
     line-height: 1;
     font-weight: 600;
     align-self: flex-start;
-    margin-top: 0.06em;
+    margin-top: 0.02em;
   }
 
   .nav-link-highlight {
@@ -830,7 +833,8 @@
   }
 
   .site-header-nav-surfaced .site-header-nav-list {
-    @apply border-border-light bg-surface shadow-medium;
+    @apply border-border-light bg-surface;
+    box-shadow: var(--shadow-medium);
   }
 
   body.theme-dark .site-header-nav-surfaced .site-header-nav-list {
@@ -1604,27 +1608,128 @@
   }
 
   .case-card-image {
-    @apply h-full w-full object-cover transition-[transform,filter] duration-500 ease-[var(--ease-smooth)];
+    @apply h-full w-full object-cover;
   }
 
   .case-card-type {
-    @apply absolute top-4 right-4 z-10 rounded-pill px-4 py-2.5 text-body-sm font-medium uppercase text-white;
-    background: rgb(0 0 0 / 0.28);
+    @apply absolute top-4 right-4 z-10 rounded-pill border px-4 py-2.5 text-body-sm font-medium uppercase;
+    border-color: rgb(249 249 249 / 0.92);
+    background: transparent;
   }
 
-  .case-card-client {
-    @apply absolute bottom-0 left-0 z-10 px-4 py-4 text-h4 font-bold text-white opacity-0 transition-opacity duration-300 ease-[var(--ease-smooth)] group-hover:opacity-100 group-focus-visible:opacity-100;
+  .case-card-type-text {
+    display: inline-block;
+    color: #f9f9f9;
+  }
+
+  .case-card:hover .case-card-type-text,
+  .case-card:focus-visible .case-card-type-text {
+    background: linear-gradient(
+      90deg,
+      #f9f9f9 0%,
+      #f9f9f9 32%,
+      #d8d8d8 44%,
+      #ffffff 50%,
+      #d8d8d8 56%,
+      #f9f9f9 68%,
+      #f9f9f9 100%
+    );
+    background-size: 300% 100%;
+    background-repeat: repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: case-card-type-shimmer 2.8s linear infinite;
+  }
+
+  @keyframes case-card-type-shimmer {
+    0% {
+      background-position: 100% center;
+    }
+
+    100% {
+      background-position: 0% center;
+    }
+  }
+
+  .case-card-action {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 1.25rem;
+    z-index: 10;
+  }
+
+  .case-card-action-track {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    overflow: hidden;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 9999px;
+    background-color: #ffffff;
+    transition: width 1.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .case-card-action-label-wrap {
+    overflow: hidden;
+    width: 0;
+    flex-shrink: 0;
+    transition: width 1.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .case-card-action-label {
+    display: block;
+    padding-left: 1.25rem;
+    padding-right: 0.5rem;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 1.25rem;
+    line-height: 1.65;
+    font-weight: 600;
+    color: #000000;
+    opacity: 0;
+    transform: translateY(115%);
+    transition:
+      opacity 1.45s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 1.55s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .case-card-action-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    color: #000000;
+  }
+
+  .case-card-action-arrow {
+    width: 1.25rem;
+    height: 1rem;
+  }
+
+  .case-card:hover .case-card-action-track,
+  .case-card:focus-visible .case-card-action-track {
+    width: 12.5rem;
+  }
+
+  .case-card:hover .case-card-action-label-wrap,
+  .case-card:focus-visible .case-card-action-label-wrap {
+    width: 8.5rem;
+  }
+
+  .case-card:hover .case-card-action-label,
+  .case-card:focus-visible .case-card-action-label {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .case-card-media::after {
     content: "";
     @apply pointer-events-none absolute inset-0 z-[1] bg-linear-to-t from-black/55 via-black/10 to-transparent opacity-0 transition-opacity duration-300 ease-[var(--ease-smooth)] group-hover:opacity-100 group-focus-visible:opacity-100;
-  }
-
-  .case-card:hover .case-card-image,
-  .case-card:focus-visible .case-card-image {
-    transform: scale(1.06);
-    filter: blur(3px);
   }
 
   .contact-drawer-overlay {
@@ -1972,16 +2077,53 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .case-card-image,
-    .case-card-client,
-    .case-card-media::after {
+    .case-card-media::after,
+    .case-card-action-track,
+    .case-card-action-label-wrap,
+    .case-card-action-label,
+    .case-card-type-text {
       transition: none;
+      animation: none;
     }
 
-    .case-card:hover .case-card-image,
-    .case-card:focus-visible .case-card-image {
-      transform: none;
-      filter: none;
+    .case-card:hover .case-card-action-track,
+    .case-card:focus-visible .case-card-action-track {
+      width: 12.5rem;
     }
+
+    .case-card:hover .case-card-action-label-wrap,
+    .case-card:focus-visible .case-card-action-label-wrap {
+      width: 8.5rem;
+    }
+
+    .case-card:hover .case-card-action-label,
+    .case-card:focus-visible .case-card-action-label {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .case-card:hover .case-card-type-text,
+    .case-card:focus-visible .case-card-type-text {
+      background: none;
+      -webkit-text-fill-color: #f9f9f9;
+      color: #f9f9f9;
+    }
+  }
+
+  .page-surface {
+    @apply min-h-dvh;
+  }
+
+  .page-surface-cream {
+    background-color: var(--color-page-cream);
+  }
+
+  .concept-step-card-media {
+    @apply absolute inset-0 h-full w-full object-cover;
+    filter: brightness(1.1);
+  }
+
+  .concept-step-card-overlay {
+    @apply absolute inset-0 bg-black/45;
   }
 }

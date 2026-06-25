@@ -11,7 +11,7 @@ import {
 
 export function HomePage() {
   return (
-    <main className="overflow-x-clip">
+    <main className="page-surface bg-background overflow-x-clip">
       <div className="home-hero-promo">
         <HeroDecorationLines />
         <Hero showDecorations={false} showDecorationDots />

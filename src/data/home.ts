@@ -32,17 +32,18 @@ const homeContent = {
       titleLine2: "p\u00e5 kvalitet",
       ctaLabel: "Se alle cases",
       ctaHref: '/cases',
+      viewCaseLabel: "Se case",
       items: [
         {
           client: "Nordwear",
-          type: "Website",
+          type: "Hjemmeside",
           href: "#portfolio",
           imageSrc: "/cases/Nordwear-mobile.webp",
           imageAlt: "Nordwear case",
         },
         {
           client: "Fresh Cut",
-          type: "Website",
+          type: "Hjemmeside",
           href: "#portfolio",
           imageSrc: "/cases/freshCut-thumbnail.webp",
           imageAlt: "Fresh Cut case",
@@ -127,25 +128,31 @@ const homeContent = {
       ],
     },
     concept: {
-      eyebrow: "Vi g\u00f8r det komplekse enkelt",
-      title: "Projektet starter i en konceptfase, s\u00e5 vi ser hele potentialet.",
+      eyebrow: "Hvad er udfordringen?",
+      title: "En god l\u00f8sning starter med de rigtige sp\u00f8rgsm\u00e5l.",
       description:
-        "Projektet starter altid med en konceptfase, som sikrer, at indsatsen fokuserer p\u00e5 de afg\u00f8rende succeskrav, og alle parter har en f\u00e6lles forst\u00e5else for, hvor I er nu, og hvor I gerne vil v\u00e6re i fremtiden. Dermed sikrer vi, at de inkluderede tekniske krav og \u00f8nsker til funktioner underst\u00f8tter den rejse, og taler ind i jeres overordnede strategi.",
+        "F\u00f8r vi designer eller udvikler noget, l\u00e6rer vi jeres virksomhed at kende. Vi afd\u00e6kker m\u00e5l, udfordringer og muligheder, s\u00e5 l\u00f8sningen ikke kun ser godt ud \u2013 men ogs\u00e5 skaber v\u00e6rdi.",
       steps: [
         {
           title: "1. Hvilken smerte skal fjernes?",
           description:
             "Vi starter altid med at diagnosticere jeres smerte, inden vi kommer med r\u00e5d, s\u00e5 vi ikke bare er et fix men giver den rigtige \u201cmedicin\u201d.",
+          imageSrc: "/images/concept/concept-step-pain.webp",
+          imageAlt: "Konceptfase: identifikation af udfordringer",
         },
         {
           title: "2. Hvilken v\u00e6rdi kan skabes?",
           description:
             "Vi vil forst\u00e5 v\u00e6rdien, der kan skabes, og finde ud af, hvordan vi skaber den st\u00f8rste effekt for jer. Hvad er jeres baseline, og hvor vil I hen?",
+          imageSrc: "/images/concept/concept-step-value.webp",
+          imageAlt: "Konceptfase: kortl\u00e6gning af v\u00e6rdi og potentiale",
         },
         {
           title: "3. Hvordan skaber vi den v\u00e6rdi?",
           description:
             "Vi forst\u00e5r nu smerten og v\u00e6rdien og skal nu dele alt arbejdet op i mindre leverancer, s\u00e5 vi sikrer god fremdrift og feedbackmuligheder.",
+          imageSrc: "/images/concept/concept-step-delivery.webp",
+          imageAlt: "Konceptfase: plan for leverance og eksekvering",
         },
       ],
     },
@@ -326,6 +333,7 @@ const homeContent = {
       titleLine2: "on quality",
       ctaLabel: "View all cases",
       ctaHref: '/cases',
+      viewCaseLabel: "View case",
       items: [
         {
           client: "Nordwear",
@@ -428,16 +436,22 @@ const homeContent = {
           title: "1. What pain should be removed?",
           description:
             "We always start by diagnosing your pain before giving advice, so we are not just a quick fix but provide the right \u201cmedicine\u201d.",
+          imageSrc: "/images/concept/concept-step-pain.webp",
+          imageAlt: "Concept phase: identifying challenges",
         },
         {
           title: "2. What value can be created?",
           description:
             "We want to understand the value that can be created and find out how we create the greatest effect for you. What is your baseline, and where do you want to go?",
+          imageSrc: "/images/concept/concept-step-value.webp",
+          imageAlt: "Concept phase: mapping value and potential",
         },
         {
           title: "3. How do we create that value?",
           description:
             "We now understand the pain and the value, and we break the work into smaller deliverables to ensure good progress and opportunities for feedback.",
+          imageSrc: "/images/concept/concept-step-delivery.webp",
+          imageAlt: "Concept phase: delivery and execution plan",
         },
       ],
     },

@@ -38,6 +38,7 @@ export function CasesSection() {
               imageSrc={item.imageSrc}
               imageAlt={item.imageAlt}
               href={item.href}
+              viewCaseLabel={cases.viewCaseLabel}
               placeholderClassName={placeholderTones[index % placeholderTones.length]}
             />
           ))}

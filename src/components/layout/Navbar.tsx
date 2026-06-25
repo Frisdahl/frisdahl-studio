@@ -130,7 +130,7 @@ export function Navbar() {
   const triggerRefs = useRef(new Map<string, HTMLDivElement>())
   const shouldReduceMotion = useReducedMotion()
   const { locale } = useLocale()
-  const { isReady: isNavReady, pinnedTop, navSize, isScrolled: isNavScrolled, isAnimating: isNavAnimating } = useFixedNav({
+  const { isReady: isNavReady, navSize, isScrolled: isNavScrolled, isAnimating: isNavAnimating } = useFixedNav({
     navRef,
     clusterRef: navClusterRef,
     placeholderRef: navPlaceholderRef,
@@ -344,13 +344,12 @@ export function Navbar() {
                 ref={navClusterRef}
                 className={[
                   'site-header-nav-cluster hidden lg:block',
-                  isNavReady && isNavScrolled ? 'site-header-nav-cluster-fixed' : '',
+                  isNavScrolled ? 'site-header-nav-cluster-fixed' : '',
                   isNavScrolled ? 'site-header-nav-surfaced' : '',
                   isNavAnimating ? 'site-header-nav-scrolled' : '',
                 ]
                   .filter(Boolean)
                   .join(' ')}
-                style={isNavReady && isNavScrolled ? { top: pinnedTop } : undefined}
                 onMouseLeave={handleNavClusterLeave}
               >
                 <nav ref={navRef} className="site-header-nav" aria-label={navAriaLabel}>

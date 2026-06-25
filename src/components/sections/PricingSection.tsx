@@ -44,6 +44,7 @@ export function PricingSection() {
       eyebrow={pricing.eyebrow}
       title={pricing.title}
       description={pricing.description}
+      eyebrowTheme
     >
       <div
         className="pricing-slider mt-4xl lg:mt-5xl"
