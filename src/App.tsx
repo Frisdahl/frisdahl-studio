@@ -2,8 +2,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Footer, Navbar, ScrollProgressButton, ScrollToTop } from './components/layout'
 import { ContactDrawerProvider } from './context/ContactDrawerContext'
 import { LocaleProvider } from './context/LocaleContext'
-import { CASES_PATH, PRICING_PATH } from './lib/routes'
-import { CasesPage, HomePage, PricingPage } from './pages'
+import { CASES_PATH, PRICING_PATH, WEB_DEVELOPMENT_PATH } from './lib/routes'
+import { CasesPage, HomePage, PricingPage, WebudviklingPage } from './pages'
 
 function App() {
   return (
@@ -16,6 +16,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path={PRICING_PATH} element={<PricingPage />} />
             <Route path={CASES_PATH} element={<CasesPage />} />
+            <Route path={WEB_DEVELOPMENT_PATH} element={<WebudviklingPage />} />
           </Routes>
           <Footer />
           <ScrollProgressButton />

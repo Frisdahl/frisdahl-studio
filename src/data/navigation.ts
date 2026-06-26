@@ -1,4 +1,4 @@
-import { PRICING_PATH, CASES_PATH } from '../lib/routes'
+import { PRICING_PATH, CASES_PATH, WEB_DEVELOPMENT_PATH } from '../lib/routes'
 
 export type Locale = 'da' | 'en'
 
@@ -31,7 +31,7 @@ const servicesDropdownColumns = {
     {
       title: 'Webudvikling',
       description: 'Moderne, hurtige websites skræddersyet til jeres behov.',
-      href: '#webudvikling',
+      href: WEB_DEVELOPMENT_PATH,
       icon: 'code',
     },
     {
@@ -57,7 +57,7 @@ const servicesDropdownColumns = {
     {
       title: 'Web development',
       description: 'Modern, fast websites tailored to your needs.',
-      href: '#web-development',
+      href: WEB_DEVELOPMENT_PATH,
       icon: 'code',
     },
     {

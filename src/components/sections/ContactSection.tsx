@@ -5,13 +5,26 @@ import { getHomeContent } from '../../data/home'
 import { Button, Container } from '../ui'
 import { ContactDecorations } from './ContactDecorations'
 
-export function ContactSection() {
+export interface ContactSectionProps {
+  surface?: 'default' | 'plain'
+}
+
+export function ContactSection({ surface = 'default' }: ContactSectionProps) {
   const { locale } = useLocale()
   const { contact } = getHomeContent(locale)
   const { openDrawer } = useContactDrawer()
+  const isPlain = surface === 'plain'
 
   return (
-    <section id="contact" className="contact-section relative overflow-hidden bg-contact-bg py-24 lg:py-32">
+    <section
+      id="contact"
+      className={[
+        'contact-section relative overflow-hidden py-24 lg:py-32',
+        isPlain ? 'contact-section--plain' : 'bg-contact-bg',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+    >
       <ContactDecorations />
 
       <Container className="relative z-10">
@@ -27,7 +40,11 @@ export function ContactSection() {
             <Button type="button" onClick={() => openDrawer('contact')}>
               {contact.ctaPrimary}
             </Button>
-            <Button type="button" variant="secondary" onClick={() => openDrawer('book')}>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => openDrawer('book')}
+            >
               <HiCalendar className="h-5 w-5 shrink-0" aria-hidden="true" />
               {contact.ctaSecondary}
             </Button>
