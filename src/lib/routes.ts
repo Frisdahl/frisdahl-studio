@@ -1,5 +1,6 @@
 export const PRICING_PATH = '/priser'
 export const CASES_PATH = '/cases'
+export const MEET_US_PATH = '/mod-os'
 export const WEB_DEVELOPMENT_PATH = '/webudvikling'
 
 export function toAppHref(href: string): string {

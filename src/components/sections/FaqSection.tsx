@@ -40,6 +40,11 @@ function FaqItemRow({ item, isOpen, onToggle, itemId }: FaqItemProps) {
 
   return (
     <div className="faq-item">
+      <div className="faq-item-top-divider" aria-hidden="true">
+        <span className="faq-item-divider-track" />
+        <span className="faq-item-divider-slider" />
+      </div>
+
       <h3 className="faq-item-heading">
         <button
           type="button"
@@ -91,7 +96,7 @@ export function FaqSection({ content }: FaqSectionProps) {
           </h2>
         </div>
 
-        <div className="faq-list mt-3xl w-full border-t border-border">
+        <div className="faq-list mt-3xl w-full">
           {content.items.map((item, index) => (
             <FaqItemRow
               key={item.question}

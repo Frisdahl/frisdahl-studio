@@ -1,8 +1,20 @@
 import type { IconType } from 'react-icons'
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTiktok } from 'react-icons/fa6'
+import { Link } from 'react-router-dom'
 import { useLocale } from '../../context/LocaleContext'
 import { getFooterContent, type FooterSocialLink } from '../../data/footer'
-import { Container } from '../ui'
+import { useBrandWordmarkAnimation } from '../../hooks/useBrandWordmarkAnimation'
+import { BrandWordmark, Container } from '../ui'
+
+function FooterLogo({ label }: { label: string }) {
+  const { phase, wordmarkHandlers } = useBrandWordmarkAnimation()
+
+  return (
+    <Link to="/" className="site-footer-logo" aria-label={label} {...wordmarkHandlers}>
+      <BrandWordmark phase={phase} />
+    </Link>
+  )
+}
 
 const socialIcons: Record<FooterSocialLink['icon'], IconType> = {
   facebook: FaFacebookF,
@@ -42,9 +54,7 @@ export function Footer() {
     <footer className="site-footer">
       <Container>
         <div className="site-footer-top">
-          <a href="/" className="site-footer-logo">
-            {footer.logoLabel}
-          </a>
+          <FooterLogo label={footer.logoLabel} />
 
           <nav className="site-footer-nav" aria-label={footer.columnsAriaLabel}>
             <div className="site-footer-columns">

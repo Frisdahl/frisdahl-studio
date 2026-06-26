@@ -1,3 +1,4 @@
+export { useBrandWordmarkAnimation } from './useBrandWordmarkAnimation'
 export { useFixedNav } from './useFixedNav'
 export { useFeatureScrollTheme } from './useFeatureScrollTheme'
 export { usePromoVideoReveal } from './usePromoVideoReveal'

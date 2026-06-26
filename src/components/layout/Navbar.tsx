@@ -1,7 +1,8 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocale } from '../../context/LocaleContext'
+import { useContactDrawer } from '../../context/ContactDrawerContext'
 import { getNavigation, getNavDropdownColumns, navDropdownHrefs } from '../../data/navigation'
 import { toAppHref } from '../../lib/routes'
 import { useFixedNav } from '../../hooks/useFixedNav'
@@ -130,6 +131,8 @@ export function Navbar() {
   const triggerRefs = useRef(new Map<string, HTMLDivElement>())
   const shouldReduceMotion = useReducedMotion()
   const { locale } = useLocale()
+  const { openDrawer } = useContactDrawer()
+  const { pathname, hash } = useLocation()
   const { isReady: isNavReady, navSize, isScrolled: isNavScrolled, isAnimating: isNavAnimating } = useFixedNav({
     navRef,
     clusterRef: navClusterRef,
@@ -219,6 +222,13 @@ export function Navbar() {
   }, [activeDropdown, navHighlight.opacity, updateCaretOffset, updateHighlight])
 
   useEffect(() => {
+    setIsOpen(false)
+    setScrollLocked(false)
+    closeDropdown()
+    hideHighlight()
+  }, [pathname, hash, closeDropdown, hideHighlight])
+
+  useEffect(() => {
     if (isOpen) setScrollLocked(true)
   }, [isOpen])
 
@@ -304,13 +314,26 @@ export function Navbar() {
                       <ul className="mobile-nav-list">
                         {groupItems.map(({ label, href }) => (
                           <li key={href}>
-                            <Link
-                              to={toAppHref(href)}
-                              className="mobile-nav-link"
-                              onClick={closeMenu}
-                            >
-                              {label}
-                            </Link>
+                            {href === '/#contact' ? (
+                              <button
+                                type="button"
+                                className="mobile-nav-link w-full"
+                                onClick={() => {
+                                  openDrawer('contact')
+                                  closeMenu()
+                                }}
+                              >
+                                {label}
+                              </button>
+                            ) : (
+                              <Link
+                                to={toAppHref(href)}
+                                className="mobile-nav-link"
+                                onClick={closeMenu}
+                              >
+                                {label}
+                              </Link>
+                            )}
                           </li>
                         ))}
                       </ul>
@@ -400,7 +423,7 @@ export function Navbar() {
                             hideHighlight()
                           }}
                         >
-                          <NavContactLink label={label} href={href} />
+                          <NavContactLink label={label} />
                         </li>
                       ) : (
                         <li

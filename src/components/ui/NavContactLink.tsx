@@ -1,14 +1,13 @@
 import { useCallback, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { toAppHref } from '../../lib/routes'
+import { useContactDrawer } from '../../context/ContactDrawerContext'
 import { NavMirroredText } from './NavMirroredText'
 
 interface NavContactLinkProps {
   label: string
-  href?: string
 }
 
-export function NavContactLink({ label, href = '/#contact' }: NavContactLinkProps) {
+export function NavContactLink({ label }: NavContactLinkProps) {
+  const { openDrawer } = useContactDrawer()
   const [isPlaying, setIsPlaying] = useState(false)
   const [isSettled, setIsSettled] = useState(false)
 
@@ -29,8 +28,8 @@ export function NavContactLink({ label, href = '/#contact' }: NavContactLinkProp
   }, [])
 
   return (
-    <Link
-      to={toAppHref(href)}
+    <button
+      type="button"
       className={[
         'nav-link',
         'nav-link-contact',
@@ -39,6 +38,7 @@ export function NavContactLink({ label, href = '/#contact' }: NavContactLinkProp
       ]
         .filter(Boolean)
         .join(' ')}
+      onClick={() => openDrawer('contact')}
       onMouseEnter={playEntrance}
       onMouseLeave={settleText}
       onFocus={playEntrance}
@@ -48,6 +48,6 @@ export function NavContactLink({ label, href = '/#contact' }: NavContactLinkProp
         {label}
       </span>
       <NavMirroredText text={label} />
-    </Link>
+    </button>
   )
 }

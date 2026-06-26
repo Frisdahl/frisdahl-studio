@@ -6,8 +6,8 @@ export function ScrollToTop() {
   const { pathname } = useLocation()
 
   useLayoutEffect(() => {
-    resetWindowScroll()
     resetPageTheme()
+    resetWindowScroll()
   }, [pathname])
 
   return null

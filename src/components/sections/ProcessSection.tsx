@@ -1,36 +1,53 @@
-import { getHomeContent } from '../../data/home'
-import { defaultLocale, type Locale } from '../../data/navigation'
+import type { ProcessContent } from '../../types/process'
 import { Container } from '../ui'
 
 interface ProcessSectionProps {
-  locale?: Locale
+  content: ProcessContent
 }
 
-export function ProcessSection({ locale = defaultLocale }: ProcessSectionProps) {
-  const { process } = getHomeContent(locale)
+function formatStepNumber(index: number) {
+  return String(index + 1).padStart(2, '0')
+}
 
+export function ProcessSection({ content }: ProcessSectionProps) {
   return (
-    <section id="process" className="py-section-sm lg:py-section">
+    <section className="process-section py-section-sm lg:py-section" aria-labelledby="process-section-title">
       <Container>
-        <div className="section-panel-muted">
-          <div className="max-w-2xl">
-            <p className="eyebrow">{process.eyebrow}</p>
-            <h2 className="mt-md">{process.title}</h2>
-            <p className="mt-md text-body-lg">{process.description}</p>
-          </div>
+        <p className="eyebrow">{content.eyebrow}</p>
+        <h2 id="process-section-title" className="process-section-title mt-md">
+          {content.title}
+        </h2>
 
-          <ol className="mt-2xl grid gap-xl lg:grid-cols-3">
-            {process.steps.map((step) => (
-              <li key={step.number} className="border-t border-border pt-xl">
-                <span className="font-heading text-body-sm font-bold text-accent">
-                  {step.number}
-                </span>
-                <h3 className="mt-md text-h4">{step.title}</h3>
-                <p className="mt-sm">{step.description}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
+        <ol className="process-steps">
+          {content.steps.map((step, index) => (
+            <li key={step.title} className="process-step">
+              <div className="process-step-card">
+                <p className="process-step-number" aria-hidden="true">
+                  {formatStepNumber(index)}
+                </p>
+
+                <div className="process-step-grid">
+                  <div className="process-step-copy">
+                    <div className="process-step-divider process-step-divider-light" role="separator" />
+                    <h3 className="process-step-heading">{step.title}</h3>
+                    <p className="process-step-description">{step.description}</p>
+                  </div>
+
+                  <div className="process-step-keywords-col">
+                    <div className="process-step-divider process-step-divider-dark" role="separator" />
+                    <ul className="process-step-keywords">
+                      {step.keywords.map((keyword) => (
+                        <li key={keyword}>
+                          <span className="process-step-keyword">{keyword}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ol>
       </Container>
     </section>
   )

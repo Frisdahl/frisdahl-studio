@@ -1,3 +1,5 @@
+export { BrandMark } from './BrandMark'
+export { BrandWordmark } from './BrandWordmark'
 export { Button } from './Button'
 export type { ButtonProps } from './Button'
 export { Container } from './Container'

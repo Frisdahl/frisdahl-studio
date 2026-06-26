@@ -1,4 +1,5 @@
-import { useEffect, type RefObject } from 'react'
+import { useLayoutEffect, type RefObject } from 'react'
+import { resetPageTheme, ROUTE_SCROLL_RESET_EVENT } from '../lib/scroll'
 
 const THEME_BLEND_DISTANCE = 360
 
@@ -41,21 +42,30 @@ export function useScrollTheme({
   endId,
   endAtBottom = false,
 }: UseScrollThemeOptions) {
-  useEffect(() => {
+  useLayoutEffect(() => {
     const startElement = startRef.current
     if (!startElement) return
 
     let frameId = 0
+    let isActive = true
 
     const getEndBoundary = () => {
       const endElement = endRef?.current ?? (endId ? document.getElementById(endId) : null)
-      if (!endElement) return Number.POSITIVE_INFINITY
+      if (!endElement?.isConnected) return Number.POSITIVE_INFINITY
 
       return endAtBottom ? getElementBottom(endElement) : getElementTop(endElement)
     }
 
     const updateTheme = () => {
-      const startTop = getElementTop(startElement)
+      if (!isActive) return
+
+      const element = startRef.current
+      if (!element?.isConnected) {
+        resetPageTheme()
+        return
+      }
+
+      const startTop = getElementTop(element)
       const endBoundary = getEndBoundary()
       const progress = clamp(
         getThemeProgress(window.scrollY, startTop, endBoundary),
@@ -68,20 +78,28 @@ export function useScrollTheme({
     }
 
     const onScroll = () => {
+      if (!isActive) return
       cancelAnimationFrame(frameId)
       frameId = requestAnimationFrame(updateTheme)
+    }
+
+    const onRouteReset = () => {
+      cancelAnimationFrame(frameId)
+      resetPageTheme()
     }
 
     updateTheme()
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onScroll, { passive: true })
+    window.addEventListener(ROUTE_SCROLL_RESET_EVENT, onRouteReset)
 
     return () => {
+      isActive = false
       cancelAnimationFrame(frameId)
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
-      document.body.classList.remove('theme-dark')
-      document.body.style.removeProperty('--theme-progress')
+      window.removeEventListener(ROUTE_SCROLL_RESET_EVENT, onRouteReset)
+      resetPageTheme()
     }
   }, [startRef, endRef, endId, endAtBottom])
 }

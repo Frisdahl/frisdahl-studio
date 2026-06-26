@@ -3,6 +3,7 @@ import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
 import { Button } from '../ui'
 import { ContactDrawerHeader } from './ContactDrawerHeader'
+import { ContactFormInputShell } from './ContactFormInputShell'
 
 interface ContactWritePanelProps {
   onClose: () => void
@@ -46,31 +47,35 @@ export function ContactWritePanel({ onClose }: ContactWritePanelProps) {
               <label className="contact-form-label" htmlFor="contact-name">
                 {form.nameLabel}
               </label>
-              <input
-                id="contact-name"
-                type="text"
-                className="contact-form-input"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                placeholder={form.namePlaceholder}
-                autoComplete="name"
-                required
-              />
+              <ContactFormInputShell>
+                <input
+                  id="contact-name"
+                  type="text"
+                  className="contact-form-input"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                  placeholder={form.namePlaceholder}
+                  autoComplete="name"
+                  required
+                />
+              </ContactFormInputShell>
             </div>
 
             <div className="contact-form-field">
               <label className="contact-form-label" htmlFor="contact-company">
                 {form.companyLabel}
               </label>
-              <input
-                id="contact-company"
-                type="text"
-                className="contact-form-input"
-                value={company}
-                onChange={(event) => setCompany(event.target.value)}
-                placeholder={form.companyPlaceholder}
-                autoComplete="organization"
-              />
+              <ContactFormInputShell>
+                <input
+                  id="contact-company"
+                  type="text"
+                  className="contact-form-input"
+                  value={company}
+                  onChange={(event) => setCompany(event.target.value)}
+                  placeholder={form.companyPlaceholder}
+                  autoComplete="organization"
+                />
+              </ContactFormInputShell>
             </div>
           </div>
 
@@ -79,32 +84,36 @@ export function ContactWritePanel({ onClose }: ContactWritePanelProps) {
               <label className="contact-form-label" htmlFor="contact-email">
                 {form.emailLabel}
               </label>
-              <input
-                id="contact-email"
-                type="email"
-                className="contact-form-input"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                placeholder={form.emailPlaceholder}
-                autoComplete="email"
-                required
-              />
+              <ContactFormInputShell>
+                <input
+                  id="contact-email"
+                  type="email"
+                  className="contact-form-input"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder={form.emailPlaceholder}
+                  autoComplete="email"
+                  required
+                />
+              </ContactFormInputShell>
             </div>
 
             <div className="contact-form-field">
               <label className="contact-form-label" htmlFor="contact-phone">
                 {form.phoneLabel}
               </label>
-              <input
-                id="contact-phone"
-                type="tel"
-                className="contact-form-input"
-                value={phone}
-                onChange={(event) => setPhone(event.target.value)}
-                placeholder={form.phonePlaceholder}
-                autoComplete="tel"
-                required
-              />
+              <ContactFormInputShell>
+                <input
+                  id="contact-phone"
+                  type="tel"
+                  className="contact-form-input"
+                  value={phone}
+                  onChange={(event) => setPhone(event.target.value)}
+                  placeholder={form.phonePlaceholder}
+                  autoComplete="tel"
+                  required
+                />
+              </ContactFormInputShell>
             </div>
           </div>
 
@@ -112,14 +121,16 @@ export function ContactWritePanel({ onClose }: ContactWritePanelProps) {
             <label className="contact-form-label" htmlFor="contact-message">
               {form.messageLabel}
             </label>
-            <textarea
-              id="contact-message"
-              className="contact-form-input contact-form-textarea"
-              value={message}
-              onChange={(event) => setMessage(event.target.value)}
-              placeholder={form.messagePlaceholder}
-              required
-            />
+            <ContactFormInputShell>
+              <textarea
+                id="contact-message"
+                className="contact-form-input contact-form-textarea"
+                value={message}
+                onChange={(event) => setMessage(event.target.value)}
+                placeholder={form.messagePlaceholder}
+                required
+              />
+            </ContactFormInputShell>
           </div>
 
           <div className="contact-form-checkbox">

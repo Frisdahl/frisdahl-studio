@@ -1,3 +1,4 @@
+import { MEET_US_PATH } from '../lib/routes'
 import type { Locale } from './navigation'
 import { defaultLocale } from './navigation'
 
@@ -49,6 +50,7 @@ const footerContent = {
       {
         title: 'Mød os',
         links: [
+          { label: 'Mød os', href: MEET_US_PATH },
           { label: 'Om os', href: '#om-os' },
           { label: 'Kultur', href: '#kultur' },
         ],
@@ -102,6 +104,7 @@ const footerContent = {
       {
         title: 'Meet us',
         links: [
+          { label: 'Meet us', href: MEET_US_PATH },
           { label: 'About us', href: '#about' },
           { label: 'Culture', href: '#culture' },
         ],

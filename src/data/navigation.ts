@@ -1,4 +1,4 @@
-import { PRICING_PATH, CASES_PATH, WEB_DEVELOPMENT_PATH } from '../lib/routes'
+import { PRICING_PATH, CASES_PATH, MEET_US_PATH, WEB_DEVELOPMENT_PATH } from '../lib/routes'
 
 export type Locale = 'da' | 'en'
 
@@ -86,7 +86,7 @@ const aboutUsDropdownColumns = {
     {
       title: 'Mød os',
       description: 'Lær teamet bag Frisdahl Studio og vores tilgang til samarbejde.',
-      href: '#om-os',
+      href: MEET_US_PATH,
       icon: 'meet',
     },
     {
@@ -112,7 +112,7 @@ const aboutUsDropdownColumns = {
     {
       title: 'Meet us',
       description: 'Get to know the Frisdahl Studio team and how we work together.',
-      href: '#om-os',
+      href: MEET_US_PATH,
       icon: 'meet',
     },
     {
