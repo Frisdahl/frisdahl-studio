@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 export interface CaseCardProps {
   client: string
   type: string
@@ -39,8 +41,8 @@ export function CaseCard({
   placeholderClassName = 'bg-peach',
 }: CaseCardProps) {
   return (
-    <a
-      href={href}
+    <Link
+      to={href}
       className="case-card group block"
       aria-label={`${viewCaseLabel}: ${client}`}
     >
@@ -74,6 +76,6 @@ export function CaseCard({
           </span>
         </span>
       </div>
-    </a>
+    </Link>
   )
 }

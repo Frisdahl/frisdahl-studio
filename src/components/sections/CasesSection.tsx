@@ -1,7 +1,7 @@
 import { CaseCard } from '../cards/CaseCard'
 import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
-import { Button, Container } from '../ui'
+import { Container, CtaPillButton } from '../ui'
 
 const placeholderTones = [
   'bg-peach',
@@ -23,9 +23,9 @@ export function CasesSection() {
               <br />
               {cases.titleLine2}
             </h2>
-            <Button href={cases.ctaHref} className="shrink-0 self-start sm:self-auto">
+            <CtaPillButton href={cases.ctaHref} className="cases-section-cta shrink-0 self-start sm:self-auto">
               {cases.ctaLabel}
-            </Button>
+            </CtaPillButton>
           </div>
         </div>
 

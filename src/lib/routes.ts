@@ -1,3 +1,4 @@
+export const PROCESS_PATH = '/proces'
 export const PRICING_PATH = '/priser'
 export const CASES_PATH = '/cases'
 export const MEET_US_PATH = '/mod-os'

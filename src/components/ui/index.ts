@@ -1,3 +1,4 @@
+export { CtaPillButton } from './CtaPillButton'
 export { BrandMark } from './BrandMark'
 export { BrandWordmark } from './BrandWordmark'
 export { Button } from './Button'

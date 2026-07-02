@@ -37,15 +37,15 @@ const homeContent = {
         {
           client: "Nordwear",
           type: "Hjemmeside",
-          href: "#portfolio",
-          imageSrc: "/cases/Nordwear-mobile.webp",
+          href: '/cases/nordwear',
+          imageSrc: "/cases/nordwear/mobile--6-7.jpg",
           imageAlt: "Nordwear case",
         },
         {
           client: "Fresh Cut",
           type: "Hjemmeside",
-          href: "#portfolio",
-          imageSrc: "/cases/freshCut-thumbnail.webp",
+          href: '/cases/fresh-cut',
+          imageSrc: "/cases/fresh-cut/thumbnail--6-7.jpg",
           imageAlt: "Fresh Cut case",
         },
       ],
@@ -57,8 +57,8 @@ const homeContent = {
         "En ny hjemmeside er kun begyndelsen. Vi tror p\u00e5 langvarige samarbejder, hvor vi l\u00f8bende hj\u00e6lper med vedligeholdelse, opdateringer og videreudvikling. P\u00e5 den m\u00e5de sikrer vi, at jeres hjemmeside forts\u00e6tter med at skabe v\u00e6rdi i takt med, at virksomheden udvikler sig.",
       ctaLabel: "Har du sp\u00f8rgsm\u00e5l du vil stille os?",
       ctaHref: "#contact",
-      imageSrc: null,
-      imageAlt: "Frisdahl Studio samarbejde",
+      imageSrc: '/images/team/alexander-portrait.webp',
+      imageAlt: 'Portræt af Alexander Frisdahl',
     },
     services: {
       eyebrow: "Ydelser",
@@ -166,10 +166,10 @@ const homeContent = {
       sliderNext: "N\u00e6ste",
       sliderStatus: "Billede {current} af {total}",
       slides: [
-        { imageSrc: null, imageAlt: "Website eksempel 1" },
-        { imageSrc: null, imageAlt: "Website eksempel 2" },
-        { imageSrc: null, imageAlt: "Website eksempel 3" },
-        { imageSrc: null, imageAlt: "Website eksempel 4" },
+        { imageSrc: '/cases/nordwear/mobile2--16-10.jpg', imageAlt: 'Nordwear hjemmeside' },
+        { imageSrc: '/cases/fresh-cut/mobile1--16-10.jpg', imageAlt: 'Fresh Cut hjemmeside' },
+        { imageSrc: '/cases/fresh-cut/mobile2--16-10.jpg', imageAlt: 'Fresh Cut hjemmeside' },
+        { imageSrc: '/cases/visuel-atelier/hero--16-10.jpg', imageAlt: 'Visuel Atelier hjemmeside' },
       ],
     },
     contact: {
@@ -224,11 +224,13 @@ const homeContent = {
           "Vi tilbyder fleksible l\u00f8sninger, der matcher jeres behov og budget \u2014 fra landingssider til komplette digitale platforme.",
         ctaPrimary: "Start dit projekt",
         ctaSecondary: "Se priser",
+        imageSrc: "/images/pricing/digital-strategy.webp",
+        imageAlt: "Digital strategi illustration",
       },
       examplesIntro: {
         title: "Klar til en hjemmeside, der skaber resultater?",
         subtitle:
-          "Vi har sammensat tre priseksempler, s\u00e5 I nemt kan f\u00e5 et overblik over vores l\u00f8sninger og priser.",
+          "Vi har sammensat fire priseksempler, s\u00e5 I nemt kan f\u00e5 et overblik over vores l\u00f8sninger og priser.",
       },
       plans: {
         includesLabel: "Inkluderer:",
@@ -338,15 +340,15 @@ const homeContent = {
         {
           client: "Nordwear",
           type: "Website",
-          href: "#portfolio",
-          imageSrc: "/cases/Nordwear-mobile.webp",
+          href: '/cases/nordwear',
+          imageSrc: "/cases/nordwear/mobile--6-7.jpg",
           imageAlt: "Nordwear case",
         },
         {
           client: "Fresh Cut",
           type: "Website",
-          href: "#portfolio",
-          imageSrc: "/cases/freshCut-thumbnail.webp",
+          href: '/cases/fresh-cut',
+          imageSrc: "/cases/fresh-cut/thumbnail--6-7.jpg",
           imageAlt: "Fresh Cut case",
         },
       ],
@@ -358,8 +360,8 @@ const homeContent = {
         "A new website is only the beginning. We believe in long-term partnerships where we continuously help with maintenance, updates, and further development. That way we ensure your website keeps creating value as your business evolves.",
       ctaLabel: "Do you have questions for us?",
       ctaHref: "#contact",
-      imageSrc: null,
-      imageAlt: "Frisdahl Studio partnership",
+      imageSrc: '/images/team/alexander-portrait.webp',
+      imageAlt: 'Portrait of Alexander Frisdahl',
     },
     services: {
       eyebrow: "Services",
@@ -465,10 +467,10 @@ const homeContent = {
       sliderNext: "Next",
       sliderStatus: "Image {current} of {total}",
       slides: [
-        { imageSrc: null, imageAlt: "Website example 1" },
-        { imageSrc: null, imageAlt: "Website example 2" },
-        { imageSrc: null, imageAlt: "Website example 3" },
-        { imageSrc: null, imageAlt: "Website example 4" },
+        { imageSrc: '/cases/nordwear/mobile2--16-10.jpg', imageAlt: 'Nordwear website' },
+        { imageSrc: '/cases/fresh-cut/mobile1--16-10.jpg', imageAlt: 'Fresh Cut website' },
+        { imageSrc: '/cases/fresh-cut/mobile2--16-10.jpg', imageAlt: 'Fresh Cut website' },
+        { imageSrc: '/cases/visuel-atelier/hero--16-10.jpg', imageAlt: 'Visuel Atelier website' },
       ],
     },
     contact: {
@@ -523,11 +525,13 @@ const homeContent = {
           "We offer flexible solutions that match your needs and budget \u2014 from landing pages to complete digital platforms.",
         ctaPrimary: "Start your project",
         ctaSecondary: "See pricing",
+        imageSrc: "/images/pricing/digital-strategy.webp",
+        imageAlt: "Digital strategy illustration",
       },
       examplesIntro: {
         title: "Ready for a website that delivers results?",
         subtitle:
-          "We've put together three pricing examples so you can easily get an overview of our solutions and prices.",
+          "We've put together four pricing examples so you can easily get an overview of our solutions and prices.",
       },
       plans: {
         includesLabel: "Includes:",

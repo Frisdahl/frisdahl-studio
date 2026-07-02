@@ -5,11 +5,5 @@ interface ContactFormInputShellProps {
 }
 
 export function ContactFormInputShell({ children }: ContactFormInputShellProps) {
-  return (
-    <div className="contact-form-input-shell">
-      <span className="contact-form-input-track" aria-hidden="true" />
-      <span className="contact-form-input-slider" aria-hidden="true" />
-      {children}
-    </div>
-  )
+  return <div className="contact-form-input-shell">{children}</div>
 }

@@ -1,5 +1,7 @@
+export { ProcessPage } from './ProcessPage'
 export { MeetUsPage } from './MeetUsPage'
 export { HomePage } from './HomePage'
+export { CaseDetailPage } from './CaseDetailPage'
 export { CasesPage } from './CasesPage'
 export { PricingPage } from './PricingPage'
 export { WebudviklingPage } from './WebudviklingPage'

@@ -37,7 +37,7 @@ export function PortfolioSection({ locale = defaultLocale }: PortfolioSectionPro
                 />
                 <div className="p-lg">
                   <p className="text-body-sm font-medium text-muted">{item.tag}</p>
-                  <p className="mt-xs font-heading text-h4 font-semibold text-primary transition-colors group-hover:text-accent">
+                  <p className="mt-xs font-heading text-h4 font-medium text-primary transition-colors group-hover:text-accent">
                     {item.title}
                   </p>
                 </div>

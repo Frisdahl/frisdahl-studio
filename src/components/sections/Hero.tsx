@@ -4,7 +4,7 @@ import { useContactDrawer } from '../../context/ContactDrawerContext'
 import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
 import { toAppHref } from '../../lib/routes'
-import { Button, Container } from '../ui'
+import { Container, CtaPillButton } from '../ui'
 import { DecorativeRings } from '../ui/DecorativeRings'
 
 const heroVideoSrc: string | null = null
@@ -88,22 +88,24 @@ export function Hero({
   const { hero, pricingPage } = getHomeContent(locale)
   const { openDrawer } = useContactDrawer()
   const content = variant === 'pricing' ? pricingPage.hero : hero
+  const isPricing = variant === 'pricing'
   const [isMuted, setIsMuted] = useState(true)
   const hasVideo = Boolean(heroVideoSrc)
+  const heroImageSrc = isPricing && 'imageSrc' in content ? content.imageSrc : null
+  const heroImageAlt = isPricing && 'imageAlt' in content ? content.imageAlt : ''
 
   const muteLabel = isMuted ? hero.muteOn : hero.muteOff
-  const isPricing = variant === 'pricing'
 
   return (
-    <section className="hero-section">
+    <section className={`hero-section${isPricing ? ' hero-section--pricing' : ''}`}>
       {showDecorations ? <HeroDecorations /> : null}
       {showDecorationDots ? <HeroDecorationDots /> : null}
 
       <Container className="relative z-10">
-        <div className="hero-grid grid min-h-[calc(100svh-4rem)] items-start gap-12 px-2 pb-12 pt-6 max-[1088px]:gap-8 max-[1088px]:pb-8 max-[1088px]:pt-5 min-[1089px]:sm:gap-12 sm:px-3 sm:pt-8 lg:min-h-0 lg:grid-cols-[1fr_1.1fr] lg:gap-10 lg:px-0 lg:pb-16 lg:pt-16">
-          <div className="min-w-0 self-center lg:max-w-[50rem]">
+        <div className="hero-grid grid min-h-[calc(100svh-4rem)] items-start gap-12 px-2 pb-12 pt-6 max-[1088px]:gap-8 max-[1088px]:pb-8 max-[1088px]:pt-5 min-[1089px]:sm:gap-12 sm:px-3 sm:pt-8 lg:min-h-0 lg:gap-10 lg:px-0 lg:pb-16 lg:pt-16">
+          <div className="hero-grid-copy min-w-0 self-center lg:max-w-none">
             <p className="eyebrow text-secondary">{content.eyebrow}</p>
-            <h1 className="mt-5 max-[1088px]:mt-3">
+            <h1 className="hero-grid-title mt-5 max-[1088px]:mt-3">
               <span className="block min-[801px]:max-[1088px]:whitespace-nowrap">
                 {content.headlineLine1}
               </span>
@@ -116,33 +118,19 @@ export function Hero({
             </p>
             <div className="mt-8 flex flex-col gap-4 max-[1088px]:mt-5 max-[1088px]:gap-3 min-[1089px]:sm:mt-9 sm:flex-row sm:items-center">
               {isPricing ? (
-                <>
-                  <Button type="button" onClick={() => openDrawer('book')}>
-                    {content.ctaPrimary}
-                  </Button>
-                  <Button href="#priser" variant="secondary">
-                    {content.ctaSecondary}
-                  </Button>
-                </>
+                <CtaPillButton onClick={() => openDrawer('book')}>{content.ctaPrimary}</CtaPillButton>
               ) : (
-                <>
-                  <Button href={toAppHref('#contact')}>
-                    {content.ctaPrimary}
-                  </Button>
-                  <Button href={toAppHref('#portfolio')} variant="secondary">
-                    {content.ctaSecondary}
-                  </Button>
-                </>
+                <CtaPillButton href={toAppHref('#contact')}>{content.ctaPrimary}</CtaPillButton>
               )}
             </div>
           </div>
 
-          <div className="relative min-w-0 w-full pt-3 pb-12 max-[1088px]:pb-6 max-[1088px]:pt-2 sm:pt-4 sm:pb-8">
-            <div className="relative mx-auto w-full max-w-[520px] lg:ml-auto lg:mr-0 lg:max-w-[600px]">
+          <div className="hero-grid-media relative min-w-0 w-full pt-3 pb-12 max-[1088px]:pb-6 max-[1088px]:pt-2 sm:pt-4 sm:pb-8">
+            <div className="hero-grid-media-inner relative mx-auto w-full max-w-[520px] lg:ml-auto lg:mr-0 lg:max-w-[480px]">
               <HeroVideoRings />
 
-              <div className="relative z-[2] rounded-tl-xl rounded-bl-xl rounded-br-xl rounded-tr-[2.75rem] border border-border-light bg-surface shadow-medium lg:rounded-tr-[3rem]">
-                <div className="aspect-[3/4] max-h-[540px] w-full overflow-hidden rounded-[inherit] lg:max-h-[580px]">
+              <div className="hero-grid-media-frame relative z-[2] rounded-tl-xl rounded-bl-xl rounded-br-xl rounded-tr-[2.75rem] border border-border-light bg-surface shadow-medium lg:rounded-tr-[3rem]">
+                <div className="hero-grid-media-aspect aspect-[3/4] max-h-[500px] w-full overflow-hidden rounded-[inherit] lg:max-h-[520px]">
                   {hasVideo && heroVideoSrc ? (
                     <video
                       className="h-full w-full object-cover"
@@ -152,20 +140,31 @@ export function Hero({
                       muted={isMuted}
                       playsInline
                     />
+                  ) : heroImageSrc ? (
+                    <img
+                      src={heroImageSrc}
+                      alt={heroImageAlt}
+                      className="h-full w-full object-cover"
+                      loading="eager"
+                      decoding="async"
+                      fetchPriority="high"
+                    />
                   ) : (
                     <div className="h-full w-full bg-peach" aria-hidden="true" />
                   )}
                 </div>
 
-                <button
-                  type="button"
-                  className="absolute left-0 top-1/2 z-10 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-surface shadow-medium transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:h-16 sm:w-16"
-                  aria-label={muteLabel}
-                  aria-pressed={hasVideo ? isMuted : undefined}
-                  onClick={hasVideo ? () => setIsMuted((muted) => !muted) : undefined}
-                >
-                  <MuteToggleIcon muted={isMuted} />
-                </button>
+                {hasVideo ? (
+                  <button
+                    type="button"
+                    className="absolute left-0 top-1/2 z-10 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-surface shadow-medium transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:h-16 sm:w-16"
+                    aria-label={muteLabel}
+                    aria-pressed={isMuted}
+                    onClick={() => setIsMuted((muted) => !muted)}
+                  >
+                    <MuteToggleIcon muted={isMuted} />
+                  </button>
+                ) : null}
               </div>
             </div>
           </div>

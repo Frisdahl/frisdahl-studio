@@ -1,4 +1,4 @@
-import { ContactSection, FaqSection, ProcessSection, SplitPanelSection, WhyChooseUsSection } from '../components/sections'
+import { ContactSection, FaqSection, ProcessSliderSection, SplitPanelSection, WhyChooseUsSection } from '../components/sections'
 import { useLocale } from '../context/LocaleContext'
 import { getWebudviklingContent } from '../data/webudvikling'
 
@@ -11,7 +11,7 @@ export function WebudviklingPage() {
       <ContactSection surface="plain" />
       <SplitPanelSection content={splitPanel} />
       <WhyChooseUsSection content={whyChooseUs} />
-      <ProcessSection content={process} />
+      <ProcessSliderSection content={process} />
       <FaqSection content={faq} />
     </main>
   )

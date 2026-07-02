@@ -1,4 +1,4 @@
-import { type CSSProperties, useRef, useState } from 'react'
+import { type CSSProperties, useEffect, useRef, useState } from 'react'
 import { useLocale } from '../../context/LocaleContext'
 import { useScrollTheme } from '../../hooks'
 import { getHomeContent } from '../../data/home'
@@ -37,6 +37,16 @@ export function PricingSection() {
     endAtBottom: true,
   })
 
+  useEffect(() => {
+    pricing.slides.forEach((slide) => {
+      if (!slide.imageSrc) return
+
+      const img = new Image()
+      img.src = slide.imageSrc
+      void img.decode?.().catch(() => undefined)
+    })
+  }, [pricing.slides])
+
   return (
     <SplitIntroSection
       id="priser"
@@ -57,7 +67,7 @@ export function PricingSection() {
           >
             {pricing.slides.map((slide, index) => (
               <figure
-                key={slide.imageAlt}
+                key={slide.imageSrc}
                 className="pricing-slider-slide"
                 aria-hidden={index !== activeIndex}
               >
@@ -66,12 +76,14 @@ export function PricingSection() {
                     src={slide.imageSrc}
                     alt={slide.imageAlt}
                     className="h-full w-full object-cover"
-                    loading={index === 0 ? 'eager' : 'lazy'}
+                    loading="eager"
+                    decoding="async"
+                    fetchPriority={index === 0 ? 'high' : 'low'}
                   />
                 ) : (
                   <div
                     className={`h-full w-full ${slidePlaceholderTones[index % slidePlaceholderTones.length]}`}
-                    aria-label={slide.imageAlt}
+                    aria-label={pricing.slides[index]?.imageAlt ?? ''}
                     role="img"
                   />
                 )}
@@ -93,7 +105,7 @@ export function PricingSection() {
           <div className="pricing-slider-indicators" aria-hidden>
             {pricing.slides.map((slide, index) => (
               <span
-                key={slide.imageAlt}
+                key={slide.imageSrc}
                 className={`pricing-slider-indicator ${index === activeIndex ? 'pricing-slider-indicator-active' : ''}`}
               />
             ))}
@@ -111,7 +123,7 @@ export function PricingSection() {
           <div className="pricing-slider-progress" aria-hidden>
             <div
               className="pricing-slider-progress-fill"
-              style={{ width: `${progress}%` }}
+              style={{ '--progress': progress } as CSSProperties}
             />
           </div>
         </div>

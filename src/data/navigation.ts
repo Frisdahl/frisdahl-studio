@@ -1,4 +1,4 @@
-import { PRICING_PATH, CASES_PATH, MEET_US_PATH, WEB_DEVELOPMENT_PATH } from '../lib/routes'
+import { CASES_PATH, MEET_US_PATH, PRICING_PATH, PROCESS_PATH, WEB_DEVELOPMENT_PATH } from '../lib/routes'
 
 export type Locale = 'da' | 'en'
 
@@ -92,7 +92,7 @@ const aboutUsDropdownColumns = {
     {
       title: 'Proces',
       description: 'Sådan arbejder vi — fra første idé til lancering og videre.',
-      href: '#process',
+      href: PROCESS_PATH,
       icon: 'process',
     },
     {
@@ -118,7 +118,7 @@ const aboutUsDropdownColumns = {
     {
       title: 'Process',
       description: 'How we work — from first idea to launch and beyond.',
-      href: '#process',
+      href: PROCESS_PATH,
       icon: 'process',
     },
     {

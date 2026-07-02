@@ -18,6 +18,12 @@ export interface CaseFilter {
   label: string
 }
 
+export interface CasesHeroSlide {
+  imageSrc: string | null
+  imageAlt: string
+  placeholderClassName?: string
+}
+
 export interface CasesPageContent {
   eyebrow: string
   title: string

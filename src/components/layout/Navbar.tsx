@@ -1,5 +1,4 @@
 import { Link, useLocation } from 'react-router-dom'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocale } from '../../context/LocaleContext'
 import { useContactDrawer } from '../../context/ContactDrawerContext'
@@ -13,64 +12,27 @@ import { NavCompactBrand } from './NavCompactBrand'
 import { NavDropdown } from './NavDropdown'
 import { NavMegaMenu } from './NavMegaMenu'
 
-const menuEase = [0.4, 0, 0.2, 1] as const
-
-const navDropdownOverlayEaseIn = [0.22, 1, 0.36, 1] as const
-const navDropdownOverlayEaseOut = [0.4, 0, 0.2, 1] as const
-
-const navDropdownOverlayVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { duration: 0.65, ease: navDropdownOverlayEaseIn },
-  },
-  exit: {
-    opacity: 0,
-    transition: { duration: 0.6, ease: navDropdownOverlayEaseOut },
-  },
-}
-
-const overlayVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
-  exit: { opacity: 0 },
-}
-
-const menuVariants = {
-  hidden: { opacity: 0, y: -12 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.3, ease: menuEase },
-  },
-  exit: {
-    opacity: 0,
-    y: -8,
-    transition: { duration: 0.2, ease: menuEase },
-  },
-}
-
-const menuContentVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { duration: 0.25, ease: menuEase, delay: 0.06 },
-  },
-  exit: {
-    opacity: 0,
-    transition: { duration: 0.12, ease: menuEase },
-  },
-}
-
 interface MenuToggleIconProps {
   isOpen: boolean
 }
 
 function MenuToggleIcon({ isOpen }: MenuToggleIconProps) {
-  const shouldReduceMotion = useReducedMotion()
-  const transition = shouldReduceMotion
-    ? { duration: 0 }
-    : { duration: 0.25, ease: menuEase }
+  if (isOpen) {
+    return (
+      <svg
+        className="h-6 w-6"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        aria-hidden="true"
+      >
+        <line x1="6" y1="6" x2="18" y2="18" />
+        <line x1="6" y1="18" x2="18" y2="6" />
+      </svg>
+    )
+  }
 
   return (
     <svg
@@ -82,58 +44,29 @@ function MenuToggleIcon({ isOpen }: MenuToggleIconProps) {
       strokeLinecap="round"
       aria-hidden="true"
     >
-      <motion.line
-        x1="4"
-        y1="7"
-        x2="20"
-        y2="7"
-        animate={
-          isOpen
-            ? { x1: 6, y1: 6, x2: 18, y2: 18 }
-            : { x1: 4, y1: 7, x2: 20, y2: 7 }
-        }
-        transition={transition}
-      />
-      <motion.line
-        x1="4"
-        y1="12"
-        x2="20"
-        y2="12"
-        animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
-        transition={transition}
-      />
-      <motion.line
-        x1="4"
-        y1="17"
-        x2="20"
-        y2="17"
-        animate={
-          isOpen
-            ? { x1: 6, y1: 18, x2: 18, y2: 6 }
-            : { x1: 4, y1: 17, x2: 20, y2: 17 }
-        }
-        transition={transition}
-      />
+      <line x1="4" y1="7" x2="20" y2="7" />
+      <line x1="4" y1="12" x2="20" y2="12" />
+      <line x1="4" y1="17" x2="20" y2="17" />
     </svg>
   )
 }
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
-  const [scrollLocked, setScrollLocked] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [caretOffset, setCaretOffset] = useState(0)
+  const headerRef = useRef<HTMLElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const navClusterRef = useRef<HTMLDivElement>(null)
   const navRef = useRef<HTMLElement>(null)
   const navListRef = useRef<HTMLUListElement>(null)
   const navPlaceholderRef = useRef<HTMLDivElement>(null)
   const triggerRefs = useRef(new Map<string, HTMLDivElement>())
-  const shouldReduceMotion = useReducedMotion()
   const { locale } = useLocale()
   const { openDrawer } = useContactDrawer()
   const { pathname, hash } = useLocation()
-  const { isReady: isNavReady, navSize, isScrolled: isNavScrolled, isAnimating: isNavAnimating } = useFixedNav({
+  const { isReady: isNavReady, navSize, isPinned: isNavPinned } = useFixedNav({
+    headerRef,
     navRef,
     clusterRef: navClusterRef,
     placeholderRef: navPlaceholderRef,
@@ -223,17 +156,15 @@ export function Navbar() {
 
   useEffect(() => {
     setIsOpen(false)
-    setScrollLocked(false)
     closeDropdown()
     hideHighlight()
   }, [pathname, hash, closeDropdown, hideHighlight])
 
   useEffect(() => {
-    if (isOpen) setScrollLocked(true)
-  }, [isOpen])
-
-  useEffect(() => {
-    if (!scrollLocked) return
+    if (!isOpen) {
+      document.body.style.overflow = ''
+      return
+    }
 
     document.body.style.overflow = 'hidden'
 
@@ -247,106 +178,64 @@ export function Navbar() {
       document.body.style.overflow = ''
       document.removeEventListener('keydown', handleEscape)
     }
-  }, [scrollLocked])
+  }, [isOpen])
 
   const closeMenu = () => setIsOpen(false)
 
-  const handleMenuExitComplete = () => {
-    if (!isOpen) setScrollLocked(false)
-  }
-
-  const motionTransition = shouldReduceMotion
-    ? { duration: 0 }
-    : undefined
-
   return (
     <>
-      <AnimatePresence>
-        {activeDropdown && (
-          <motion.div
-            key="nav-dropdown-overlay"
-            className="nav-dropdown-overlay"
-            variants={navDropdownOverlayVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            transition={motionTransition}
-            aria-hidden="true"
+      {activeDropdown ? <div className="nav-dropdown-overlay" aria-hidden="true" /> : null}
+
+      {isOpen ? (
+        <>
+          <button
+            type="button"
+            className="site-overlay mobile-menu-overlay"
+            aria-label={menuClose}
+            onClick={closeMenu}
           />
-        )}
-      </AnimatePresence>
 
-      <AnimatePresence onExitComplete={handleMenuExitComplete}>
-        {isOpen && (
-          <>
-            <motion.button
-              type="button"
-              className="site-overlay mobile-menu-overlay"
-              aria-label={menuClose}
-              onClick={closeMenu}
-              variants={overlayVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              transition={motionTransition ?? { duration: 0.25, ease: menuEase }}
-            />
+          <nav id="mobile-menu" className="mobile-menu-panel" aria-label={navAriaLabel}>
+            <Container>
+              <div className="mobile-menu-content">
+                {mobileGroups.map(({ title, items: groupItems }) => (
+                  <div key={title} className="mobile-nav-group">
+                    <p className="mobile-nav-heading">{title}</p>
+                    <ul className="mobile-nav-list">
+                      {groupItems.map(({ label, href }) => (
+                        <li key={href}>
+                          {href === '/#contact' ? (
+                            <button
+                              type="button"
+                              className="mobile-nav-link w-full"
+                              onClick={() => {
+                                openDrawer('contact')
+                                closeMenu()
+                              }}
+                            >
+                              {label}
+                            </button>
+                          ) : (
+                            <Link
+                              to={toAppHref(href)}
+                              className="mobile-nav-link"
+                              onClick={closeMenu}
+                            >
+                              {label}
+                            </Link>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </Container>
+          </nav>
+        </>
+      ) : null}
 
-            <motion.nav
-              id="mobile-menu"
-              className="mobile-menu-panel"
-              aria-label={navAriaLabel}
-              variants={menuVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-            >
-              <Container>
-                <motion.div
-                  className="mobile-menu-content"
-                  variants={menuContentVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                >
-                  {mobileGroups.map(({ title, items: groupItems }) => (
-                    <div key={title} className="mobile-nav-group">
-                      <p className="mobile-nav-heading">{title}</p>
-                      <ul className="mobile-nav-list">
-                        {groupItems.map(({ label, href }) => (
-                          <li key={href}>
-                            {href === '/#contact' ? (
-                              <button
-                                type="button"
-                                className="mobile-nav-link w-full"
-                                onClick={() => {
-                                  openDrawer('contact')
-                                  closeMenu()
-                                }}
-                              >
-                                {label}
-                              </button>
-                            ) : (
-                              <Link
-                                to={toAppHref(href)}
-                                className="mobile-nav-link"
-                                onClick={closeMenu}
-                              >
-                                {label}
-                              </Link>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </motion.div>
-              </Container>
-            </motion.nav>
-          </>
-        )}
-      </AnimatePresence>
-
-      <header className="site-header">
+      <header ref={headerRef} className="site-header">
         <Container ref={containerRef}>
           <div className="site-header-bar">
             <HeaderBrand />
@@ -367,9 +256,7 @@ export function Navbar() {
                 ref={navClusterRef}
                 className={[
                   'site-header-nav-cluster hidden lg:block',
-                  isNavScrolled ? 'site-header-nav-cluster-fixed' : '',
-                  isNavScrolled ? 'site-header-nav-surfaced' : '',
-                  isNavAnimating ? 'site-header-nav-scrolled' : '',
+                  isNavPinned ? 'site-header-nav-cluster-fixed' : '',
                 ]
                   .filter(Boolean)
                   .join(' ')}
@@ -378,32 +265,14 @@ export function Navbar() {
                 <nav ref={navRef} className="site-header-nav" aria-label={navAriaLabel}>
                   <ul ref={navListRef} className="site-header-nav-list">
                     <NavCompactBrand />
-                    <motion.span
+                    <span
                       className="nav-link-highlight"
                       aria-hidden="true"
-                      animate={{
+                      style={{
                         left: navHighlight.left,
                         width: navHighlight.width,
                         opacity: navHighlight.opacity,
                       }}
-                      transition={
-                        shouldReduceMotion
-                          ? { duration: 0 }
-                          : {
-                              left: {
-                                duration: 0.42,
-                                ease: [0.22, 1, 0.36, 1],
-                              },
-                              width: {
-                                duration: 0.42,
-                                ease: [0.22, 1, 0.36, 1],
-                              },
-                              opacity: {
-                                duration: navHighlight.opacity === 0 ? 0.28 : 0.18,
-                                ease: [0.4, 0, 0.2, 1],
-                              },
-                            }
-                      }
                     />
                     {items.map(({ label, href }) =>
                       navDropdownHrefs.has(href) ? (

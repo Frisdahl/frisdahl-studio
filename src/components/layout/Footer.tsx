@@ -1,17 +1,16 @@
 import type { IconType } from 'react-icons'
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTiktok } from 'react-icons/fa6'
-import { Link } from 'react-router-dom'
+import { HiEnvelope, HiPhone } from 'react-icons/hi2'
+import { Link, matchPath, useLocation } from 'react-router-dom'
 import { useLocale } from '../../context/LocaleContext'
 import { getFooterContent, type FooterSocialLink } from '../../data/footer'
-import { useBrandWordmarkAnimation } from '../../hooks/useBrandWordmarkAnimation'
+import { CASES_PATH } from '../../lib/routes'
 import { BrandWordmark, Container } from '../ui'
 
 function FooterLogo({ label }: { label: string }) {
-  const { phase, wordmarkHandlers } = useBrandWordmarkAnimation()
-
   return (
-    <Link to="/" className="site-footer-logo" aria-label={label} {...wordmarkHandlers}>
-      <BrandWordmark phase={phase} />
+    <Link to="/" className="site-footer-logo" aria-label={label}>
+      <BrandWordmark />
     </Link>
   )
 }
@@ -48,7 +47,15 @@ function FooterSocialLinks({ links }: { links: readonly FooterSocialLink[] }) {
 
 export function Footer() {
   const { locale } = useLocale()
+  const { pathname } = useLocation()
+  const isCaseDetailPage = Boolean(
+    matchPath({ path: `${CASES_PATH}/:caseSlug`, end: true }, pathname),
+  )
   const footer = getFooterContent(locale)
+
+  if (isCaseDetailPage) {
+    return null
+  }
 
   return (
     <footer className="site-footer">
@@ -81,6 +88,16 @@ export function Footer() {
         <div className="site-footer-middle">
           <FooterSocialLinks links={footer.socialLinks} />
 
+          <a href={footer.emailHref} className="site-footer-contact-link">
+            <HiEnvelope className="site-footer-contact-icon" aria-hidden="true" />
+            <span>{footer.email}</span>
+          </a>
+
+          <a href={footer.phoneHref} className="site-footer-contact-link">
+            <HiPhone className="site-footer-contact-icon" aria-hidden="true" />
+            <span>{footer.phone}</span>
+          </a>
+
           <div className="site-footer-location">
             <p className="site-footer-location-title">{footer.locationTitle}</p>
             <p className="site-footer-address">{footer.address}</p>
@@ -102,9 +119,6 @@ export function Footer() {
 
           <div className="site-footer-meta">
             <p className="site-footer-copyright">{footer.copyright}</p>
-            <a href={footer.phoneHref} className="site-footer-phone">
-              {footer.phone}
-            </a>
           </div>
         </div>
       </Container>

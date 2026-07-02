@@ -1,5 +1,5 @@
 import type { FaqContent } from '../types/faq'
-import type { ProcessContent } from '../types/process'
+import type { ProcessSliderContent } from '../types/process'
 import type { SplitPanelContent } from '../types/splitPanel'
 import type { WhyChooseUsContent } from '../types/whyChooseUs'
 import type { Locale } from './navigation'
@@ -37,20 +37,49 @@ const webudviklingContent = {
       ],
     },
     process: {
-      eyebrow: 'Følg tæt på vores arbejdsflow',
-      title: 'Sådan arbejder vi',
+      label: 'Vores proces',
+      sliderAriaLabel: 'Sådan arbejder vi',
+      sliderStatus: 'Trin {current} af {total}',
       steps: [
+        {
+          title: 'Skabt med vision. Afsluttet med omhu.',
+          description:
+            'Hos Frisdahl Studio følger hvert projekt en klar og gennemarbejdet proces — med præcision, transparens og ro i maven fra start til slut.',
+          keywords: [],
+          layout: 'horizontal-reveal',
+          mediaPosition: 'right',
+          imageSrc: '/cases/nordwear/production-mac.webp',
+          imageAlt: 'Nordwear website vist på computer',
+        },
         {
           title: 'Opdagelse og strategi',
           description:
             'Vi starter med at forstå jeres virksomhed, målgruppe og ambitioner. Her definerer vi scope, prioriteringer og en klar retning for projektet.',
           keywords: ['Brief', 'Målgruppe', 'Scope', 'Roadmap', 'Konkurrentanalyse', 'Mål'],
+          layout: 'dual-portrait',
+          mediaPosition: 'left',
+          imageSrc: '/cases/nordwear/mobile--6-7.jpg',
+          imageAlt: 'Mobilvisning af Nordwear website',
+          imageSrcSecondary: '/cases/nordwear/category--6-7.jpg',
+          imageAltSecondary: 'Kategoriside fra Nordwear case',
+        },
+        {
+          title: '',
+          description: '',
+          keywords: [],
+          layout: 'horizontal-reveal',
+          imageOnly: true,
+          mediaPosition: 'right',
+          imageSrc: '/cases/fresh-cut/thumbnail--16-10.jpg',
+          imageAlt: 'Fresh Cut website',
         },
         {
           title: 'Design og prototyp',
           description:
             'Vi omsætter strategien til et stærkt visuelt udtryk med wireframes, UI-design og en klikbar prototype, så I kan se løsningen, før den bygges.',
           keywords: ['Wireframes', 'UI-design', 'Prototype', 'Branding', 'Designsystem', 'UX'],
+          imageSrc: '/cases/fresh-cut/mobile1--16-10.jpg',
+          imageAlt: 'Design og prototyp i webudviklingsprocessen',
         },
         {
           title: 'Udvikling',
@@ -66,12 +95,16 @@ const webudviklingContent = {
             'API',
             'Tilgængelighed',
           ],
+          imageSrc: '/cases/nordwear/mobile.webp',
+          imageAlt: 'Udvikling af skræddersyet website',
         },
         {
           title: 'Test og lancering',
           description:
             'Før go-live gennemgår vi alt grundigt på tværs af enheder og browsere. Derefter lancerer vi og sikrer en stabil overgang til den nye løsning.',
           keywords: ['QA', 'SEO', 'Go-live', 'Tracking', 'Browser-test', 'Performance-test'],
+          imageSrc: '/cases/fresh-cut/mobile2.webp',
+          imageAlt: 'Test og lancering af website',
         },
       ],
     },
@@ -133,20 +166,49 @@ const webudviklingContent = {
       ],
     },
     process: {
-      eyebrow: 'Follow our workflow closely',
-      title: 'How we work',
+      label: 'Our process',
+      sliderAriaLabel: 'How we work',
+      sliderStatus: 'Step {current} of {total}',
       steps: [
+        {
+          title: 'Built with vision. Finished with care.',
+          description:
+            'At Frisdahl Studio, every project follows a clear and refined process — ensuring precision, transparency, and peace of mind from start to finish.',
+          keywords: [],
+          layout: 'horizontal-reveal',
+          mediaPosition: 'right',
+          imageSrc: '/cases/nordwear/production-mac.webp',
+          imageAlt: 'Nordwear website shown on a computer',
+        },
         {
           title: 'Discovery and strategy',
           description:
             'We start by understanding your business, audience, and ambitions. Here we define scope, priorities, and a clear direction for the project.',
           keywords: ['Brief', 'Audience', 'Scope', 'Roadmap', 'Competitor review', 'Goals'],
+          layout: 'dual-portrait',
+          mediaPosition: 'left',
+          imageSrc: '/cases/nordwear/mobile--6-7.jpg',
+          imageAlt: 'Mobile view of the Nordwear website',
+          imageSrcSecondary: '/cases/nordwear/category--6-7.jpg',
+          imageAltSecondary: 'Category page from the Nordwear case',
+        },
+        {
+          title: '',
+          description: '',
+          keywords: [],
+          layout: 'horizontal-reveal',
+          imageOnly: true,
+          mediaPosition: 'right',
+          imageSrc: '/cases/fresh-cut/thumbnail--16-10.jpg',
+          imageAlt: 'Fresh Cut website',
         },
         {
           title: 'Design and prototype',
           description:
             'We translate strategy into a strong visual direction with wireframes, UI design, and a clickable prototype so you can see the solution before it is built.',
           keywords: ['Wireframes', 'UI design', 'Prototype', 'Branding', 'Design system', 'UX'],
+          imageSrc: '/cases/fresh-cut/mobile1--16-10.jpg',
+          imageAlt: 'Design and prototype in the web development process',
         },
         {
           title: 'Development',
@@ -162,12 +224,16 @@ const webudviklingContent = {
             'API',
             'Accessibility',
           ],
+          imageSrc: '/cases/nordwear/mobile.webp',
+          imageAlt: 'Development of a tailored website',
         },
         {
           title: 'Testing and launch',
           description:
             'Before go-live we review everything across devices and browsers. Then we launch and ensure a stable transition to the new solution.',
           keywords: ['QA', 'SEO', 'Go-live', 'Tracking', 'Browser testing', 'Performance testing'],
+          imageSrc: '/cases/fresh-cut/mobile2.webp',
+          imageAlt: 'Testing and launch of a website',
         },
       ],
     },
@@ -203,7 +269,7 @@ const webudviklingContent = {
   {
     splitPanel: SplitPanelContent
     whyChooseUs: WhyChooseUsContent
-    process: ProcessContent
+    process: ProcessSliderContent
     faq: FaqContent
   }
 >
