@@ -8,27 +8,21 @@ import {
 } from 'react'
 import { flushSync } from 'react-dom'
 import {
-  applyNavBrandScrollAnimation,
-  resetNavBrandScrollAnimation,
-} from '../lib/navBrandScroll'
-import {
   applyNavSurfaceScroll,
   resetNavSurfaceScroll,
 } from '../lib/navSurfaceScroll'
 import {
-  clearNavClusterSlide,
-  hideHeaderSlide,
-  hideNavClusterSlide,
   resetHeaderSlide,
   resetNavClusterSlide,
-  revealHeaderSlide,
-  revealNavClusterSlide,
 } from '../lib/navSlideAnimation'
 import { ROUTE_SCROLL_RESET_EVENT } from '../lib/scroll'
 import { getScrollY, getSmoothScroll } from '../lib/smoothScroll'
 
-const MIN_SCROLL_Y = 72
-const SCROLL_DIRECTION_THRESHOLD = 4
+const DESKTOP_NAV_MIN_WIDTH = 1024
+
+function isDesktopNav() {
+  return window.matchMedia(`(min-width: ${DESKTOP_NAV_MIN_WIDTH}px)`).matches
+}
 
 interface NavSize {
   width: number
@@ -49,38 +43,60 @@ export function useFixedNav({
   placeholderRef,
 }: UseFixedNavOptions) {
   const pinnedTopRef = useRef(0)
-  const isFixedActiveRef = useRef(false)
-  const isCollapsedRef = useRef(false)
-  const lastScrollYRef = useRef(0)
   const isReadyRef = useRef(false)
   const [isReady, setIsReady] = useState(false)
   const [navSize, setNavSize] = useState<NavSize>({ width: 0, height: 0 })
   const [isPinned, setIsPinned] = useState(false)
 
+  const syncSiteHeaderHeight = useCallback(() => {
+    const header = headerRef.current
+    if (!header) return
+
+    document.documentElement.style.setProperty(
+      '--site-header-height',
+      `${header.offsetHeight}px`,
+    )
+  }, [headerRef])
+
   const syncPlaceholderSize = useCallback(() => {
-    const nav = navRef.current
+    const cluster = clusterRef.current
     const placeholder = placeholderRef.current
+    const header = headerRef.current
 
-    if (!nav || !placeholder) return
+    if (!cluster || !placeholder) return
 
-    placeholder.style.width = `${nav.offsetWidth}px`
-    placeholder.style.height = `${nav.offsetHeight}px`
-  }, [navRef, placeholderRef])
+    placeholder.style.width = `${cluster.offsetWidth}px`
+    placeholder.style.height = `${cluster.offsetHeight}px`
+
+    if (header) {
+      header.style.setProperty('--site-header-nav-height', `${cluster.offsetHeight}px`)
+    }
+
+    syncSiteHeaderHeight()
+  }, [clusterRef, headerRef, placeholderRef, syncSiteHeaderHeight])
 
   const measurePosition = useCallback(() => {
-    const nav = navRef.current
     const cluster = clusterRef.current
-    if (!nav || !cluster) return
+    const nav = navRef.current
+    const header = headerRef.current
+    const headerBar = header?.querySelector<HTMLElement>('.site-header-bar')
 
-    const rect = cluster.getBoundingClientRect()
+    if (!nav || !cluster || !headerBar) return
 
-    pinnedTopRef.current = rect.top
+    const clusterHeight = cluster.offsetHeight
+
+    if (getScrollY() <= 0) {
+      const barRect = headerBar.getBoundingClientRect()
+      pinnedTopRef.current = barRect.top + (barRect.height - clusterHeight) / 2
+    } else {
+      pinnedTopRef.current = cluster.getBoundingClientRect().top
+    }
     setNavSize({
-      width: nav.offsetWidth,
-      height: nav.offsetHeight,
+      width: cluster.offsetWidth,
+      height: cluster.offsetHeight,
     })
     syncPlaceholderSize()
-  }, [navRef, clusterRef, syncPlaceholderSize])
+  }, [navRef, clusterRef, headerRef, syncPlaceholderSize])
 
   const applyPinnedStyles = useCallback(
     (pinned: boolean) => {
@@ -93,11 +109,14 @@ export function useFixedNav({
           '--nav-cluster-pinned-top',
           `${pinnedTopRef.current}px`,
         )
+        resetNavClusterSlide(cluster)
         return
       }
 
       cluster.style.removeProperty('top')
       cluster.style.removeProperty('--nav-cluster-pinned-top')
+      cluster.style.removeProperty('transform')
+      cluster.style.removeProperty('transition')
     },
     [clusterRef],
   )
@@ -112,132 +131,54 @@ export function useFixedNav({
     [applyPinnedStyles],
   )
 
-  const collapseNav = useCallback(() => {
-    isCollapsedRef.current = true
-    hideNavClusterSlide(clusterRef.current, pinnedTopRef.current)
-    hideHeaderSlide(headerRef.current)
-  }, [clusterRef, headerRef])
+  const pinDesktopNav = useCallback(() => {
+    if (!isDesktopNav()) return
 
-  const revealNav = useCallback(() => {
-    isCollapsedRef.current = false
-    revealNavClusterSlide(clusterRef.current, pinnedTopRef.current)
-    revealHeaderSlide(headerRef.current)
-  }, [clusterRef, headerRef])
-
-  const resetToFlow = useCallback(() => {
-    const cluster = clusterRef.current
-
-    if (cluster && isFixedActiveRef.current && !isCollapsedRef.current) {
-      cluster.style.transition = 'none'
-      cluster.style.transform = 'translate3d(-50%, 0, 0)'
-      cluster.offsetHeight
-    }
-
-    isFixedActiveRef.current = false
-    isCollapsedRef.current = false
-    clearNavClusterSlide(cluster)
-    resetHeaderSlide(headerRef.current)
-    setPinned(false)
-    resetNavSurfaceScroll(cluster)
     measurePosition()
-  }, [clusterRef, headerRef, measurePosition, setPinned])
+    setPinned(true)
+  }, [measurePosition, setPinned])
+
+  const resetScrollStyles = useCallback(() => {
+    resetNavSurfaceScroll(clusterRef.current)
+    resetHeaderSlide(headerRef.current)
+    resetNavClusterSlide(clusterRef.current)
+  }, [clusterRef, headerRef])
 
   const updateScrollState = useCallback(
     (scrollY: number) => {
-      const prefersReducedMotion = window.matchMedia(
-        '(prefers-reduced-motion: reduce)',
-      ).matches
+      if (!isDesktopNav()) return
 
-      const delta = scrollY - lastScrollYRef.current
-      const atTop = scrollY <= 0
-      const pastMinScroll = scrollY > MIN_SCROLL_Y
-      const scrollingUp = delta < -SCROLL_DIRECTION_THRESHOLD
-      const scrollingDown = delta > SCROLL_DIRECTION_THRESHOLD
-
-      lastScrollYRef.current = scrollY
-
-      applyNavBrandScrollAnimation(clusterRef.current, scrollY)
-
-      if (atTop) {
-        resetToFlow()
-        return
-      }
-
-      if (prefersReducedMotion) {
-        const fixed = pastMinScroll
-
-        if (fixed !== isFixedActiveRef.current) {
-          isFixedActiveRef.current = fixed
-          setPinned(fixed)
-
-          if (fixed) {
-            resetNavClusterSlide(clusterRef.current)
-            resetHeaderSlide(headerRef.current)
-            applyNavSurfaceScroll(clusterRef.current, scrollY)
-            syncPlaceholderSize()
-          } else {
-            resetToFlow()
-          }
-        } else if (fixed) {
-          applyNavSurfaceScroll(clusterRef.current, scrollY)
-          syncPlaceholderSize()
-        }
-
-        return
-      }
-
-      if (scrollingUp && pastMinScroll) {
-        const wasCollapsed = isCollapsedRef.current
-        const wasFixedActive = isFixedActiveRef.current
-        const shouldReveal = wasCollapsed || !wasFixedActive
-
-        isFixedActiveRef.current = true
-        setPinned(true)
+      if (scrollY <= 0) {
+        resetNavSurfaceScroll(clusterRef.current)
+      } else {
         applyNavSurfaceScroll(clusterRef.current, scrollY)
-        syncPlaceholderSize()
-
-        if (shouldReveal) {
-          revealNav()
-        } else {
-          isCollapsedRef.current = false
-          resetNavClusterSlide(clusterRef.current)
-          resetHeaderSlide(headerRef.current)
-        }
-
-        return
       }
 
-      if (scrollingDown && pastMinScroll && isFixedActiveRef.current) {
-        setPinned(true)
-        applyNavSurfaceScroll(clusterRef.current, scrollY)
-        collapseNav()
-        return
-      }
-
-      if (isFixedActiveRef.current && !isCollapsedRef.current) {
-        setPinned(true)
-        applyNavSurfaceScroll(clusterRef.current, scrollY)
-        syncPlaceholderSize()
-      }
+      syncPlaceholderSize()
     },
-    [
-      clusterRef,
-      collapseNav,
-      headerRef,
-      revealNav,
-      resetToFlow,
-      setPinned,
-      syncPlaceholderSize,
-    ],
+    [clusterRef, syncPlaceholderSize],
   )
 
   useLayoutEffect(() => {
+    syncSiteHeaderHeight()
     measurePosition()
-    resetNavBrandScrollAnimation(clusterRef.current)
-    resetNavSurfaceScroll(clusterRef.current)
+    resetScrollStyles()
     isReadyRef.current = true
     setIsReady(true)
-  }, [clusterRef, measurePosition])
+    pinDesktopNav()
+  }, [clusterRef, measurePosition, pinDesktopNav, resetScrollStyles, syncSiteHeaderHeight])
+
+  useEffect(() => {
+    const header = headerRef.current
+    if (!header || typeof ResizeObserver === 'undefined') return
+
+    const observer = new ResizeObserver(() => {
+      syncSiteHeaderHeight()
+    })
+
+    observer.observe(header)
+    return () => observer.disconnect()
+  }, [headerRef, syncSiteHeaderHeight])
 
   useEffect(() => {
     const onScroll = () => {
@@ -245,17 +186,19 @@ export function useFixedNav({
     }
 
     const onResize = () => {
-      if (getScrollY() <= 0) {
-        measurePosition()
+      syncSiteHeaderHeight()
+
+      if (isDesktopNav()) {
+        pinDesktopNav()
       }
 
       updateScrollState(getScrollY())
     }
 
     const onRouteScrollReset = () => {
-      resetNavBrandScrollAnimation(clusterRef.current)
-      lastScrollYRef.current = 0
-      resetToFlow()
+      syncSiteHeaderHeight()
+      resetScrollStyles()
+      pinDesktopNav()
       updateScrollState(0)
     }
 
@@ -280,7 +223,7 @@ export function useFixedNav({
       window.removeEventListener('resize', onResize)
       window.removeEventListener(ROUTE_SCROLL_RESET_EVENT, onRouteScrollReset)
     }
-  }, [measurePosition, resetToFlow, updateScrollState])
+  }, [pinDesktopNav, resetScrollStyles, syncSiteHeaderHeight, updateScrollState])
 
   return {
     isReady,

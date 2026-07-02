@@ -3,6 +3,7 @@ export const PRICING_PATH = '/priser'
 export const CASES_PATH = '/cases'
 export const MEET_US_PATH = '/mod-os'
 export const WEB_DEVELOPMENT_PATH = '/webudvikling'
+export const PRIVACY_POLICY_PATH = '/datapolitik'
 
 export function toAppHref(href: string): string {
   if (href.startsWith('/')) return href

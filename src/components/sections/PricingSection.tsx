@@ -1,9 +1,7 @@
-import { type CSSProperties, useEffect, useRef, useState } from 'react'
+import { useEffect } from 'react'
 import { useLocale } from '../../context/LocaleContext'
-import { useScrollTheme } from '../../hooks'
 import { getHomeContent } from '../../data/home'
-import { SplitIntroSection } from './SplitIntroSection'
-import { PricingCards } from './PricingCards'
+import { Container, HorizontalDragSlider } from '../ui'
 
 const slidePlaceholderTones = [
   'bg-peach',
@@ -14,28 +12,8 @@ const slidePlaceholderTones = [
 
 export function PricingSection() {
   const { locale } = useLocale()
-  const { pricing, pricingPage } = getHomeContent(locale)
-  const { examplesIntro } = pricingPage
-  const themeStartRef = useRef<HTMLHeadingElement>(null)
-  const [activeIndex, setActiveIndex] = useState(0)
+  const { pricing } = getHomeContent(locale)
   const slideCount = pricing.slides.length
-  const isFirstSlide = activeIndex === 0
-  const isLastSlide = activeIndex === slideCount - 1
-  const progress = ((activeIndex + 1) / slideCount) * 100
-
-  const goToPrevious = () => {
-    setActiveIndex((index) => Math.max(0, index - 1))
-  }
-
-  const goToNext = () => {
-    setActiveIndex((index) => Math.min(slideCount - 1, index + 1))
-  }
-
-  useScrollTheme({
-    startRef: themeStartRef,
-    endId: 'priser',
-    endAtBottom: true,
-  })
 
   useEffect(() => {
     pricing.slides.forEach((slide) => {
@@ -48,101 +26,39 @@ export function PricingSection() {
   }, [pricing.slides])
 
   return (
-    <SplitIntroSection
-      id="priser"
-      titleRef={themeStartRef}
-      eyebrow={pricing.eyebrow}
-      title={pricing.title}
-      description={pricing.description}
-      eyebrowTheme
-    >
-      <div
-        className="pricing-slider mt-4xl lg:mt-5xl"
-        aria-label={pricing.sliderAriaLabel}
-      >
-        <div className="pricing-slider-viewport">
-          <div
-            className="pricing-slider-track"
-            style={{ '--active-index': activeIndex } as CSSProperties}
-          >
-            {pricing.slides.map((slide, index) => (
-              <figure
-                key={slide.imageSrc}
-                className="pricing-slider-slide"
-                aria-hidden={index !== activeIndex}
-              >
-                {slide.imageSrc ? (
-                  <img
-                    src={slide.imageSrc}
-                    alt={slide.imageAlt}
-                    className="h-full w-full object-cover"
-                    loading="eager"
-                    decoding="async"
-                    fetchPriority={index === 0 ? 'high' : 'low'}
-                  />
-                ) : (
-                  <div
-                    className={`h-full w-full ${slidePlaceholderTones[index % slidePlaceholderTones.length]}`}
-                    aria-label={pricing.slides[index]?.imageAlt ?? ''}
-                    role="img"
-                  />
-                )}
-              </figure>
-            ))}
-          </div>
-        </div>
-
-        <div className="pricing-slider-controls">
-          <button
-            type="button"
-            className="pricing-slider-btn"
-            onClick={goToPrevious}
-            disabled={isFirstSlide}
-          >
-            {pricing.sliderPrev}
-          </button>
-
-          <div className="pricing-slider-indicators" aria-hidden>
-            {pricing.slides.map((slide, index) => (
-              <span
-                key={slide.imageSrc}
-                className={`pricing-slider-indicator ${index === activeIndex ? 'pricing-slider-indicator-active' : ''}`}
-              />
-            ))}
-          </div>
-
-          <button
-            type="button"
-            className="pricing-slider-btn"
-            onClick={goToNext}
-            disabled={isLastSlide}
-          >
-            {pricing.sliderNext}
-          </button>
-
-          <div className="pricing-slider-progress" aria-hidden>
-            <div
-              className="pricing-slider-progress-fill"
-              style={{ '--progress': progress } as CSSProperties}
-            />
-          </div>
-        </div>
-
-        <p className="sr-only">
-          {pricing.sliderStatus.replace('{current}', String(activeIndex + 1)).replace('{total}', String(slideCount))}
-        </p>
-      </div>
-
-      <div className="mt-4xl lg:mt-5xl">
-        <div className="mx-auto w-full max-w-[700px] text-center">
-          <h2>{examplesIntro.title}</h2>
-        </div>
-        <div className="mx-auto mt-md w-full max-w-[600px] text-center">
-          <p className="text-body font-normal text-secondary">{examplesIntro.subtitle}</p>
-        </div>
-      </div>
-
-      <PricingCards />
-    </SplitIntroSection>
+    <section id="priser" className="pricing-examples py-section-sm lg:py-section">
+      <Container>
+        <HorizontalDragSlider
+          className="pricing-slider"
+          ariaLabel={pricing.sliderAriaLabel}
+          prevLabel={pricing.sliderPrev}
+          nextLabel={pricing.sliderNext}
+          statusTemplate={pricing.sliderStatus}
+          slideCount={slideCount}
+        >
+          {pricing.slides.map((slide, index) => (
+            <figure key={slide.imageSrc} className="horizontal-drag-slider-slide">
+              {slide.imageSrc ? (
+                <img
+                  src={slide.imageSrc}
+                  alt={slide.imageAlt}
+                  className="h-full w-full object-cover"
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority={index === 0 ? 'high' : 'low'}
+                  draggable={false}
+                />
+              ) : (
+                <div
+                  className={`h-full w-full ${slidePlaceholderTones[index % slidePlaceholderTones.length]}`}
+                  aria-label={pricing.slides[index]?.imageAlt ?? ''}
+                  role="img"
+                />
+              )}
+            </figure>
+          ))}
+        </HorizontalDragSlider>
+      </Container>
+    </section>
   )
 }

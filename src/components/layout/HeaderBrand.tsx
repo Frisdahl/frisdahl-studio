@@ -1,10 +1,13 @@
 import { Link } from 'react-router-dom'
-import { BRAND_LABEL } from '../../lib/brand'
 import { BrandWordmark } from '../ui'
 
-export function HeaderBrand() {
+interface HeaderBrandProps {
+  label: string
+}
+
+export function HeaderBrand({ label }: HeaderBrandProps) {
   return (
-    <Link to="/" className="site-header-brand" aria-label={BRAND_LABEL}>
+    <Link to="/" className="site-header-logo" aria-label={label}>
       <BrandWordmark />
     </Link>
   )

@@ -4,17 +4,15 @@ import {
   ContactSection,
   FeatureSection,
   Hero,
-  HeroDecorationLines,
   PartnershipSection,
   PromoSection,
 } from '../components/sections'
 
 export function HomePage() {
   return (
-    <main className="page-surface bg-background overflow-x-clip">
+    <main className="page-surface bg-home-page overflow-x-clip">
       <div className="home-hero-promo">
-        <HeroDecorationLines />
-        <Hero showDecorations={false} showDecorationDots />
+        <Hero />
         <PromoSection className="promo-section-home" />
       </div>
       <FeatureSection />

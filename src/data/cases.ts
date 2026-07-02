@@ -24,6 +24,10 @@ const casesPageContent = {
     eyebrow: 'Se et uddrag af vores cases',
     title: 'Vores resultater for de virksomheder, der former morgendagen',
     filtersAriaLabel: 'Filtrer cases efter kategori',
+    sliderAriaLabel: 'Cases',
+    sliderPrev: 'Forrige',
+    sliderNext: 'Næste',
+    sliderStatus: 'Case {current} af {total}',
     filters: [
       { id: 'website', label: 'Website' },
       { id: 'webshop', label: 'Webshop' },
@@ -111,6 +115,10 @@ const casesPageContent = {
     eyebrow: 'See a selection of our cases',
     title: 'Our results for the companies shaping tomorrow',
     filtersAriaLabel: 'Filter cases by category',
+    sliderAriaLabel: 'Cases',
+    sliderPrev: 'Previous',
+    sliderNext: 'Next',
+    sliderStatus: 'Case {current} of {total}',
     filters: [
       { id: 'website', label: 'Website' },
       { id: 'webshop', label: 'Webshop' },

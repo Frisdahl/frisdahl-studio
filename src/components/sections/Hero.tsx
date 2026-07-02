@@ -5,7 +5,6 @@ import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
 import { toAppHref } from '../../lib/routes'
 import { Container, CtaPillButton } from '../ui'
-import { DecorativeRings } from '../ui/DecorativeRings'
 
 const heroVideoSrc: string | null = null
 
@@ -13,8 +12,6 @@ export type HeroVariant = 'home' | 'pricing'
 
 interface HeroProps {
   variant?: HeroVariant
-  showDecorations?: boolean
-  showDecorationDots?: boolean
 }
 
 interface MuteToggleIconProps {
@@ -31,58 +28,8 @@ function MuteToggleIcon({ muted }: MuteToggleIconProps) {
   return <HiSpeakerWave className={className} aria-hidden="true" />
 }
 
-export function HeroDecorationLines() {
-  return (
-    <svg
-      className="hero-decoration-lines"
-      viewBox="0 0 3066 964.24"
-      fill="none"
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <g transform="translate(576 3.067)">
-        <path
-          d="M-1234.934,470.344S-417.694,862.1-36,673.477C486.858,404.691,1234.5,1235.59,1958.05,863.631s860.108-261.125,860.108-261.125"
-          stroke="currentColor"
-          strokeWidth="0.85"
-        />
-        <path
-          d="M2490.15,18.3C1696.23-159.366,1182.04,833.087,608.333,704.7"
-          stroke="currentColor"
-          strokeWidth="0.85"
-        />
-      </g>
-    </svg>
-  )
-}
-
-function HeroDecorationDots() {
-  return (
-    <>
-      <span className="hero-decoration-dot hero-decoration-dot-yellow hero-decoration-dot-left" />
-      <span className="hero-decoration-dot hero-decoration-dot-accent hero-decoration-dot-mid hidden sm:block" />
-      <span className="hero-decoration-dot hero-decoration-dot-yellow hero-decoration-dot-right" />
-    </>
-  )
-}
-
-export function HeroDecorations() {
-  return (
-    <>
-      <HeroDecorationLines />
-      <HeroDecorationDots />
-    </>
-  )
-}
-
-function HeroVideoRings() {
-  return <DecorativeRings />
-}
-
 export function Hero({
   variant = 'home',
-  showDecorations = true,
-  showDecorationDots = false,
 }: HeroProps) {
   const { locale } = useLocale()
   const { hero, pricingPage } = getHomeContent(locale)
@@ -98,9 +45,6 @@ export function Hero({
 
   return (
     <section className={`hero-section${isPricing ? ' hero-section--pricing' : ''}`}>
-      {showDecorations ? <HeroDecorations /> : null}
-      {showDecorationDots ? <HeroDecorationDots /> : null}
-
       <Container className="relative z-10">
         <div className="hero-grid grid min-h-[calc(100svh-4rem)] items-start gap-12 px-2 pb-12 pt-6 max-[1088px]:gap-8 max-[1088px]:pb-8 max-[1088px]:pt-5 min-[1089px]:sm:gap-12 sm:px-3 sm:pt-8 lg:min-h-0 lg:gap-10 lg:px-0 lg:pb-16 lg:pt-16">
           <div className="hero-grid-copy min-w-0 self-center lg:max-w-none">
@@ -109,9 +53,11 @@ export function Hero({
               <span className="block min-[801px]:max-[1088px]:whitespace-nowrap">
                 {content.headlineLine1}
               </span>
-              <span className="block min-[801px]:max-[1088px]:whitespace-nowrap">
-                {content.headlineLine2}
-              </span>
+              {content.headlineLine2 ? (
+                <span className="block min-[801px]:max-[1088px]:whitespace-nowrap">
+                  {content.headlineLine2}
+                </span>
+              ) : null}
             </h1>
             <p className="mt-6 max-w-[38rem] text-body-lg text-secondary max-[1088px]:mt-4 min-[1089px]:sm:mt-7 lg:max-w-[44rem]">
               {content.description}
@@ -127,9 +73,7 @@ export function Hero({
 
           <div className="hero-grid-media relative min-w-0 w-full pt-3 pb-12 max-[1088px]:pb-6 max-[1088px]:pt-2 sm:pt-4 sm:pb-8">
             <div className="hero-grid-media-inner relative mx-auto w-full max-w-[520px] lg:ml-auto lg:mr-0 lg:max-w-[480px]">
-              <HeroVideoRings />
-
-              <div className="hero-grid-media-frame relative z-[2] rounded-tl-xl rounded-bl-xl rounded-br-xl rounded-tr-[2.75rem] border border-border-light bg-surface shadow-medium lg:rounded-tr-[3rem]">
+              <div className="hero-grid-media-frame relative z-[2] rounded-tl-xl rounded-bl-xl rounded-br-xl rounded-tr-[2.75rem] bg-surface shadow-medium lg:rounded-tr-[3rem]">
                 <div className="hero-grid-media-aspect aspect-[3/4] max-h-[500px] w-full overflow-hidden rounded-[inherit] lg:max-h-[520px]">
                   {hasVideo && heroVideoSrc ? (
                     <video

@@ -1,53 +1,61 @@
-import { HiCheck } from 'react-icons/hi2'
-import { Button } from '../ui/Button'
+import { HiPlus } from 'react-icons/hi2'
 
 export interface PricingPlan {
   id: string
+  eyebrow: string
   title: string
-  subtitle: string
-  description: string
-  price: string
+  audience: string
+  availability: string
   cta: string
   ctaAction: 'book' | 'contact'
   featured?: boolean
-  badge?: string | null
   features: readonly string[]
 }
 
 export interface PricingCardProps {
   plan: PricingPlan
-  includesLabel: string
   onCtaClick: () => void
 }
 
-export function PricingCard({ plan, includesLabel, onCtaClick }: PricingCardProps) {
+export function PricingCard({ plan, onCtaClick }: PricingCardProps) {
   return (
     <article className={`pricing-card ${plan.featured ? 'pricing-card-featured' : ''}`}>
-      {plan.badge ? <span className="pricing-card-badge">{plan.badge}</span> : null}
-
-      <header className="pricing-card-header">
+      <div className="pricing-card-intro">
+        <p className="pricing-card-eyebrow">
+          <span className="pricing-card-marker" aria-hidden="true" />
+          {plan.eyebrow}
+        </p>
         <h3 className="pricing-card-title">{plan.title}</h3>
-        <p className="pricing-card-subtitle">{plan.subtitle}</p>
-      </header>
+      </div>
 
-      <p className="pricing-card-description">{plan.description}</p>
+      <ul className="pricing-card-features">
+        {plan.features.map((feature) => (
+          <li key={feature} className="pricing-card-feature">
+            {feature}
+          </li>
+        ))}
+      </ul>
 
-      <p className="pricing-card-price">{plan.price}</p>
+      <div className="pricing-card-footer">
+        <p className="pricing-card-audience">{plan.audience}</p>
+        <p className="pricing-card-availability">
+          <span className="pricing-card-marker" aria-hidden="true" />
+          {plan.availability}
+        </p>
 
-      <Button type="button" className="pricing-card-cta" onClick={onCtaClick}>
-        {plan.cta}
-      </Button>
-
-      <div className="pricing-card-features">
-        <p className="pricing-card-features-label">{includesLabel}</p>
-        <ul className="pricing-card-features-list">
-          {plan.features.map((feature) => (
-            <li key={feature} className="pricing-card-feature">
-              <HiCheck className="pricing-card-feature-icon" aria-hidden="true" />
-              <span>{feature}</span>
-            </li>
-          ))}
-        </ul>
+        <div className="pricing-card-actions">
+          <button type="button" className="pricing-card-action-primary" onClick={onCtaClick}>
+            {plan.cta}
+          </button>
+          <button
+            type="button"
+            className="pricing-card-action-icon"
+            onClick={onCtaClick}
+            aria-label={plan.cta}
+          >
+            <HiPlus className="h-5 w-5" aria-hidden="true" />
+          </button>
+        </div>
       </div>
     </article>
   )

@@ -1,4 +1,4 @@
-import type { ReactNode, RefObject } from 'react'
+import type { ReactNode } from 'react'
 import { Container } from '../ui'
 
 export interface SplitIntroSectionProps {
@@ -8,7 +8,6 @@ export interface SplitIntroSectionProps {
   eyebrowTheme?: boolean
   alignDescriptionEnd?: boolean
   id?: string
-  titleRef?: RefObject<HTMLHeadingElement | null>
   children?: ReactNode
 }
 
@@ -19,7 +18,6 @@ export function SplitIntroSection({
   eyebrowTheme = false,
   alignDescriptionEnd = false,
   id,
-  titleRef,
   children,
 }: SplitIntroSectionProps) {
   return (
@@ -34,9 +32,7 @@ export function SplitIntroSection({
         >
           <div className="min-w-0">
             <p className={eyebrowTheme ? 'eyebrow eyebrow-theme' : 'eyebrow'}>{eyebrow}</p>
-            <h3 ref={titleRef} className="mt-md">
-              {title}
-            </h3>
+            <h3 className="mt-md">{title}</h3>
           </div>
 
           <div className="min-w-0">

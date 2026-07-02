@@ -28,6 +28,10 @@ export interface CasesPageContent {
   eyebrow: string
   title: string
   filtersAriaLabel: string
+  sliderAriaLabel: string
+  sliderPrev: string
+  sliderNext: string
+  sliderStatus: string
   items: CaseItem[]
   filters: CaseFilter[]
 }

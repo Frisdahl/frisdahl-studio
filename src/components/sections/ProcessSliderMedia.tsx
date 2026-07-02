@@ -34,20 +34,22 @@ export function ProcessSliderMedia({ step, loading }: ProcessSliderMediaProps) {
         className="process-slider-media process-slider-media--dual"
         data-position={mediaPosition}
       >
-        <img
-          src={step.imageSrc}
-          alt={step.imageAlt}
-          className="process-slider-media-portrait process-slider-media-portrait--primary"
-          loading={loading}
-          decoding="async"
-        />
-        <img
-          src={step.imageSrcSecondary}
-          alt={step.imageAltSecondary}
-          className="process-slider-media-portrait process-slider-media-portrait--secondary"
-          loading="lazy"
-          decoding="async"
-        />
+        <div className="process-slider-media-dual-stack">
+          <img
+            src={step.imageSrc}
+            alt={step.imageAlt}
+            className="process-slider-media-portrait process-slider-media-portrait--primary"
+            loading={loading}
+            decoding="async"
+          />
+          <img
+            src={step.imageSrcSecondary}
+            alt={step.imageAltSecondary}
+            className="process-slider-media-portrait process-slider-media-portrait--secondary"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
       </div>
     )
   }

@@ -10,9 +10,9 @@ export function SplitPanelSection({ content }: SplitPanelSectionProps) {
       <div className="split-panel">
         <div className="split-panel-content">
           <div className="split-panel-content-inner">
-            <h2 id="split-panel-heading" className="split-panel-title">
+            <h3 id="split-panel-heading" className="split-panel-title">
               {content.title}
-            </h2>
+            </h3>
             <p className="split-panel-description mt-lg">{content.description}</p>
           </div>
         </div>

@@ -1,12 +1,8 @@
-import { type CSSProperties, type HTMLAttributes, useRef } from 'react'
-import { usePromoVideoReveal } from '../../hooks/usePromoVideoReveal'
+import { type HTMLAttributes } from 'react'
 
 interface PromoSectionProps extends HTMLAttributes<HTMLElement> {}
 
 export function PromoSection({ className = '', ...props }: PromoSectionProps) {
-  const videoFrameRef = useRef<HTMLDivElement>(null)
-  const revealProgress = usePromoVideoReveal(videoFrameRef)
-
   return (
     <section
       id="promo"
@@ -16,11 +12,7 @@ export function PromoSection({ className = '', ...props }: PromoSectionProps) {
       <div className="promo-stage">
         <div className="container-promo promo-stage-inner">
           <div className="promo-video-mask">
-            <div
-              ref={videoFrameRef}
-              className="promo-video-frame"
-              style={{ '--promo-reveal': revealProgress } as CSSProperties}
-            >
+            <div className="promo-video-frame">
               <video
                 className="promo-video"
                 src="/promo_h264.mp4"

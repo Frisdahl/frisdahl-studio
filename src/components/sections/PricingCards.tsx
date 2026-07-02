@@ -10,18 +10,12 @@ export function PricingCards() {
   const { openDrawer } = useContactDrawer()
 
   return (
-    <div className="pricing-cards mt-4xl lg:mt-5xl">
-      <ul className="pricing-cards-grid">
-        {plans.items.map((plan) => (
-          <li key={plan.id} className={plan.featured ? 'pricing-cards-item-featured' : undefined}>
-            <PricingCard
-              plan={plan}
-              includesLabel={plans.includesLabel}
-              onCtaClick={() => openDrawer(plan.ctaAction)}
-            />
-          </li>
-        ))}
-      </ul>
-    </div>
+    <ul className="pricing-cards-grid">
+      {plans.items.map((plan) => (
+        <li key={plan.id} className={plan.featured ? 'pricing-cards-item-featured' : undefined}>
+          <PricingCard plan={plan} onCtaClick={() => openDrawer(plan.ctaAction)} />
+        </li>
+      ))}
+    </ul>
   )
 }

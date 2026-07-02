@@ -12,8 +12,3 @@ export function resetWindowScroll() {
   window.dispatchEvent(new Event('scroll'))
   window.dispatchEvent(new Event(ROUTE_SCROLL_RESET_EVENT))
 }
-
-export function resetPageTheme() {
-  document.body.classList.remove('theme-dark')
-  document.body.style.setProperty('--theme-progress', '0')
-}

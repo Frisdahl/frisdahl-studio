@@ -1,4 +1,4 @@
-import { MEET_US_PATH } from '../lib/routes'
+import { MEET_US_PATH, PRIVACY_POLICY_PATH } from '../lib/routes'
 import type { Locale } from './navigation'
 import { defaultLocale } from './navigation'
 
@@ -64,7 +64,7 @@ const footerContent = {
     phoneHref: 'tel:+4512345678',
     copyright: '© Frisdahl Studio. Alle rettigheder forbeholdes.',
     legalLinks: [
-      { label: 'Datapolitik', href: '#datapolitik' },
+      { label: 'Datapolitik', href: PRIVACY_POLICY_PATH },
       { label: 'Databehandleraftale', href: '#databehandleraftale' },
       { label: 'Salgs- og leveringsaftaler', href: '#salgs-og-leveringsaftaler' },
     ],
@@ -120,7 +120,7 @@ const footerContent = {
     phoneHref: 'tel:+4512345678',
     copyright: '© Frisdahl Studio. All rights reserved.',
     legalLinks: [
-      { label: 'Privacy policy', href: '#privacy-policy' },
+      { label: 'Privacy policy', href: PRIVACY_POLICY_PATH },
       { label: 'Data processing agreement', href: '#data-processing-agreement' },
       { label: 'Sales and delivery terms', href: '#sales-and-delivery-terms' },
     ],

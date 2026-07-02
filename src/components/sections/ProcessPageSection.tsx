@@ -9,8 +9,6 @@ export function ProcessPageSection() {
 
   return (
     <section className="process-page relative isolate py-section-sm lg:py-section" aria-label={title}>
-      <div className="process-page-blob" aria-hidden="true" />
-
       <Container className="relative z-[1]">
         <div className="cases-page-intro">
           <p className="eyebrow">{eyebrow}</p>

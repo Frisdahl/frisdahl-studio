@@ -11,8 +11,6 @@ export function CaseDetailHero({ hero }: CaseDetailHeroProps) {
 
   return (
     <section className="case-detail relative isolate pt-section-sm lg:pt-section" aria-label={title}>
-      <div className="cases-page-blob" aria-hidden="true" />
-
       <Container className="relative z-[1]">
         <p className="eyebrow">{eyebrow}</p>
 

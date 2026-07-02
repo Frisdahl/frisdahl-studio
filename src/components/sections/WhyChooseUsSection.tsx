@@ -45,9 +45,9 @@ export function WhyChooseUsSection({ content }: WhyChooseUsSectionProps) {
       <Container>
         <div className="why-choose-grid">
           <div className="why-choose-copy">
-            <h2 id="why-choose-title" className="why-choose-title">
+            <h4 id="why-choose-title" className="why-choose-title">
               {content.title}
-            </h2>
+            </h4>
           </div>
 
           <div className="why-choose-marquees">

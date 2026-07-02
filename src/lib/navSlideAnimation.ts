@@ -29,13 +29,18 @@ export function hideNavClusterSlide(
   forceReflow(cluster)
 }
 
-export function revealNavClusterSlide(
+export function collapseNavClusterSlide(
   cluster: HTMLElement | null,
   pinnedTop: number,
 ) {
   if (!cluster) return
 
-  hideNavClusterSlide(cluster, pinnedTop)
+  cluster.style.transition = NAV_REVEAL_TRANSITION
+  cluster.style.transform = `translate3d(-50%, calc(-100% - ${pinnedTop}px), 0)`
+}
+
+export function showNavClusterSlide(cluster: HTMLElement | null) {
+  if (!cluster) return
 
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
@@ -43,6 +48,21 @@ export function revealNavClusterSlide(
       cluster.style.transform = 'translate3d(-50%, 0, 0)'
     })
   })
+}
+
+export function prepareNavClusterReveal(
+  cluster: HTMLElement | null,
+  pinnedTop: number,
+) {
+  hideNavClusterSlide(cluster, pinnedTop)
+}
+
+export function revealNavClusterSlide(
+  cluster: HTMLElement | null,
+  pinnedTop: number,
+) {
+  prepareNavClusterReveal(cluster, pinnedTop)
+  showNavClusterSlide(cluster)
 }
 
 export function resetHeaderSlide(header: HTMLElement | null) {
@@ -60,10 +80,15 @@ export function hideHeaderSlide(header: HTMLElement | null) {
   forceReflow(header)
 }
 
-export function revealHeaderSlide(header: HTMLElement | null) {
+export function collapseHeaderSlide(header: HTMLElement | null) {
   if (!header) return
 
-  hideHeaderSlide(header)
+  header.style.transition = NAV_REVEAL_TRANSITION
+  header.style.transform = 'translate3d(0, -100%, 0)'
+}
+
+export function showHeaderSlide(header: HTMLElement | null) {
+  if (!header) return
 
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
@@ -71,4 +96,13 @@ export function revealHeaderSlide(header: HTMLElement | null) {
       header.style.transform = 'translate3d(0, 0, 0)'
     })
   })
+}
+
+export function prepareHeaderReveal(header: HTMLElement | null) {
+  hideHeaderSlide(header)
+}
+
+export function revealHeaderSlide(header: HTMLElement | null) {
+  prepareHeaderReveal(header)
+  showHeaderSlide(header)
 }

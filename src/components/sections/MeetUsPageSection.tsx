@@ -38,8 +38,6 @@ export function MeetUsPageSection() {
 
   return (
     <section className="meet-us-page relative isolate py-section-sm lg:py-section" aria-label={title}>
-      <div className="meet-us-page-blob" aria-hidden="true" />
-
       <Container className="relative z-[1]">
         <div className="cases-page-intro">
           <p className="eyebrow">{eyebrow}</p>

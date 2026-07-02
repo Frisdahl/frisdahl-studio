@@ -2,7 +2,7 @@ import { HiCalendar } from 'react-icons/hi2'
 import { useLocale } from '../../context/LocaleContext'
 import { useContactDrawer } from '../../context/ContactDrawerContext'
 import { getHomeContent } from '../../data/home'
-import { Button, Container } from '../ui'
+import { Button, Container, CtaPillButton } from '../ui'
 import { ContactDecorations } from './ContactDecorations'
 
 export interface ContactSectionProps {
@@ -37,9 +37,9 @@ export function ContactSection({ surface = 'default' }: ContactSectionProps) {
           </div>
 
           <div className="mt-3xl flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button type="button" onClick={() => openDrawer('contact')}>
+            <CtaPillButton onClick={() => openDrawer('contact')}>
               {contact.ctaPrimary}
-            </Button>
+            </CtaPillButton>
             <Button
               type="button"
               variant="secondary"

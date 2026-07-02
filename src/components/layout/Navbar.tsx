@@ -2,16 +2,15 @@ import { Link, useLocation } from 'react-router-dom'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocale } from '../../context/LocaleContext'
 import { useContactDrawer } from '../../context/ContactDrawerContext'
+import { getFooterContent } from '../../data/footer'
 import { getNavigation, getNavDropdownColumns, navDropdownHrefs } from '../../data/navigation'
 import { toAppHref } from '../../lib/routes'
 import { useFixedNav } from '../../hooks/useFixedNav'
 import { useNavLinkHighlight } from '../../hooks/useNavLinkHighlight'
 import { Container, LanguageSwitcher, NavContactLink, UnderlineLink } from '../ui'
-import { HeaderBrand } from './HeaderBrand'
-import { NavCompactBrand } from './NavCompactBrand'
 import { NavDropdown } from './NavDropdown'
+import { HeaderBrand } from './HeaderBrand'
 import { NavMegaMenu } from './NavMegaMenu'
-
 interface MenuToggleIconProps {
   isOpen: boolean
 }
@@ -73,6 +72,7 @@ export function Navbar() {
   })
   const { metrics: navHighlight, updateHighlight, hideHighlight } = useNavLinkHighlight(navListRef)
   const { items, mobileGroups, navAriaLabel, menuOpen, menuClose } = getNavigation(locale)
+  const { logoLabel } = getFooterContent(locale)
   const activeDropdownLabel =
     items.find((item) => item.href === activeDropdown)?.label ?? ''
   const activeDropdownColumns = activeDropdown
@@ -184,7 +184,10 @@ export function Navbar() {
 
   return (
     <>
-      {activeDropdown ? <div className="nav-dropdown-overlay" aria-hidden="true" /> : null}
+      <div
+        className={`nav-dropdown-overlay ${activeDropdown ? 'nav-dropdown-overlay-visible' : ''}`}
+        aria-hidden={!activeDropdown}
+      />
 
       {isOpen ? (
         <>
@@ -196,7 +199,7 @@ export function Navbar() {
           />
 
           <nav id="mobile-menu" className="mobile-menu-panel" aria-label={navAriaLabel}>
-            <Container>
+            <Container fullWidth>
               <div className="mobile-menu-content">
                 {mobileGroups.map(({ title, items: groupItems }) => (
                   <div key={title} className="mobile-nav-group">
@@ -236,9 +239,9 @@ export function Navbar() {
       ) : null}
 
       <header ref={headerRef} className="site-header">
-        <Container ref={containerRef}>
+        <Container ref={containerRef} fullWidth>
           <div className="site-header-bar">
-            <HeaderBrand />
+            <HeaderBrand label={logoLabel} />
 
             <div className="site-header-nav-slot">
               <div
@@ -264,7 +267,6 @@ export function Navbar() {
               >
                 <nav ref={navRef} className="site-header-nav" aria-label={navAriaLabel}>
                   <ul ref={navListRef} className="site-header-nav-list">
-                    <NavCompactBrand />
                     <span
                       className="nav-link-highlight"
                       aria-hidden="true"
@@ -311,7 +313,7 @@ export function Navbar() {
 
                 {activeDropdown && (
                   <div className="nav-mega-menu-shell">
-                    <Container>
+                    <Container fullWidth>
                       <NavMegaMenu
                         columns={activeDropdownColumns}
                         menuLabel={activeDropdownLabel}

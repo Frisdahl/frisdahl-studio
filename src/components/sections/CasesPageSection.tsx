@@ -1,14 +1,14 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useMemo, useState } from 'react'
 import { HiXMark } from 'react-icons/hi2'
-import { CaseRow } from '../cards/CaseRow'
+import { CaseSlideCard } from '../cards/CaseSlideCard'
 import { useLocale } from '../../context/LocaleContext'
 import {
   getCasesPageContent,
   getCasesResultsCountLabel,
 } from '../../data/cases'
 import type { CaseCategory } from '../../types/cases'
-import { Container } from '../ui'
+import { Container, HorizontalDragSlider } from '../ui'
 
 const placeholderTones = ['bg-peach', 'bg-peach-hover'] as const
 const countEnterEase = [0.16, 1, 0.3, 1] as const
@@ -45,8 +45,17 @@ const countSlideReducedMotionVariants = {
 export function CasesPageSection() {
   const { locale } = useLocale()
   const shouldReduceMotion = useReducedMotion()
-  const { eyebrow, title, filters, filtersAriaLabel, items } =
-    getCasesPageContent(locale)
+  const {
+    eyebrow,
+    title,
+    filters,
+    filtersAriaLabel,
+    sliderAriaLabel,
+    sliderPrev,
+    sliderNext,
+    sliderStatus,
+    items,
+  } = getCasesPageContent(locale)
   const [activeFilter, setActiveFilter] = useState<CaseCategory | null>(null)
 
   const filteredItems = useMemo(() => {
@@ -56,6 +65,7 @@ export function CasesPageSection() {
 
   const resultsCountLabel = getCasesResultsCountLabel(locale, filteredItems.length)
   const resultsCountKey = `${activeFilter ?? 'all'}-${filteredItems.length}`
+  const sliderResetKey = `${activeFilter ?? 'all'}-${filteredItems.map((item) => item.id).join('-')}`
 
   const handleFilterClick = (category: CaseCategory) => {
     setActiveFilter((current) => (current === category ? null : category))
@@ -67,8 +77,6 @@ export function CasesPageSection() {
 
   return (
     <section className="cases-page relative isolate py-section-sm lg:py-section" aria-label={title}>
-      <div className="cases-page-blob" aria-hidden="true" />
-
       <Container className="relative z-[1]">
         <div className="cases-page-intro">
           <p className="eyebrow">{eyebrow}</p>
@@ -129,23 +137,34 @@ export function CasesPageSection() {
 
         <div className="cases-page-divider" role="separator" aria-hidden="true" />
 
-        <div className="cases-page-list">
-          {filteredItems.map((item, index) => (
-            <CaseRow
-              key={item.id}
-              client={item.client}
-              industry={item.industry}
-              href={item.href}
-              imageSrc={item.imageSrc}
-              imageAlt={item.imageAlt}
-              keywords={item.keywords}
-              description={item.description}
-              panelHoverColor={item.panelHoverColor}
-              reversed={index % 2 === 0}
-              placeholderClassName={placeholderTones[index % placeholderTones.length]}
-            />
-          ))}
-        </div>
+        {filteredItems.length > 0 ? (
+          <HorizontalDragSlider
+            className="cases-page-slider cases-slider"
+            ariaLabel={sliderAriaLabel}
+            prevLabel={sliderPrev}
+            nextLabel={sliderNext}
+            statusTemplate={sliderStatus}
+            slideCount={filteredItems.length}
+            slidesPerView={2}
+            resetKey={sliderResetKey}
+            dragThresholdPx={3}
+            snapRatio={0.24}
+            axisLockRatio={1.45}
+          >
+            {filteredItems.map((item, index) => (
+              <figure key={item.id} className="horizontal-drag-slider-slide">
+                <CaseSlideCard
+                  client={item.client}
+                  industry={item.industry}
+                  href={item.href}
+                  imageSrc={item.imageSrc}
+                  imageAlt={item.imageAlt}
+                  placeholderClassName={placeholderTones[index % placeholderTones.length]}
+                />
+              </figure>
+            ))}
+          </HorizontalDragSlider>
+        ) : null}
       </Container>
     </section>
   )
