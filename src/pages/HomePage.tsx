@@ -5,16 +5,12 @@ import {
   FeatureSection,
   Hero,
   PartnershipSection,
-  PromoSection,
 } from '../components/sections'
 
 export function HomePage() {
   return (
     <main className="page-surface bg-home-page overflow-x-clip">
-      <div className="home-hero-promo">
-        <Hero />
-        <PromoSection className="promo-section-home" />
-      </div>
+      <Hero />
       <FeatureSection />
       <CasesSection />
       <ConceptSection />

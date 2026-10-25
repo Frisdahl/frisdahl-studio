@@ -14,7 +14,7 @@ export function CasesSection() {
 
   return (
     <section id="portfolio" className="py-section-sm lg:py-section" aria-label={cases.ariaLabel}>
-      <Container>
+      <Container fullWidth>
         <div className="mb-xl">
           <p className="eyebrow eyebrow-theme">{cases.eyebrow}</p>
           <div className="mt-md flex flex-col gap-lg sm:flex-row sm:items-end sm:justify-between">

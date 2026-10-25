@@ -10,27 +10,6 @@ export interface CaseCardProps {
   placeholderClassName?: string
 }
 
-function CaseCardArrow() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="14"
-      height="11"
-      viewBox="0 0 14 11"
-      fill="none"
-      className="case-card-action-arrow"
-      aria-hidden="true"
-    >
-      <path
-        fill="currentColor"
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="m9.84 1.08 3.977 3.978a.625.625 0 0 1 0 .884L9.839 9.919a.625.625 0 0 1-.883-.884l2.91-2.91H1.375a.625.625 0 0 1 0-1.25h10.491l-2.91-2.91a.625.625 0 1 1 .883-.884"
-      />
-    </svg>
-  )
-}
-
 export function CaseCard({
   client,
   type,
@@ -61,19 +40,9 @@ export function CaseCard({
           />
         )}
 
-        <span className="case-card-type">
-          <span className="case-card-type-text">{type}</span>
-        </span>
-
-        <span className="case-card-action">
-          <span className="case-card-action-track">
-            <span className="case-card-action-label-wrap" aria-hidden="true">
-              <span className="case-card-action-label">{viewCaseLabel}</span>
-            </span>
-            <span className="case-card-action-icon" aria-hidden="true">
-              <CaseCardArrow />
-            </span>
-          </span>
+        <span className="case-card-caption">
+          <span className="case-card-client">{client}</span>
+          <span className="case-card-industry">{type}</span>
         </span>
       </div>
     </Link>

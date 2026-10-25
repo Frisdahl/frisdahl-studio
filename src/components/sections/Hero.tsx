@@ -1,119 +1,75 @@
-import { useState } from 'react'
-import { HiSpeakerWave, HiSpeakerXMark } from 'react-icons/hi2'
-import { useContactDrawer } from '../../context/ContactDrawerContext'
 import { useLocale } from '../../context/LocaleContext'
-import { getHomeContent } from '../../data/home'
-import { toAppHref } from '../../lib/routes'
-import { Container, CtaPillButton } from '../ui'
+import { CtaPillButton } from '../ui'
+import styles from './Hero.module.css'
 
-const heroVideoSrc: string | null = null
+const heroContent = {
+  da: {
+    line1Start: 'DIGITALE',
+    line1End: 'BRANDS',
+    line2Start: 'DER',
+    line2End: 'SKABER V\u00c6RDI.',
+    cta: 'SE VORES ARBEJDE',
+    intro:
+      'Vi skaber digitale oplevelser, der styrker dit brand og skaber m\u00e5lbare resultater. Strategi, design og teknologi \u2013 alt samlet \u00e9t sted.',
+    aboutLabel: 'HVEM VI ER',
+    about:
+      'Frisdahl Studio er en digital design- og udviklingspartner for ambiti\u00f8se brands. Vi skaber identiteter og digitale oplevelser, der st\u00e5r skarpt, f\u00f8les rigtige og skaber m\u00e5lbare resultater.',
+  },
+  en: {
+    line1Start: 'DIGITAL',
+    line1End: 'BRANDS',
+    line2Start: 'THAT',
+    line2End: 'CREATE VALUE.',
+    cta: 'VIEW OUR WORK',
+    intro:
+      'We create digital experiences that strengthen your brand and deliver measurable results. Strategy, design, and technology \u2013 all in one place.',
+    aboutLabel: 'WHO WE ARE',
+    about:
+      'Frisdahl Studio is a digital design and development partner for ambitious brands. We create identities and digital experiences that stand out, feel right, and deliver measurable results.',
+  },
+} as const
 
-export type HeroVariant = 'home' | 'pricing'
-
-interface HeroProps {
-  variant?: HeroVariant
-}
-
-interface MuteToggleIconProps {
-  muted: boolean
-}
-
-function MuteToggleIcon({ muted }: MuteToggleIconProps) {
-  const className = 'h-7 w-7 text-surface sm:h-8 sm:w-8'
-
-  if (muted) {
-    return <HiSpeakerXMark className={className} aria-hidden="true" />
-  }
-
-  return <HiSpeakerWave className={className} aria-hidden="true" />
-}
-
-export function Hero({
-  variant = 'home',
-}: HeroProps) {
+export function Hero() {
   const { locale } = useLocale()
-  const { hero, pricingPage } = getHomeContent(locale)
-  const { openDrawer } = useContactDrawer()
-  const content = variant === 'pricing' ? pricingPage.hero : hero
-  const isPricing = variant === 'pricing'
-  const [isMuted, setIsMuted] = useState(true)
-  const hasVideo = Boolean(heroVideoSrc)
-  const heroImageSrc = isPricing && 'imageSrc' in content ? content.imageSrc : null
-  const heroImageAlt = isPricing && 'imageAlt' in content ? content.imageAlt : ''
-
-  const muteLabel = isMuted ? hero.muteOn : hero.muteOff
+  const content = heroContent[locale]
 
   return (
-    <section className={`hero-section${isPricing ? ' hero-section--pricing' : ''}`}>
-      <Container className="relative z-10">
-        <div className="hero-grid grid min-h-[calc(100svh-4rem)] items-start gap-12 px-2 pb-12 pt-6 max-[1088px]:gap-8 max-[1088px]:pb-8 max-[1088px]:pt-5 min-[1089px]:sm:gap-12 sm:px-3 sm:pt-8 lg:min-h-0 lg:gap-10 lg:px-0 lg:pb-16 lg:pt-16">
-          <div className="hero-grid-copy min-w-0 self-center lg:max-w-none">
-            <p className="eyebrow text-secondary">{content.eyebrow}</p>
-            <h1 className="hero-grid-title mt-5 max-[1088px]:mt-3">
-              <span className="block min-[801px]:max-[1088px]:whitespace-nowrap">
-                {content.headlineLine1}
-              </span>
-              {content.headlineLine2 ? (
-                <span className="block min-[801px]:max-[1088px]:whitespace-nowrap">
-                  {content.headlineLine2}
-                </span>
-              ) : null}
-            </h1>
-            <p className="mt-6 max-w-[38rem] text-body-lg text-secondary max-[1088px]:mt-4 min-[1089px]:sm:mt-7 lg:max-w-[44rem]">
-              {content.description}
-            </p>
-            <div className="mt-8 flex flex-col gap-4 max-[1088px]:mt-5 max-[1088px]:gap-3 min-[1089px]:sm:mt-9 sm:flex-row sm:items-center">
-              {isPricing ? (
-                <CtaPillButton onClick={() => openDrawer('book')}>{content.ctaPrimary}</CtaPillButton>
-              ) : (
-                <CtaPillButton href={toAppHref('#contact')}>{content.ctaPrimary}</CtaPillButton>
-              )}
-            </div>
+    <section className={styles.hero} aria-labelledby="home-hero-title">
+      <div className={styles.inner}>
+        <h1 id="home-hero-title" className={styles.title}>
+          <span className={styles.titleRow}>
+            <span>{content.line1Start}</span>
+            <span className={styles.inlineVisual} aria-hidden="true">
+              <video src="/promo_h264.mp4" autoPlay muted loop playsInline />
+            </span>
+            <span>{content.line1End}</span>
+          </span>
+          <span className={styles.titleRow}>
+            <span>{content.line2Start}</span>
+            <span className={`${styles.inlineVisual} ${styles.secondaryVisual}`} aria-hidden="true">
+              <img src="/images/hero/hero-secondary.avif" alt="" />
+            </span>
+            <span>{content.line2End}</span>
+          </span>
+        </h1>
+
+        <div className={styles.heroFooter}>
+          <div className={`${styles.heroFooterColumn} ${styles.actionColumn}`}>
+            <p className={styles.introText}>{content.intro}</p>
+            <CtaPillButton href="/cases" className="cases-section-cta">
+              {content.cta}
+            </CtaPillButton>
           </div>
-
-          <div className="hero-grid-media relative min-w-0 w-full pt-3 pb-12 max-[1088px]:pb-6 max-[1088px]:pt-2 sm:pt-4 sm:pb-8">
-            <div className="hero-grid-media-inner relative mx-auto w-full max-w-[520px] lg:ml-auto lg:mr-0 lg:max-w-[480px]">
-              <div className="hero-grid-media-frame relative z-[2] rounded-tl-xl rounded-bl-xl rounded-br-xl rounded-tr-[2.75rem] bg-surface shadow-medium lg:rounded-tr-[3rem]">
-                <div className="hero-grid-media-aspect aspect-[3/4] max-h-[500px] w-full overflow-hidden rounded-[inherit] lg:max-h-[520px]">
-                  {hasVideo && heroVideoSrc ? (
-                    <video
-                      className="h-full w-full object-cover"
-                      src={heroVideoSrc}
-                      autoPlay
-                      loop
-                      muted={isMuted}
-                      playsInline
-                    />
-                  ) : heroImageSrc ? (
-                    <img
-                      src={heroImageSrc}
-                      alt={heroImageAlt}
-                      className="h-full w-full object-cover"
-                      loading="eager"
-                      decoding="async"
-                      fetchPriority="high"
-                    />
-                  ) : (
-                    <div className="h-full w-full bg-peach" aria-hidden="true" />
-                  )}
-                </div>
-
-                {hasVideo ? (
-                  <button
-                    type="button"
-                    className="absolute left-0 top-1/2 z-10 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary text-surface shadow-medium transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:h-16 sm:w-16"
-                    aria-label={muteLabel}
-                    aria-pressed={isMuted}
-                    onClick={() => setIsMuted((muted) => !muted)}
-                  >
-                    <MuteToggleIcon muted={isMuted} />
-                  </button>
-                ) : null}
-              </div>
-            </div>
+          <div className={`${styles.heroFooterColumn} ${styles.aboutColumn}`}>
+            <div className={styles.aboutDivider} aria-hidden="true" />
+            <p className={styles.aboutEyebrow}>{content.aboutLabel}</p>
+            <p className={styles.aboutText}>
+              <span className={styles.aboutMark} aria-hidden="true">{'\u273a'}</span>
+              {content.about}
+            </p>
           </div>
         </div>
-      </Container>
+      </div>
     </section>
   )
 }

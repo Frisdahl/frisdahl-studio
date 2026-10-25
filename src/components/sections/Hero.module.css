@@ -1,0 +1,178 @@
+.hero {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 38rem;
+  overflow: hidden;
+  background: #f8f8f9;
+  color: #010100;
+  margin-bottom: clamp(3rem, 6vw, 6rem);
+}
+
+@media (min-width: 1024px) {
+  .hero {
+    height: calc(100svh - var(--site-header-height));
+  }
+}
+
+.inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 90rem;
+  height: 100%;
+  margin-inline: auto;
+  padding: clamp(5.5rem, 9vh, 8rem) clamp(1rem, 2.5vw, 2.5rem) 2rem;
+}
+
+.title {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
+  color: #000000;
+  font-family: "PP Mori", "Aktiv Grotesk", Arial, sans-serif;
+  font-size: clamp(2rem, 8.25vw, 8.25rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.065em;
+  text-transform: uppercase;
+}
+
+.title span {
+  display: block;
+  white-space: nowrap;
+}
+
+.titleRow {
+  position: relative;
+  display: flex !important;
+  align-items: center;
+  gap: 0.14em;
+}
+
+.titleRow > span:not(.inlineVisual) {
+  position: relative;
+  z-index: 2;
+}
+
+.inlineVisual {
+  width: 1.65em;
+  height: 0.92em;
+  flex: 0 0 auto;
+  align-self: center;
+  transform: translateY(-0.055em);
+  overflow: hidden;
+  border-radius: 999px;
+}
+
+.inlineVisual img,
+.inlineVisual video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.secondaryVisual {
+  width: 1.55em;
+  height: 1.05em;
+  border-radius: 0;
+}
+
+.heroFooter {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(1.5rem, 4vw, 5rem);
+  margin-top: auto;
+  padding-top: clamp(2.5rem, 7vh, 5.5rem);
+}
+
+.heroFooterColumn {
+  min-width: 0;
+}
+
+.actionColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.introText {
+  max-width: 31rem;
+  margin: 0 0 clamp(1.75rem, 3.5vh, 2.75rem);
+  color: #141314;
+  font-family: "Aktiv Grotesk", Arial, sans-serif;
+  font-size: clamp(1rem, 1.35vw, 1.35rem);
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+
+.aboutDivider {
+  width: 100%;
+  height: 1px;
+  background: rgb(0 0 0 / 18%);
+}
+
+.aboutEyebrow {
+  margin-top: 0.65rem;
+  color: #6f6f6f;
+  font-family: "Aktiv Grotesk", Arial, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.04em;
+}
+
+.aboutText {
+  max-width: 46rem;
+  margin-top: 1.35rem;
+  color: #000000;
+  font-family: "PP Mori", "Aktiv Grotesk", Arial, sans-serif;
+  font-size: clamp(1.15rem, 1.65vw, 1.65rem);
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+}
+
+.aboutMark {
+  display: inline-block;
+  margin-right: 0.5em;
+  color: #000000;
+}
+
+@media (max-width: 700px) {
+  .hero {
+    height: auto;
+    min-height: 100svh;
+  }
+
+  .inner {
+    padding-top: clamp(5rem, 12vh, 6.5rem);
+  }
+
+  .title {
+    line-height: 1.02;
+    letter-spacing: -0.06em;
+  }
+
+  .heroFooter {
+    grid-template-columns: 1fr;
+    margin-top: 2.5rem;
+    padding-top: 0;
+  }
+
+  .introText {
+    max-width: 28rem;
+  }
+
+  .aboutColumn {
+    margin-top: 1rem;
+  }
+
+}

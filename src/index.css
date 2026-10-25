@@ -3,6 +3,14 @@
 @import "@fontsource/geist-mono/400.css";
 
 @font-face {
+  font-family: "PP Mori";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/PPMori-Regular.woff2") format("woff2");
+}
+
+@font-face {
   font-family: "Aktiv Grotesk";
   font-style: normal;
   font-weight: 400;
@@ -38,7 +46,7 @@
 @theme {
   /* Typography */
   --font-sans: "Aktiv Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Aktiv Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "PP Mori", "Aktiv Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-nav: "Aktiv Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-brand: "Aktiv Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -48,7 +56,11 @@
   --text-display--line-height: 1.04;
   --text-display--letter-spacing: -0.0206em;
 
-  --text-h1: 4.5rem;
+  --text-h1: clamp(
+    calc(0.0625rem * 32),
+    calc(0.0625rem * 32 + (96 - 32) * ((100vw - (0.0625rem * 375)) / (1600 - 375))),
+    calc(0.0625rem * 96)
+  );
   --text-h1--line-height: 1.04;
   --text-h1--letter-spacing: -0.0206em;
 
@@ -91,7 +103,7 @@
 
   /* Colors */
   --color-page-cream: #f9f8f8;
-  --color-home-page: #eeefef;
+  --color-home-page: #f8f8f9;
   --color-cases-page: #f9f8f8;
   --color-background: #f9f8f8;
   --color-background-alt: #f9f8f8;
@@ -228,6 +240,7 @@
 
   h2 {
     @apply text-h2 font-medium;
+    font-weight: 500 !important;
   }
 
   h3 {
@@ -252,7 +265,6 @@
 
   @media (max-width: 1536px) {
     :root {
-      --text-h1: 3.5rem;
       --text-h3: 2rem;
       --text-body-lg: 1.25rem;
       --text-body: 1.25rem;
@@ -262,7 +274,6 @@
 
   @media (max-width: 1088px) {
     :root {
-      --text-h1: 2.75rem;
       --text-h3: 1.75rem;
       --text-body-lg: 1.0625rem;
       --text-body: 1.0625rem;
@@ -272,7 +283,6 @@
 
   @media (max-width: 800px) {
     :root {
-      --text-h1: 2.25rem;
       --text-h3: 2rem;
       --text-body-lg: 1rem;
       --text-body: 1rem;
@@ -284,8 +294,8 @@
 @layer components {
   .site-container {
     box-sizing: border-box;
-    width: var(--site-grid-width);
-    max-width: var(--site-max-width);
+    width: calc(100% - 2 * clamp(1rem, 2.5vw, 2.5rem));
+    max-width: calc(90rem - 2 * clamp(1rem, 2.5vw, 2.5rem));
     margin-inline: auto;
   }
 
@@ -361,7 +371,7 @@
   @media (max-width: 1536px) and (min-width: 1089px) {
     .hero-grid-title,
     .cases-page-title {
-      font-size: 3rem;
+      font-size: var(--text-h1);
       line-height: 1.06;
       letter-spacing: -0.02em;
     }
@@ -407,6 +417,20 @@
   .hero-cta-btn:focus-visible {
     background-color: transparent;
     color: #141314;
+  }
+
+  .cases-section-cta {
+    gap: 0.75rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    padding-left: 1.5rem;
+    font-weight: 400;
+  }
+
+  .cases-section-cta .hero-cta-btn-icon {
+    width: 4.25rem;
+    height: 2.25rem;
+    background-color: #fd541c;
   }
 
   .hero-cta-btn-label {
@@ -794,7 +818,7 @@
   }
 
   .feature-section-title {
-    @apply max-w-[18ch] text-h2 font-semibold;
+    @apply max-w-[18ch] text-h2 font-medium;
   }
 
   .feature-section-label {
@@ -1839,7 +1863,13 @@
 
   .site-header {
     @apply relative z-50 px-4 sm:px-5 lg:px-6;
+    padding-inline: clamp(1rem, 2.5vw, 2.5rem);
     background-color: transparent;
+  }
+
+  .site-header > .site-container {
+    width: 100%;
+    max-width: calc(90rem - 2 * clamp(1rem, 2.5vw, 2.5rem));
   }
 
   @media (max-width: 1023px) {
@@ -2328,8 +2358,9 @@
   }
 
   .pricing-card {
-    @apply relative flex h-full min-h-[36rem] flex-col bg-[#eeefef] p-6 sm:p-7 lg:min-h-[40rem] lg:p-8;
+    @apply relative flex h-full min-h-[36rem] flex-col bg-[#f7f7f7] p-6 sm:p-7 lg:min-h-[40rem] lg:p-8;
     color: #141314;
+    font-weight: 400;
     transition:
       background-color 0.35s var(--ease-smooth),
       color 0.35s var(--ease-smooth);
@@ -2342,8 +2373,12 @@
   }
 
   .pricing-card-featured {
-    background-color: #141314;
-    color: #fffefe;
+    background-color: #1a1a1a;
+    color: #eeeeee;
+  }
+
+  .pricing-card-featured .pricing-card-feature {
+    border-color: #eeeeee1a;
   }
 
   .pricing-card-intro {
@@ -2356,12 +2391,21 @@
     color: color-mix(in srgb, currentColor 72%, transparent);
   }
 
+  .pricing-card-availability {
+    font-weight: 300;
+  }
+
   .pricing-card-marker {
     @apply inline-block h-2.5 w-2.5 shrink-0 bg-accent;
   }
 
   .pricing-card-title {
-    @apply max-w-[12ch] font-heading text-[clamp(2.5rem,4vw,3.75rem)] font-medium leading-[0.95] tracking-[-0.04em];
+    @apply max-w-[12ch] font-heading text-[clamp(2.5rem,4vw,3.75rem)] font-light leading-[0.95] tracking-[-0.04em];
+    font-weight: 300;
+  }
+
+  .pricing-card-featured .pricing-card-title {
+    color: #eeeeee;
   }
 
   .pricing-card-features {
@@ -3218,6 +3262,53 @@
 
   .case-card-image {
     @apply h-full w-full object-cover;
+    transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .case-card:hover .case-card-image,
+  .case-card:focus-visible .case-card-image {
+    transform: scale(1.035);
+  }
+
+  .case-card-caption {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    overflow: hidden;
+    color: #f9f8f8;
+    font-family: var(--font-heading);
+  }
+
+  .case-card-client {
+    font-size: clamp(1.5rem, 2.2vw, 2.25rem);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .case-card-industry {
+    margin-top: 0.45rem;
+    font-family: var(--font-nav);
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(120%);
+    transition:
+      opacity 420ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .case-card:hover .case-card-industry,
+  .case-card:focus-visible .case-card-industry {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .case-card-type {

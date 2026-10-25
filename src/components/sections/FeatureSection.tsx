@@ -87,7 +87,7 @@ export function FeatureSection() {
         style={{ '--feature-scroll-steps': stepCount } as CSSProperties}
       >
         <div className="feature-scroll-sticky">
-          <Container>
+          <Container fullWidth>
             <div className="feature-section-header">
               <h2 className="feature-section-title">{feature.title}</h2>
               <p className="feature-section-label">{feature.eyebrow}</p>
