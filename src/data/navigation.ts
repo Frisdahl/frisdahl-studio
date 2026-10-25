@@ -136,10 +136,10 @@ const aboutUsDropdownColumns = {
   ],
 } as const satisfies Record<Locale, NavDropdownColumn[]>
 
-export const navDropdownHrefs = new Set(['/#services', '/#om-os'])
+export const navDropdownHrefs = new Set([WEB_DEVELOPMENT_PATH, '/#om-os'])
 
 export const navItems: NavItem[] = [
-  { href: '/#services', labels: { da: 'Services', en: 'Services' } },
+  { href: WEB_DEVELOPMENT_PATH, labels: { da: 'Services', en: 'Services' } },
   { href: CASES_PATH, labels: { da: 'Cases', en: 'Cases' } },
   { href: '/#om-os', labels: { da: 'Om os', en: 'About us' } },
   { href: PRICING_PATH, labels: { da: 'Priser', en: 'Pricing' } },
@@ -149,7 +149,7 @@ export const navItems: NavItem[] = [
 const mobileNavGroups = [
   {
     title: { da: 'Samarbejde', en: 'Collaboration' },
-    hrefs: ['/#services', PRICING_PATH],
+    hrefs: [WEB_DEVELOPMENT_PATH, PRICING_PATH],
   },
   {
     title: { da: 'Om os', en: 'About us' },

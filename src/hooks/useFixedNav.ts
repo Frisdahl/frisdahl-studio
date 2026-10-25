@@ -121,22 +121,32 @@ export function useFixedNav({
     [clusterRef],
   )
 
+  // `flush` forces the pinned class to render before the inline styles are
+  // applied. It must be false when called during React's layout phase, where
+  // flushSync is not allowed and the update is committed before paint anyway.
   const setPinned = useCallback(
-    (pinned: boolean) => {
-      flushSync(() => {
+    (pinned: boolean, flush: boolean) => {
+      if (flush) {
+        flushSync(() => {
+          setIsPinned(pinned)
+        })
+      } else {
         setIsPinned(pinned)
-      })
+      }
       applyPinnedStyles(pinned)
     },
     [applyPinnedStyles],
   )
 
-  const pinDesktopNav = useCallback(() => {
-    if (!isDesktopNav()) return
+  const pinDesktopNav = useCallback(
+    (flush = true) => {
+      if (!isDesktopNav()) return
 
-    measurePosition()
-    setPinned(true)
-  }, [measurePosition, setPinned])
+      measurePosition()
+      setPinned(true, flush)
+    },
+    [measurePosition, setPinned],
+  )
 
   const resetScrollStyles = useCallback(() => {
     resetNavSurfaceScroll(clusterRef.current)
@@ -165,7 +175,7 @@ export function useFixedNav({
     resetScrollStyles()
     isReadyRef.current = true
     setIsReady(true)
-    pinDesktopNav()
+    pinDesktopNav(false)
   }, [clusterRef, measurePosition, pinDesktopNav, resetScrollStyles, syncSiteHeaderHeight])
 
   useEffect(() => {
@@ -195,10 +205,11 @@ export function useFixedNav({
       updateScrollState(getScrollY())
     }
 
+    // Dispatched synchronously from ScrollToTop's layout effect.
     const onRouteScrollReset = () => {
       syncSiteHeaderHeight()
       resetScrollStyles()
-      pinDesktopNav()
+      pinDesktopNav(false)
       updateScrollState(0)
     }
 

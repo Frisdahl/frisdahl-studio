@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Footer, Navbar, ScrollToTop, SmoothScroll } from './components/layout'
-import { ContactDrawerProvider } from './context/ContactDrawerContext'
-import { LocaleProvider } from './context/LocaleContext'
+import { ContactDrawerProvider } from './context/ContactDrawerProvider'
+import { LocaleProvider } from './context/LocaleProvider'
 import {
   CASES_PATH,
   MEET_US_PATH,
@@ -15,6 +15,7 @@ import {
   CasesPage,
   HomePage,
   MeetUsPage,
+  NotFoundPage,
   PricingPage,
   PrivacyPolicyPage,
   ProcessPage,
@@ -38,6 +39,7 @@ function App() {
             <Route path={PROCESS_PATH} element={<ProcessPage />} />
             <Route path={WEB_DEVELOPMENT_PATH} element={<WebudviklingPage />} />
             <Route path={PRIVACY_POLICY_PATH} element={<PrivacyPolicyPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Footer />
         </BrowserRouter>

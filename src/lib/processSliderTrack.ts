@@ -4,6 +4,20 @@ const HORIZONTAL_REVEAL_SLIDE_VW = 150
 const STANDARD_SLIDE_VW = 100
 const GAP_AFTER_HORIZONTAL_VW = 8
 
+export function getSlideClassName(step: ProcessSliderStep) {
+  const layout = step.layout ?? 'single'
+  const mediaPosition = step.mediaPosition ?? 'right'
+
+  return [
+    'process-slider-slide',
+    layout !== 'single' ? `process-slider-slide--${layout}` : '',
+    step.imageOnly ? 'process-slider-slide--image-only' : '',
+    mediaPosition === 'left' ? 'process-slider-slide--media-left' : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
+}
+
 export function getSlideLeadingGapVw(index: number, steps: readonly ProcessSliderStep[]) {
   if (index === 0) return 0
 

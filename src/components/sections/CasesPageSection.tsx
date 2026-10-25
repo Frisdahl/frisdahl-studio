@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { HiXMark } from 'react-icons/hi2'
 import { CaseSlideCard } from '../cards/CaseSlideCard'
 import { useLocale } from '../../context/LocaleContext'
@@ -58,10 +58,10 @@ export function CasesPageSection() {
   } = getCasesPageContent(locale)
   const [activeFilter, setActiveFilter] = useState<CaseCategory | null>(null)
 
-  const filteredItems = useMemo(() => {
-    if (!activeFilter) return items
-    return items.filter((item) => item.category === activeFilter)
-  }, [activeFilter, items])
+  // A cheap filter over a handful of cases; no memoization needed.
+  const filteredItems = activeFilter
+    ? items.filter((item) => item.category === activeFilter)
+    : items
 
   const resultsCountLabel = getCasesResultsCountLabel(locale, filteredItems.length)
   const resultsCountKey = `${activeFilter ?? 'all'}-${filteredItems.length}`

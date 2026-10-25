@@ -1,6 +1,6 @@
 import type { IconType } from 'react-icons'
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTiktok } from 'react-icons/fa6'
-import { HiEnvelope, HiPhone } from 'react-icons/hi2'
+import { HiEnvelope } from 'react-icons/hi2'
 import { Link, matchPath, useLocation } from 'react-router-dom'
 import { useLocale } from '../../context/LocaleContext'
 import { getFooterContent, type FooterSocialLink } from '../../data/footer'
@@ -23,6 +23,8 @@ const socialIcons: Record<FooterSocialLink['icon'], IconType> = {
 }
 
 function FooterSocialLinks({ links }: { links: readonly FooterSocialLink[] }) {
+  if (links.length === 0) return null
+
   return (
     <div className="site-footer-social">
       {links.map((social) => {
@@ -91,11 +93,6 @@ export function Footer() {
           <a href={footer.emailHref} className="site-footer-contact-link">
             <HiEnvelope className="site-footer-contact-icon" aria-hidden="true" />
             <span>{footer.email}</span>
-          </a>
-
-          <a href={footer.phoneHref} className="site-footer-contact-link">
-            <HiPhone className="site-footer-contact-icon" aria-hidden="true" />
-            <span>{footer.phone}</span>
           </a>
 
           <div className="site-footer-location">

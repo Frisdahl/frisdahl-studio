@@ -1,7 +1,5 @@
 import type { ProcessSliderStep } from '../../types/process'
 
-export { getSlideLeadingGapVw, getSlideWidthVw, getTrackOffsetVw } from '../../lib/processSliderTrack'
-
 interface ProcessSliderMediaProps {
   step: ProcessSliderStep
   loading: 'eager' | 'lazy'
@@ -65,18 +63,4 @@ export function ProcessSliderMedia({ step, loading }: ProcessSliderMediaProps) {
       />
     </div>
   )
-}
-
-export function getSlideClassName(step: ProcessSliderStep) {
-  const layout = step.layout ?? 'single'
-  const mediaPosition = step.mediaPosition ?? 'right'
-
-  return [
-    'process-slider-slide',
-    layout !== 'single' ? `process-slider-slide--${layout}` : '',
-    step.imageOnly ? 'process-slider-slide--image-only' : '',
-    mediaPosition === 'left' ? 'process-slider-slide--media-left' : '',
-  ]
-    .filter(Boolean)
-    .join(' ')
 }

@@ -1,23 +1,10 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react'
+import { useCallback, useMemo, useState, type ReactNode } from 'react'
 import { BookMeetingPanel } from '../components/contact/BookMeetingPanel'
 import { ContactDrawer, type ContactDrawerView } from '../components/contact/ContactDrawer'
 import { ContactWritePanel } from '../components/contact/ContactWritePanel'
 import { getHomeContent } from '../data/home'
+import { ContactDrawerContext } from './ContactDrawerContext'
 import { useLocale } from './LocaleContext'
-
-interface ContactDrawerContextValue {
-  openDrawer: (view: ContactDrawerView) => void
-  closeDrawer: () => void
-}
-
-const ContactDrawerContext = createContext<ContactDrawerContextValue | null>(null)
 
 export function ContactDrawerProvider({ children }: { children: ReactNode }) {
   const [drawerView, setDrawerView] = useState<ContactDrawerView | null>(null)
@@ -57,14 +44,4 @@ export function ContactDrawerProvider({ children }: { children: ReactNode }) {
       </ContactDrawer>
     </ContactDrawerContext.Provider>
   )
-}
-
-export function useContactDrawer() {
-  const context = useContext(ContactDrawerContext)
-
-  if (!context) {
-    throw new Error('useContactDrawer must be used within ContactDrawerProvider')
-  }
-
-  return context
 }

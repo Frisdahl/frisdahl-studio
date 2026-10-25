@@ -924,6 +924,9 @@
   .feature-step-columns {
     display: grid;
     min-width: 0;
+    /* Room for the active step's x offset (FEATURE_STEP_INDENT) so it stays
+       inside the viewport on narrow screens. */
+    padding-inline-end: 1.25rem;
     grid-template-columns: var(--feature-step-number-width) minmax(0, 1fr);
     column-gap: var(--feature-step-copy-gap);
     align-items: start;
@@ -954,8 +957,10 @@
     @apply text-secondary;
   }
 
+  /* Inactive steps use text-secondary (not text-disabled) to keep readable
+     contrast; the active step is marked by text-primary and the indicator. */
   .feature-step-title {
-    @apply m-0 max-w-[34rem] text-h4 font-medium text-disabled;
+    @apply m-0 max-w-[34rem] text-h4 font-medium text-secondary;
     transition: color var(--feature-step-motion-duration) var(--feature-step-motion-easing);
   }
 
@@ -964,7 +969,7 @@
   }
 
   .feature-step-description {
-    @apply mt-3 max-w-[34rem] text-body-sm text-disabled/70;
+    @apply mt-3 max-w-[34rem] text-body-sm text-secondary;
     transition: color var(--feature-step-motion-duration) var(--feature-step-motion-easing);
 
     @media (min-width: 901px) {
@@ -1878,6 +1883,8 @@
       top: 0;
       left: 0;
       right: 0;
+      /* Opaque so the fixed header stays readable over scrolled content. */
+      background-color: var(--color-background);
     }
   }
 
@@ -3658,8 +3665,10 @@
     @apply w-full lg:ml-auto lg:min-w-0 lg:flex-1 lg:pl-12 xl:pl-16;
   }
 
+  /* lg:flex-wrap lets a column that does not fit move to a new row instead of
+     pushing the footer (and the page) wider than the viewport. */
   .site-footer-columns {
-    @apply grid grid-cols-2 gap-x-8 gap-y-10 sm:gap-x-10 lg:flex lg:w-full lg:justify-between lg:gap-x-8;
+    @apply grid grid-cols-2 gap-x-8 gap-y-10 sm:gap-x-10 lg:flex lg:w-full lg:flex-wrap lg:justify-between lg:gap-x-8;
   }
 
   .site-footer-column {

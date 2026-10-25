@@ -1,7 +1,8 @@
 const NAV_REVEAL_TRANSITION = 'transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)'
 
 function forceReflow(element: HTMLElement) {
-  element.offsetHeight
+  // Reading offsetHeight forces layout; `void` marks the read as intentional.
+  void element.offsetHeight
 }
 
 export function resetNavClusterSlide(cluster: HTMLElement | null) {

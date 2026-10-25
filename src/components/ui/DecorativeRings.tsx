@@ -33,10 +33,3 @@ export function DecorativeRings({
     </>
   )
 }
-
-export const partnershipRingClasses = {
-  topRingClassName:
-    'pointer-events-none absolute -top-2 right-2 z-[1] h-5 w-5 text-accent sm:-top-3 sm:right-3 sm:h-6 sm:w-6',
-  bottomRingClassName:
-    'pointer-events-none absolute -bottom-8 -left-3 z-[1] h-4 w-4 text-accent-yellow sm:-bottom-5 sm:-left-1 sm:h-5 sm:w-5',
-} as const

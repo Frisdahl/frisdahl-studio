@@ -1,9 +1,13 @@
 import { type CSSProperties, useCallback, useEffect, useRef } from 'react'
 import { getScrollY, smoothScrollTo } from '../../lib/smoothScroll'
-import { buildTrackMetrics, getScrollProgressForSlideIndex } from '../../lib/processSliderTrack'
+import {
+  buildTrackMetrics,
+  getScrollProgressForSlideIndex,
+  getSlideClassName,
+} from '../../lib/processSliderTrack'
 import { useProcessSliderMotion } from '../../hooks/useProcessSliderMotion'
 import type { ProcessSliderContent } from '../../types/process'
-import { getSlideClassName, ProcessSliderMedia } from './ProcessSliderMedia'
+import { ProcessSliderMedia } from './ProcessSliderMedia'
 
 interface ProcessSliderSectionProps {
   content: ProcessSliderContent

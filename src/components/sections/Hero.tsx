@@ -36,19 +36,21 @@ export function Hero() {
   return (
     <section className={styles.hero} aria-labelledby="home-hero-title">
       <div className={styles.inner}>
+        {/* The {' '} text nodes keep the words separated for screen readers and
+            search engines; whitespace between flex items does not affect layout. */}
         <h1 id="home-hero-title" className={styles.title}>
           <span className={styles.titleRow}>
-            <span>{content.line1Start}</span>
+            <span>{content.line1Start}</span>{' '}
             <span className={styles.inlineVisual} aria-hidden="true">
               <video src="/promo_h264.mp4" autoPlay muted loop playsInline />
-            </span>
+            </span>{' '}
             <span>{content.line1End}</span>
-          </span>
+          </span>{' '}
           <span className={styles.titleRow}>
-            <span>{content.line2Start}</span>
+            <span>{content.line2Start}</span>{' '}
             <span className={`${styles.inlineVisual} ${styles.secondaryVisual}`} aria-hidden="true">
               <img src="/images/hero/hero-secondary.avif" alt="" />
-            </span>
+            </span>{' '}
             <span>{content.line2End}</span>
           </span>
         </h1>

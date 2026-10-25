@@ -1,3 +1,4 @@
+import { PageMeta } from '../components/layout'
 import {
   CasesSection,
   ConceptSection,
@@ -10,6 +11,7 @@ import {
 export function HomePage() {
   return (
     <main className="page-surface bg-home-page overflow-x-clip">
+      <PageMeta />
       <Hero />
       <FeatureSection />
       <CasesSection />

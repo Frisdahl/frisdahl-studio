@@ -23,14 +23,17 @@ function getImageTranslateY(
   return 100
 }
 
+// The panels share one position, so the outgoing text fades out over the first
+// half of a transition and the incoming text fades in over the second half.
+// They are never visible at the same time.
 function getTextOpacity(
   index: number,
   activeIndex: number,
   transitionProgress: number,
 ) {
   if (index < activeIndex) return 0
-  if (index === activeIndex) return 1 - transitionProgress
-  if (index === activeIndex + 1) return transitionProgress
+  if (index === activeIndex) return Math.max(0, 1 - transitionProgress * 2)
+  if (index === activeIndex + 1) return Math.max(0, transitionProgress * 2 - 1)
   return 0
 }
 

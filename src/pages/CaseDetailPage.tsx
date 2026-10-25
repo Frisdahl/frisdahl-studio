@@ -1,4 +1,5 @@
 import { Navigate, useParams } from 'react-router-dom'
+import { PageMeta } from '../components/layout'
 import { useLocale } from '../context/LocaleContext'
 import { getCaseDetail } from '../data/caseDetails'
 import { getNextCasePreview } from '../data/caseNavigation'
@@ -23,6 +24,7 @@ export function CaseDetailPage() {
 
   return (
     <main className="page-surface case-detail-page bg-background">
+      <PageMeta title={detail.hero.title} description={detail.hero.description} />
       <CaseDetailHero hero={detail.hero} />
       <CaseDetailColumns columns={detail.columns} />
       <CaseDetailGallery gallery={detail.gallery} />

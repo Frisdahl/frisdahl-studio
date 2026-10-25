@@ -60,20 +60,14 @@ const footerContent = {
     address: 'Tagensvej 55, 2200 Nørrebro',
     email: 'hello@frisdahlstudio.dk',
     emailHref: 'mailto:hello@frisdahlstudio.dk',
-    phone: '+45 12 34 56 78',
-    phoneHref: 'tel:+4512345678',
     copyright: '© Frisdahl Studio. Alle rettigheder forbeholdes.',
     legalLinks: [
       { label: 'Datapolitik', href: PRIVACY_POLICY_PATH },
       { label: 'Databehandleraftale', href: '#databehandleraftale' },
       { label: 'Salgs- og leveringsaftaler', href: '#salgs-og-leveringsaftaler' },
     ],
-    socialLinks: [
-      { label: 'Facebook', href: 'https://facebook.com', icon: 'facebook' },
-      { label: 'Instagram', href: 'https://instagram.com', icon: 'instagram' },
-      { label: 'TikTok', href: 'https://tiktok.com', icon: 'tiktok' },
-      { label: 'LinkedIn', href: 'https://linkedin.com', icon: 'linkedin' },
-    ],
+    // Only list verified Frisdahl Studio profiles.
+    socialLinks: [] as FooterSocialLink[],
   },
   en: {
     logoLabel: 'Frisdahl Studio',
@@ -116,20 +110,14 @@ const footerContent = {
     address: 'Tagensvej 55, 2200 Nørrebro',
     email: 'hello@frisdahlstudio.dk',
     emailHref: 'mailto:hello@frisdahlstudio.dk',
-    phone: '+45 12 34 56 78',
-    phoneHref: 'tel:+4512345678',
     copyright: '© Frisdahl Studio. All rights reserved.',
     legalLinks: [
       { label: 'Privacy policy', href: PRIVACY_POLICY_PATH },
       { label: 'Data processing agreement', href: '#data-processing-agreement' },
       { label: 'Sales and delivery terms', href: '#sales-and-delivery-terms' },
     ],
-    socialLinks: [
-      { label: 'Facebook', href: 'https://facebook.com', icon: 'facebook' },
-      { label: 'Instagram', href: 'https://instagram.com', icon: 'instagram' },
-      { label: 'TikTok', href: 'https://tiktok.com', icon: 'tiktok' },
-      { label: 'LinkedIn', href: 'https://linkedin.com', icon: 'linkedin' },
-    ],
+    // Only list verified Frisdahl Studio profiles.
+    socialLinks: [] as FooterSocialLink[],
   },
 } as const
 

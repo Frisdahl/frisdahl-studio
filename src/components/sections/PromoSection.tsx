@@ -1,6 +1,6 @@
 import { type HTMLAttributes } from 'react'
 
-interface PromoSectionProps extends HTMLAttributes<HTMLElement> {}
+type PromoSectionProps = HTMLAttributes<HTMLElement>
 
 export function PromoSection({ className = '', ...props }: PromoSectionProps) {
   return (
