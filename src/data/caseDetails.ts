@@ -1,10 +1,13 @@
-import type { CaseDetailContent } from '../types/caseDetail'
+import type { CaseDetailContent, CaseDetailHero, CaseDetailHeroMeta } from '../types/caseDetail'
 import type { Locale } from './navigation'
 import { defaultLocale } from './navigation'
+import { getCaseCategoryLabel, getCaseItemSummary } from './cases'
 import { getCaseGallery } from './caseGallery'
-import { getNextCasePreview } from './caseNavigation'
+import { getCaseYear, getNextCasePreview } from './caseNavigation'
 
-type CaseDetailBase = Omit<CaseDetailContent, 'gallery' | 'nextCase'>
+type CaseDetailBase = Omit<CaseDetailContent, 'gallery' | 'nextCase' | 'hero'> & {
+  hero: Omit<CaseDetailHero, 'meta'>
+}
 
 const caseDetails = {
   da: {
@@ -33,7 +36,7 @@ const caseDetails = {
         {
           title: 'Ydelser',
           paragraphs: [
-            'Vi stod for website, UX-design, branding og udvikling med fokus på hastighed, struktur og konvertering.',
+            'Jeg stod for website, UX-design, branding og udvikling med fokus på hastighed, struktur og konvertering.',
             'Løsningen blev bygget med en tydelig informationsarkitektur og et visuelt udtryk, der understøtter brandets positionering.',
           ],
         },
@@ -71,7 +74,7 @@ const caseDetails = {
         {
           title: 'Ydelser',
           paragraphs: [
-            'Vi leverede website, design, content og SEO med særligt fokus på mobil og lokal synlighed.',
+            'Jeg leverede website, design, content og SEO med særligt fokus på mobil og lokal synlighed.',
             'Bookingflow og indhold blev struktureret, så besøgende hurtigt forstår ydelser, priser og stemning.',
           ],
         },
@@ -109,7 +112,7 @@ const caseDetails = {
         {
           title: 'Ydelser',
           paragraphs: [
-            'Vi designede og udviklede webshop, e-commerce flows, UX og integrationer til checkout og produktdata.',
+            'Jeg designede og udviklede webshop, e-commerce flows, UX og integrationer til checkout og produktdata.',
             'Produktpræsentation og navigation blev prioriteret for at skabe ro og tydelighed i købsrejsen.',
           ],
         },
@@ -147,7 +150,7 @@ const caseDetails = {
         {
           title: 'Ydelser',
           paragraphs: [
-            'Vi udviklede grafisk identitet, designmanual, printmateriale og art direction på tværs af formater.',
+            'Jeg udviklede grafisk identitet, designmanual, printmateriale og art direction på tværs af formater.',
             'Typografi, farver og layout blev defineret med fokus på fleksibilitet og genkendelighed i brug.',
           ],
         },
@@ -185,7 +188,7 @@ const caseDetails = {
         {
           title: 'Ydelser',
           paragraphs: [
-            'Vi leverede contentstrategi, tone of voice, tekst og struktur på tværs af website og salgskanaler.',
+            'Jeg leverede contentstrategi, tone of voice, tekst og struktur på tværs af website og salgskanaler.',
             'Budskaber og formater blev tilpasset målgrupper og touchpoints for at skabe sammenhæng i kommunikationen.',
           ],
         },
@@ -223,7 +226,7 @@ const caseDetails = {
         {
           title: 'Ydelser',
           paragraphs: [
-            'Vi byggede e-commerce platform, integrationer, produktdata-struktur og automatisering af centrale flows.',
+            'Jeg byggede e-commerce platform, integrationer, produktdata-struktur og automatisering af centrale flows.',
             'Fokus var på driftssikkerhed, overskuelig administration og en strømlinet rejse fra produkt til checkout.',
           ],
         },
@@ -263,7 +266,7 @@ const caseDetails = {
         {
           title: 'Services',
           paragraphs: [
-            'We delivered website, UX design, branding, and development with a focus on speed, structure, and conversion.',
+            'I delivered website, UX design, branding, and development with a focus on speed, structure, and conversion.',
             'The solution was built with clear information architecture and a visual expression that supports the brand positioning.',
           ],
         },
@@ -301,7 +304,7 @@ const caseDetails = {
         {
           title: 'Services',
           paragraphs: [
-            'We delivered website, design, content, and SEO with a particular focus on mobile and local visibility.',
+            'I delivered website, design, content, and SEO with a particular focus on mobile and local visibility.',
             'The booking flow and content were structured so visitors quickly understand services, pricing, and atmosphere.',
           ],
         },
@@ -339,7 +342,7 @@ const caseDetails = {
         {
           title: 'Services',
           paragraphs: [
-            'We designed and developed the webshop, e-commerce flows, UX, and integrations for checkout and product data.',
+            'I designed and developed the webshop, e-commerce flows, UX, and integrations for checkout and product data.',
             'Product presentation and navigation were prioritized to create calm and clarity in the purchase journey.',
           ],
         },
@@ -377,7 +380,7 @@ const caseDetails = {
         {
           title: 'Services',
           paragraphs: [
-            'We developed graphic identity, design guidelines, print materials, and art direction across formats.',
+            'I developed graphic identity, design guidelines, print materials, and art direction across formats.',
             'Typography, color, and layout were defined with a focus on flexibility and recognizability in use.',
           ],
         },
@@ -415,7 +418,7 @@ const caseDetails = {
         {
           title: 'Services',
           paragraphs: [
-            'We delivered content strategy, tone of voice, copy, and structure across website and sales channels.',
+            'I delivered content strategy, tone of voice, copy, and structure across website and sales channels.',
             'Messages and formats were tailored to audiences and touchpoints to create cohesion in communication.',
           ],
         },
@@ -453,7 +456,7 @@ const caseDetails = {
         {
           title: 'Services',
           paragraphs: [
-            'We built the e-commerce platform, integrations, product data structure, and automation of core flows.',
+            'I built the e-commerce platform, integrations, product data structure, and automation of core flows.',
             'The focus was on operational reliability, clear administration, and a streamlined journey from product to checkout.',
           ],
         },
@@ -468,6 +471,63 @@ const caseDetails = {
     },
   },
 } as const satisfies Record<Locale, Record<string, CaseDetailBase>>
+
+const metaLabels: Record<Locale, { type: string; role: string; completed: string; explore: string }> = {
+  da: { type: 'Type', role: 'Rolle', completed: 'Afsluttet', explore: 'Udforsk' },
+  en: { type: 'Type', role: 'Role', completed: 'Completed', explore: 'Explore' },
+}
+
+const exploreValues: Record<Locale, string> = {
+  da: 'Se live site',
+  en: 'Visit site',
+}
+
+/**
+ * Live site behind the "Explore" keyword. null = no live site yet, so the
+ * keyword renders as its label only (add a URL here to turn it into a link).
+ */
+const caseLiveUrls: Record<string, string | null> = {
+  nordwear: null,
+  'fresh-cut': null,
+  'atelier-noir': null,
+  'forma-studio': null,
+  northline: null,
+  'urban-supply': null,
+}
+
+function joinRole(locale: Locale, words: string[]): string {
+  if (words.length === 0) return ''
+  if (words.length === 1) return words[0]
+
+  const rest = words.slice(0, -1)
+  const last = words[words.length - 1]
+  return locale === 'da' ? `${rest.join(', ')} og ${last}` : `${rest.join(', ')} and ${last}`
+}
+
+function getCaseHeroMeta(locale: Locale, caseSlug: string): CaseDetailHeroMeta[] {
+  const labels = metaLabels[locale]
+  const summary = getCaseItemSummary(locale, caseSlug)
+  const year = getCaseYear(caseSlug)
+  const liveUrl = caseLiveUrls[caseSlug] ?? null
+  const meta: CaseDetailHeroMeta[] = []
+
+  if (summary) {
+    meta.push({ label: labels.type, value: getCaseCategoryLabel(locale, summary.category) })
+
+    const role = joinRole(locale, summary.keywords.slice(1))
+    if (role) meta.push({ label: labels.role, value: role })
+  }
+
+  if (year) meta.push({ label: labels.completed, value: year })
+
+  meta.push(
+    liveUrl
+      ? { label: labels.explore, value: exploreValues[locale], href: liveUrl }
+      : { label: labels.explore },
+  )
+
+  return meta
+}
 
 export function getCaseDetail(
   locale: Locale = defaultLocale,
@@ -484,5 +544,10 @@ export function getCaseDetail(
   const nextCase = getNextCasePreview(locale, caseSlug)
   if (!nextCase) return null
 
-  return { ...detail, gallery, nextCase }
+  return {
+    ...detail,
+    hero: { ...detail.hero, meta: getCaseHeroMeta(locale, caseSlug) },
+    gallery,
+    nextCase,
+  }
 }

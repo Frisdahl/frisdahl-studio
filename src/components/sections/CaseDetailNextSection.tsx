@@ -1,9 +1,9 @@
 import { useReducedMotion } from 'framer-motion'
 import { useEffect, useRef } from 'react'
-import { HiArrowDown } from 'react-icons/hi2'
 import { Link, useNavigate } from 'react-router-dom'
 import { useNextCaseTimerProgress } from '../../hooks/useNextCaseTimerProgress'
 import type { CaseDetailNext } from '../../types/caseDetail'
+import { ArrowIcon } from '../ui/ArrowIcon'
 
 interface CaseDetailNextSectionProps {
   nextCase: CaseDetailNext
@@ -92,7 +92,7 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
                     transform={`rotate(-90 ${RING_CENTER} ${RING_CENTER})`}
                   />
                 </svg>
-                <HiArrowDown className="case-detail-next-icon-arrow" />
+                <ArrowIcon className="case-detail-next-icon-arrow" rotate={90} />
               </span>
             </span>
 

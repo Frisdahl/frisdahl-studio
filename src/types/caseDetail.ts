@@ -1,11 +1,18 @@
 import type { CasesHeroSlide } from './cases'
 
+export interface CaseDetailHeroMeta {
+  label: string
+  value?: string
+  href?: string
+}
+
 export interface CaseDetailHero {
   eyebrow: string
   title: string
   description: string
   sliderAriaLabel: string
   slides: CasesHeroSlide[]
+  meta: CaseDetailHeroMeta[]
 }
 
 export interface CaseDetailColumn {

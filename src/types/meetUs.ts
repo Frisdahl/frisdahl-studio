@@ -3,6 +3,8 @@ export interface TeamMember {
   title: string
   imageSrc: string | null
   imageAlt: string
+  bioLabel: string
+  bio: string
 }
 
 export interface MeetUsPageContent {

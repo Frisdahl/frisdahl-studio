@@ -1,4 +1,5 @@
 export { CtaPillButton } from './CtaPillButton'
+export { ArrowIcon } from './ArrowIcon'
 export { BrandWordmark } from './BrandWordmark'
 export { Button } from './Button'
 export type { ButtonProps } from './Button'

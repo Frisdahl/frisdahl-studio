@@ -1,4 +1,10 @@
-import { MEET_US_PATH, PRIVACY_POLICY_PATH } from '../lib/routes'
+import {
+  CASES_PATH,
+  MEET_US_PATH,
+  PRICING_PATH,
+  PRIVACY_POLICY_PATH,
+  PROCESS_PATH,
+} from '../lib/routes'
 import type { Locale } from './navigation'
 import { defaultLocale } from './navigation'
 
@@ -8,51 +14,32 @@ export interface FooterLink {
 }
 
 export interface FooterColumn {
-  title: string
   links: FooterLink[]
 }
 
 export interface FooterSocialLink {
   label: string
   href: string
-  icon: 'facebook' | 'instagram' | 'tiktok' | 'linkedin'
+  icon: 'facebook' | 'behance' | 'github'
 }
 
 const footerContent = {
   da: {
     logoLabel: 'Frisdahl Studio',
     columnsAriaLabel: 'Footer navigation',
+    // Every href here is a route that exists; no #anchors.
     columns: [
       {
-        title: 'Webudvikling',
         links: [
-          { label: 'Wordpress', href: '#wordpress' },
-          { label: 'Shopify', href: '#shopify' },
-          { label: 'Kodet løsninger', href: '#kodet-loesninger' },
+          { label: 'Cases', href: CASES_PATH },
+          { label: 'Proces', href: PROCESS_PATH },
+          { label: 'Priser', href: PRICING_PATH },
         ],
       },
       {
-        title: 'Marketing & kommunikation',
         links: [
-          { label: 'Content & koncept', href: '#content-koncept' },
-          { label: 'Lead generering', href: '#lead-generering' },
-          { label: 'SEO', href: '#seo' },
-        ],
-      },
-      {
-        title: 'Support og vedligehold',
-        links: [
-          { label: 'Wordpress support', href: '#wordpress-support' },
-          { label: 'Shopify support', href: '#shopify-support' },
-          { label: 'Kodet løsning support', href: '#kodet-loesning-support' },
-        ],
-      },
-      {
-        title: 'Mød os',
-        links: [
-          { label: 'Mød os', href: MEET_US_PATH },
-          { label: 'Om os', href: '#om-os' },
-          { label: 'Kultur', href: '#kultur' },
+          { label: 'Mød mig', href: MEET_US_PATH },
+          { label: 'Kontakt', href: '/#contact' },
         ],
       },
     ],
@@ -66,43 +53,41 @@ const footerContent = {
       { label: 'Databehandleraftale', href: '#databehandleraftale' },
       { label: 'Salgs- og leveringsaftaler', href: '#salgs-og-leveringsaftaler' },
     ],
-    // Only list verified Frisdahl Studio profiles.
-    socialLinks: [] as FooterSocialLink[],
+    // PLACEHOLDER profile URLs — replace with the verified profiles before launch.
+    socialLinks: [
+      {
+        label: 'Facebook',
+        href: 'https://www.facebook.com/frisdahlstudio',
+        icon: 'facebook',
+      },
+      {
+        label: 'Behance',
+        href: 'https://www.behance.net/frisdahlstudio',
+        icon: 'behance',
+      },
+      {
+        label: 'GitHub',
+        href: 'https://github.com/frisdahlstudio',
+        icon: 'github',
+      },
+    ] as FooterSocialLink[],
   },
   en: {
     logoLabel: 'Frisdahl Studio',
     columnsAriaLabel: 'Footer navigation',
+    // Every href here is a route that exists; no #anchors.
     columns: [
       {
-        title: 'Web development',
         links: [
-          { label: 'WordPress', href: '#wordpress' },
-          { label: 'Shopify', href: '#shopify' },
-          { label: 'Custom coded solutions', href: '#custom-solutions' },
+          { label: 'Cases', href: CASES_PATH },
+          { label: 'Process', href: PROCESS_PATH },
+          { label: 'Pricing', href: PRICING_PATH },
         ],
       },
       {
-        title: 'Marketing & communication',
         links: [
-          { label: 'Content & concept', href: '#content-concept' },
-          { label: 'Lead generation', href: '#lead-generation' },
-          { label: 'SEO', href: '#seo' },
-        ],
-      },
-      {
-        title: 'Support & maintenance',
-        links: [
-          { label: 'WordPress support', href: '#wordpress-support' },
-          { label: 'Shopify support', href: '#shopify-support' },
-          { label: 'Custom solution support', href: '#custom-solution-support' },
-        ],
-      },
-      {
-        title: 'Meet us',
-        links: [
-          { label: 'Meet us', href: MEET_US_PATH },
-          { label: 'About us', href: '#about' },
-          { label: 'Culture', href: '#culture' },
+          { label: 'Meet me', href: MEET_US_PATH },
+          { label: 'Contact', href: '/#contact' },
         ],
       },
     ],
@@ -116,8 +101,24 @@ const footerContent = {
       { label: 'Data processing agreement', href: '#data-processing-agreement' },
       { label: 'Sales and delivery terms', href: '#sales-and-delivery-terms' },
     ],
-    // Only list verified Frisdahl Studio profiles.
-    socialLinks: [] as FooterSocialLink[],
+    // PLACEHOLDER profile URLs — replace with the verified profiles before launch.
+    socialLinks: [
+      {
+        label: 'Facebook',
+        href: 'https://www.facebook.com/frisdahlstudio',
+        icon: 'facebook',
+      },
+      {
+        label: 'Behance',
+        href: 'https://www.behance.net/frisdahlstudio',
+        icon: 'behance',
+      },
+      {
+        label: 'GitHub',
+        href: 'https://github.com/frisdahlstudio',
+        icon: 'github',
+      },
+    ] as FooterSocialLink[],
   },
 } as const
 

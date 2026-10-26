@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# PP Mori is not licensed for this project; never commit it.
+public/fonts/PPMori*
+
+# Output of `npm run images` (scripts/optimize-images.mjs). Nothing imports the
+# manifest yet, so it is regenerated rather than committed.
+public/_img/
+src/data/generated/

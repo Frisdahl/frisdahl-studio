@@ -3,20 +3,21 @@ import { getHomeContent } from '../../data/home'
 import { Container } from '../ui'
 import { PricingCards } from './PricingCards'
 
-export function PricingHeroSection() {
+// The three packages, shown on the homepage. The nav's "Priser" link scrolls here.
+export function PricingPlansSection() {
   const { locale } = useLocale()
   const { pricingPage } = getHomeContent(locale)
   const { hero } = pricingPage
 
   return (
-    <section className="pricing-hero" aria-labelledby="pricing-hero-title">
+    <section id="priser" className="pricing-hero" aria-labelledby="pricing-hero-title">
       <Container fullWidth>
         <div className="pricing-hero-grid">
           <div className="pricing-hero-grid-layout">
             <div className="pricing-hero-grid-content">
               <div className="pricing-hero-header">
                 <p className="pricing-hero-eyebrow">{hero.eyebrow}</p>
-                <h1 id="pricing-hero-title" className="pricing-hero-title">
+                <h2 id="pricing-hero-title" className="pricing-hero-title">
                   {hero.headlineLine1}
                   {hero.headlineLine2 ? (
                     <>
@@ -24,7 +25,7 @@ export function PricingHeroSection() {
                       {hero.headlineLine2}
                     </>
                   ) : null}
-                </h1>
+                </h2>
               </div>
 
               <PricingCards />

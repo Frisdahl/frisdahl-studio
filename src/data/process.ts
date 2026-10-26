@@ -7,19 +7,19 @@ const processSteps = {
     {
       title: 'Opdagelse og strategi',
       description:
-        'Vi starter med at forstå jeres virksomhed, målgruppe og ambitioner. Her definerer vi scope, prioriteringer og en klar retning for projektet.',
+        'Jeg starter med at forstå din virksomhed, målgruppe og ambitioner. Her definerer vi sammen scope, prioriteringer og en klar retning for projektet.',
       keywords: ['Brief', 'Målgruppe', 'Scope', 'Roadmap', 'Konkurrentanalyse', 'Mål'],
     },
     {
       title: 'Design og prototyp',
       description:
-        'Vi omsætter strategien til et stærkt visuelt udtryk med wireframes, UI-design og en klikbar prototype, så I kan se løsningen, før den bygges.',
+        'Jeg omsætter strategien til et stærkt visuelt udtryk med wireframes, UI-design og en klikbar prototype, så du kan se løsningen, før den bygges.',
       keywords: ['Wireframes', 'UI-design', 'Prototype', 'Branding', 'Designsystem', 'UX'],
     },
     {
       title: 'Udvikling',
       description:
-        'Vi bygger løsningen fra bunden med moderne teknologi, fokus på performance og en struktur, der er nem at vedligeholde og udvide.',
+        'Jeg bygger løsningen fra bunden med moderne teknologi, fokus på performance og en struktur, der er nem at vedligeholde og udvide.',
       keywords: [
         'Frontend',
         'React',
@@ -34,7 +34,7 @@ const processSteps = {
     {
       title: 'Test og lancering',
       description:
-        'Før go-live gennemgår vi alt grundigt på tværs af enheder og browsere. Derefter lancerer vi og sikrer en stabil overgang til den nye løsning.',
+        'Før go-live gennemgår jeg alt grundigt på tværs af enheder og browsere. Derefter lancerer jeg og sikrer en stabil overgang til den nye løsning.',
       keywords: ['QA', 'SEO', 'Go-live', 'Tracking', 'Browser-test', 'Performance-test'],
     },
   ],
@@ -42,19 +42,19 @@ const processSteps = {
     {
       title: 'Discovery and strategy',
       description:
-        'We start by understanding your business, audience, and ambitions. Here we define scope, priorities, and a clear direction for the project.',
+        'I start by understanding your business, audience and ambitions. Together we define scope, priorities and a clear direction for the project.',
       keywords: ['Brief', 'Audience', 'Scope', 'Roadmap', 'Competitor review', 'Goals'],
     },
     {
       title: 'Design and prototype',
       description:
-        'We translate strategy into a strong visual direction with wireframes, UI design, and a clickable prototype so you can see the solution before it is built.',
+        'I translate the strategy into a strong visual direction with wireframes, UI design and a clickable prototype, so you can see the solution before it is built.',
       keywords: ['Wireframes', 'UI design', 'Prototype', 'Branding', 'Design system', 'UX'],
     },
     {
       title: 'Development',
       description:
-        'We build the solution from scratch with modern technology, a focus on performance, and a structure that is easy to maintain and extend.',
+        'I build the solution from scratch with modern technology, a focus on performance and a structure that is easy to maintain and extend.',
       keywords: [
         'Frontend',
         'React',
@@ -69,7 +69,7 @@ const processSteps = {
     {
       title: 'Testing and launch',
       description:
-        'Before go-live we review everything across devices and browsers. Then we launch and ensure a stable transition to the new solution.',
+        'Before go-live I review everything across devices and browsers. Then I launch and make sure the transition to the new solution is stable.',
       keywords: ['QA', 'SEO', 'Go-live', 'Tracking', 'Browser testing', 'Performance testing'],
     },
   ],
@@ -77,17 +77,17 @@ const processSteps = {
 
 const processPageContent = {
   da: {
-    eyebrow: 'Vores proces',
+    eyebrow: 'Min proces',
     title: 'Struktureret samarbejde — fra idé til lancering',
     description:
-      'Vi arbejder tæt sammen med dig gennem hele forløbet, så du altid ved, hvor vi er, og hvad der sker næste skridt. Hvert trin er tydeligt defineret med fokus på fremdrift, feedback og kvalitet.',
+      'Jeg arbejder tæt sammen med dig gennem hele forløbet, så du altid ved, hvor projektet står, og hvad der sker næste skridt. Hvert trin er tydeligt defineret med fokus på fremdrift, feedback og kvalitet.',
     steps: processSteps.da,
   },
   en: {
-    eyebrow: 'Our process',
+    eyebrow: 'My process',
     title: 'Structured collaboration — from idea to launch',
     description:
-      'We work closely with you throughout the journey, so you always know where we are and what happens next. Each step is clearly defined with a focus on momentum, feedback, and quality.',
+      'I work closely with you throughout the journey, so you always know where the project stands and what happens next. Each step is clearly defined with a focus on momentum, feedback and quality.',
     steps: processSteps.en,
   },
 } as const satisfies Record<Locale, ProcessPageContent>

@@ -1,3 +1,4 @@
+import { ArrowIcon } from '../ui/ArrowIcon'
 import { Link } from 'react-router-dom'
 
 export interface CaseCardProps {
@@ -43,6 +44,10 @@ export function CaseCard({
         <span className="case-card-caption">
           <span className="case-card-client">{client}</span>
           <span className="case-card-industry">{type}</span>
+        </span>
+
+        <span className="case-card-arrow" aria-hidden="true">
+          <ArrowIcon rotate={-45} />
         </span>
       </div>
     </Link>
