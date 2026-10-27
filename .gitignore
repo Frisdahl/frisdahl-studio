@@ -22,3 +22,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# PP Mori is not licensed for this project; never commit it.
+public/fonts/PPMori*
+
+# Output of `npm run images` (scripts/optimize-images.mjs). Regenerated rather
+# than committed: the predev/prebuild hooks run it, so dev and production builds
+# always have the variants and the manifest that src/lib/responsiveImage.ts imports.
+public/_img/
+src/data/generated/

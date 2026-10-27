@@ -1,16 +1,13 @@
 import { Link, useLocation } from 'react-router-dom'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useLocale } from '../../context/LocaleContext'
 import { useContactDrawer } from '../../context/ContactDrawerContext'
 import { getFooterContent } from '../../data/footer'
-import { getNavigation, getNavDropdownColumns, navDropdownHrefs } from '../../data/navigation'
+import { getNavigation } from '../../data/navigation'
 import { toAppHref } from '../../lib/routes'
-import { useFixedNav } from '../../hooks/useFixedNav'
-import { useNavLinkHighlight } from '../../hooks/useNavLinkHighlight'
-import { Container, LanguageSwitcher, NavContactLink, UnderlineLink } from '../ui'
-import { NavDropdown } from './NavDropdown'
+import { Container, CtaPillButton, LanguageSwitcher } from '../ui'
 import { HeaderBrand } from './HeaderBrand'
-import { NavMegaMenu } from './NavMegaMenu'
+
 interface MenuToggleIconProps {
   isOpen: boolean
 }
@@ -52,113 +49,43 @@ function MenuToggleIcon({ isOpen }: MenuToggleIconProps) {
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
-  const [caretOffset, setCaretOffset] = useState(0)
   const headerRef = useRef<HTMLElement>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const navClusterRef = useRef<HTMLDivElement>(null)
-  const navRef = useRef<HTMLElement>(null)
-  const navListRef = useRef<HTMLUListElement>(null)
-  const navPlaceholderRef = useRef<HTMLDivElement>(null)
-  const triggerRefs = useRef(new Map<string, HTMLDivElement>())
   const { locale } = useLocale()
   const { openDrawer } = useContactDrawer()
   const { pathname, hash } = useLocation()
-  const { isReady: isNavReady, navSize, isPinned: isNavPinned } = useFixedNav({
-    headerRef,
-    navRef,
-    clusterRef: navClusterRef,
-    placeholderRef: navPlaceholderRef,
-  })
-  const { metrics: navHighlight, updateHighlight, hideHighlight } = useNavLinkHighlight(navListRef)
   const { items, mobileGroups, navAriaLabel, menuOpen, menuClose } = getNavigation(locale)
   const { logoLabel } = getFooterContent(locale)
-  const activeDropdownLabel =
-    items.find((item) => item.href === activeDropdown)?.label ?? ''
-  const activeDropdownColumns = activeDropdown
-    ? getNavDropdownColumns(activeDropdown, locale)
-    : []
+  const contactLabel =
+    items.find((item) => item.href === '/#contact')?.label ?? 'Kontakt'
 
-  const updateCaretOffset = useCallback((href: string) => {
-    const trigger = triggerRefs.current.get(href)
-    const container = containerRef.current
+  // The header is fixed at every width, so its height positions the menu
+  // panel and offsets the page surface below it.
+  useLayoutEffect(() => {
+    const header = headerRef.current
+    if (!header) return
 
-    if (!trigger || !container) return
-
-    const triggerRect = trigger.getBoundingClientRect()
-    const containerRect = container.getBoundingClientRect()
-
-    setCaretOffset(triggerRect.left + triggerRect.width / 2 - containerRect.left)
-  }, [])
-
-  const openDropdown = useCallback(
-    (href: string) => {
-      updateCaretOffset(href)
-      setActiveDropdown(href)
-
-      const trigger = triggerRefs.current.get(href)
-      const link = trigger?.querySelector('a')
-
-      if (link instanceof HTMLElement) {
-        updateHighlight(link)
-      }
-    },
-    [updateCaretOffset, updateHighlight],
-  )
-
-  const closeDropdown = useCallback(() => {
-    setActiveDropdown(null)
-  }, [])
-
-  const handleNavClusterLeave = useCallback(() => {
-    closeDropdown()
-    hideHighlight()
-  }, [closeDropdown, hideHighlight])
-
-  const handleNavItemHighlight = useCallback(
-    (target: EventTarget & HTMLElement) => {
-      const link = target.querySelector('a')
-
-      if (link instanceof HTMLElement) {
-        updateHighlight(link)
-      }
-    },
-    [updateHighlight],
-  )
-
-  const setTriggerRef = useCallback((href: string, element: HTMLDivElement | null) => {
-    if (element) {
-      triggerRefs.current.set(href, element)
-      return
+    const sync = () => {
+      document.documentElement.style.setProperty(
+        '--site-header-height',
+        `${header.offsetHeight}px`,
+      )
     }
 
-    triggerRefs.current.delete(href)
-  }, [])
+    sync()
 
-  useEffect(() => {
-    if (!activeDropdown) return
+    const observer = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(sync) : null
+    observer?.observe(header)
+    window.addEventListener('resize', sync)
 
-    const handleResize = () => {
-      updateCaretOffset(activeDropdown)
-
-      const trigger = triggerRefs.current.get(activeDropdown)
-      const link = trigger?.querySelector('a')
-
-      if (link instanceof HTMLElement && navHighlight.opacity > 0) {
-        updateHighlight(link)
-      }
+    return () => {
+      observer?.disconnect()
+      window.removeEventListener('resize', sync)
     }
-
-    window.addEventListener('resize', handleResize)
-
-    return () => window.removeEventListener('resize', handleResize)
-  }, [activeDropdown, navHighlight.opacity, updateCaretOffset, updateHighlight])
+  }, [])
 
   useEffect(() => {
     setIsOpen(false)
-    closeDropdown()
-    hideHighlight()
-  }, [pathname, hash, closeDropdown, hideHighlight])
+  }, [pathname, hash])
 
   useEffect(() => {
     if (!isOpen) {
@@ -184,11 +111,6 @@ export function Navbar() {
 
   return (
     <>
-      <div
-        className={`nav-dropdown-overlay ${activeDropdown ? 'nav-dropdown-overlay-visible' : ''}`}
-        aria-hidden={!activeDropdown}
-      />
-
       {isOpen ? (
         <>
           <button
@@ -201,6 +123,10 @@ export function Navbar() {
           <nav id="mobile-menu" className="mobile-menu-panel" aria-label={navAriaLabel}>
             <Container fullWidth>
               <div className="mobile-menu-content">
+                <div className="mobile-menu-language">
+                  <LanguageSwitcher />
+                </div>
+
                 {mobileGroups.map(({ title, items: groupItems }) => (
                   <div key={title} className="mobile-nav-group">
                     <p className="mobile-nav-heading">{title}</p>
@@ -239,98 +165,18 @@ export function Navbar() {
       ) : null}
 
       <header ref={headerRef} className="site-header">
-        <Container ref={containerRef} fullWidth>
+        <Container fullWidth>
           <div className="site-header-bar">
             <HeaderBrand label={logoLabel} />
 
-            <div className="site-header-nav-slot">
-              <div
-                className="site-header-nav-placeholder"
-                ref={navPlaceholderRef}
-                style={
-                  isNavReady
-                    ? { width: navSize.width, height: navSize.height }
-                    : undefined
-                }
-                aria-hidden="true"
-              />
-
-              <div
-                ref={navClusterRef}
-                className={[
-                  'site-header-nav-cluster hidden lg:block',
-                  isNavPinned ? 'site-header-nav-cluster-fixed' : '',
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
-                onMouseLeave={handleNavClusterLeave}
-              >
-                <nav ref={navRef} className="site-header-nav" aria-label={navAriaLabel}>
-                  <ul ref={navListRef} className="site-header-nav-list">
-                    <span
-                      className="nav-link-highlight"
-                      aria-hidden="true"
-                      style={{
-                        left: navHighlight.left,
-                        width: navHighlight.width,
-                        opacity: navHighlight.opacity,
-                      }}
-                    />
-                    {items.map(({ label, href }) =>
-                      navDropdownHrefs.has(href) ? (
-                        <NavDropdown
-                          key={href}
-                          label={label}
-                          href={href}
-                          isOpen={activeDropdown === href}
-                          onOpen={() => openDropdown(href)}
-                          triggerRef={(element) => setTriggerRef(href, element)}
-                        />
-                      ) : href === '/#contact' ? (
-                        <li
-                          key={href}
-                          onMouseEnter={() => {
-                            closeDropdown()
-                            hideHighlight()
-                          }}
-                        >
-                          <NavContactLink label={label} />
-                        </li>
-                      ) : (
-                        <li
-                          key={href}
-                          onMouseEnter={(event) => {
-                            closeDropdown()
-                            handleNavItemHighlight(event.currentTarget)
-                          }}
-                        >
-                          <UnderlineLink href={href}>{label}</UnderlineLink>
-                        </li>
-                      ),
-                    )}
-                  </ul>
-                </nav>
-
-                {activeDropdown && (
-                  <div className="nav-mega-menu-shell">
-                    <Container fullWidth>
-                      <NavMegaMenu
-                        columns={activeDropdownColumns}
-                        menuLabel={activeDropdownLabel}
-                        caretOffset={caretOffset}
-                      />
-                    </Container>
-                  </div>
-                )}
-              </div>
-            </div>
-
             <div className="site-header-actions">
-              <LanguageSwitcher />
+              <CtaPillButton className="header-contact" onClick={() => openDrawer('contact')}>
+                {contactLabel}
+              </CtaPillButton>
 
               <button
                 type="button"
-                className="inline-flex items-center justify-center rounded-control p-2.5 text-primary transition-colors hover:bg-peach-hover/50 lg:hidden"
+                className="header-menu-toggle"
                 aria-expanded={isOpen}
                 aria-controls="mobile-menu"
                 aria-label={isOpen ? menuClose : menuOpen}

@@ -21,8 +21,8 @@ const categoryLabels: Record<Locale, Record<CaseCategory, string>> = {
 
 const casesPageContent = {
   da: {
-    eyebrow: 'Se et uddrag af vores cases',
-    title: 'Vores resultater for de virksomheder, der former morgendagen',
+    eyebrow: 'Udvalgte projekter',
+    title: 'Digitale oplevelser, skabt fra bunden.',
     filtersAriaLabel: 'Filtrer cases efter kategori',
     sliderAriaLabel: 'Cases',
     sliderPrev: 'Forrige',
@@ -45,7 +45,7 @@ const casesPageContent = {
         imageSrc: '/cases/nordwear/mobile--6-7.jpg',
         imageAlt: 'Nordwear case',
         panelHoverColor: '#f0e0e4',
-        keywords: ['Website', 'UX-DESIGN', 'Branding', 'Udvikling'],
+        keywords: ['Website', 'UX-design', 'Branding', 'Udvikling'],
         description:
           'En skarp digital platform til et moderne tøjbrand med fokus på performance og en stærk visuel identitet.',
       },
@@ -69,7 +69,7 @@ const casesPageContent = {
         href: '/cases/atelier-noir',
         imageSrc: null,
         imageAlt: 'Atelier Noir webshop case',
-        keywords: ['Webshop', 'E-commerce', 'UX-DESIGN', 'Integration'],
+        keywords: ['Webshop', 'E-commerce', 'UX-design', 'Integration'],
         description:
           'En elegant webshop med fokus på produktoplevelse, hurtig checkout og en premium brandfølelse.',
       },
@@ -112,8 +112,8 @@ const casesPageContent = {
     ],
   },
   en: {
-    eyebrow: 'See a selection of our cases',
-    title: 'Our results for the companies shaping tomorrow',
+    eyebrow: 'Selected work',
+    title: "Websites and webshops I've designed and built from scratch",
     filtersAriaLabel: 'Filter cases by category',
     sliderAriaLabel: 'Cases',
     sliderPrev: 'Previous',
@@ -136,7 +136,7 @@ const casesPageContent = {
         imageSrc: '/cases/nordwear/mobile--6-7.jpg',
         imageAlt: 'Nordwear case',
         panelHoverColor: '#f0e0e4',
-        keywords: ['Website', 'UX-DESIGN', 'Branding', 'Development'],
+        keywords: ['Website', 'UX-design', 'Branding', 'Development'],
         description:
           'A sharp digital platform for a modern apparel brand focused on performance and a strong visual identity.',
       },
@@ -160,7 +160,7 @@ const casesPageContent = {
         href: '/cases/atelier-noir',
         imageSrc: null,
         imageAlt: 'Atelier Noir webshop case',
-        keywords: ['Webshop', 'E-commerce', 'UX-DESIGN', 'Integration'],
+        keywords: ['Webshop', 'E-commerce', 'UX-design', 'Integration'],
         description:
           'An elegant webshop focused on product experience, fast checkout, and a premium brand feel.',
       },
@@ -221,4 +221,20 @@ export function getCaseCategoryLabel(
   category: CaseCategory,
 ): string {
   return categoryLabels[locale][category]
+}
+
+export interface CaseItemSummary {
+  category: CaseCategory
+  keywords: string[]
+}
+
+/** Category and keywords for one case, used to build the case-detail hero meta row. */
+export function getCaseItemSummary(
+  locale: Locale,
+  caseId: string,
+): CaseItemSummary | null {
+  const item = casesPageContent[locale].items.find((entry) => entry.id === caseId)
+  if (!item) return null
+
+  return { category: item.category, keywords: [...item.keywords] }
 }

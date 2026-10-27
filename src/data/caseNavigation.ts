@@ -10,7 +10,7 @@ export interface CaseDetailNext {
   ariaLabel: string
 }
 
-const caseOrder = [
+export const caseOrder = [
   'nordwear',
   'fresh-cut',
   'atelier-noir',
@@ -19,13 +19,19 @@ const caseOrder = [
   'urban-supply',
 ] as const
 
-const caseYears: Record<(typeof caseOrder)[number], string> = {
+export type CaseSlug = (typeof caseOrder)[number]
+
+const caseYears: Record<CaseSlug, string> = {
   nordwear: '2026',
   'fresh-cut': '2026',
   'atelier-noir': '2025',
   'forma-studio': '2025',
   northline: '2024',
   'urban-supply': '2024',
+}
+
+export function getCaseYear(caseSlug: string): string | null {
+  return caseYears[caseSlug as CaseSlug] ?? null
 }
 
 const nextCaseLabels: Record<Locale, string> = {

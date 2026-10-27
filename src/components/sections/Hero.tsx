@@ -1,31 +1,21 @@
 import { useLocale } from '../../context/LocaleContext'
-import { CtaPillButton } from '../ui'
 import styles from './Hero.module.css'
 
 const heroContent = {
   da: {
-    line1Start: 'DIGITALE',
-    line1End: 'BRANDS',
-    line2Start: 'DER',
-    line2End: 'SKABER V\u00c6RDI.',
-    cta: 'SE VORES ARBEJDE',
+    // Three lines: line 2 and the final full stop carry the muted colour.
+    headingLead: 'Jeg udvikler',
+    headingMuted: 'digitale oplevelser',
+    headingTail: 'med omtanke',
     intro:
-      'Vi skaber digitale oplevelser, der styrker dit brand og skaber m\u00e5lbare resultater. Strategi, design og teknologi \u2013 alt samlet \u00e9t sted.',
-    aboutLabel: 'HVEM VI ER',
-    about:
-      'Frisdahl Studio er en digital design- og udviklingspartner for ambiti\u00f8se brands. Vi skaber identiteter og digitale oplevelser, der st\u00e5r skarpt, f\u00f8les rigtige og skaber m\u00e5lbare resultater.',
+      'Jeg designer og udvikler hjemmesider og webapps, der kombinerer stærkt design, gennemført brugeroplevelse og teknisk performance – fra idé til færdigt produkt.',
   },
   en: {
-    line1Start: 'DIGITAL',
-    line1End: 'BRANDS',
-    line2Start: 'THAT',
-    line2End: 'CREATE VALUE.',
-    cta: 'VIEW OUR WORK',
+    headingLead: 'I develop',
+    headingMuted: 'digital experiences',
+    headingTail: 'with care',
     intro:
-      'We create digital experiences that strengthen your brand and deliver measurable results. Strategy, design, and technology \u2013 all in one place.',
-    aboutLabel: 'WHO WE ARE',
-    about:
-      'Frisdahl Studio is a digital design and development partner for ambitious brands. We create identities and digital experiences that stand out, feel right, and deliver measurable results.',
+      'I design and develop websites and webapps that combine strong design, thoughtful user experience and technical performance – from idea to finished product.',
   },
 } as const
 
@@ -36,40 +26,20 @@ export function Hero() {
   return (
     <section className={styles.hero} aria-labelledby="home-hero-title">
       <div className={styles.inner}>
-        {/* The {' '} text nodes keep the words separated for screen readers and
-            search engines; whitespace between flex items does not affect layout. */}
-        <h1 id="home-hero-title" className={styles.title}>
-          <span className={styles.titleRow}>
-            <span>{content.line1Start}</span>{' '}
-            <span className={styles.inlineVisual} aria-hidden="true">
-              <video src="/promo_h264.mp4" autoPlay muted loop playsInline />
-            </span>{' '}
-            <span>{content.line1End}</span>
-          </span>{' '}
-          <span className={styles.titleRow}>
-            <span>{content.line2Start}</span>{' '}
-            <span className={`${styles.inlineVisual} ${styles.secondaryVisual}`} aria-hidden="true">
-              <img src="/images/hero/hero-secondary.avif" alt="" />
-            </span>{' '}
-            <span>{content.line2End}</span>
-          </span>
-        </h1>
+        <div className={styles.copy}>
+          <h1 id="home-hero-title" className={styles.title}>
+            {content.headingLead}
+            <br />
+            <span className={styles.titleMuted}>{content.headingMuted}</span>
+            <br />
+            {content.headingTail}
+            <span className={styles.titleMuted}>.</span>
+          </h1>
+          <p className={styles.intro}>{content.intro}</p>
+        </div>
 
-        <div className={styles.heroFooter}>
-          <div className={`${styles.heroFooterColumn} ${styles.actionColumn}`}>
-            <p className={styles.introText}>{content.intro}</p>
-            <CtaPillButton href="/cases" className="cases-section-cta">
-              {content.cta}
-            </CtaPillButton>
-          </div>
-          <div className={`${styles.heroFooterColumn} ${styles.aboutColumn}`}>
-            <div className={styles.aboutDivider} aria-hidden="true" />
-            <p className={styles.aboutEyebrow}>{content.aboutLabel}</p>
-            <p className={styles.aboutText}>
-              <span className={styles.aboutMark} aria-hidden="true">{'\u273a'}</span>
-              {content.about}
-            </p>
-          </div>
+        <div className={styles.media}>
+          <video src="/promo_h264.mp4" autoPlay muted loop playsInline aria-hidden="true" />
         </div>
       </div>
     </section>

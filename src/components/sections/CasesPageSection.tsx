@@ -79,7 +79,7 @@ export function CasesPageSection() {
     <section className="cases-page relative isolate py-section-sm lg:py-section" aria-label={title}>
       <Container className="relative z-[1]">
         <div className="cases-page-intro">
-          <p className="eyebrow">{eyebrow}</p>
+          <p className="eyebrow eyebrow-accent">{eyebrow}</p>
           <h1 className="cases-page-title mt-md">{title}</h1>
 
           <div className="cases-page-filters-row">

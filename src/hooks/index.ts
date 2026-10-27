@@ -1,7 +1,5 @@
 export { useAutoplaySlider } from './useAutoplaySlider'
-export { useFixedNav } from './useFixedNav'
 export { useHorizontalDragSlider } from './useHorizontalDragSlider'
 export { useNextCaseTimerProgress } from './useNextCaseTimerProgress'
-export { useFeatureStepTimeline } from './useFeatureStepTimeline'
 export { useStickyScrollSteps } from './useStickyScrollSteps'
 export { useUnderlineHover } from './useUnderlineHover'

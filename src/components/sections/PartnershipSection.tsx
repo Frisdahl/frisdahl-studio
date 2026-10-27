@@ -1,6 +1,7 @@
 import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
-import { Container, TextLink } from '../ui'
+import { responsiveImageProps } from '../../lib/responsiveImage'
+import { Container } from '../ui'
 import { PartnershipImageDecorations } from './PartnershipDecorations'
 
 export function PartnershipSection() {
@@ -8,35 +9,34 @@ export function PartnershipSection() {
   const { partnership } = getHomeContent(locale)
 
   return (
-    <section id="partnership" className="relative overflow-visible py-24 lg:py-32">
+    // id="om-os": target of the "Om os" links in the nav, mobile menu and footer.
+    <section id="om-os" className="relative overflow-visible py-24 lg:py-32">
       <Container>
-        <div className="relative grid gap-20 lg:grid-cols-[1fr_auto] lg:items-start lg:gap-5xl">
-          <div className="min-w-0 max-w-[38rem] lg:max-w-[75%]">
-            <p className="eyebrow eyebrow-theme">{partnership.eyebrow}</p>
+        <div className="relative grid gap-20 lg:grid-cols-2 lg:items-center lg:gap-3xl">
+          <div className="min-w-0 max-w-[38rem]">
+            <p className="eyebrow eyebrow-accent">{partnership.eyebrow}</p>
             <h2 className="mt-xl">{partnership.title}</h2>
             <p className="mt-2xl text-body">{partnership.description}</p>
-            <div className="mt-3xl">
-              <TextLink href={partnership.ctaHref} variant="nav">
-                {partnership.ctaLabel}
-              </TextLink>
-            </div>
           </div>
 
-          <div className="relative mx-auto w-[14rem] shrink-0 sm:w-[15rem] lg:mx-0 lg:w-[17rem]">
+          <div className="relative mx-auto w-[16rem] shrink-0 sm:w-[19rem] lg:w-[24rem]">
             <PartnershipImageDecorations />
 
-            <div className="relative overflow-hidden rounded-full bg-peach">
+            <div className="relative overflow-hidden rounded-panel bg-peach">
               {partnership.imageSrc ? (
                 <img
-                  src={partnership.imageSrc}
+                  // Matches the frame widths above: 16rem, 19rem from sm, 24rem from lg.
+                  {...responsiveImageProps(
+                    partnership.imageSrc,
+                    '(min-width: 64rem) 24rem, (min-width: 40rem) 19rem, 16rem',
+                  )}
                   alt={partnership.imageAlt}
-                  className="aspect-[4/5] w-full object-cover lg:aspect-[9/16]"
+                  className="aspect-[4/5] w-full object-cover"
+                  loading="lazy"
+                  decoding="async"
                 />
               ) : (
-                <div
-                  className="aspect-[4/5] w-full lg:aspect-[9/16]"
-                  aria-hidden="true"
-                />
+                <div className="aspect-[4/5] w-full" aria-hidden="true" />
               )}
             </div>
           </div>

@@ -16,14 +16,14 @@ export function CasesSection() {
     <section id="portfolio" className="py-section-sm lg:py-section" aria-label={cases.ariaLabel}>
       <Container fullWidth>
         <div className="mb-xl">
-          <p className="eyebrow eyebrow-theme">{cases.eyebrow}</p>
+          <p className="eyebrow eyebrow-accent">{cases.eyebrow}</p>
           <div className="mt-md flex flex-col gap-lg sm:flex-row sm:items-end sm:justify-between">
             <h2>
               {cases.titleLine1}
               <br />
               {cases.titleLine2}
             </h2>
-            <CtaPillButton href={cases.ctaHref} className="cases-section-cta shrink-0 self-start sm:self-auto">
+            <CtaPillButton href={cases.ctaHref} className="cases-link-cta shrink-0 self-start sm:self-auto">
               {cases.ctaLabel}
             </CtaPillButton>
           </div>

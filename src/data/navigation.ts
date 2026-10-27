@@ -1,4 +1,4 @@
-import { CASES_PATH, MEET_US_PATH, PRICING_PATH, PROCESS_PATH, WEB_DEVELOPMENT_PATH } from '../lib/routes'
+import { CASES_PATH, MEET_US_PATH, PROCESS_PATH } from '../lib/routes'
 
 export type Locale = 'da' | 'en'
 
@@ -26,104 +26,49 @@ export interface NavDropdownColumn {
   icon: NavDropdownIcon
 }
 
-const servicesDropdownColumns = {
-  da: [
-    {
-      title: 'Webudvikling',
-      description: 'Moderne, hurtige websites skræddersyet til jeres behov.',
-      href: WEB_DEVELOPMENT_PATH,
-      icon: 'code',
-    },
-    {
-      title: 'Grafisk design',
-      description: 'Visuel identitet og UI-design der styrker jeres brand.',
-      href: '#grafisk-design',
-      icon: 'design',
-    },
-    {
-      title: 'Content & Koncept',
-      description: 'Strategi, tekst og koncept der skaber klarhed og værdi.',
-      href: '#content-koncept',
-      icon: 'content',
-    },
-    {
-      title: 'Vedligeholdelse',
-      description: 'Løbende support, opdateringer og forbedringer efter lancering.',
-      href: '#vedligeholdelse',
-      icon: 'maintenance',
-    },
-  ],
-  en: [
-    {
-      title: 'Web development',
-      description: 'Modern, fast websites tailored to your needs.',
-      href: WEB_DEVELOPMENT_PATH,
-      icon: 'code',
-    },
-    {
-      title: 'Graphic design',
-      description: 'Visual identity and UI design that strengthens your brand.',
-      href: '#graphic-design',
-      icon: 'design',
-    },
-    {
-      title: 'Content & concept',
-      description: 'Strategy, copy and concept that create clarity and value.',
-      href: '#content-concept',
-      icon: 'content',
-    },
-    {
-      title: 'Maintenance',
-      description: 'Ongoing support, updates and improvements after launch.',
-      href: '#maintenance',
-      icon: 'maintenance',
-    },
-  ],
-} as const satisfies Record<Locale, NavDropdownColumn[]>
-
 const aboutUsDropdownColumns = {
   da: [
     {
-      title: 'Mød os',
-      description: 'Lær teamet bag Frisdahl Studio og vores tilgang til samarbejde.',
+      title: 'Mød mig',
+      description: 'Lær mig bag Frisdahl Studio at kende – og min tilgang til samarbejde.',
       href: MEET_US_PATH,
       icon: 'meet',
     },
     {
       title: 'Proces',
-      description: 'Sådan arbejder vi — fra første idé til lancering og videre.',
+      description: 'Sådan arbejder jeg — fra første idé til lancering og videre.',
       href: PROCESS_PATH,
       icon: 'process',
     },
     {
       title: 'Kultur',
-      description: 'Værdier, mindset og det der driver os i hverdagen.',
+      description: 'Værdier, mindset og det, der driver mig i hverdagen.',
       href: '#kultur',
       icon: 'culture',
     },
     {
       title: 'Blog',
-      description: 'Indsigt, erfaringer og tanker fra vores hverdag i studiet.',
+      description: 'Indsigt, erfaringer og tanker fra min hverdag i studiet.',
       href: '#blog',
       icon: 'blog',
     },
   ],
   en: [
     {
-      title: 'Meet us',
-      description: 'Get to know the Frisdahl Studio team and how we work together.',
+      title: 'Meet me',
+      description: 'Get to know the person behind Frisdahl Studio and how I work with clients.',
       href: MEET_US_PATH,
       icon: 'meet',
     },
     {
       title: 'Process',
-      description: 'How we work — from first idea to launch and beyond.',
+      description: 'How I work — from first idea to launch and beyond.',
       href: PROCESS_PATH,
       icon: 'process',
     },
     {
       title: 'Culture',
-      description: 'Values, mindset and what drives us every day.',
+      description: 'Values, mindset and what drives me every day.',
       href: '#kultur',
       icon: 'culture',
     },
@@ -136,24 +81,24 @@ const aboutUsDropdownColumns = {
   ],
 } as const satisfies Record<Locale, NavDropdownColumn[]>
 
-export const navDropdownHrefs = new Set([WEB_DEVELOPMENT_PATH, '/#om-os'])
+// No nav item opens a dropdown any more; "Om mig" links straight to the Mød mig page.
+export const navDropdownHrefs = new Set<string>()
 
 export const navItems: NavItem[] = [
-  { href: WEB_DEVELOPMENT_PATH, labels: { da: 'Services', en: 'Services' } },
   { href: CASES_PATH, labels: { da: 'Cases', en: 'Cases' } },
-  { href: '/#om-os', labels: { da: 'Om os', en: 'About us' } },
-  { href: PRICING_PATH, labels: { da: 'Priser', en: 'Pricing' } },
+  { href: MEET_US_PATH, labels: { da: 'Om mig', en: 'About me' } },
+  { href: '/#priser', labels: { da: 'Priser', en: 'Pricing' } },
   { href: '/#contact', labels: { da: 'Kontakt', en: 'Contact' } },
 ]
 
 const mobileNavGroups = [
   {
     title: { da: 'Samarbejde', en: 'Collaboration' },
-    hrefs: [WEB_DEVELOPMENT_PATH, PRICING_PATH],
+    hrefs: ['/#priser'],
   },
   {
-    title: { da: 'Om os', en: 'About us' },
-    hrefs: [CASES_PATH, '/#om-os', '/#contact'],
+    title: { da: 'Om mig', en: 'About me' },
+    hrefs: [CASES_PATH, MEET_US_PATH, '/#contact'],
   },
 ] as const
 
@@ -185,7 +130,6 @@ const navigationCopy = {
 export interface NavigationContent {
   items: { href: string; label: string }[]
   mobileGroups: { title: string; items: { href: string; label: string }[] }[]
-  servicesDropdown: NavDropdownColumn[]
   aboutUsDropdown: NavDropdownColumn[]
   cta: string
   navAriaLabel: string
@@ -203,7 +147,7 @@ export function getNavDropdownColumns(
     return [...aboutUsDropdownColumns[locale]]
   }
 
-  return [...servicesDropdownColumns[locale]]
+  return []
 }
 
 export function getNavigation(locale: Locale = defaultLocale): NavigationContent {
@@ -222,7 +166,6 @@ export function getNavigation(locale: Locale = defaultLocale): NavigationContent
   return {
     items,
     mobileGroups,
-    servicesDropdown: [...servicesDropdownColumns[locale]],
     aboutUsDropdown: [...aboutUsDropdownColumns[locale]],
     ...navigationCopy[locale],
   }

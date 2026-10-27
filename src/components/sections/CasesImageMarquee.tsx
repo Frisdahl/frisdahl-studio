@@ -1,4 +1,5 @@
 import type { CasesHeroSlide } from '../../types/cases'
+import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 
 interface CasesImageMarqueeProps {
   slides: CasesHeroSlide[]
@@ -32,7 +33,7 @@ export function CasesImageMarquee({
                 >
                   {slide.imageSrc ? (
                     <img
-                      src={slide.imageSrc}
+                      {...responsiveImageProps(slide.imageSrc, IMAGE_SIZES.container)}
                       alt={groupIndex === 0 ? slide.imageAlt : ''}
                       className="h-full w-full object-cover"
                       loading={groupIndex === 0 ? 'eager' : 'lazy'}

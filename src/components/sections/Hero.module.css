@@ -1,178 +1,123 @@
 .hero {
   position: relative;
-  height: 100vh;
-  height: 100svh;
-  min-height: 38rem;
+  display: flex;
+  align-items: center;
   overflow: hidden;
-  background: #f8f8f9;
-  color: #010100;
+  background: var(--color-home-page);
+  color: #030008;
   margin-bottom: clamp(3rem, 6vw, 6rem);
 }
 
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 4rem);
+  width: 100%;
+  max-width: var(--page-max-width);
+  margin-inline: auto;
+  padding: clamp(5.5rem, 12vh, 8rem) var(--page-gutter) clamp(3rem, 7vh, 5rem);
+}
+
 @media (min-width: 1024px) {
-  .hero {
-    height: calc(100svh - var(--site-header-height));
+  .inner {
+    /* The video takes the larger share and the gap is kept tight, so the text
+       and the video read as one composition without a wide empty strip. */
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+    /* The hero fills exactly the first screen; the copy and video row takes
+       all of it. The small top padding lets the video start close under the
+       header. */
+    grid-template-rows: minmax(0, 1fr);
+    min-height: calc(100svh - var(--site-header-height));
+    gap: clamp(2rem, 3vw, 3rem);
+    padding-block: clamp(1rem, 2.5vh, 1.5rem) clamp(2rem, 5vh, 3.5rem);
+  }
+
+  /* The copy sits at the bottom of the row, so its last line lines up with
+     the video's bottom edge. */
+  .copy {
+    align-self: end;
   }
 }
 
-.inner {
-  position: relative;
+.copy {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 90rem;
-  height: 100%;
-  margin-inline: auto;
-  padding: clamp(5.5rem, 9vh, 8rem) clamp(1rem, 2.5vw, 2.5rem) 2rem;
+  align-items: flex-start;
+  min-width: 0;
 }
 
 .title {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+  /* Three explicit lines. The old 20ch cap (~504px at 64px) is narrower than
+     the longest line ("digitale oplevelser", 518px at 64px) and would re-wrap
+     it, so the box follows the longest line instead. */
+  max-width: none;
   margin: 0;
-  color: #000000;
-  font-family: "PP Mori", "Aktiv Grotesk", Arial, sans-serif;
-  font-size: clamp(2rem, 8.25vw, 8.25rem);
-  font-weight: 400;
-  line-height: 1.02;
-  letter-spacing: -0.065em;
-  text-transform: uppercase;
+  color: #030008;
+  font-family: var(--font-heading);
+  font-size: clamp(2.25rem, 4.7vw, 4rem);
+  font-weight: var(--heading-weight);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
 }
 
-.title span {
-  display: block;
-  white-space: nowrap;
+.titleMuted {
+  color: #b2b2b2;
 }
 
-.titleRow {
+.intro {
+  max-width: 30rem;
+  margin: clamp(1.5rem, 3vh, 2rem) 0 0;
+  color: oklch(70.7% 0.022 261.325);
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 1.2vw, 1.1875rem);
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+}
+
+.media {
   position: relative;
-  display: flex !important;
-  align-items: center;
-  gap: 0.14em;
-}
-
-.titleRow > span:not(.inlineVisual) {
-  position: relative;
-  z-index: 2;
-}
-
-.inlineVisual {
-  width: 1.65em;
-  height: 0.92em;
-  flex: 0 0 auto;
-  align-self: center;
-  transform: translateY(-0.055em);
+  min-width: 0;
   overflow: hidden;
-  border-radius: 999px;
+  aspect-ratio: 16 / 9;
+  border-radius: clamp(0.375rem, 0.7vw, 0.625rem);
 }
 
-.inlineVisual img,
-.inlineVisual video {
+.media video {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.secondaryVisual {
-  width: 1.55em;
-  height: 1.05em;
-  border-radius: 0;
+/* Desktop: the video fills the height left in the first screen (see .inner),
+   between 18rem (on very short screens the hero grows instead) and 52rem.
+   It is anchored to the bottom of the row like the copy, so their bottom
+   edges line up even when the 52rem cap leaves space above (very tall screens). */
+@media (min-width: 1024px) {
+  .media {
+    align-self: end;
+    height: 100%;
+    aspect-ratio: auto;
+    min-height: 18rem;
+    max-height: 52rem;
+  }
+
+  .media video {
+    position: absolute;
+    inset: 0;
+  }
 }
 
-.heroFooter {
-  position: relative;
-  z-index: 3;
-  display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-  gap: clamp(1.5rem, 4vw, 5rem);
-  margin-top: auto;
-  padding-top: clamp(2.5rem, 7vh, 5.5rem);
-}
-
-.heroFooterColumn {
-  min-width: 0;
-}
-
-.actionColumn {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.introText {
-  max-width: 31rem;
-  margin: 0 0 clamp(1.75rem, 3.5vh, 2.75rem);
-  color: #141314;
-  font-family: "Aktiv Grotesk", Arial, sans-serif;
-  font-size: clamp(1rem, 1.35vw, 1.35rem);
-  font-weight: 400;
-  line-height: 1.35;
-  letter-spacing: -0.02em;
-}
-
-.aboutDivider {
-  width: 100%;
-  height: 1px;
-  background: rgb(0 0 0 / 18%);
-}
-
-.aboutEyebrow {
-  margin-top: 0.65rem;
-  color: #6f6f6f;
-  font-family: "Aktiv Grotesk", Arial, sans-serif;
-  font-size: 0.72rem;
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: 0.04em;
-}
-
-.aboutText {
-  max-width: 46rem;
-  margin-top: 1.35rem;
-  color: #000000;
-  font-family: "PP Mori", "Aktiv Grotesk", Arial, sans-serif;
-  font-size: clamp(1.15rem, 1.65vw, 1.65rem);
-  font-weight: 400;
-  line-height: 1.25;
-  letter-spacing: -0.025em;
-}
-
-.aboutMark {
-  display: inline-block;
-  margin-right: 0.5em;
-  color: #000000;
+@media (max-width: 1023px) {
+  .title {
+    letter-spacing: -0.03em;
+  }
 }
 
 @media (max-width: 700px) {
-  .hero {
-    height: auto;
-    min-height: 100svh;
-  }
-
-  .inner {
-    padding-top: clamp(5rem, 12vh, 6.5rem);
-  }
-
-  .title {
-    line-height: 1.02;
-    letter-spacing: -0.06em;
-  }
-
-  .heroFooter {
-    grid-template-columns: 1fr;
-    margin-top: 2.5rem;
-    padding-top: 0;
-  }
-
-  .introText {
+  .intro {
     max-width: 28rem;
   }
-
-  .aboutColumn {
-    margin-top: 1rem;
-  }
-
 }

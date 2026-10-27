@@ -1,5 +1,5 @@
 import type { IconType } from 'react-icons'
-import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTiktok } from 'react-icons/fa6'
+import { FaBehance, FaFacebookF, FaGithub } from 'react-icons/fa6'
 import { HiEnvelope } from 'react-icons/hi2'
 import { Link, matchPath, useLocation } from 'react-router-dom'
 import { useLocale } from '../../context/LocaleContext'
@@ -17,9 +17,8 @@ function FooterLogo({ label }: { label: string }) {
 
 const socialIcons: Record<FooterSocialLink['icon'], IconType> = {
   facebook: FaFacebookF,
-  instagram: FaInstagram,
-  tiktok: FaTiktok,
-  linkedin: FaLinkedinIn,
+  behance: FaBehance,
+  github: FaGithub,
 }
 
 function FooterSocialLinks({ links }: { links: readonly FooterSocialLink[] }) {
@@ -61,15 +60,21 @@ export function Footer() {
 
   return (
     <footer className="site-footer">
-      <Container>
+      {/* Full container so the footer frames the page on the same edges as the header. */}
+      <Container fullWidth>
         <div className="site-footer-top">
-          <FooterLogo label={footer.logoLabel} />
+          <div className="site-footer-brand">
+            <FooterLogo label={footer.logoLabel} />
+            <FooterSocialLinks links={footer.socialLinks} />
+          </div>
 
           <nav className="site-footer-nav" aria-label={footer.columnsAriaLabel}>
             <div className="site-footer-columns">
-              {footer.columns.map((column) => (
-                <div key={column.title} className="site-footer-column">
-                  <p className="site-footer-column-title">{column.title}</p>
+              {footer.columns.map((column, columnIndex) => (
+                <div
+                  key={column.links[0]?.href ?? columnIndex}
+                  className="site-footer-column"
+                >
                   <ul className="site-footer-links">
                     {column.links.map((link) => (
                       <li key={link.href}>
@@ -88,8 +93,6 @@ export function Footer() {
         <hr className="site-footer-divider" />
 
         <div className="site-footer-middle">
-          <FooterSocialLinks links={footer.socialLinks} />
-
           <a href={footer.emailHref} className="site-footer-contact-link">
             <HiEnvelope className="site-footer-contact-icon" aria-hidden="true" />
             <span>{footer.email}</span>

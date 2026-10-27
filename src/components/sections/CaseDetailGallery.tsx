@@ -1,4 +1,5 @@
 import type { CaseDetailGallery, CaseDetailGalleryImage } from '../../types/caseDetail'
+import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 import { Container } from '../ui'
 
 interface CaseDetailGalleryProps {
@@ -15,7 +16,11 @@ function GalleryFigure({ image, variant }: GalleryFigureProps) {
     <figure className={`case-detail-gallery-item case-detail-gallery-item-${variant}`}>
       {image.imageSrc ? (
         <img
-          src={image.imageSrc}
+          {...responsiveImageProps(
+            image.imageSrc,
+            // Horizontal images span the container; vertical ones come in pairs.
+            variant === 'horizontal' ? IMAGE_SIZES.container : IMAGE_SIZES.halfContainer,
+          )}
           alt={image.imageAlt}
           className="h-full w-full object-cover"
           loading="lazy"

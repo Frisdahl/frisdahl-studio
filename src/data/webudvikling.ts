@@ -19,7 +19,7 @@ const webudviklingContent = {
       ],
     },
     whyChooseUs: {
-      title: 'Der er masser af årsager til at vælge os',
+      title: 'Der er masser af grunde til at vælge mig',
       rows: [
         [
           'Skræddersyet design',
@@ -40,14 +40,14 @@ const webudviklingContent = {
       ],
     },
     process: {
-      label: 'Vores proces',
-      sliderAriaLabel: 'Sådan arbejder vi',
+      label: 'Min proces',
+      sliderAriaLabel: 'Sådan arbejder jeg',
       sliderStatus: 'Trin {current} af {total}',
       steps: [
         {
           title: 'Skabt med vision. Afsluttet med omhu.',
           description:
-            'Hos Frisdahl Studio følger hvert projekt en klar og gennemarbejdet proces — med præcision, transparens og ro i maven fra start til slut.',
+            'Hvert projekt følger en klar og gennemarbejdet proces — med præcision, transparens og ro i maven fra start til slut.',
           keywords: [],
           layout: 'horizontal-reveal',
           mediaPosition: 'right',
@@ -57,7 +57,7 @@ const webudviklingContent = {
         {
           title: 'Opdagelse og strategi',
           description:
-            'Vi starter med at forstå jeres virksomhed, målgruppe og ambitioner. Her definerer vi scope, prioriteringer og en klar retning for projektet.',
+            'Jeg starter med at forstå din virksomhed, målgruppe og ambitioner. Her definerer vi sammen scope, prioriteringer og en klar retning for projektet.',
           keywords: ['Brief', 'Målgruppe', 'Scope', 'Roadmap', 'Konkurrentanalyse', 'Mål'],
           layout: 'dual-portrait',
           mediaPosition: 'left',
@@ -79,7 +79,7 @@ const webudviklingContent = {
         {
           title: 'Design og prototyp',
           description:
-            'Vi omsætter strategien til et stærkt visuelt udtryk med wireframes, UI-design og en klikbar prototype, så I kan se løsningen, før den bygges.',
+            'Jeg omsætter strategien til et stærkt visuelt udtryk med wireframes, UI-design og en klikbar prototype, så du kan se løsningen, før den bygges.',
           keywords: ['Wireframes', 'UI-design', 'Prototype', 'Branding', 'Designsystem', 'UX'],
           imageSrc: '/cases/fresh-cut/mobile1--16-10.jpg',
           imageAlt: 'Design og prototyp i webudviklingsprocessen',
@@ -87,7 +87,7 @@ const webudviklingContent = {
         {
           title: 'Udvikling',
           description:
-            'Vi bygger løsningen fra bunden med moderne teknologi, fokus på performance og en struktur, der er nem at vedligeholde og udvide.',
+            'Jeg bygger løsningen fra bunden med moderne teknologi, fokus på performance og en struktur, der er nem at vedligeholde og udvide.',
           keywords: [
             'Frontend',
             'React',
@@ -104,7 +104,7 @@ const webudviklingContent = {
         {
           title: 'Test og lancering',
           description:
-            'Før go-live gennemgår vi alt grundigt på tværs af enheder og browsere. Derefter lancerer vi og sikrer en stabil overgang til den nye løsning.',
+            'Før go-live gennemgår jeg alt grundigt på tværs af enheder og browsere. Derefter lancerer jeg og sikrer en stabil overgang til den nye løsning.',
           keywords: ['QA', 'SEO', 'Go-live', 'Tracking', 'Browser-test', 'Performance-test'],
           imageSrc: '/cases/fresh-cut/mobile2.webp',
           imageAlt: 'Test og lancering af website',
@@ -112,13 +112,13 @@ const webudviklingContent = {
       ],
     },
     faq: {
-      eyebrow: 'Se de spørgsmål vi får ofte',
+      eyebrow: 'Se de spørgsmål jeg ofte får',
       title: 'Ofte stillede spørgsmål',
       items: [
         {
           question: 'Hvad koster en hjemmeside?',
           answer:
-            'Prisen afhænger af omfang, funktionalitet og design. Vi starter altid med en kort snak om jeres behov, så I får et tydeligt tilbud uden skjulte omkostninger.',
+            'Prisen afhænger af omfang, funktionalitet og design. Jeg starter altid med en kort snak om dine behov, så du får et tydeligt tilbud uden skjulte omkostninger.',
         },
         {
           question: 'Hvor lang tid tager det at få en ny hjemmeside?',
@@ -126,14 +126,14 @@ const webudviklingContent = {
             'De fleste projekter tager mellem 4 og 10 uger fra kickoff til lancering. Tidsplanen afhænger af indhold, feedback og hvor mange sider og funktioner løsningen skal have.',
         },
         {
-          question: 'Kan I hjælpe med både design og udvikling?',
+          question: 'Kan du hjælpe med både design og udvikling?',
           answer:
-            'Ja. Vi håndterer hele processen fra første idé og visuelt udtryk til kodning, test og lancering — så I får én samlet løsning og én kontaktperson.',
+            'Ja. Jeg håndterer hele processen fra første idé og visuelt udtryk til kodning, test og lancering — så du får én samlet løsning og én kontaktperson.',
         },
         {
           question: 'Hvad sker der efter lancering?',
           answer:
-            'Vi tilbyder løbende vedligeholdelse, opdateringer og videreudvikling. Mange af vores kunder vælger et samarbejde efter lancering, så hjemmesiden fortsat performer og udvikler sig.',
+            'Jeg tilbyder løbende vedligeholdelse, opdateringer og videreudvikling. Mange kunder vælger et samarbejde efter lancering, så hjemmesiden fortsat performer og udvikler sig.',
         },
       ],
     },
@@ -151,7 +151,7 @@ const webudviklingContent = {
       ],
     },
     whyChooseUs: {
-      title: 'There are plenty of reasons to choose us',
+      title: 'There are plenty of reasons to choose me',
       rows: [
         [
           'Tailored design',
@@ -172,14 +172,14 @@ const webudviklingContent = {
       ],
     },
     process: {
-      label: 'Our process',
-      sliderAriaLabel: 'How we work',
+      label: 'My process',
+      sliderAriaLabel: 'How I work',
       sliderStatus: 'Step {current} of {total}',
       steps: [
         {
           title: 'Built with vision. Finished with care.',
           description:
-            'At Frisdahl Studio, every project follows a clear and refined process — ensuring precision, transparency, and peace of mind from start to finish.',
+            'Every project follows a clear and refined process — with precision, transparency and peace of mind from start to finish.',
           keywords: [],
           layout: 'horizontal-reveal',
           mediaPosition: 'right',
@@ -189,7 +189,7 @@ const webudviklingContent = {
         {
           title: 'Discovery and strategy',
           description:
-            'We start by understanding your business, audience, and ambitions. Here we define scope, priorities, and a clear direction for the project.',
+            'I start by understanding your business, audience and ambitions. Together we define scope, priorities and a clear direction for the project.',
           keywords: ['Brief', 'Audience', 'Scope', 'Roadmap', 'Competitor review', 'Goals'],
           layout: 'dual-portrait',
           mediaPosition: 'left',
@@ -211,7 +211,7 @@ const webudviklingContent = {
         {
           title: 'Design and prototype',
           description:
-            'We translate strategy into a strong visual direction with wireframes, UI design, and a clickable prototype so you can see the solution before it is built.',
+            'I translate the strategy into a strong visual direction with wireframes, UI design and a clickable prototype, so you can see the solution before it is built.',
           keywords: ['Wireframes', 'UI design', 'Prototype', 'Branding', 'Design system', 'UX'],
           imageSrc: '/cases/fresh-cut/mobile1--16-10.jpg',
           imageAlt: 'Design and prototype in the web development process',
@@ -219,7 +219,7 @@ const webudviklingContent = {
         {
           title: 'Development',
           description:
-            'We build the solution from scratch with modern technology, a focus on performance, and a structure that is easy to maintain and extend.',
+            'I build the solution from scratch with modern technology, a focus on performance and a structure that is easy to maintain and extend.',
           keywords: [
             'Frontend',
             'React',
@@ -236,7 +236,7 @@ const webudviklingContent = {
         {
           title: 'Testing and launch',
           description:
-            'Before go-live we review everything across devices and browsers. Then we launch and ensure a stable transition to the new solution.',
+            'Before go-live I review everything across devices and browsers. Then I launch and make sure the transition to the new solution is stable.',
           keywords: ['QA', 'SEO', 'Go-live', 'Tracking', 'Browser testing', 'Performance testing'],
           imageSrc: '/cases/fresh-cut/mobile2.webp',
           imageAlt: 'Testing and launch of a website',
@@ -244,13 +244,13 @@ const webudviklingContent = {
       ],
     },
     faq: {
-      eyebrow: 'See the questions we get most often',
+      eyebrow: 'See the questions I get most often',
       title: 'Frequently asked questions',
       items: [
         {
           question: 'How much does a website cost?',
           answer:
-            'The price depends on scope, functionality, and design. We always start with a short conversation about your needs so you get a clear quote without hidden costs.',
+            'The price depends on scope, functionality and design. I always start with a short conversation about your needs, so you get a clear quote without hidden costs.',
         },
         {
           question: 'How long does it take to build a new website?',
@@ -260,12 +260,12 @@ const webudviklingContent = {
         {
           question: 'Can you help with both design and development?',
           answer:
-            'Yes. We handle the full process from first idea and visual direction to coding, testing, and launch — so you get one cohesive solution and one point of contact.',
+            'Yes. I handle the full process from first idea and visual direction to coding, testing and launch — so you get one cohesive solution and one point of contact.',
         },
         {
           question: 'What happens after launch?',
           answer:
-            'We offer ongoing maintenance, updates, and further development. Many of our clients choose a partnership after launch so the website keeps performing and evolving.',
+            'I offer ongoing maintenance, updates and further development. Many clients choose a partnership after launch, so the website keeps performing and evolving.',
         },
       ],
     },

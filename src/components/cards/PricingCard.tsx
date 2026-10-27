@@ -4,8 +4,6 @@ export interface PricingPlan {
   id: string
   eyebrow: string
   title: string
-  audience: string
-  availability: string
   cta: string
   ctaAction: 'book' | 'contact'
   featured?: boolean
@@ -37,12 +35,6 @@ export function PricingCard({ plan, onCtaClick }: PricingCardProps) {
       </ul>
 
       <div className="pricing-card-footer">
-        <p className="pricing-card-audience">{plan.audience}</p>
-        <p className="pricing-card-availability">
-          <span className="pricing-card-marker" aria-hidden="true" />
-          {plan.availability}
-        </p>
-
         <div className="pricing-card-actions">
           <button type="button" className="pricing-card-action-primary" onClick={onCtaClick}>
             {plan.cta}

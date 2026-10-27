@@ -1,4 +1,8 @@
 import { Link } from 'react-router-dom'
+import { responsiveImageProps } from '../../lib/responsiveImage'
+
+// The /cases slider always shows two slides, so each is about half the container.
+const CASE_SLIDE_IMAGE_SIZES = '(min-width: 96rem) 48rem, 50vw'
 
 export interface CaseSlideCardProps {
   client: string
@@ -27,10 +31,11 @@ export function CaseSlideCard({
       <div className="case-slide-card-media">
         {imageSrc ? (
           <img
-            src={imageSrc}
+            {...responsiveImageProps(imageSrc, CASE_SLIDE_IMAGE_SIZES)}
             alt={imageAlt}
             className="case-slide-card-image"
             loading="lazy"
+            decoding="async"
             draggable={false}
           />
         ) : (
