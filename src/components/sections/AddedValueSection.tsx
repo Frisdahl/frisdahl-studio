@@ -40,7 +40,7 @@ export function AddedValueSection() {
                       aria-controls={panelId}
                       onClick={() => setActiveIndex(index)}
                     >
-                      <span className="added-value-number">{String(index + 1).padStart(2, '0')}</span>
+                      <span className="added-value-number">({String(index + 1).padStart(2, '0')})</span>
                       <span className="added-value-title">{item.title}</span>
                     </button>
                   </h3>

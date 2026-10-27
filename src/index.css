@@ -3122,7 +3122,7 @@
      a crossfading image on the right that follows the open row. */
   .added-value {
     /* Width of the number column; the open text is indented by the same. */
-    --added-value-number-width: 3rem;
+    --added-value-number-width: 3.75rem;
     @apply py-section-sm lg:py-section;
     background-color: var(--color-home-page);
     color: #030008;
@@ -3132,18 +3132,20 @@
     display: grid;
     gap: clamp(2rem, 5vw, 5rem);
     width: 100%;
-    max-width: var(--page-max-width);
+    /* Narrower than the page's other content (72rem instead of 96rem). */
+    max-width: calc(72rem + 2 * var(--page-gutter));
     margin-inline: auto;
     padding-inline: var(--page-gutter);
   }
 
   @media (min-width: 1024px) {
     .added-value {
-      --added-value-number-width: 4.5rem;
+      --added-value-number-width: 5rem;
     }
 
+    /* The list gets the larger share so each heading stays on one line. */
     .added-value-inner {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
       align-items: start;
     }
   }
@@ -3186,23 +3188,19 @@
     margin: clamp(2rem, 4vw, 3rem) 0 0;
     padding: 0;
     list-style: none;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .added-value-item {
-    border-top: 1px solid var(--color-border);
   }
 
   .added-value-item-heading {
     margin: 0;
   }
 
+  /* The number is centred on the heading's line. */
   .added-value-trigger {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 0;
     width: 100%;
-    padding: clamp(1.25rem, 2vw, 1.75rem) 0;
+    padding: clamp(0.5rem, 1vw, 0.875rem) 0;
     border: 0;
     background: none;
     color: inherit;
@@ -3228,9 +3226,9 @@
   .added-value-title {
     color: #b2b2b2;
     font-family: var(--font-heading);
-    font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+    font-size: clamp(2rem, 3.1vw, 3rem);
     font-weight: var(--heading-weight);
-    line-height: 1.1;
+    line-height: 1.05;
     letter-spacing: -0.03em;
     transition: color 400ms var(--ease-smooth);
   }
@@ -3262,7 +3260,7 @@
   .added-value-text {
     max-width: 30rem;
     margin: 0;
-    padding: 0 0 clamp(1.5rem, 2.5vw, 2rem) var(--added-value-number-width);
+    padding: 0.5rem 0 clamp(1.25rem, 2vw, 1.75rem) var(--added-value-number-width);
     color: rgb(3 0 8 / 0.55);
     font-size: 1rem;
     line-height: 1.6;
