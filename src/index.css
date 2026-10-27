@@ -3012,6 +3012,15 @@
     background-color: #1f1f1f;
   }
 
+  /* Desktop: a capped full height (mirrored by fullHeight() in
+     CasesSection, which scrubs each image between 80% and 100% of it). */
+  @media (min-width: 1024px) {
+    .case-card-media {
+      height: clamp(22rem, 32vw, 38rem);
+      aspect-ratio: auto;
+    }
+  }
+
   .case-card-image {
     @apply h-full w-full object-cover;
     transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);

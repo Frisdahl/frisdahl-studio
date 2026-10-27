@@ -7,12 +7,15 @@ import { getHomeContent } from '../../data/home'
 
 gsap.registerPlugin(ScrollTrigger)
 
-// The image grows from 80% to its full width and height (anchored to the
-// page's left edge, centred vertically) as its row reaches the middle of the
-// screen, then shrinks again as the next row takes over. clip-path keeps it
-// off the layout path.
-const NARROW = 'inset(10% 20% 10% 0%)'
-const FULL = 'inset(0% 0% 0% 0%)'
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
+// Symmetric ease: smoothstep(t) + smoothstep(1 - t) === 1, so the row that
+// grows always gains exactly what its neighbour loses.
+const smoothstep = (t: number) => t * t * (3 - 2 * t)
+
+// Full image height, mirroring `.case-card-media` on desktop in index.css
+// (clamp(22rem, 32vw, 38rem)); the smallest size is 80% of it.
+const fullHeight = () => clamp(window.innerWidth * 0.32, 352, 608)
+const SMALL = 0.8
 
 export function CasesSection() {
   const { locale } = useLocale()
@@ -25,41 +28,74 @@ export function CasesSection() {
 
     const mm = gsap.matchMedia()
 
-    // Desktop only: on phones the rows stack and everything stays visible.
+    // Desktop only: on phones the rows stack at full size with the text shown.
     mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
-      list.querySelectorAll<HTMLElement>('.case-card').forEach((row) => {
-        const media = row.querySelector('.case-card-media')
-        const meta = row.querySelector('.case-card-meta')
+      const rows = Array.from(list.querySelectorAll<HTMLElement>('.case-card'))
+      const medias = rows.map((row) => row.querySelector<HTMLElement>('.case-card-media')!)
+      const metas = rows.map((row) => row.querySelector<HTMLElement>('.case-card-meta')!)
 
-        // Progress 0 → 1 runs from the row entering at the bottom to leaving at
-        // the top, so 0.5 is the row's centre at the screen's centre.
-        gsap
-          .timeline({
-            defaults: { ease: 'none' },
-            scrollTrigger: { trigger: row, start: 'top bottom', end: 'bottom top', scrub: true },
-          })
-          .fromTo(media, { clipPath: NARROW }, { clipPath: FULL, duration: 0.5, ease: 'sine.out' }, 0)
-          .to(media, { clipPath: NARROW, duration: 0.5, ease: 'sine.in' }, 0.5)
+      let maxH = 0
+      let minH = 0
+      let listTop = 0
+      let activeIndex = -1
 
-        // The text belongs to the row covering the screen's centre line (the
-        // one at or near full width), so exactly one title shows at a time.
-        gsap.fromTo(
-          meta,
-          { autoAlpha: 0, y: 16 },
-          {
-            autoAlpha: 1,
-            y: 0,
-            duration: 0.6,
+      const measure = () => {
+        maxH = fullHeight()
+        minH = maxH * SMALL
+        listTop = list.getBoundingClientRect().top + window.scrollY
+      }
+
+      // `position` is how far through the list the screen's centre is, in rows:
+      // at a whole number k, row k is at full size and centred. Between two
+      // rows one grows while the other shrinks by the same amount, so the
+      // images always touch and the list's total height never changes. That
+      // keeps the mapping exact: row k's centre sits at listTop + k·minH + maxH/2.
+      const update = () => {
+        const centre = window.scrollY + window.innerHeight / 2
+        const position = clamp((centre - listTop - maxH / 2) / minH, 0, rows.length - 1)
+
+        medias.forEach((media, index) => {
+          const weight = smoothstep(clamp(1 - Math.abs(index - position), 0, 1))
+          media.style.height = `${minH + (maxH - minH) * weight}px`
+          media.style.width = `${(SMALL + (1 - SMALL) * weight) * 100}%`
+        })
+
+        // The nearest row owns the text; it fades in as that row takes over.
+        const nextActive = Math.round(position)
+        if (nextActive === activeIndex) return
+        metas.forEach((meta, index) => {
+          gsap.to(meta, {
+            autoAlpha: index === nextActive ? 1 : 0,
+            y: index === nextActive ? 0 : -12,
+            duration: index === nextActive ? 0.7 : 0.35,
             ease: 'power3.out',
-            scrollTrigger: {
-              trigger: row,
-              start: 'top center',
-              end: 'bottom center',
-              toggleActions: 'play reverse play reverse',
-            },
-          },
-        )
+            overwrite: true,
+          })
+        })
+        activeIndex = nextActive
+      }
+
+      gsap.set(metas, { autoAlpha: 0, y: 16 })
+      measure()
+      update()
+
+      const trigger = ScrollTrigger.create({
+        start: 0,
+        end: 'max',
+        onUpdate: update,
+        onRefresh: () => {
+          measure()
+          update()
+        },
       })
+
+      return () => {
+        trigger.kill()
+        medias.forEach((media) => {
+          media.style.height = ''
+          media.style.width = ''
+        })
+      }
     })
 
     return () => mm.revert()
