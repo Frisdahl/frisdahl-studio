@@ -170,7 +170,7 @@ export function Navbar() {
             <HeaderBrand label={logoLabel} />
 
             <div className="site-header-actions">
-              <CtaPillButton className="header-contact" onClick={() => openDrawer('contact')}>
+              <CtaPillButton className="header-contact" fillOnHover onClick={() => openDrawer('contact')}>
                 {contactLabel}
               </CtaPillButton>
 
