@@ -1640,7 +1640,8 @@
   }
 
   /* Fill hover (CtaPillButton fillOnHover): GSAP slides the overlay up from
-     the bottom, rolls the label track up to its copy and tilts the icon chip. */
+     the bottom, rolls the label track up to its copy and turns the icon chip
+     90° while the arrow inside counter-rotates and stays pointing right. */
   .cta-fill-hover {
     position: relative;
     isolation: isolate;

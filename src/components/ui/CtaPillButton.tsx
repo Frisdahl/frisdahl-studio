@@ -7,7 +7,7 @@ interface CtaPillButtonProps {
   href?: string
   onClick?: () => void
   className?: string
-  /** Hover slides a colour overlay up, rolls the label to a copy and tilts the arrow chip. */
+  /** Hover slides a colour overlay up, rolls the label to a copy and turns the arrow chip. */
   fillOnHover?: boolean
 }
 
@@ -28,6 +28,7 @@ export function CtaPillButton({
   const overlayRef = useRef<HTMLSpanElement>(null)
   const labelTrackRef = useRef<HTMLSpanElement>(null)
   const iconRef = useRef<HTMLSpanElement>(null)
+  const arrowWrapRef = useRef<HTMLSpanElement>(null)
   const hoverTimeline = useRef<gsap.core.Timeline | null>(null)
 
   // One paused timeline: hover plays it, leaving reverses it from wherever it
@@ -40,7 +41,9 @@ export function CtaPillButton({
         .timeline({ paused: true, defaults: { duration: 0.5, ease: 'power3.inOut' } })
         .fromTo(overlayRef.current, { yPercent: 101 }, { yPercent: 0 }, 0)
         .to(labelTrackRef.current, { yPercent: -100 }, 0)
-        .to(iconRef.current, { rotation: -45 }, 0)
+        .to(iconRef.current, { rotation: 90 }, 0)
+        // Counter-rotates in sync so the arrow itself never turns.
+        .to(arrowWrapRef.current, { rotation: -90 }, 0)
     })
 
     return () => {
@@ -106,7 +109,7 @@ export function CtaPillButton({
         )}
       </span>
       <span ref={iconRef} className="hero-cta-btn-icon" aria-hidden="true">
-        <span className="hero-cta-btn-arrow-wrap">
+        <span ref={arrowWrapRef} className="hero-cta-btn-arrow-wrap">
           <ArrowIcon className="hero-cta-btn-arrow" />
         </span>
       </span>
