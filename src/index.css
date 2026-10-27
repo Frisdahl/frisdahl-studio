@@ -2308,7 +2308,7 @@
   /* Case intro: the client name, its keyword row right under it, then the
      hero image, starting a little above the middle of the first screen. */
   .case-detail-hero-intro {
-    padding-top: calc(var(--site-header-height) + clamp(5rem, 22svh, 13rem));
+    padding-top: calc(var(--site-header-height) + clamp(4rem, 16svh, 10rem));
   }
 
   .case-detail-hero-name {
@@ -2321,7 +2321,7 @@
 
   /* Keywords spread edge to edge with equal gaps between them. */
   .case-detail-hero-meta {
-    @apply mt-8 grid grid-cols-2 gap-x-6 gap-y-md lg:flex lg:items-start lg:justify-between;
+    @apply mt-12 grid grid-cols-2 gap-x-6 gap-y-md lg:flex lg:items-start lg:justify-between;
   }
 
   .case-detail-hero-image {
