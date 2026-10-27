@@ -20,6 +20,15 @@
 }
 
 @media (min-width: 1024px) {
+  /* Pinned under the header so the cases section after it rolls up over it
+     (HomePage wraps the two, which ends the pin). Desktop only: there the
+     hero fits one screen, while on phones pinning would hide its bottom. */
+  .hero {
+    position: sticky;
+    top: var(--site-header-height);
+    z-index: 0;
+  }
+
   .inner {
     /* The video takes the larger share and the gap is kept tight, so the text
        and the video read as one composition without a wide empty strip. */

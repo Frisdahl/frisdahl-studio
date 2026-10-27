@@ -21,8 +21,12 @@ export function HomePage() {
   return (
     <main className="page-surface bg-home-page overflow-x-clip">
       <PageMeta />
-      <Hero />
-      <CasesSection />
+      {/* The hero stays pinned inside this wrapper while the cases section
+          rolls up over it; the wrapper ends where the cases do. */}
+      <div>
+        <Hero />
+        <CasesSection />
+      </div>
       <SplitPanelSection content={splitPanel} />
       <WhyChooseUsSection content={whyChooseUs} />
       <PartnershipSection />

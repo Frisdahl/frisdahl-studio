@@ -2983,26 +2983,31 @@
     }
   }
 
-  /* Home cases: rows stacked on the dark section, each with the image on the
-     left and the title plus keywords outside it, at its top right. */
+  /* Home cases: full-bleed rows stacked with no gap. On desktop the image
+     fills the left half of the page (CasesSection scrubs its clip-path from
+     80% to full width around the screen's centre) and the title plus keywords
+     sit outside it, at its top right. Phones stack the text under the image. */
   .home-cases {
+    /* Above the pinned hero, which it rolls up over. */
+    position: relative;
+    z-index: 1;
     background-color: #131313;
     color: #fffefe;
   }
 
   .case-card {
-    @apply grid grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-x-8;
+    @apply grid grid-cols-1 lg:grid-cols-2;
     color: inherit;
     text-decoration: none;
   }
 
   .case-card:focus-visible {
     outline: 2px solid var(--color-accent);
-    outline-offset: 0.5rem;
+    outline-offset: -2px;
   }
 
   .case-card-media {
-    @apply relative aspect-[4/3] overflow-hidden rounded-control-sm lg:col-span-7;
+    @apply relative aspect-[4/3] overflow-hidden;
     /* Also the placeholder for cases without an image yet. */
     background-color: #1f1f1f;
   }
@@ -3018,7 +3023,14 @@
   }
 
   .case-card-meta {
-    @apply flex flex-col gap-3 self-start lg:col-span-5;
+    @apply flex flex-col gap-3 self-start;
+    padding: 1.25rem var(--page-gutter) 3rem;
+  }
+
+  @media (min-width: 1024px) {
+    .case-card-meta {
+      padding: 0 var(--page-gutter) 0 clamp(2rem, 3vw, 3.5rem);
+    }
   }
 
   /* Explicit colours: the base h2 / p styles would otherwise win over the
