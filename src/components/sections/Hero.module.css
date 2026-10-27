@@ -82,7 +82,8 @@
 .intro {
   max-width: 30rem;
   margin: clamp(1.5rem, 3vh, 2rem) 0 0;
-  color: oklch(70.7% 0.022 261.325);
+  /* The heading's dark ink at lower opacity. */
+  color: rgb(3 0 8 / 0.55);
   font-family: var(--font-sans);
   font-size: clamp(1rem, 1.2vw, 1.1875rem);
   font-weight: 500;
