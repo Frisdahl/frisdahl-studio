@@ -67,10 +67,17 @@ function Slider({
   currentIndex: number
   setCurrentIndex: (i: number) => void
 }) {
+  const prevIndexRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    prevIndexRef.current = currentIndex
+  }, [currentIndex])
+
   return (
     <div className="slider-container">
       {images.map((image, i) => {
         const isActive = i === currentIndex
+        const isPrev = prevIndexRef.current !== null && i === prevIndexRef.current
         return (
           <img
             key={i}
@@ -84,7 +91,7 @@ function Slider({
               height: '100%',
               objectFit: 'cover',
               opacity: isActive ? 1 : 0,
-              transform: isActive ? 'translateX(0)' : 'translateX(100%)',
+              transform: isActive || isPrev ? 'translateX(0)' : 'translateX(100%)',
               transition: 'transform 0.6s ease, opacity 0.4s ease',
               zIndex: isActive ? 2 : 1,
             }}
