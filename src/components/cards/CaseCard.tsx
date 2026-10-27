@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
+import { CtaPillButton } from '../ui/CtaPillButton'
 
 export interface CaseCardMeta {
   label: string
@@ -19,9 +20,9 @@ export interface CaseCardProps {
 }
 
 /**
- * One home-page case row: the image on the left; title, keywords, description
- * and a three-column meta row at its top right. Only the image and the title
- * link to the case; hovering either lights up the "[se projekt]" label.
+ * One home-page case row: the image on the left; title, keywords, description,
+ * a three-column meta row and a CTA at its top right. The image, the title and
+ * the CTA link to the case.
  */
 export function CaseCard({
   client,
@@ -56,7 +57,6 @@ export function CaseCard({
         <h2 className="case-card-client">
           <Link to={href} className="case-card-title-link">
             {client}
-            <span className="case-card-cta">[{linkLabel}]</span>
           </Link>
         </h2>
         <p className="case-card-keywords">{keywords}</p>
@@ -70,6 +70,11 @@ export function CaseCard({
             </div>
           ))}
         </dl>
+
+        {/* The header contact button's style, in its light variant for the black section. */}
+        <CtaPillButton href={href} className="header-contact is-light case-card-button" fillOnHover>
+          {linkLabel}
+        </CtaPillButton>
       </div>
     </div>
   )
