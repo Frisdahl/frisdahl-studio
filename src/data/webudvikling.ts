@@ -8,12 +8,15 @@ import { defaultLocale } from './navigation'
 const webudviklingContent = {
   da: {
     splitPanel: {
-      imageSrc: '/images/webudvikling/webudvikling-split.webp',
-      imageAlt: 'Webudvikling hos Frisdahl Studio',
       badgeLabel: 'Webudvikling',
       title: 'Skræddersyede løsninger bygget til at performe',
       description:
         'Vi designer og udvikler hjemmesider fra bunden med fokus på hastighed, brugeroplevelse og et udtryk, der matcher jeres brand.',
+      images: [
+        { src: '/images/webudvikling/webudvikling-1.webp', alt: 'Webudvikling 1' },
+        { src: '/images/webudvikling/webudvikling-2.webp', alt: 'Webudvikling 2' },
+        { src: '/images/webudvikling/webudvikling-3.webp', alt: 'Webudvikling 3' },
+      ],
     },
     whyChooseUs: {
       title: 'Der er masser af årsager til at vælge os',
@@ -137,12 +140,15 @@ const webudviklingContent = {
   },
   en: {
     splitPanel: {
-      imageSrc: '/images/webudvikling/webudvikling-split.webp',
-      imageAlt: 'Web development at Frisdahl Studio',
       badgeLabel: 'Web development',
       title: 'Tailored solutions built to perform',
       description:
         'We design and develop websites from scratch with a focus on speed, user experience, and an expression that matches your brand.',
+      images: [
+        { src: '/images/webudvikling/webudvikling-1.webp', alt: 'Web development 1' },
+        { src: '/images/webudvikling/webudvikling-2.webp', alt: 'Web development 2' },
+        { src: '/images/webudvikling/webudvikling-3.webp', alt: 'Web development 3' },
+      ],
     },
     whyChooseUs: {
       title: 'There are plenty of reasons to choose us',

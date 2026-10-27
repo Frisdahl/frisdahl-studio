@@ -1,7 +1,11 @@
 export interface SplitPanelContent {
-  imageSrc: string
-  imageAlt: string
   badgeLabel: string
   title: string
   description: string
+  images: SplitPanelImage[]
+}
+
+export interface SplitPanelImage {
+  src: string
+  alt: string
 }
