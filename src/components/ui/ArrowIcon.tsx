@@ -28,7 +28,7 @@ export function ArrowIcon({
       aria-hidden="true"
       focusable="false"
     >
-      <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8-8-8z" />
+      <path d="M10.685 3.42h3.776l7.862 8.583-7.862 8.583h-3.776l7.083-7.193h-16.1v-2.748H17.8L10.685 3.42Z" />
     </svg>
   )
 }
