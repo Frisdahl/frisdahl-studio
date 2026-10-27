@@ -175,7 +175,8 @@ export function CasesSection() {
   return (
     <section
       id="portfolio"
-      className="home-cases py-section-sm lg:py-section"
+      // No bottom padding on desktop: the last image sits flush with the section's end.
+      className="home-cases py-section-sm lg:pt-section lg:pb-0"
       aria-label={cases.ariaLabel}
       data-header-theme="dark"
     >
