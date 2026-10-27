@@ -3,7 +3,7 @@ import styles from './Hero.module.css'
 
 const heroContent = {
   da: {
-    // Three lines: line 2 and the final full stop carry the muted colour.
+    // Three lines: line 2 carries the muted colour, the final full stop the accent red.
     headingLead: 'Jeg udvikler',
     headingMuted: 'digitale oplevelser',
     headingTail: 'med omtanke',
@@ -33,7 +33,7 @@ export function Hero() {
             <span className={styles.titleMuted}>{content.headingMuted}</span>
             <br />
             {content.headingTail}
-            <span className={styles.titleMuted}>.</span>
+            <span className={styles.titleDot}>.</span>
           </h1>
           <p className={styles.intro}>{content.intro}</p>
         </div>

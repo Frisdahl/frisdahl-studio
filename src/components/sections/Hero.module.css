@@ -65,6 +65,11 @@
   color: #b2b2b2;
 }
 
+/* Same red as the header contact button's hover fill. */
+.titleDot {
+  color: #eb4b3d;
+}
+
 .intro {
   max-width: 30rem;
   margin: clamp(1.5rem, 3vh, 2rem) 0 0;
