@@ -51,9 +51,12 @@ export function CasesSection() {
       // while the other shrinks by the same amount, so the images always touch
       // and the list's total height never changes. That keeps the mapping
       // exact: row k's centre sits at listTop + k·minH + maxH/2.
+      // It starts at -1, so the first row arrives small and without its text
+      // and grows into place; it stops at the last row, which stays full so
+      // the sections below never shift while in view.
       const targetPosition = () => {
         const centre = window.scrollY + window.innerHeight / 2
-        return clamp((centre - listTop - maxH / 2) / minH, 0, rows.length - 1)
+        return clamp((centre - listTop - maxH / 2) / minH, -1, rows.length - 1)
       }
 
       const render = () => {
@@ -63,8 +66,9 @@ export function CasesSection() {
           media.style.width = `${(SMALL + (1 - SMALL) * weight) * 100}%`
         })
 
-        // The nearest row owns the text; it fades in as that row takes over.
-        const nextActive = Math.round(position)
+        // The nearest row owns the text; it fades in as that row takes over
+        // (none before the first row is halfway grown).
+        const nextActive = position < -0.5 ? -1 : Math.round(position)
         if (nextActive === activeIndex) return
         metas.forEach((meta, index) => {
           gsap.to(meta, {
