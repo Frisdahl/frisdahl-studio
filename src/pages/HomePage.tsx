@@ -1,5 +1,6 @@
 import { PageMeta } from '../components/layout'
 import {
+  AddedValueSection,
   CasesSection,
   ContactSection,
   FaqSection,
@@ -27,6 +28,7 @@ export function HomePage() {
         <Hero />
         <CasesSection />
       </div>
+      <AddedValueSection />
       <SplitPanelSection content={splitPanel} />
       <WhyChooseUsSection content={whyChooseUs} />
       <PartnershipSection />

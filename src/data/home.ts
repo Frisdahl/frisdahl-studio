@@ -59,6 +59,43 @@ const homeContent = {
         },
       ],
     },
+    addedValue: {
+      ariaLabel: "Hvad jeg kan tilbyde",
+      eyebrow: "Hvad jeg kan tilbyde jeres virksomhed",
+      // The images are placeholders from existing case material.
+      items: [
+        {
+          title: "Brand strategi",
+          text: "Jeg hjælper jer med at definere, hvem I er, hvem I taler til, og hvad der adskiller jer fra konkurrenterne. Strategien bliver kompasset for alle de valg, der følger.",
+          imageSrc: "/images/pricing/digital-strategy.webp",
+          imageAlt: "Strategiarbejde på skærm",
+        },
+        {
+          title: "Brand identitet",
+          text: "Logo, farver, typografi og et visuelt sprog, der føles som jer – samlet i et system, der fungerer lige godt på skærm, i tryk og på sociale medier.",
+          imageSrc: "/cases/visuel-atelier/hero.webp",
+          imageAlt: "Visuel identitet for Visuel Atelier",
+        },
+        {
+          title: "Brand præsentation",
+          text: "Jeg sørger for, at jeres brand fremstår skarpt overalt – fra præsentationer og salgsmaterialer til de første indtryk, kunderne møder.",
+          imageSrc: "/cases/nordwear/production.webp",
+          imageAlt: "Nordwear præsenteret på en bærbar computer",
+        },
+        {
+          title: "Hjemmeside design",
+          text: "Gennemarbejdet design med fokus på brugeroplevelse og konvertering, hvor hver side guider den besøgende videre mod næste skridt.",
+          imageSrc: "/cases/nordwear/category.webp",
+          imageAlt: "Nordwear kategoriside",
+        },
+        {
+          title: "Hjemmeside udvikling",
+          text: "Hurtige, tilgængelige og skalerbare hjemmesider, bygget med moderne teknologi og nemme at vedligeholde, i takt med at jeres virksomhed vokser.",
+          imageSrc: "/images/webudvikling/webudvikling-split.webp",
+          imageAlt: "Hjemmeside under udvikling",
+        },
+      ],
+    },
     partnership: {
       eyebrow: "Et samarbejde, der r\u00e6kker l\u00e6ngere",
       title: "Jeg er med – også efter lanceringen",
@@ -314,6 +351,42 @@ const homeContent = {
           href: '/cases/forma-studio',
           imageSrc: null,
           imageAlt: "Forma Studio case",
+        },
+      ],
+    },
+    addedValue: {
+      ariaLabel: "What I can offer",
+      eyebrow: "What I can offer your business",
+      items: [
+        {
+          title: "Brand strategy",
+          text: "I help you define who you are, who you speak to and what sets you apart from competitors. The strategy becomes the compass for every choice that follows.",
+          imageSrc: "/images/pricing/digital-strategy.webp",
+          imageAlt: "Strategy work on screen",
+        },
+        {
+          title: "Brand identity",
+          text: "Logo, colours, typography and a visual language that feels like you – brought together in a system that works on screen, in print and on social media.",
+          imageSrc: "/cases/visuel-atelier/hero.webp",
+          imageAlt: "Visual identity for Visuel Atelier",
+        },
+        {
+          title: "Brand presentation",
+          text: "I make sure your brand looks sharp everywhere – from presentations and sales material to the first impressions customers meet.",
+          imageSrc: "/cases/nordwear/production.webp",
+          imageAlt: "Nordwear shown on a laptop",
+        },
+        {
+          title: "Website design",
+          text: "Considered design focused on user experience and conversion, where every page guides visitors towards the next step.",
+          imageSrc: "/cases/nordwear/category.webp",
+          imageAlt: "Nordwear category page",
+        },
+        {
+          title: "Website development",
+          text: "Fast, accessible and scalable websites, built with modern technology and easy to maintain as your business grows.",
+          imageSrc: "/images/webudvikling/webudvikling-split.webp",
+          imageAlt: "Website in development",
         },
       ],
     },
