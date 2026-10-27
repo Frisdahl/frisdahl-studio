@@ -69,23 +69,34 @@ function Slider({
 }) {
   return (
     <div className="slider-container">
-      {images.map((image, i) => (
-        <img
-          key={i}
-          src={image.src}
-          alt={image.alt}
-          className="slider-image"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            opacity: i === currentIndex ? 1 : 0,
-            transition: 'opacity 0.5s ease',
-          }}
-        />
-      ))}
+      {images.map((image, i) => {
+        const isActive = i === currentIndex
+        const isPrevious = i === currentIndex - 1
+        const isNext = i === currentIndex + 1
+        return (
+          <img
+            key={i}
+            src={image.src}
+            alt={image.alt}
+            className="slider-image"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              opacity: isActive || isPrevious || isNext ? 1 : 0,
+              transform: isActive
+                ? 'translateX(0)'
+                : isPrevious
+                ? 'translateX(-100%)'
+                : 'translateX(100%)',
+              transition: 'transform 0.6s ease, opacity 0.4s ease',
+              zIndex: isActive ? 2 : 1,
+            }}
+          />
+        )
+      })}
 
       <div className="slider-dots" role="group" aria-label="Slide navigation">
         {images.map((_, i) => (
