@@ -1,5 +1,13 @@
+import { useLayoutEffect, useRef } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useLocale } from '../../context/LocaleContext'
 import styles from './Hero.module.css'
+
+gsap.registerPlugin(ScrollTrigger)
+
+/** How far the pinned hero's content drifts up while the cases section covers it. */
+const DRIFT_PX = 80
 
 const heroContent = {
   da: {
@@ -22,10 +30,39 @@ const heroContent = {
 export function Hero() {
   const { locale } = useLocale()
   const content = heroContent[locale]
+  const heroRef = useRef<HTMLElement>(null)
+  const innerRef = useRef<HTMLDivElement>(null)
+
+  // Desktop only, where the hero is pinned (see Hero.module.css): its content
+  // drifts up a little, scrubbed over the scroll it takes the cases section
+  // to cover it, so it seems to move with the section rolling over it.
+  useLayoutEffect(() => {
+    const hero = heroRef.current
+    const inner = innerRef.current
+    if (!hero || !inner) return
+
+    const mm = gsap.matchMedia()
+    mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
+      gsap.to(inner, {
+        y: -DRIFT_PX,
+        ease: 'none',
+        // The hero sits at the top of the page, so this runs from the first
+        // scroll until the cases section has covered it.
+        scrollTrigger: {
+          start: 0,
+          end: () => hero.offsetHeight,
+          scrub: true,
+          invalidateOnRefresh: true,
+        },
+      })
+    })
+
+    return () => mm.revert()
+  }, [])
 
   return (
-    <section className={styles.hero} aria-labelledby="home-hero-title">
-      <div className={styles.inner}>
+    <section ref={heroRef} className={styles.hero} aria-labelledby="home-hero-title">
+      <div ref={innerRef} className={styles.inner}>
         <div className={styles.copy}>
           <h1 id="home-hero-title" className={styles.title}>
             {content.headingLead}

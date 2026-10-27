@@ -3022,7 +3022,6 @@
 
   .case-card-image {
     @apply h-full w-full object-cover;
-    transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   /* Rhythm: tight title-keywords pair, then progressively larger steps to the
@@ -3044,7 +3043,8 @@
     margin: 0;
     color: #fffefe;
     font-family: var(--font-heading);
-    font-size: clamp(2.5rem, 4vw, 4.5rem);
+    /* Stays below the hero h1 (clamp(2.25rem, 4.7vw, 4rem)) at every width. */
+    font-size: clamp(2rem, 3.6vw, 3.5rem);
     font-weight: var(--heading-weight);
     line-height: 1;
     letter-spacing: -0.035em;
@@ -3058,11 +3058,6 @@
   .case-card-title-link:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 0.25rem;
-  }
-
-  .case-card:has(.case-card-media-link:hover, .case-card-title-link:hover, .case-card-button:hover)
-    .case-card-image {
-    transform: scale(1.03);
   }
 
   .case-card-keywords {
@@ -3422,16 +3417,6 @@
     @apply text-body-sm text-[#bababa] transition-colors hover:text-[#fffefe];
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .case-card-image {
-      transition: none;
-    }
-
-    .case-card:has(.case-card-media-link:hover, .case-card-title-link:hover, .case-card-button:hover)
-      .case-card-image {
-      transform: none;
-    }
-  }
 
   /* The header is fixed at every width now, so nothing is pulled up under it:
      the surface starts at the top of the document and is offset by the header
