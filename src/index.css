@@ -2983,37 +2983,34 @@
     }
   }
 
-  /* Home cases: full-bleed rows stacked with no gap. On desktop the image
-     fills the left half of the page (CasesSection scrubs its clip-path from
-     80% to full width around the screen's centre) and the title plus keywords
-     sit outside it, at its top right. Phones stack the text under the image. */
+  /* Home cases: full-bleed rows stacked with no gap on black. On desktop the
+     image fills the left 60% of the page (CasesSection sizes it between 80%
+     and 100% around the screen's centre) and the title plus keywords sit
+     outside it, at its top right. Phones stack the text under the image. */
   .home-cases {
     /* Above the pinned hero, which it rolls up over. */
     position: relative;
     z-index: 1;
-    background-color: #131313;
+    background-color: #000000;
     color: #fffefe;
   }
 
   .case-card {
-    @apply grid grid-cols-1 lg:grid-cols-2;
-    color: inherit;
-    text-decoration: none;
+    @apply grid grid-cols-1 lg:grid-cols-[3fr_2fr];
   }
 
-  .case-card:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: -2px;
+  .case-card-media-link {
+    display: block;
   }
 
   .case-card-media {
     @apply relative aspect-[4/3] overflow-hidden;
     /* Also the placeholder for cases without an image yet. */
-    background-color: #1f1f1f;
+    background-color: #1a1a1a;
   }
 
   /* Desktop: a capped full height (mirrored by fullHeight() in
-     CasesSection, which scrubs each image between 80% and 100% of it). */
+     CasesSection, which sizes each image between 80% and 100% of it). */
   @media (min-width: 1024px) {
     .case-card-media {
       height: clamp(22rem, 32vw, 38rem);
@@ -3024,11 +3021,6 @@
   .case-card-image {
     @apply h-full w-full object-cover;
     transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .case-card:hover .case-card-image,
-  .case-card:focus-visible .case-card-image {
-    transform: scale(1.03);
   }
 
   .case-card-meta {
@@ -3052,6 +3044,43 @@
     font-weight: var(--heading-weight);
     line-height: 1.05;
     letter-spacing: -0.03em;
+  }
+
+  .case-card-title-link {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .case-card-title-link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 0.25rem;
+  }
+
+  /* "[se projekt]" at the title's top right: small and grey, white while the
+     title or the image is hovered (or the title focused). */
+  .case-card-cta {
+    margin-top: 0.2em;
+    color: #8a8a8a;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0;
+    white-space: nowrap;
+    transition: color 300ms var(--ease-smooth);
+  }
+
+  .case-card:has(.case-card-media-link:hover, .case-card-title-link:hover, .case-card-title-link:focus-visible)
+    .case-card-cta {
+    color: #fffefe;
+  }
+
+  .case-card:has(.case-card-media-link:hover, .case-card-title-link:hover, .case-card-title-link:focus-visible)
+    .case-card-image {
+    transform: scale(1.03);
   }
 
   .case-card-keywords {
@@ -3362,12 +3391,13 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .case-card-image {
+    .case-card-image,
+    .case-card-cta {
       transition: none;
     }
 
-    .case-card:hover .case-card-image,
-    .case-card:focus-visible .case-card-image {
+    .case-card:has(.case-card-media-link:hover, .case-card-title-link:hover, .case-card-title-link:focus-visible)
+      .case-card-image {
       transform: none;
     }
   }

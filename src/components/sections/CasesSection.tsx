@@ -38,6 +38,7 @@ export function CasesSection() {
       let minH = 0
       let listTop = 0
       let activeIndex = -1
+      let position = 0
 
       const measure = () => {
         maxH = fullHeight()
@@ -45,15 +46,17 @@ export function CasesSection() {
         listTop = list.getBoundingClientRect().top + window.scrollY
       }
 
-      // `position` is how far through the list the screen's centre is, in rows:
-      // at a whole number k, row k is at full size and centred. Between two
-      // rows one grows while the other shrinks by the same amount, so the
-      // images always touch and the list's total height never changes. That
-      // keeps the mapping exact: row k's centre sits at listTop + k·minH + maxH/2.
-      const update = () => {
+      // How far through the list the screen's centre is, in rows: at a whole
+      // number k, row k is at full size and centred. Between two rows one grows
+      // while the other shrinks by the same amount, so the images always touch
+      // and the list's total height never changes. That keeps the mapping
+      // exact: row k's centre sits at listTop + k·minH + maxH/2.
+      const targetPosition = () => {
         const centre = window.scrollY + window.innerHeight / 2
-        const position = clamp((centre - listTop - maxH / 2) / minH, 0, rows.length - 1)
+        return clamp((centre - listTop - maxH / 2) / minH, 0, rows.length - 1)
+      }
 
+      const render = () => {
         medias.forEach((media, index) => {
           const weight = smoothstep(clamp(1 - Math.abs(index - position), 0, 1))
           media.style.height = `${minH + (maxH - minH) * weight}px`
@@ -75,22 +78,38 @@ export function CasesSection() {
         activeIndex = nextActive
       }
 
-      gsap.set(metas, { autoAlpha: 0, y: 16 })
-      measure()
-      update()
+      // The sizes ease towards the scroll position instead of following it
+      // 1:1, so uneven wheel steps still read as one smooth glide. Each frame
+      // closes 12% of the remaining distance (at 60fps, adjusted for frame
+      // time), and nothing is written once it has settled.
+      const tick = (_time: number, deltaMs: number) => {
+        const target = targetPosition()
+        const distance = target - position
+        if (Math.abs(distance) < 0.0005) {
+          if (position === target) return
+          position = target
+        } else {
+          position += distance * (1 - Math.pow(1 - 0.12, deltaMs / (1000 / 60)))
+        }
+        render()
+      }
 
-      const trigger = ScrollTrigger.create({
-        start: 0,
-        end: 'max',
-        onUpdate: update,
-        onRefresh: () => {
-          measure()
-          update()
-        },
-      })
+      const snap = () => {
+        measure()
+        position = targetPosition()
+        render()
+      }
+
+      gsap.set(metas, { autoAlpha: 0, y: 16 })
+      snap()
+      gsap.ticker.add(tick)
+      ScrollTrigger.addEventListener('refresh', snap)
+      window.addEventListener('resize', snap)
 
       return () => {
-        trigger.kill()
+        gsap.ticker.remove(tick)
+        ScrollTrigger.removeEventListener('refresh', snap)
+        window.removeEventListener('resize', snap)
         medias.forEach((media) => {
           media.style.height = ''
           media.style.width = ''
@@ -117,7 +136,7 @@ export function CasesSection() {
             imageSrc={item.imageSrc}
             imageAlt={item.imageAlt}
             href={item.href}
-            viewCaseLabel={cases.viewCaseLabel}
+            linkLabel={cases.linkLabel}
           />
         ))}
       </div>

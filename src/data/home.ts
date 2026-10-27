@@ -17,7 +17,7 @@ const homeContent = {
     },
     cases: {
       ariaLabel: "Udvalgte cases",
-      viewCaseLabel: "Se case",
+      linkLabel: "se projekt",
       // Atelier Noir and Forma Studio are placeholders until real case material exists.
       items: [
         {
@@ -267,7 +267,7 @@ const homeContent = {
     },
     cases: {
       ariaLabel: "Selected cases",
-      viewCaseLabel: "View case",
+      linkLabel: "view project",
       items: [
         {
           client: "Nordwear",
