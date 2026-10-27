@@ -11,7 +11,7 @@ export function initSmoothScroll() {
   if (lenis || prefersReducedMotion()) return null
 
   lenis = new Lenis({
-    lerp: 0.1,
+    lerp: 0.08,
     smoothWheel: true,
     syncTouch: false,
     anchors: true,

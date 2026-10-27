@@ -90,8 +90,10 @@ export function CasesSection() {
 
       // The sizes ease towards the scroll position instead of following it
       // 1:1, so uneven wheel steps still read as one smooth glide. Each frame
-      // closes 12% of the remaining distance (at 60fps, adjusted for frame
-      // time), and nothing is written once it has settled.
+      // closes 18% of the remaining distance (at 60fps, adjusted for frame
+      // time) — light, since Lenis already smooths the scroll itself — and
+      // nothing is written once it has settled. Runs on GSAP's ticker after
+      // Lenis (see SmoothScroll), so it reads this frame's scroll position.
       const tick = (_time: number, deltaMs: number) => {
         const target = targetPosition()
         const distance = target - position
@@ -99,7 +101,7 @@ export function CasesSection() {
           if (position === target) return
           position = target
         } else {
-          position += distance * (1 - Math.pow(1 - 0.12, deltaMs / (1000 / 60)))
+          position += distance * (1 - Math.pow(1 - 0.18, deltaMs / (1000 / 60)))
         }
         render()
       }

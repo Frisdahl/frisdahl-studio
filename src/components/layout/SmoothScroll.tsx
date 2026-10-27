@@ -1,4 +1,6 @@
 import { useEffect } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import {
   destroySmoothScroll,
   initSmoothScroll,
@@ -6,9 +8,11 @@ import {
   runSmoothScrollFrame,
 } from '../../lib/smoothScroll'
 
+gsap.registerPlugin(ScrollTrigger)
+
 export function SmoothScroll() {
   useEffect(() => {
-    let frameId = 0
+    let onTick: ((time: number) => void) | null = null
 
     const start = () => {
       if (prefersReducedMotion()) return
@@ -16,17 +20,23 @@ export function SmoothScroll() {
       const instance = initSmoothScroll()
       if (!instance) return
 
-      const onFrame = (time: number) => {
-        instance.raf(time)
+      // Lenis runs on GSAP's ticker (first in each frame) instead of its own
+      // requestAnimationFrame loop, so every scroll-driven animation reads the
+      // scroll position Lenis set in the same frame. Two separate loops let
+      // them land a frame behind, which showed as micro-stutter.
+      onTick = (time) => {
+        instance.raf(time * 1000)
         runSmoothScrollFrame(instance)
-        frameId = requestAnimationFrame(onFrame)
       }
-
-      frameId = requestAnimationFrame(onFrame)
+      gsap.ticker.add(onTick, false, true)
+      // No catch-up jumps after a slow frame; Lenis already eases.
+      gsap.ticker.lagSmoothing(0)
+      instance.on('scroll', ScrollTrigger.update)
     }
 
     const stop = () => {
-      cancelAnimationFrame(frameId)
+      if (onTick) gsap.ticker.remove(onTick)
+      onTick = null
       destroySmoothScroll()
     }
 
