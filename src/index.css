@@ -1712,6 +1712,50 @@
     border: 0;
   }
 
+  /* Light header over dark sections (Navbar sets .is-on-dark): light logo and
+     burger, and the contact button inverts to white with a dark chip. Its
+     label turns light on hover so it stays readable on the red fill. */
+  .site-header-logo,
+  .header-menu-toggle,
+  .header-contact,
+  .header-contact .hero-cta-btn-icon,
+  .header-contact .hero-cta-btn-arrow {
+    transition:
+      color 400ms var(--ease-smooth),
+      background-color 400ms var(--ease-smooth);
+  }
+
+  .site-header.is-on-dark :is(.site-header-logo, .header-menu-toggle) {
+    color: #fffefe;
+  }
+
+  .site-header.is-on-dark .header-contact {
+    background-color: #fffefe;
+    color: #131313;
+  }
+
+  .site-header.is-on-dark .header-contact:is(:hover, :focus-visible) {
+    color: #fffefe;
+  }
+
+  .site-header.is-on-dark .header-contact .hero-cta-btn-icon {
+    background-color: #131313;
+  }
+
+  .site-header.is-on-dark .header-contact .hero-cta-btn-arrow {
+    color: #fffefe;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header-logo,
+    .header-menu-toggle,
+    .header-contact,
+    .header-contact .hero-cta-btn-icon,
+    .header-contact .hero-cta-btn-arrow {
+      transition: none;
+    }
+  }
+
   .horizontal-drag-slider {
     --slide-width: var(--site-grid-width);
     --slide-gap: 1.5rem;
@@ -2939,207 +2983,62 @@
     }
   }
 
+  /* Home cases: rows stacked on the dark section, each with the image on the
+     left and the title plus keywords outside it, at its top right. */
+  .home-cases {
+    background-color: #131313;
+    color: #fffefe;
+  }
+
+  .case-card {
+    @apply grid grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-x-8;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .case-card:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 0.5rem;
+  }
+
   .case-card-media {
-    @apply relative aspect-[4/3] overflow-hidden rounded-control-sm;
+    @apply relative aspect-[4/3] overflow-hidden rounded-control-sm lg:col-span-7;
+    /* Also the placeholder for cases without an image yet. */
+    background-color: #1f1f1f;
   }
 
   .case-card-image {
     @apply h-full w-full object-cover;
+    transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  /* Always-visible link cue in the bottom right; turns orange on hover. */
-  .case-card-arrow {
-    @apply absolute right-6 bottom-6 z-10 flex h-11 w-11 items-center justify-center rounded-full text-xl;
-    background-color: #fffefe;
-    color: var(--color-primary);
-    transition:
-      background-color 600ms cubic-bezier(0.22, 1, 0.36, 1),
-      color 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  .case-card:hover .case-card-image,
+  .case-card:focus-visible .case-card-image {
+    transform: scale(1.03);
   }
 
-  .case-card:hover .case-card-arrow,
-  .case-card:focus-visible .case-card-arrow {
-    background-color: var(--color-accent);
-    color: #fffefe;
+  .case-card-meta {
+    @apply flex flex-col gap-3 self-start lg:col-span-5;
   }
 
-  .case-card-caption {
-    position: absolute;
-    bottom: 1.5rem;
-    left: 1.5rem;
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-    color: #f9f8f8;
-    font-family: var(--font-heading);
-  }
-
-  /* On hover the title fades in and the keywords appear instantly. The dark pill keeps
-     the keywords readable over light mockup screens. */
+  /* Explicit colours: the base h2 / p styles would otherwise win over the
+     section's inherited light text. */
   .case-card-client {
-    font-size: clamp(1.5rem, 2.2vw, 2.25rem);
-    font-weight: 500;
-    line-height: 1.1;
+    margin: 0;
+    color: #fffefe;
+    font-family: var(--font-heading);
+    font-size: clamp(1.75rem, 2.6vw, 2.75rem);
+    font-weight: var(--heading-weight);
+    line-height: 1.05;
     letter-spacing: -0.03em;
   }
 
-  .case-card-industry {
-    @apply rounded-pill px-4 py-2.5 backdrop-blur-md;
-    background-color: rgb(20 19 20 / 0.55);
-    font-family: var(--font-nav);
-    font-size: 0.875rem;
+  .case-card-keywords {
+    margin: 0;
+    color: #9a9a9a;
+    font-size: 0.9375rem;
     font-weight: 500;
-    line-height: 1;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  .case-card-client,
-  .case-card-industry {
-    opacity: 0;
-  }
-
-  .case-card-client {
-    transition: opacity 400ms ease-out;
-  }
-
-  .case-card:hover :is(.case-card-client, .case-card-industry),
-  .case-card:focus-visible :is(.case-card-client, .case-card-industry) {
-    opacity: 1;
-  }
-
-  /* Touch screens have no hover, so show the title and keywords from the start. */
-  @media (hover: none) {
-    .case-card :is(.case-card-client, .case-card-industry) {
-      opacity: 1;
-    }
-
-    .case-card .case-card-media::after {
-      opacity: 1;
-    }
-  }
-
-  .case-card-type {
-    @apply absolute top-4 right-4 z-10 rounded-pill border px-4 py-2.5 text-body-sm font-medium uppercase;
-    border-color: rgb(249 249 249 / 0.92);
-    background: transparent;
-  }
-
-  .case-card-type-text {
-    display: inline-block;
-    color: #f9f9f9;
-  }
-
-  .case-card:hover .case-card-type-text,
-  .case-card:focus-visible .case-card-type-text {
-    background: linear-gradient(
-      90deg,
-      #f9f9f9 0%,
-      #f9f9f9 32%,
-      #d8d8d8 44%,
-      #ffffff 50%,
-      #d8d8d8 56%,
-      #f9f9f9 68%,
-      #f9f9f9 100%
-    );
-    background-size: 300% 100%;
-    background-repeat: repeat;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    animation: case-card-type-shimmer 2.8s linear infinite;
-  }
-
-  @keyframes case-card-type-shimmer {
-    0% {
-      background-position: 100% center;
-    }
-
-    100% {
-      background-position: 0% center;
-    }
-  }
-
-  .case-card-action {
-    position: absolute;
-    bottom: 1.25rem;
-    left: 1.25rem;
-    z-index: 10;
-  }
-
-  .case-card-action-track {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    overflow: hidden;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 9999px;
-    background-color: #ffffff;
-    transition: width 1.35s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .case-card-action-label-wrap {
-    overflow: hidden;
-    width: 0;
-    flex-shrink: 0;
-    transition: width 1.35s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .case-card-action-label {
-    display: block;
-    padding-left: 1rem;
-    padding-right: 0.375rem;
-    overflow: hidden;
-    white-space: nowrap;
-    font-size: 1.125rem;
-    line-height: 1;
-    font-weight: 600;
-    color: #030008;
-    opacity: 0;
-    transform: translateY(115%);
-    transition:
-      opacity 1.45s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 1.55s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .case-card-action-icon {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    color: #030008;
-  }
-
-  .case-card-action-arrow {
-    width: 1.125rem;
-    height: 0.875rem;
-  }
-
-  .case-card:hover .case-card-action-track,
-  .case-card:focus-visible .case-card-action-track {
-    width: 10.75rem;
-  }
-
-  .case-card:hover .case-card-action-label-wrap,
-  .case-card:focus-visible .case-card-action-label-wrap {
-    width: 7.25rem;
-  }
-
-  .case-card:hover .case-card-action-label,
-  .case-card:focus-visible .case-card-action-label {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .case-card-media::after {
-    content: "";
-    @apply pointer-events-none absolute inset-0 z-[1] bg-linear-to-t from-black/55 via-black/10 to-transparent opacity-0 transition-opacity duration-300 ease-[var(--ease-smooth)] group-hover:opacity-100 group-focus-visible:opacity-100;
+    line-height: 1.5;
   }
 
   .contact-drawer-overlay {
@@ -3442,38 +3341,13 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .case-card-media::after,
-    .case-card-arrow,
-    .case-card-client,
-    .case-card-action-track,
-    .case-card-action-label-wrap,
-    .case-card-action-label,
-    .case-card-type-text {
+    .case-card-image {
       transition: none;
-      animation: none;
     }
 
-    .case-card:hover .case-card-action-track,
-    .case-card:focus-visible .case-card-action-track {
-      width: 10.75rem;
-    }
-
-    .case-card:hover .case-card-action-label-wrap,
-    .case-card:focus-visible .case-card-action-label-wrap {
-      width: 7.25rem;
-    }
-
-    .case-card:hover .case-card-action-label,
-    .case-card:focus-visible .case-card-action-label {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .case-card:hover .case-card-type-text,
-    .case-card:focus-visible .case-card-type-text {
-      background: none;
-      -webkit-text-fill-color: #f9f9f9;
-      color: #f9f9f9;
+    .case-card:hover .case-card-image,
+    .case-card:focus-visible .case-card-image {
+      transform: none;
     }
   }
 

@@ -22,9 +22,9 @@ export function HomePage() {
     <main className="page-surface bg-home-page overflow-x-clip">
       <PageMeta />
       <Hero />
+      <CasesSection />
       <SplitPanelSection content={splitPanel} />
       <WhyChooseUsSection content={whyChooseUs} />
-      <CasesSection />
       <PartnershipSection />
       <PricingPlansSection />
       <FaqSection content={faq} />

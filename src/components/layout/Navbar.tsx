@@ -48,6 +48,7 @@ function MenuToggleIcon({ isOpen }: MenuToggleIconProps) {
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isOnDark, setIsOnDark] = useState(false)
   const headerRef = useRef<HTMLElement>(null)
   const { locale } = useLocale()
   const { openDrawer } = useContactDrawer()
@@ -81,6 +82,39 @@ export function Navbar() {
       window.removeEventListener('resize', sync)
     }
   }, [])
+
+  // The header is transparent, so it switches to its light variant while a
+  // section marked data-header-theme="dark" is behind its middle line.
+  useEffect(() => {
+    const header = headerRef.current
+    if (!header) return
+
+    let frame = 0
+    const check = () => {
+      frame = 0
+      const line = header.offsetHeight / 2
+      const onDark = Array.from(
+        document.querySelectorAll('[data-header-theme="dark"]'),
+      ).some((section) => {
+        const rect = section.getBoundingClientRect()
+        return rect.top <= line && rect.bottom >= line
+      })
+      setIsOnDark(onDark)
+    }
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(check)
+    }
+
+    schedule()
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', schedule)
+
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', schedule)
+    }
+  }, [pathname])
 
   useEffect(() => {
     setIsOpen(false)
@@ -163,7 +197,7 @@ export function Navbar() {
         </>
       ) : null}
 
-      <header ref={headerRef} className="site-header">
+      <header ref={headerRef} className={`site-header${isOnDark ? ' is-on-dark' : ''}`}>
         <Container fullWidth>
           <div className="site-header-bar">
             <HeaderBrand label={logoLabel} />

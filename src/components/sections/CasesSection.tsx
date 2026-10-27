@@ -1,45 +1,30 @@
 import { CaseCard } from '../cards/CaseCard'
 import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
-import { Container, CtaPillButton } from '../ui'
-
-const placeholderTones = [
-  'bg-peach',
-  'bg-peach-hover',
-] as const
+import { Container } from '../ui'
 
 export function CasesSection() {
   const { locale } = useLocale()
   const { cases } = getHomeContent(locale)
 
   return (
-    <section id="portfolio" className="py-section-sm lg:py-section" aria-label={cases.ariaLabel}>
+    <section
+      id="portfolio"
+      className="home-cases py-section-sm lg:py-section"
+      aria-label={cases.ariaLabel}
+      data-header-theme="dark"
+    >
       <Container fullWidth>
-        <div className="mb-xl">
-          <p className="eyebrow eyebrow-accent">{cases.eyebrow}</p>
-          <div className="mt-md flex flex-col gap-lg sm:flex-row sm:items-end sm:justify-between">
-            <h2>
-              {cases.titleLine1}
-              <br />
-              {cases.titleLine2}
-            </h2>
-            <CtaPillButton href={cases.ctaHref} className="cases-link-cta shrink-0 self-start sm:self-auto">
-              {cases.ctaLabel}
-            </CtaPillButton>
-          </div>
-        </div>
-
-        <div className="grid gap-xl sm:grid-cols-2 lg:gap-2xl">
-          {cases.items.map((item, index) => (
+        <div className="flex flex-col gap-16 lg:gap-24">
+          {cases.items.map((item) => (
             <CaseCard
               key={item.client}
               client={item.client}
-              type={item.type}
+              keywords={item.keywords}
               imageSrc={item.imageSrc}
               imageAlt={item.imageAlt}
               href={item.href}
               viewCaseLabel={cases.viewCaseLabel}
-              placeholderClassName={placeholderTones[index % placeholderTones.length]}
             />
           ))}
         </div>
