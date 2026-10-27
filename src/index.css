@@ -1729,22 +1729,21 @@
     color: #fffefe;
   }
 
-  /* The same light button anywhere on a dark background: .header-contact.is-light. */
-  :is(.site-header.is-on-dark .header-contact, .header-contact.is-light) {
+  .site-header.is-on-dark .header-contact {
     background-color: #fffefe;
     color: #131313;
   }
 
-  :is(.site-header.is-on-dark .header-contact, .header-contact.is-light):is(:hover, :focus-visible) {
+  .site-header.is-on-dark .header-contact:is(:hover, :focus-visible) {
     background-color: #fffefe;
     color: #fffefe;
   }
 
-  :is(.site-header.is-on-dark .header-contact, .header-contact.is-light) .hero-cta-btn-icon {
+  .site-header.is-on-dark .header-contact .hero-cta-btn-icon {
     background-color: #131313;
   }
 
-  :is(.site-header.is-on-dark .header-contact, .header-contact.is-light) .hero-cta-btn-arrow {
+  .site-header.is-on-dark .header-contact .hero-cta-btn-arrow {
     color: #fffefe;
   }
 
@@ -2989,12 +2988,29 @@
      image fills the left 60% of the page (CasesSection sizes it between 80%
      and 100% around the screen's centre) and the title plus keywords sit
      outside it, at its top right. Phones stack the text under the image. */
+  /* --cases-light runs 0 → 1 (CasesSection scrubs it as the section rolls
+     in): black with light text at 0, white with dark text at 1. Every colour
+     below mixes from it, so the whole section turns over as one. It rests at
+     1 without the animation (reduced motion). */
   .home-cases {
+    --cases-light: 1;
+    --cases-mix: calc(var(--cases-light) * 100%);
+    --cases-bg: color-mix(in srgb, #ffffff var(--cases-mix), #000000);
+    --cases-ink: color-mix(in srgb, #030008 var(--cases-mix), #fffefe);
+    --cases-muted: color-mix(in srgb, rgb(3 0 8 / 0.55) var(--cases-mix), #a3a3a3);
+    --cases-label: color-mix(in srgb, rgb(3 0 8 / 0.45) var(--cases-mix), #7a7a7a);
+    --cases-value: color-mix(in srgb, #030008 var(--cases-mix), #f3f3f3);
+    --cases-rule: color-mix(in srgb, rgb(3 0 8 / 0.12) var(--cases-mix), rgb(243 243 243 / 0.18));
+    --cases-placeholder: color-mix(in srgb, #ececec var(--cases-mix), #1a1a1a);
+    /* The CTA: the header's dark button on white, its light version on black. */
+    --cases-button: color-mix(in srgb, #131313 var(--cases-mix), #fffefe);
+    --cases-button-ink: color-mix(in srgb, #fffefe var(--cases-mix), #131313);
+
     /* Above the pinned hero, which it rolls up over. */
     position: relative;
     z-index: 1;
-    background-color: #000000;
-    color: #fffefe;
+    background-color: var(--cases-bg);
+    color: var(--cases-ink);
   }
 
   .case-card {
@@ -3008,7 +3024,7 @@
   .case-card-media {
     @apply relative aspect-[4/3] overflow-hidden;
     /* Also the placeholder for cases without an image yet. */
-    background-color: #1a1a1a;
+    background-color: var(--cases-placeholder);
   }
 
   /* Desktop: a capped full height (mirrored by fullHeight() in
@@ -3038,10 +3054,10 @@
   }
 
   /* Explicit colours: the base h2 / p styles would otherwise win over the
-     section's inherited light text. */
+     section's inherited text colour. */
   .case-card-client {
     margin: 0;
-    color: #fffefe;
+    color: var(--cases-ink);
     font-family: var(--font-heading);
     /* Stays below the hero h1 (clamp(2.25rem, 4.7vw, 4rem)) at every width. */
     font-size: clamp(2rem, 3.6vw, 3.5rem);
@@ -3062,7 +3078,7 @@
 
   .case-card-keywords {
     margin: 0.875rem 0 0;
-    color: #a3a3a3;
+    color: var(--cases-muted);
     font-size: 0.8125rem;
     font-weight: 500;
     line-height: 1.5;
@@ -3073,7 +3089,7 @@
   .case-card-description {
     max-width: 32rem;
     margin: 1.5rem 0 0;
-    color: #a3a3a3;
+    color: var(--cases-muted);
     font-size: 1rem;
     line-height: 1.6;
   }
@@ -3086,12 +3102,12 @@
     max-width: 36rem;
     margin: 2rem 0 0;
     padding-top: 1.25rem;
-    border-top: 1px solid rgb(243 243 243 / 0.18);
+    border-top: 1px solid var(--cases-rule);
   }
 
   .case-card-fact {
     padding-inline: 1.25rem;
-    border-left: 1px solid rgb(243 243 243 / 0.18);
+    border-left: 1px solid var(--cases-rule);
   }
 
   .case-card-fact:first-child {
@@ -3100,7 +3116,7 @@
   }
 
   .case-card-fact-label {
-    color: #7a7a7a;
+    color: var(--cases-label);
     font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 0.08em;
@@ -3109,13 +3125,33 @@
 
   .case-card-fact-value {
     margin: 0.5rem 0 0;
-    color: #f3f3f3;
+    color: var(--cases-value);
     font-size: 0.875rem;
     line-height: 1.45;
   }
 
   .case-card-button {
     margin-top: 2rem;
+  }
+
+  /* Follows the section from light-on-black to dark-on-white; the label still
+     turns light over the red hover fill. */
+  .home-cases .case-card-button {
+    background-color: var(--cases-button);
+    color: var(--cases-button-ink);
+  }
+
+  .home-cases .case-card-button:is(:hover, :focus-visible) {
+    background-color: var(--cases-button);
+    color: #fffefe;
+  }
+
+  .home-cases .case-card-button .hero-cta-btn-icon {
+    background-color: var(--cases-button-ink);
+  }
+
+  .home-cases .case-card-button .hero-cta-btn-arrow {
+    color: var(--cases-button);
   }
 
   /* Added value ("Hvad jeg kan tilbyde"): numbered accordion rows on the left,

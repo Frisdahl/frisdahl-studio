@@ -71,8 +71,8 @@ export function CaseCard({
           ))}
         </dl>
 
-        {/* The header contact button's style, in its light variant for the black section. */}
-        <CtaPillButton href={href} className="header-contact is-light case-card-button" fillOnHover>
+        {/* The header contact button's style; its colours follow the section (see .home-cases). */}
+        <CtaPillButton href={href} className="header-contact case-card-button" fillOnHover>
           {linkLabel}
         </CtaPillButton>
       </div>

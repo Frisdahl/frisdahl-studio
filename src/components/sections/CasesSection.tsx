@@ -33,15 +33,34 @@ export function CasesSection() {
   const caseDescriptions = new Map<string, string>(
     getCasesPageContent(locale).items.map((item) => [item.id, item.description]),
   )
+  const sectionRef = useRef<HTMLElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const spacerRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
+    const section = sectionRef.current
     const list = listRef.current
     const spacer = spacerRef.current
-    if (!list || !spacer) return
+    if (!section || !list || !spacer) return
 
     const mm = gsap.matchMedia()
+
+    // The section arrives black and turns white as it rolls in: --cases-light
+    // (which every colour in .home-cases mixes from) runs 0 → 1 from the
+    // section entering at the bottom until its top is a quarter down the
+    // screen, so it's light well before the first project is centred, and
+    // before it reaches the header (which therefore stays in its normal mode).
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      gsap.fromTo(
+        section,
+        { '--cases-light': 0 },
+        {
+          '--cases-light': 1,
+          ease: 'none',
+          scrollTrigger: { trigger: section, start: 'top bottom', end: 'top 25%', scrub: true },
+        },
+      )
+    })
 
     // Desktop only: on phones the rows stack at full size with the text shown.
     mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
@@ -174,11 +193,11 @@ export function CasesSection() {
 
   return (
     <section
+      ref={sectionRef}
       id="portfolio"
       // No bottom padding on desktop: the last image sits flush with the section's end.
       className="home-cases py-section-sm lg:pt-section lg:pb-0"
       aria-label={cases.ariaLabel}
-      data-header-theme="dark"
     >
       <div ref={listRef}>
         {cases.items.map((item) => (
