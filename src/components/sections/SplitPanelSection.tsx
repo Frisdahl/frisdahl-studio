@@ -71,8 +71,6 @@ function Slider({
     <div className="slider-container">
       {images.map((image, i) => {
         const isActive = i === currentIndex
-        const isPrevious = i === currentIndex - 1
-        const isNext = i === currentIndex + 1
         return (
           <img
             key={i}
@@ -85,12 +83,8 @@ function Slider({
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              opacity: isActive || isPrevious || isNext ? 1 : 0,
-              transform: isActive
-                ? 'translateX(0)'
-                : isPrevious
-                ? 'translateX(-100%)'
-                : 'translateX(100%)',
+              opacity: isActive ? 1 : 0,
+              transform: isActive ? 'translateX(0)' : 'translateX(100%)',
               transition: 'transform 0.6s ease, opacity 0.4s ease',
               zIndex: isActive ? 2 : 1,
             }}
