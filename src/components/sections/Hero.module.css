@@ -91,57 +91,6 @@
   object-fit: cover;
 }
 
-.centerBadge {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 20;
-  pointer-events: none;
-  display: grid;
-  place-items: center;
-  width: clamp(7rem, 17vw, 13rem);
-  height: clamp(7rem, 17vw, 13rem);
-}
-
-.badgeText {
-  position: relative;
-  z-index: 2;
-  font-family: var(--font-brand);
-  font-size: clamp(1rem, 2.2vw, 1.75rem);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #fffefe;
-  text-shadow: 0 0 0.08em #030008;
-}
-
-.badgeRing {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 2.5px solid #030008;
-  border-radius: 50%;
-  opacity: 0.7;
-  animation: badgePulse 3s ease-in-out infinite;
-}
-
-@keyframes badgePulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.7;
-  }
-  55% {
-    transform: scale(2.1);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(2.1);
-    opacity: 0;
-  }
-}
-
 /* Desktop: the video fills the height left in the first screen (see .inner),
    between 18rem (on very short screens the hero grows instead) and 52rem.
    It is anchored to the bottom of the row like the copy, so their bottom
