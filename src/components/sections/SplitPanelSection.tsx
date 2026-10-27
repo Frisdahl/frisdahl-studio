@@ -82,8 +82,7 @@ function Slider({
             height: '100%',
             objectFit: 'cover',
             opacity: i === currentIndex ? 1 : 0,
-            transition: 'opacity 0.5s ease transform 1s cubic-bezier(0.4, 0, 0.2, 1)',
-            transform: `translateX(${i !== currentIndex ? (i > currentIndex ? 100 : -100) : 0}%)`,
+            transition: 'opacity 0.5s ease',
           }}
         />
       ))}
@@ -100,11 +99,9 @@ function Slider({
         ))}
       </div>
 
-      <div
-        className="slider-timer"
-        role="progressbar"
-        aria-label="Slide transition progress"
-      />
+      <div className="slider-timer">
+        <div className="slider-timer-progress" key={currentIndex} />
+      </div>
     </div>
   )
 }
