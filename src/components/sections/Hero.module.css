@@ -23,14 +23,14 @@
   .inner {
     /* The video takes the larger share and the gap is kept tight, so the text
        and the video read as one composition without a wide empty strip. */
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.6fr);
     /* The hero fills exactly the first screen; the copy and video row takes
        all of it. The small top padding lets the video start close under the
        header. */
     grid-template-rows: minmax(0, 1fr);
     min-height: calc(100svh - var(--site-header-height));
-    gap: clamp(2rem, 3vw, 3rem);
-    padding-block: clamp(1rem, 2.5vh, 1.5rem) clamp(2rem, 5vh, 3.5rem);
+    gap: clamp(0.5rem, 1vw, 1rem);
+    padding-block: 0 clamp(2rem, 5vh, 3.5rem);
   }
 
   /* The copy sits at the bottom of the row, so its last line lines up with
@@ -89,6 +89,57 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.centerBadge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  width: clamp(7rem, 17vw, 13rem);
+  height: clamp(7rem, 17vw, 13rem);
+}
+
+.badgeText {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-brand);
+  font-size: clamp(1rem, 2.2vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fffefe;
+  text-shadow: 0 0 0.08em #030008;
+}
+
+.badgeRing {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 2.5px solid #030008;
+  border-radius: 50%;
+  opacity: 0.7;
+  animation: badgePulse 3s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  55% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
 }
 
 /* Desktop: the video fills the height left in the first screen (see .inner),
