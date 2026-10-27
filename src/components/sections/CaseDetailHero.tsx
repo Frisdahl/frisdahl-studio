@@ -40,27 +40,19 @@ export function CaseDetailHero({ hero }: CaseDetailHeroProps) {
               ))}
             </dl>
           )}
+
+          {image?.imageSrc && (
+            <figure className="case-detail-hero-image">
+              <img
+                {...responsiveImageProps(image.imageSrc, IMAGE_SIZES.container)}
+                alt={image.imageAlt}
+                className="h-full w-full object-cover"
+                decoding="async"
+              />
+            </figure>
+          )}
         </div>
       </Container>
-
-      {image && (
-        <figure className="case-detail-hero-image">
-          {image.imageSrc ? (
-            <img
-              {...responsiveImageProps(image.imageSrc, IMAGE_SIZES.fullBleed)}
-              alt={image.imageAlt}
-              className="h-full w-full object-cover"
-              decoding="async"
-            />
-          ) : (
-            <div
-              className={`h-full w-full ${image.placeholderClassName ?? 'bg-peach'}`}
-              role="img"
-              aria-label={image.imageAlt}
-            />
-          )}
-        </figure>
-      )}
     </section>
   )
 }
