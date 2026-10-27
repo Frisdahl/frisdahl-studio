@@ -1,13 +1,14 @@
 import type { CaseDetailHero as CaseDetailHeroContent } from '../../types/caseDetail'
+import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 import { ArrowIcon, Container } from '../ui'
-import { CasesImageMarquee } from './CasesImageMarquee'
 
 interface CaseDetailHeroProps {
   hero: CaseDetailHeroContent
 }
 
 export function CaseDetailHero({ hero }: CaseDetailHeroProps) {
-  const { title, name, slides, sliderAriaLabel, meta } = hero
+  const { title, name, slides, meta } = hero
+  const image = slides[0]
 
   return (
     <section className="case-detail relative isolate" aria-label={title}>
@@ -42,11 +43,24 @@ export function CaseDetailHero({ hero }: CaseDetailHeroProps) {
         </div>
       </Container>
 
-      <CasesImageMarquee
-        slides={slides}
-        ariaLabel={sliderAriaLabel}
-        className="relative z-[1] mt-xl lg:mt-2xl"
-      />
+      {image && (
+        <figure className="case-detail-hero-image">
+          {image.imageSrc ? (
+            <img
+              {...responsiveImageProps(image.imageSrc, IMAGE_SIZES.fullBleed)}
+              alt={image.imageAlt}
+              className="h-full w-full object-cover"
+              decoding="async"
+            />
+          ) : (
+            <div
+              className={`h-full w-full ${image.placeholderClassName ?? 'bg-peach'}`}
+              role="img"
+              aria-label={image.imageAlt}
+            />
+          )}
+        </figure>
+      )}
     </section>
   )
 }

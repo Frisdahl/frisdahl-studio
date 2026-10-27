@@ -2300,24 +2300,22 @@
     overflow-x: clip;
   }
 
-  /* Title and description stack (as on the other content pages, e.g. /proces):
-     the long case titles at h1 size broke into one or two words per line in a
-     side-by-side column. */
-  /* First screen of a case: the client name centred in the viewport, the
-     keyword row pinned to the bottom of it. */
+  /* The case hero offsets the fixed header itself, so it can fill the screen. */
   .case-detail-page.page-surface {
     padding-top: 0;
   }
 
+  /* First screen of a case: the client name with its keyword row right
+     under it, centred together in the viewport. */
   .case-detail-hero-intro {
-    @apply flex flex-col;
+    @apply flex flex-col justify-center py-xl;
     min-height: 100svh;
     padding-top: var(--site-header-height);
   }
 
   .case-detail-hero-name {
-    @apply flex flex-1 items-center justify-center py-xl text-center text-primary;
-    font-size: clamp(3.5rem, 13vw, 12rem);
+    @apply text-center text-primary;
+    font-size: clamp(3rem, 9vw, 8rem);
     font-weight: var(--heading-weight);
     line-height: 0.95;
     letter-spacing: -0.04em;
@@ -2325,7 +2323,13 @@
 
   /* Keywords spread edge to edge with equal gaps between them. */
   .case-detail-hero-meta {
-    @apply grid grid-cols-2 gap-x-6 gap-y-md border-y border-border py-md lg:flex lg:items-start lg:justify-between;
+    @apply mt-8 grid grid-cols-2 gap-x-6 gap-y-md lg:flex lg:items-start lg:justify-between;
+  }
+
+  /* One still image, edge to edge, under the first screen. */
+  .case-detail-hero-image {
+    @apply relative z-[1] w-full;
+    aspect-ratio: 16 / 10;
   }
 
   .case-detail-hero-meta-item {

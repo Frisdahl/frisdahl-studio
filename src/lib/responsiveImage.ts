@@ -41,4 +41,5 @@ export const IMAGE_SIZES = {
   splitPanel: '(min-width: 130rem) 50vw, (min-width: 64rem) 65rem, (min-width: 36rem) 100vw, 36rem',
   // Home case rows: the image fills the left 60% of the page from desktop up.
   homeCaseRow: '(min-width: 64rem) 60vw, 100vw',
+  fullBleed: '100vw',
 } as const
