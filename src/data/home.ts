@@ -18,31 +18,44 @@ const homeContent = {
     cases: {
       ariaLabel: "Udvalgte cases",
       linkLabel: "se projekt",
+      metaLabels: { role: "Rolle", technologies: "Teknologier", year: "År" },
       // Atelier Noir and Forma Studio are placeholders until real case material exists.
       items: [
         {
+          id: 'nordwear',
           client: "Nordwear",
+          // Fill in the real stack; shown as "—" until then.
+          technologies: null,
           keywords: "E-commerce • Design • Udvikling",
           href: '/cases/nordwear',
           imageSrc: "/cases/nordwear/card--4-3.webp",
           imageAlt: "Nordwear case",
         },
         {
+          id: 'fresh-cut',
           client: "Fresh Cut",
+          // Fill in the real stack; shown as "—" until then.
+          technologies: null,
           keywords: "Website • Branding • Booking",
           href: '/cases/fresh-cut',
           imageSrc: "/cases/fresh-cut/card--4-3.webp",
           imageAlt: "Fresh Cut case",
         },
         {
+          id: 'atelier-noir',
           client: "Atelier Noir",
+          // Fill in the real stack; shown as "—" until then.
+          technologies: null,
           keywords: "Webshop • E-commerce • UX-design",
           href: '/cases/atelier-noir',
           imageSrc: null,
           imageAlt: "Atelier Noir case",
         },
         {
+          id: 'forma-studio',
           client: "Forma Studio",
+          // Fill in the real stack; shown as "—" until then.
+          technologies: null,
           keywords: "Grafisk • Identitet • Art direction",
           href: '/cases/forma-studio',
           imageSrc: null,
@@ -268,30 +281,43 @@ const homeContent = {
     cases: {
       ariaLabel: "Selected cases",
       linkLabel: "view project",
+      metaLabels: { role: "Role", technologies: "Technologies", year: "Year" },
       items: [
         {
+          id: 'nordwear',
           client: "Nordwear",
+          // Fill in the real stack; shown as "—" until then.
+          technologies: null,
           keywords: "E-commerce • Design • Development",
           href: '/cases/nordwear',
           imageSrc: "/cases/nordwear/card--4-3.webp",
           imageAlt: "Nordwear case",
         },
         {
+          id: 'fresh-cut',
           client: "Fresh Cut",
+          // Fill in the real stack; shown as "—" until then.
+          technologies: null,
           keywords: "Website • Branding • Booking",
           href: '/cases/fresh-cut',
           imageSrc: "/cases/fresh-cut/card--4-3.webp",
           imageAlt: "Fresh Cut case",
         },
         {
+          id: 'atelier-noir',
           client: "Atelier Noir",
+          // Fill in the real stack; shown as "—" until then.
+          technologies: null,
           keywords: "Webshop • E-commerce • UX design",
           href: '/cases/atelier-noir',
           imageSrc: null,
           imageAlt: "Atelier Noir case",
         },
         {
+          id: 'forma-studio',
           client: "Forma Studio",
+          // Fill in the real stack; shown as "—" until then.
+          technologies: null,
           keywords: "Graphic • Identity • Art direction",
           href: '/cases/forma-studio',
           imageSrc: null,

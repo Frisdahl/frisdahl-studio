@@ -504,6 +504,12 @@ function joinRole(locale: Locale, words: string[]): string {
   return locale === 'da' ? `${rest.join(', ')} og ${last}` : `${rest.join(', ')} and ${last}`
 }
 
+/** The role on a case: its keywords after the first (the category), joined. */
+export function getCaseRole(locale: Locale, caseSlug: string): string | null {
+  const summary = getCaseItemSummary(locale, caseSlug)
+  return (summary && joinRole(locale, summary.keywords.slice(1))) || null
+}
+
 function getCaseHeroMeta(locale: Locale, caseSlug: string): CaseDetailHeroMeta[] {
   const labels = metaLabels[locale]
   const summary = getCaseItemSummary(locale, caseSlug)
@@ -514,7 +520,7 @@ function getCaseHeroMeta(locale: Locale, caseSlug: string): CaseDetailHeroMeta[]
   if (summary) {
     meta.push({ label: labels.type, value: getCaseCategoryLabel(locale, summary.category) })
 
-    const role = joinRole(locale, summary.keywords.slice(1))
+    const role = getCaseRole(locale, caseSlug)
     if (role) meta.push({ label: labels.role, value: role })
   }
 

@@ -1,9 +1,17 @@
 import { Link } from 'react-router-dom'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 
+export interface CaseCardMeta {
+  label: string
+  /** null shows a dash until the value exists. */
+  value: string | null
+}
+
 export interface CaseCardProps {
   client: string
   keywords: string
+  description: string
+  meta: CaseCardMeta[]
   imageSrc: string | null
   imageAlt: string
   href: string
@@ -11,11 +19,20 @@ export interface CaseCardProps {
 }
 
 /**
- * One home-page case row: the image on the left, title and keywords at its
- * top right. Only the image and the title link to the case; hovering either
- * lights up the "[se projekt]" label next to the title.
+ * One home-page case row: the image on the left; title, keywords, description
+ * and a three-column meta row at its top right. Only the image and the title
+ * link to the case; hovering either lights up the "[se projekt]" label.
  */
-export function CaseCard({ client, keywords, imageSrc, imageAlt, href, linkLabel }: CaseCardProps) {
+export function CaseCard({
+  client,
+  keywords,
+  description,
+  meta,
+  imageSrc,
+  imageAlt,
+  href,
+  linkLabel,
+}: CaseCardProps) {
   return (
     <div className="case-card">
       {/* Same target as the title link, so it's left out of the tab order and
@@ -43,6 +60,16 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, href, linkLabel
           </Link>
         </h2>
         <p className="case-card-keywords">{keywords}</p>
+        {description ? <p className="case-card-description">{description}</p> : null}
+
+        <dl className="case-card-facts">
+          {meta.map(({ label, value }) => (
+            <div key={label} className="case-card-fact">
+              <dt className="case-card-fact-label">{label}</dt>
+              <dd className="case-card-fact-value">{value ?? '—'}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </div>
   )

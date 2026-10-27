@@ -4,6 +4,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { CaseCard } from '../cards/CaseCard'
 import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
+import { getCaseRole } from '../../data/caseDetails'
+import { getCaseYear } from '../../data/caseNavigation'
+import { getCasesPageContent } from '../../data/cases'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -20,6 +23,9 @@ const SMALL = 0.8
 export function CasesSection() {
   const { locale } = useLocale()
   const { cases } = getHomeContent(locale)
+  const caseDescriptions = new Map<string, string>(
+    getCasesPageContent(locale).items.map((item) => [item.id, item.description]),
+  )
   const listRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
@@ -134,9 +140,17 @@ export function CasesSection() {
       <div ref={listRef}>
         {cases.items.map((item) => (
           <CaseCard
-            key={item.client}
+            key={item.id}
             client={item.client}
             keywords={item.keywords}
+            // Description, role and year come from the shared case data, so
+            // they always match the case pages.
+            description={caseDescriptions.get(item.id) ?? ''}
+            meta={[
+              { label: cases.metaLabels.role, value: getCaseRole(locale, item.id) },
+              { label: cases.metaLabels.technologies, value: item.technologies },
+              { label: cases.metaLabels.year, value: getCaseYear(item.id) },
+            ]}
             imageSrc={item.imageSrc}
             imageAlt={item.imageAlt}
             href={item.href}
