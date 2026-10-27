@@ -27,7 +27,7 @@ const homeContent = {
           technologies: "Shopify, Liquid, Figma",
           keywords: "E-commerce • Design • Udvikling",
           href: '/cases/nordwear',
-          imageSrc: "/cases/nordwear/card--4-3.webp",
+          imageSrc: "/cases/nordwear/official--4-3.webp",
           imageAlt: "Nordwear case",
         },
         {
@@ -322,7 +322,7 @@ const homeContent = {
           technologies: "Shopify, Liquid, Figma",
           keywords: "E-commerce • Design • Development",
           href: '/cases/nordwear',
-          imageSrc: "/cases/nordwear/card--4-3.webp",
+          imageSrc: "/cases/nordwear/official--4-3.webp",
           imageAlt: "Nordwear case",
         },
         {
