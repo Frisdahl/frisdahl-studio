@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { BrandWordmark } from '../ui'
+import { BrandMonogram } from '../ui'
 
 interface HeaderBrandProps {
   label: string
@@ -8,7 +8,7 @@ interface HeaderBrandProps {
 export function HeaderBrand({ label }: HeaderBrandProps) {
   return (
     <Link to="/" className="site-header-logo" aria-label={label}>
-      <BrandWordmark />
+      <BrandMonogram />
     </Link>
   )
 }

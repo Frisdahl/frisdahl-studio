@@ -3,8 +3,13 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
   "scripts": {
+    "predev": "node scripts/optimize-images.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/optimize-images.mjs",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",

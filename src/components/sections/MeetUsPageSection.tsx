@@ -1,7 +1,11 @@
 import { useLocale } from '../../context/LocaleContext'
 import { getMeetUsPageContent } from '../../data/meetUs'
 import type { TeamMember } from '../../types/meetUs'
+import { responsiveImageProps } from '../../lib/responsiveImage'
 import { Container } from '../ui'
+
+// One column on phones, two on tablets, three from desktop.
+const MEMBER_IMAGE_SIZES = '(min-width: 64rem) 30vw, (min-width: 48rem) 50vw, 100vw'
 
 interface TeamMemberCardProps {
   member: TeamMember
@@ -13,7 +17,7 @@ function TeamMemberCard({ member }: TeamMemberCardProps) {
       <div className="meet-us-member-portrait">
         {member.imageSrc ? (
           <img
-            src={member.imageSrc}
+            {...responsiveImageProps(member.imageSrc, MEMBER_IMAGE_SIZES)}
             alt={member.imageAlt}
             className="meet-us-member-image"
             loading="lazy"

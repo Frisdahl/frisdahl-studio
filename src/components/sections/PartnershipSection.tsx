@@ -1,5 +1,6 @@
 import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
+import { responsiveImageProps } from '../../lib/responsiveImage'
 import { Container } from '../ui'
 import { PartnershipImageDecorations } from './PartnershipDecorations'
 
@@ -24,9 +25,15 @@ export function PartnershipSection() {
             <div className="relative overflow-hidden rounded-panel bg-peach">
               {partnership.imageSrc ? (
                 <img
-                  src={partnership.imageSrc}
+                  // Matches the frame widths above: 16rem, 19rem from sm, 24rem from lg.
+                  {...responsiveImageProps(
+                    partnership.imageSrc,
+                    '(min-width: 64rem) 24rem, (min-width: 40rem) 19rem, 16rem',
+                  )}
                   alt={partnership.imageAlt}
                   className="aspect-[4/5] w-full object-cover"
+                  loading="lazy"
+                  decoding="async"
                 />
               ) : (
                 <div className="aspect-[4/5] w-full" aria-hidden="true" />

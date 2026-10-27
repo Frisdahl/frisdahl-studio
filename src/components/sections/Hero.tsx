@@ -1,20 +1,21 @@
 import { useLocale } from '../../context/LocaleContext'
-import { CtaPillButton } from '../ui'
 import styles from './Hero.module.css'
-import { HeroSellingPoints } from './HeroSellingPoints'
 
 const heroContent = {
   da: {
-    heading: 'Digitale brands der skaber v\u00e6rdi.',
-    cta: 'Se mit arbejde',
+    // Three lines: line 2 and the final full stop carry the muted colour.
+    headingLead: 'Jeg udvikler',
+    headingMuted: 'digitale oplevelser',
+    headingTail: 'med omtanke',
     intro:
-      'Jeg skaber digitale oplevelser, der styrker dit brand og skaber m\u00e5lbare resultater. Strategi, design og teknologi \u2013 alt samlet \u00e9t sted.',
+      'Jeg designer og udvikler hjemmesider og webapps, der kombinerer stærkt design, gennemført brugeroplevelse og teknisk performance – fra idé til færdigt produkt.',
   },
   en: {
-    heading: 'Digital brands that create value.',
-    cta: 'View my work',
+    headingLead: 'I develop',
+    headingMuted: 'digital experiences',
+    headingTail: 'with care',
     intro:
-      'I create digital experiences that strengthen your brand and deliver measurable results. Strategy, design, and technology \u2013 all in one place.',
+      'I design and develop websites and webapps that combine strong design, thoughtful user experience and technical performance – from idea to finished product.',
   },
 } as const
 
@@ -27,19 +28,19 @@ export function Hero() {
       <div className={styles.inner}>
         <div className={styles.copy}>
           <h1 id="home-hero-title" className={styles.title}>
-            {content.heading}
+            {content.headingLead}
+            <br />
+            <span className={styles.titleMuted}>{content.headingMuted}</span>
+            <br />
+            {content.headingTail}
+            <span className={styles.titleMuted}>.</span>
           </h1>
           <p className={styles.intro}>{content.intro}</p>
-          <CtaPillButton href="/cases" className="cases-section-cta">
-            {content.cta}
-          </CtaPillButton>
         </div>
 
         <div className={styles.media}>
           <video src="/promo_h264.mp4" autoPlay muted loop playsInline aria-hidden="true" />
         </div>
-
-        <HeroSellingPoints className={styles.points} />
       </div>
     </section>
   )

@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useNextCaseTimerProgress } from '../../hooks/useNextCaseTimerProgress'
 import type { CaseDetailNext } from '../../types/caseDetail'
+import { responsiveImageProps } from '../../lib/responsiveImage'
 import { ArrowIcon } from '../ui/ArrowIcon'
 
 interface CaseDetailNextSectionProps {
@@ -50,7 +51,7 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
         >
           {image.imageSrc ? (
             <img
-              src={image.imageSrc}
+              {...responsiveImageProps(image.imageSrc, '100vw')}
               alt=""
               className="case-detail-next-image"
               loading="lazy"

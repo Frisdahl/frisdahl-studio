@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   overflow: hidden;
-  background: #f8f8f9;
+  background: var(--color-home-page);
   color: #030008;
   margin-bottom: clamp(3rem, 6vw, 6rem);
 }
@@ -24,13 +24,19 @@
     /* The video takes the larger share and the gap is kept tight, so the text
        and the video read as one composition without a wide empty strip. */
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
-    /* The hero fills exactly the first screen: the selling points take their
-       natural height in the last row and the video row gets what is left, so
-       the points are always visible without scrolling. */
-    grid-template-rows: minmax(0, 1fr) auto;
+    /* The hero fills exactly the first screen; the copy and video row takes
+       all of it. The small top padding lets the video start close under the
+       header. */
+    grid-template-rows: minmax(0, 1fr);
     min-height: calc(100svh - var(--site-header-height));
     gap: clamp(2rem, 3vw, 3rem);
-    padding-block: clamp(3.5rem, 8vh, 5.5rem) clamp(2rem, 5vh, 3.5rem);
+    padding-block: clamp(1rem, 2.5vh, 1.5rem) clamp(2rem, 5vh, 3.5rem);
+  }
+
+  /* The copy sits at the bottom of the row, so its last line lines up with
+     the video's bottom edge. */
+  .copy {
+    align-self: end;
   }
 }
 
@@ -42,7 +48,10 @@
 }
 
 .title {
-  max-width: 20ch;
+  /* Three explicit lines. The old 20ch cap (~504px at 64px) is narrower than
+     the longest line ("digitale oplevelser", 518px at 64px) and would re-wrap
+     it, so the box follows the longest line instead. */
+  max-width: none;
   margin: 0;
   color: #030008;
   font-family: var(--font-heading);
@@ -52,10 +61,14 @@
   letter-spacing: -0.035em;
 }
 
+.titleMuted {
+  color: #b2b2b2;
+}
+
 .intro {
   max-width: 30rem;
-  margin: clamp(1.5rem, 3vh, 2rem) 0 clamp(1.75rem, 3.5vh, 2.5rem);
-  color: #030008;
+  margin: clamp(1.5rem, 3vh, 2rem) 0 0;
+  color: oklch(70.7% 0.022 261.325);
   font-family: var(--font-sans);
   font-size: clamp(1rem, 1.2vw, 1.1875rem);
   font-weight: 500;
@@ -68,7 +81,7 @@
   min-width: 0;
   overflow: hidden;
   aspect-ratio: 16 / 9;
-  border-radius: clamp(0.75rem, 1.5vw, 1.25rem);
+  border-radius: clamp(0.375rem, 0.7vw, 0.625rem);
 }
 
 .media video {
@@ -79,24 +92,22 @@
 }
 
 /* Desktop: the video fills the height left in the first screen (see .inner),
-   between 18rem (on very short screens the hero grows instead) and 40rem. */
+   between 18rem (on very short screens the hero grows instead) and 52rem.
+   It is anchored to the bottom of the row like the copy, so their bottom
+   edges line up even when the 52rem cap leaves space above (very tall screens). */
 @media (min-width: 1024px) {
   .media {
-    align-self: stretch;
+    align-self: end;
+    height: 100%;
     aspect-ratio: auto;
     min-height: 18rem;
-    max-height: 40rem;
+    max-height: 52rem;
   }
 
   .media video {
     position: absolute;
     inset: 0;
   }
-}
-
-/* Selling points: a full-width row under the copy and the video. */
-.points {
-  grid-column: 1 / -1;
 }
 
 @media (max-width: 1023px) {

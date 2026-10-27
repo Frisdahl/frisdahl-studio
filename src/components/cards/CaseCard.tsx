@@ -1,5 +1,6 @@
 import { ArrowIcon } from '../ui/ArrowIcon'
 import { Link } from 'react-router-dom'
+import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 
 export interface CaseCardProps {
   client: string
@@ -29,10 +30,11 @@ export function CaseCard({
       <div className="case-card-media">
         {imageSrc ? (
           <img
-            src={imageSrc}
+            {...responsiveImageProps(imageSrc, IMAGE_SIZES.halfContainer)}
             alt={imageAlt}
             className="case-card-image"
             loading="lazy"
+            decoding="async"
           />
         ) : (
           <div

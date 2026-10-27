@@ -1,5 +1,9 @@
 import { type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
+import { responsiveImageProps } from '../../lib/responsiveImage'
+
+// The image column is roughly half the row at every width (169px of 390, 667px of 1440).
+const CASE_ROW_IMAGE_SIZES = '(min-width: 96rem) 48rem, 50vw'
 
 export interface CaseRowProps {
   client: string
@@ -51,10 +55,11 @@ export function CaseRow({
         <div className="case-row-media">
           {imageSrc ? (
             <img
-              src={imageSrc}
+              {...responsiveImageProps(imageSrc, CASE_ROW_IMAGE_SIZES)}
               alt={imageAlt}
               className="case-row-image"
               loading="lazy"
+              decoding="async"
             />
           ) : (
             <div

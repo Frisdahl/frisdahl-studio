@@ -6,7 +6,7 @@
 //
 // Sources stay where they are in public/. Variants go to public/_img/ and are
 // committed, so the production build doesn't need sharp.
-import { mkdir, readdir, readFile, stat, writeFile } from 'node:fs/promises'
+import { mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { dirname, extname, join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
@@ -18,7 +18,7 @@ const MANIFEST = join(ROOT, 'src/data/generated/responsiveImages.json')
 
 // Breakpoints cover phones (1x–3x), tablets and desktops up to large 2x screens.
 const WIDTHS = [480, 768, 1080, 1440, 1920, 2560]
-const QUALITY = 78
+const QUALITY = 85
 const IMAGE_PATH = /['"`](\/(?:cases|images)\/[^'"`\s]+\.(?:jpe?g|png|webp|avif))['"`]/g
 
 async function* walk(dir) {
@@ -26,6 +26,20 @@ async function* walk(dir) {
     const path = join(dir, entry.name)
     if (entry.isDirectory()) yield* walk(path)
     else if (/\.(tsx?|css)$/.test(entry.name)) yield path
+  }
+}
+
+async function* walkAll(dir) {
+  let entries
+  try {
+    entries = await readdir(dir, { withFileTypes: true })
+  } catch {
+    return
+  }
+  for (const entry of entries) {
+    const path = join(dir, entry.name)
+    if (entry.isDirectory()) yield* walkAll(path)
+    else yield path
   }
 }
 
@@ -61,7 +75,7 @@ async function processImage(src) {
     const output = join(PUBLIC, url)
     if (!(await isFresh(output, sourceMtime))) {
       await mkdir(dirname(output), { recursive: true })
-      await sharp(sourcePath).resize({ width: w }).webp({ quality: QUALITY }).toFile(output)
+      await sharp(sourcePath).resize({ width: w }).webp({ quality: QUALITY, smartSubsample: true }).toFile(output)
     }
     variants.push([w, url])
   }
@@ -90,6 +104,18 @@ for (const src of images) {
     console.warn(`Skipped ${src}: ${error.message}`)
   }
 }
+
+// public/_img is owned by this script: drop variants of images no longer referenced,
+// so stale files don't end up in the production build.
+const keep = new Set(Object.values(manifest).flatMap(({ variants }) => variants.map(([, url]) => join(PUBLIC, url))))
+let pruned = 0
+for await (const file of walkAll(OUT_DIR)) {
+  if (!keep.has(file)) {
+    await rm(file)
+    pruned++
+  }
+}
+if (pruned) console.log(`Pruned ${pruned} unreferenced variant(s)`)
 
 await mkdir(dirname(MANIFEST), { recursive: true })
 await writeFile(MANIFEST, `${JSON.stringify(manifest, null, 2)}\n`)

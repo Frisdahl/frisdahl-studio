@@ -1,4 +1,5 @@
 import type { SplitPanelContent } from '../../types/splitPanel'
+import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 
 interface SplitPanelSectionProps {
   content: SplitPanelContent
@@ -20,10 +21,11 @@ export function SplitPanelSection({ content }: SplitPanelSectionProps) {
         <div className="split-panel-media">
           <div className="split-panel-media-frame">
             <img
-              src={content.imageSrc}
+              {...responsiveImageProps(content.imageSrc, IMAGE_SIZES.splitPanel)}
               alt={content.imageAlt}
               className="split-panel-image"
               loading="lazy"
+              decoding="async"
             />
           </div>
         </div>

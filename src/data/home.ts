@@ -15,29 +15,6 @@ const homeContent = {
       muteOn: "Sl\u00e5 lyd til",
       muteOff: "Sl\u00e5 lyd fra",
     },
-    sellingPoints: {
-      ariaLabel: "Det får du",
-      items: [
-        {
-          icon: "tailored",
-          title: "Skræddersyede løsninger",
-          description:
-            "Design og udvikling, der passer til dine behov",
-        },
-        {
-          icon: "results",
-          title: "Fokus på resultater",
-          description:
-            "Flere kunder, stærkere brand og bedre konvertering",
-        },
-        {
-          icon: "partnership",
-          title: "Langvarigt samarbejde",
-          description:
-            "Jeg er med hele vejen – også efter lanceringen",
-        },
-      ],
-    },
     cases: {
       ariaLabel: "Udvalgte cases",
       eyebrow: "Cases",
@@ -277,29 +254,6 @@ const homeContent = {
       ctaSecondary: "View cases",
       muteOn: "Unmute video",
       muteOff: "Mute video",
-    },
-    sellingPoints: {
-      ariaLabel: "What you get",
-      items: [
-        {
-          icon: "tailored",
-          title: "Tailored solutions",
-          description:
-            "Design and development tailored to your needs",
-        },
-        {
-          icon: "results",
-          title: "Focus on results",
-          description:
-            "More customers, a stronger brand and better conversion",
-        },
-        {
-          icon: "partnership",
-          title: "Long-term partnership",
-          description:
-            "I'm with you all the way – even after launch",
-        },
-      ],
     },
     cases: {
       ariaLabel: "Selected cases",
