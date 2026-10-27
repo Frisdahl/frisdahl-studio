@@ -2303,32 +2303,41 @@
   /* Title and description stack (as on the other content pages, e.g. /proces):
      the long case titles at h1 size broke into one or two words per line in a
      side-by-side column. */
-  .case-detail-hero-grid {
-    @apply grid gap-8;
+  /* First screen of a case: the client name centred in the viewport, the
+     keyword row pinned to the bottom of it. */
+  .case-detail-page.page-surface {
+    padding-top: 0;
   }
 
-  .case-detail-hero-description {
-    @apply max-w-[34rem] font-normal;
+  .case-detail-hero-intro {
+    @apply flex flex-col;
+    min-height: 100svh;
+    padding-top: var(--site-header-height);
   }
 
+  .case-detail-hero-name {
+    @apply flex flex-1 items-center justify-center py-xl text-center text-primary;
+    font-size: clamp(3.5rem, 13vw, 12rem);
+    font-weight: var(--heading-weight);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+  }
+
+  /* Keywords spread edge to edge with equal gaps between them. */
   .case-detail-hero-meta {
-    @apply mt-2xl flex flex-wrap items-start gap-x-10 gap-y-md border-y border-border py-md lg:mt-3xl;
+    @apply grid grid-cols-2 gap-x-6 gap-y-md border-y border-border py-md lg:flex lg:items-start lg:justify-between;
   }
 
   .case-detail-hero-meta-item {
     @apply min-w-0;
   }
 
-  .case-detail-hero-meta-item + .case-detail-hero-meta-item {
-    @apply lg:border-l lg:border-border lg:pl-10;
-  }
-
   .case-detail-hero-meta-label {
-    @apply text-caption font-semibold uppercase tracking-[0.12em] text-muted;
+    @apply text-caption font-bold uppercase tracking-[0.12em] text-muted;
   }
 
   .case-detail-hero-meta-value {
-    @apply mt-1 min-w-0 text-body-sm text-secondary;
+    @apply mt-1 min-w-0 text-body-sm font-bold text-primary;
   }
 
   .case-detail-hero-meta-link {
@@ -2558,10 +2567,9 @@
   }
 
   /* Same scale as the homepage hero title (Hero.module.css), across the full
-     content width. The case detail and meet-us pages share it, so their titles
-     read at the same size as the homepage headline. */
+     content width. The meet-us page shares it, so its title reads at the same
+     size as the homepage headline. */
   .cases-page .cases-page-title,
-  .case-detail-page .cases-page-title,
   .meet-us-page .cases-page-title {
     font-size: clamp(2.25rem, 4.7vw, 4rem);
     line-height: 1.06;

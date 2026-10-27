@@ -9,6 +9,8 @@ export interface CaseDetailHeroMeta {
 export interface CaseDetailHero {
   eyebrow: string
   title: string
+  /** The case's client name alone, shown as the hero heading. */
+  name: string
   description: string
   sliderAriaLabel: string
   slides: CasesHeroSlide[]

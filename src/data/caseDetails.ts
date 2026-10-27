@@ -6,7 +6,7 @@ import { getCaseGallery } from './caseGallery'
 import { getCaseYear, getNextCasePreview } from './caseNavigation'
 
 type CaseDetailBase = Omit<CaseDetailContent, 'gallery' | 'nextCase' | 'hero'> & {
-  hero: Omit<CaseDetailHero, 'meta'>
+  hero: Omit<CaseDetailHero, 'meta' | 'name'>
 }
 
 const caseDetails = {
@@ -552,7 +552,11 @@ export function getCaseDetail(
 
   return {
     ...detail,
-    hero: { ...detail.hero, meta: getCaseHeroMeta(locale, caseSlug) },
+    hero: {
+      ...detail.hero,
+      name: getCaseItemSummary(locale, caseSlug)?.client ?? detail.hero.title,
+      meta: getCaseHeroMeta(locale, caseSlug),
+    },
     gallery,
     nextCase,
   }
