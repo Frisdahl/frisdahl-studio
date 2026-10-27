@@ -14,12 +14,18 @@ const placeholderPair = (
 const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
   nordwear: {
     horizontalTop: {
-      imageSrc: '/cases/nordwear/category--16-9.jpg',
-      imageAlt: 'Nordwear kategori',
+      imageSrc: '/cases/nordwear/gallery-forside--16-9.webp',
+      imageAlt: 'Nordwear forside på en MacBook Air',
     },
     verticalPairTop: [
-      { imageSrc: '/cases/nordwear/production--5-6.jpg', imageAlt: 'Nordwear produktion' },
-      { imageSrc: '/cases/nordwear/cart--5-6.jpg', imageAlt: 'Nordwear kurv' },
+      {
+        imageSrc: '/cases/nordwear/gallery-udvalgte-produkter--5-6.webp',
+        imageAlt: 'Nordwear udvalgte produkter på en MacBook',
+      },
+      {
+        imageSrc: '/cases/nordwear/gallery-alle-produkter--5-6.webp',
+        imageAlt: 'Nordwear produktoversigt på en MacBook',
+      },
     ],
     verticalPairBottom: [
       { imageSrc: '/cases/nordwear/mobile--5-6.jpg', imageAlt: 'Nordwear forside' },
