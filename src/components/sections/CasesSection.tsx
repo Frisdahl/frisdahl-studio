@@ -19,6 +19,13 @@ const smoothstep = (t: number) => t * t * (3 - 2 * t)
 // (clamp(22rem, 32vw, 38rem)); the smallest size is 80% of it.
 const fullHeight = () => clamp(window.innerWidth * 0.32, 352, 608)
 const SMALL = 0.8
+// While the rows pass through, the list lags behind the scroll (a parallax
+// slow-down), so they drift past calmly and each grow/shrink hand-off takes
+// more scrolling. The slow-down follows a sine: it eases in from full speed,
+// peaks mid-list (the list then moves at 1 - LAG of the scroll speed) and
+// eases back to full speed exactly as the last row reaches the centre, so
+// there's no sudden speed change and no empty stretch below the last row.
+const LAG = 0.55
 
 export function CasesSection() {
   const { locale } = useLocale()
@@ -27,10 +34,12 @@ export function CasesSection() {
     getCasesPageContent(locale).items.map((item) => [item.id, item.description]),
   )
   const listRef = useRef<HTMLDivElement>(null)
+  const spacerRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
     const list = listRef.current
-    if (!list) return
+    const spacer = spacerRef.current
+    if (!list || !spacer) return
 
     const mm = gsap.matchMedia()
 
@@ -42,27 +51,48 @@ export function CasesSection() {
 
       let maxH = 0
       let minH = 0
-      let listTop = 0
+      let listTop = 0 // page offset of the list without the lag shift
+      let lagStart = 0
+      let lagRange = 0
+      let lag = -1
       let activeIndex = -1
       let position = 0
 
       const measure = () => {
         maxH = fullHeight()
         minH = maxH * SMALL
+        list.style.transform = ''
         listTop = list.getBoundingClientRect().top + window.scrollY
+        // The lag runs from the list's top entering at the bottom of the screen
+        // until the last row's centre reaches the screen's centre. Over that
+        // range the sine profile averages a 2·LAG/π slow-down, which sets the
+        // range length. The spacer adds the total distance fallen behind, so
+        // the list never overlaps what follows.
+        const viewport = window.innerHeight
+        const lastRowCentre = (rows.length - 1) * minH + maxH / 2
+        lagStart = listTop - viewport
+        lagRange = (viewport / 2 + lastRowCentre) / (1 - (2 * LAG) / Math.PI)
+        spacer.style.height = `${(2 * LAG * lagRange) / Math.PI}px`
+        lag = -1
+      }
+
+      // Integral of LAG·sin(π·u) over the scroll: 0 before, full shift after.
+      const lagOffset = () => {
+        const progress = clamp((window.scrollY - lagStart) / lagRange, 0, 1)
+        return ((LAG * lagRange) / Math.PI) * (1 - Math.cos(Math.PI * progress))
       }
 
       // How far through the list the screen's centre is, in rows: at a whole
       // number k, row k is at full size and centred. Between two rows one grows
       // while the other shrinks by the same amount, so the images always touch
       // and the list's total height never changes. That keeps the mapping
-      // exact: row k's centre sits at listTop + k·minH + maxH/2.
+      // exact: row k's centre sits at listTop + lag + k·minH + maxH/2.
       // It starts at -1, so the first row arrives small and without its text
       // and grows into place; it stops at the last row, which stays full so
       // the sections below never shift while in view.
-      const targetPosition = () => {
+      const targetPosition = (offset: number) => {
         const centre = window.scrollY + window.innerHeight / 2
-        return clamp((centre - listTop - maxH / 2) / minH, -1, rows.length - 1)
+        return clamp((centre - listTop - offset - maxH / 2) / minH, -1, rows.length - 1)
       }
 
       const render = () => {
@@ -88,14 +118,20 @@ export function CasesSection() {
         activeIndex = nextActive
       }
 
-      // The sizes ease towards the scroll position instead of following it
-      // 1:1, so uneven wheel steps still read as one smooth glide. Each frame
-      // closes 18% of the remaining distance (at 60fps, adjusted for frame
-      // time) — light, since Lenis already smooths the scroll itself — and
-      // nothing is written once it has settled. Runs on GSAP's ticker after
-      // Lenis (see SmoothScroll), so it reads this frame's scroll position.
+      // The lag shift follows the (Lenis-smoothed) scroll exactly, so the list
+      // stays glued to it. The sizes then ease towards their target instead of
+      // following it 1:1, so uneven wheel steps still read as one glide: each
+      // frame closes 18% of the remaining distance (at 60fps, adjusted for
+      // frame time), and nothing is written once settled. Runs on GSAP's
+      // ticker after Lenis (see SmoothScroll), so it reads this frame's scroll.
       const tick = (_time: number, deltaMs: number) => {
-        const target = targetPosition()
+        const offset = lagOffset()
+        if (offset !== lag) {
+          lag = offset
+          list.style.transform = `translate3d(0, ${offset}px, 0)`
+        }
+
+        const target = targetPosition(offset)
         const distance = target - position
         if (Math.abs(distance) < 0.0005) {
           if (position === target) return
@@ -108,7 +144,9 @@ export function CasesSection() {
 
       const snap = () => {
         measure()
-        position = targetPosition()
+        lag = lagOffset()
+        list.style.transform = `translate3d(0, ${lag}px, 0)`
+        position = targetPosition(lag)
         render()
       }
 
@@ -122,6 +160,8 @@ export function CasesSection() {
         gsap.ticker.remove(tick)
         ScrollTrigger.removeEventListener('refresh', snap)
         window.removeEventListener('resize', snap)
+        list.style.transform = ''
+        spacer.style.height = ''
         medias.forEach((media) => {
           media.style.height = ''
           media.style.width = ''
@@ -160,6 +200,8 @@ export function CasesSection() {
           />
         ))}
       </div>
+      {/* Room for the list's parallax lag on desktop (height set in the effect). */}
+      <div ref={spacerRef} aria-hidden="true" />
     </section>
   )
 }
