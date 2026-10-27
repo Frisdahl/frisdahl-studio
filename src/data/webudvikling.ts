@@ -13,9 +13,9 @@ const webudviklingContent = {
       description:
         'Vi designer og udvikler hjemmesider fra bunden med fokus på hastighed, brugeroplevelse og et udtryk, der matcher jeres brand.',
       images: [
-        { src: '/images/webudvikling/webudvikling-1.webp', alt: 'Webudvikling 1' },
-        { src: '/images/webudvikling/webudvikling-2.webp', alt: 'Webudvikling 2' },
-        { src: '/images/webudvikling/webudvikling-3.webp', alt: 'Webudvikling 3' },
+        { src: '/cases/nordwear/production-mac.webp', alt: 'Webudvikling 1' },
+        { src: '/cases/nordwear/production-mac.webp', alt: 'Webudvikling 2' },
+        { src: '/cases/nordwear/production-mac.webp', alt: 'Webudvikling 3' },
       ],
     },
     whyChooseUs: {
@@ -145,9 +145,9 @@ const webudviklingContent = {
       description:
         'We design and develop websites from scratch with a focus on speed, user experience, and an expression that matches your brand.',
       images: [
-        { src: '/images/webudvikling/webudvikling-1.webp', alt: 'Web development 1' },
-        { src: '/images/webudvikling/webudvikling-2.webp', alt: 'Web development 2' },
-        { src: '/images/webudvikling/webudvikling-3.webp', alt: 'Web development 3' },
+        { src: '/cases/nordwear/production-mac.webp', alt: 'Web development 1' },
+        { src: '/cases/nordwear/production-mac.webp', alt: 'Web development 2' },
+        { src: '/cases/nordwear/production-mac.webp', alt: 'Web development 3' },
       ],
     },
     whyChooseUs: {
