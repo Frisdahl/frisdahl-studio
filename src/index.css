@@ -1673,6 +1673,26 @@
     left: 0;
   }
 
+  /* Two arrows side by side: the visible one plus one parked two arrow widths
+     to its left. GSAP slides the track right by that distance on hover. */
+  .cta-fill-hover-arrows {
+    position: relative;
+    display: flex;
+  }
+
+  /* overflow: hidden alone lets the GPU-composited arrows leak past the
+     rotating chip's rounded corners in Chrome; clip-path clips reliably. */
+  .cta-fill-hover .hero-cta-btn-icon {
+    clip-path: inset(0 round 0.375rem);
+  }
+
+  .cta-fill-hover-arrow-next {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(-200%);
+  }
+
   .header-contact .hero-cta-btn-icon {
     width: 1.25rem;
     height: 1.25rem;

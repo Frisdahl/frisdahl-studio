@@ -29,6 +29,7 @@ export function CtaPillButton({
   const labelTrackRef = useRef<HTMLSpanElement>(null)
   const iconRef = useRef<HTMLSpanElement>(null)
   const arrowWrapRef = useRef<HTMLSpanElement>(null)
+  const arrowTrackRef = useRef<HTMLSpanElement>(null)
   const hoverTimeline = useRef<gsap.core.Timeline | null>(null)
 
   // One paused, linear timeline that is scrubbed by an eased progress tween.
@@ -47,6 +48,9 @@ export function CtaPillButton({
         .to(iconRef.current, { rotation: 90, duration: 1 }, 0)
         // Counter-rotates in sync so the arrow itself never turns.
         .to(arrowWrapRef.current, { rotation: -90, duration: 1 }, 0)
+        // Pushes the visible arrow out to the right and brings in the one
+        // waiting on its left; leaving scrubs it straight back.
+        .to(arrowTrackRef.current, { xPercent: 200, duration: 0.85 }, 0)
     })
 
     return () => {
@@ -72,7 +76,8 @@ export function CtaPillButton({
   }
 
   const handleEnter = () => {
-    playArrow()
+    // The fill variant moves its arrows in the hover timeline instead.
+    if (!fillOnHover) playArrow()
     animateHover(1, 0.8)
   }
 
@@ -117,7 +122,14 @@ export function CtaPillButton({
       </span>
       <span ref={iconRef} className="hero-cta-btn-icon" aria-hidden="true">
         <span ref={arrowWrapRef} className="hero-cta-btn-arrow-wrap">
-          <ArrowIcon className="hero-cta-btn-arrow" />
+          {fillOnHover ? (
+            <span ref={arrowTrackRef} className="cta-fill-hover-arrows">
+              <ArrowIcon className="hero-cta-btn-arrow" />
+              <ArrowIcon className="hero-cta-btn-arrow cta-fill-hover-arrow-next" />
+            </span>
+          ) : (
+            <ArrowIcon className="hero-cta-btn-arrow" />
+          )}
         </span>
       </span>
     </>
