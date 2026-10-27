@@ -40,9 +40,8 @@ function MenuToggleIcon({ isOpen }: MenuToggleIconProps) {
       strokeLinecap="round"
       aria-hidden="true"
     >
-      <line x1="4" y1="7" x2="20" y2="7" />
-      <line x1="4" y1="12" x2="20" y2="12" />
-      <line x1="4" y1="17" x2="20" y2="17" />
+      <line x1="2" y1="8" x2="22" y2="8" />
+      <line x1="2" y1="16" x2="22" y2="16" />
     </svg>
   )
 }

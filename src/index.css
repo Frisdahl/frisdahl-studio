@@ -1618,11 +1618,9 @@
   /* The header contact CTA: dark label block with a white arrow chip on the
      right, both inside one slightly rounded container. */
   .header-contact {
-    gap: 0.5rem;
-    /* No border (the hover overlay can't cover one); the padding absorbs the
-       base button's 1.5px border so the size is unchanged. */
-    padding: calc(0.25rem + 1.5px) calc(0.25rem + 1.5px) calc(0.25rem + 1.5px)
-      calc(0.875rem + 1.5px);
+    gap: 0.75rem;
+    /* No border: the hover overlay can't cover one. */
+    padding: 0.4375rem 0.4375rem 0.4375rem 1.125rem;
     border: 0;
     border-radius: 0.375rem;
     background-color: #131313;

@@ -31,22 +31,26 @@ export function CtaPillButton({
   const arrowWrapRef = useRef<HTMLSpanElement>(null)
   const hoverTimeline = useRef<gsap.core.Timeline | null>(null)
 
-  // One paused timeline: hover plays it, leaving reverses it from wherever it
-  // is, so quick in/out movements never jump.
+  // One paused, linear timeline that is scrubbed by an eased progress tween.
+  // Both directions then start fast and settle softly (a reversed timeline
+  // would flip the ease), and quick in/out movements continue from wherever
+  // the animation is instead of jumping.
   useLayoutEffect(() => {
     if (!fillOnHover) return
 
     const ctx = gsap.context(() => {
       hoverTimeline.current = gsap
-        .timeline({ paused: true, defaults: { duration: 0.5, ease: 'power3.inOut' } })
-        .fromTo(overlayRef.current, { yPercent: 101 }, { yPercent: 0 }, 0)
-        .to(labelTrackRef.current, { yPercent: -100 }, 0)
-        .to(iconRef.current, { rotation: 90 }, 0)
+        .timeline({ paused: true, defaults: { ease: 'none' } })
+        .fromTo(overlayRef.current, { yPercent: 101 }, { yPercent: 0, duration: 0.85 }, 0)
+        // The label follows the overlay a beat later so the layers read separately.
+        .to(labelTrackRef.current, { yPercent: -100, duration: 0.85 }, 0.15)
+        .to(iconRef.current, { rotation: 90, duration: 1 }, 0)
         // Counter-rotates in sync so the arrow itself never turns.
-        .to(arrowWrapRef.current, { rotation: -90 }, 0)
+        .to(arrowWrapRef.current, { rotation: -90, duration: 1 }, 0)
     })
 
     return () => {
+      if (hoverTimeline.current) gsap.killTweensOf(hoverTimeline.current)
       ctx.revert()
       hoverTimeline.current = null
     }
@@ -56,20 +60,23 @@ export function CtaPillButton({
     if (!isArrowPlaying && !prefersReducedMotion()) setIsArrowPlaying(true)
   }
 
-  const handleEnter = () => {
-    playArrow()
+  const animateHover = (progress: number, duration: number) => {
     const timeline = hoverTimeline.current
     if (!timeline) return
-    if (prefersReducedMotion()) timeline.progress(1).pause()
-    else timeline.play()
+    if (prefersReducedMotion()) {
+      gsap.killTweensOf(timeline)
+      timeline.progress(progress)
+      return
+    }
+    gsap.to(timeline, { progress, duration, ease: 'power3.out', overwrite: true })
   }
 
-  const handleLeave = () => {
-    const timeline = hoverTimeline.current
-    if (!timeline) return
-    if (prefersReducedMotion()) timeline.progress(0).pause()
-    else timeline.reverse()
+  const handleEnter = () => {
+    playArrow()
+    animateHover(1, 0.8)
   }
+
+  const handleLeave = () => animateHover(0, 0.6)
 
   const handleAnimationEnd = (event: AnimationEvent) => {
     if (event.animationName === 'hero-cta-arrow-slide') setIsArrowPlaying(false)
