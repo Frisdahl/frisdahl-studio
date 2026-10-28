@@ -1,11 +1,18 @@
-import type { CaseDetailContent, CaseDetailHero, CaseDetailHeroMeta } from '../types/caseDetail'
+import type {
+  CaseDetailContent,
+  CaseDetailFact,
+  CaseDetailHero,
+  CaseDetailHeroMeta,
+  CaseDetailOverview,
+  CaseDetailTypography,
+} from '../types/caseDetail'
 import type { Locale } from './navigation'
 import { defaultLocale } from './navigation'
 import { getCaseCategoryLabel, getCaseItemSummary } from './cases'
 import { getCaseGallery } from './caseGallery'
 import { getCaseYear, getNextCasePreview } from './caseNavigation'
 
-type CaseDetailBase = Omit<CaseDetailContent, 'gallery' | 'nextCase' | 'hero'> & {
+type CaseDetailBase = Omit<CaseDetailContent, 'gallery' | 'nextCase' | 'hero' | 'overview' | 'typography'> & {
   hero: Omit<CaseDetailHero, 'meta' | 'name'>
 }
 
@@ -495,6 +502,146 @@ const caseLiveUrls: Record<string, string | null> = {
   'urban-supply': null,
 }
 
+const overviewLabels: Record<
+  Locale,
+  { descriptionTitle: string; detailsTitle: string; industry: string; deliverables: string; timeline: string; scope: string }
+> = {
+  da: {
+    descriptionTitle: 'Projektbeskrivelse',
+    detailsTitle: 'Projektdetaljer',
+    industry: 'Branche',
+    deliverables: 'Leverancer',
+    timeline: 'Tidslinje',
+    scope: 'Omfang',
+  },
+  en: {
+    descriptionTitle: 'Project description',
+    detailsTitle: 'Project details',
+    industry: 'Industry',
+    deliverables: 'Deliverables',
+    timeline: 'Timeline',
+    scope: 'Scope',
+  },
+}
+
+/**
+ * Project details beyond the industry (which comes from the case listing).
+ * Only documented facts: a case leaves out what isn't known yet, and the
+ * overview shows just the details it has.
+ */
+const caseProjectDetails: Record<
+  Locale,
+  Partial<
+    Record<
+      string,
+      { description?: string[]; deliverables?: string; timeline?: string; scope?: string }
+    >
+  >
+> = {
+  da: {
+    nordwear: {
+      // Describes what the NordWear webshop actually does (see its repository), no invented results.
+      description: [
+        'Nordwear er en webshop til et moderne tøjbrand, designet og udviklet fra bunden – fra visuel identitet og brugerflow til den tekniske platform bag. Målet var en butik, der føles rolig og premium at handle i, men som samtidig er hurtig, overskuelig og bygget til at sælge.',
+        'Kunderne kan filtrere og sortere i hele sortimentet, se produkterne i store billedgallerier, vælge farve og størrelse og betale sikkert med Stripe. Fragtpriser hentes fra Shipmondo, adressen udfyldes med Google Maps, og med en kundekonto kan man gemme favoritter og følge sine ordrer. Gavekort og nyhedsbrev er også en del af løsningen.',
+        'Bag butikken ligger et administrationspanel, hvor produkter, billeder, ordrer og gavekort styres, og et dashboard med statistik. Platformen er bygget i React og TypeScript med en Express- og Prisma-backend, Redis-caching af produkterne og sikkerhed som JWT-login og rate limiting.',
+      ],
+      deliverables: 'UX/UI-design, frontend, backend og administrationspanel',
+      scope: 'Webshop, betaling, fragt, kundekonti, administration',
+    },
+  },
+  en: {
+    nordwear: {
+      description: [
+        'Nordwear is a webshop for a modern clothing brand, designed and built from scratch – from the visual identity and user flows to the technical platform behind it. The goal was a shop that feels calm and premium to browse, while staying fast, clear and built to sell.',
+        'Customers can filter and sort the whole range, browse products in large image galleries, choose colour and size, and pay securely with Stripe. Shipping rates come from Shipmondo, the address is filled in with Google Maps, and a customer account lets people save favourites and follow their orders. Gift cards and a newsletter are part of the solution too.',
+        'Behind the shop is an admin panel for products, images, orders and gift cards, plus a dashboard with statistics. The platform is built with React and TypeScript on an Express and Prisma backend, with Redis caching for products and security such as JWT login and rate limiting.',
+      ],
+      deliverables: 'UX/UI design, frontend, backend and admin panel',
+      scope: 'Webshop, payments, shipping, accounts, admin',
+    },
+  },
+}
+
+function getCaseOverview(locale: Locale, caseSlug: string, description: string): CaseDetailOverview {
+  const labels = overviewLabels[locale]
+  const known = caseProjectDetails[locale][caseSlug] ?? {}
+  const facts: [string, string | undefined][] = [
+    [labels.industry, getCaseItemSummary(locale, caseSlug)?.industry],
+    [labels.deliverables, known.deliverables],
+    [labels.timeline, known.timeline],
+    [labels.scope, known.scope],
+  ]
+
+  return {
+    descriptionTitle: labels.descriptionTitle,
+    description: known.description ?? [description],
+    detailsTitle: labels.detailsTitle,
+    details: facts
+      .filter((fact): fact is [string, string] => Boolean(fact[1]))
+      .map(([label, value]): CaseDetailFact => ({ label, value })),
+  }
+}
+
+const typographyLabels: Record<
+  Locale,
+  Pick<CaseDetailTypography, 'title' | 'typefaceLabel' | 'categoryLabel' | 'capHeightLabel' | 'baselineLabel'>
+> = {
+  da: {
+    title: 'Typografi',
+    typefaceLabel: 'Skrifttype',
+    categoryLabel: 'Kategori',
+    capHeightLabel: 'Cap height',
+    baselineLabel: 'Baseline',
+  },
+  en: {
+    title: 'Typography',
+    typefaceLabel: 'Typeface',
+    categoryLabel: 'Category',
+    capHeightLabel: 'Cap height',
+    baselineLabel: 'Baseline',
+  },
+}
+
+/** Typefaces the cases use (NordWear sets Montserrat across the whole shop). */
+const caseTypefaces: Partial<
+  Record<
+    string,
+    {
+      typeface: string
+      category: Record<Locale, string>
+      description: Record<Locale, string>
+      fontFamily: string
+      capHeight: number
+    }
+  >
+> = {
+  nordwear: {
+    typeface: 'Montserrat',
+    category: { da: 'Geometrisk sans-serif', en: 'Geometric sans-serif' },
+    description: {
+      da: 'Montserrat bærer hele butikken – logo, navigation, produktnavne, priser og knapper. Den geometriske form giver et rent og moderne udtryk, der lader produktbillederne stå i centrum, og med flere vægte af samme skrift skabes hierarkiet uden at blande skrifttyper.',
+      en: 'Montserrat carries the whole shop – logo, navigation, product names, prices and buttons. Its geometric shapes give a clean, modern look that keeps the product photos in focus, and using several weights of one typeface builds the hierarchy without mixing typefaces.',
+    },
+    fontFamily: "'Montserrat Variable', sans-serif",
+    capHeight: 0.7,
+  },
+}
+
+function getCaseTypography(locale: Locale, caseSlug: string): CaseDetailTypography | undefined {
+  const font = caseTypefaces[caseSlug]
+  if (!font) return undefined
+
+  return {
+    ...typographyLabels[locale],
+    description: font.description[locale],
+    typeface: font.typeface,
+    category: font.category[locale],
+    fontFamily: font.fontFamily,
+    capHeight: font.capHeight,
+  }
+}
+
 function joinRole(locale: Locale, words: string[]): string {
   if (words.length === 0) return ''
   if (words.length === 1) return words[0]
@@ -557,6 +704,8 @@ export function getCaseDetail(
       name: getCaseItemSummary(locale, caseSlug)?.client ?? detail.hero.title,
       meta: getCaseHeroMeta(locale, caseSlug),
     },
+    overview: getCaseOverview(locale, caseSlug, detail.hero.description),
+    typography: getCaseTypography(locale, caseSlug),
     gallery,
     nextCase,
   }

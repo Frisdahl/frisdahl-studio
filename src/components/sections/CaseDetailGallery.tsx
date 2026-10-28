@@ -13,7 +13,10 @@ interface GalleryFigureProps {
 
 function GalleryFigure({ image, variant }: GalleryFigureProps) {
   return (
-    <figure className={`case-detail-gallery-item case-detail-gallery-item-${variant}`}>
+    <figure
+      className={`case-detail-gallery-item case-detail-gallery-item-${variant}${image.transparent ? ' case-detail-gallery-item-transparent' : ''}`}
+      style={image.aspectRatio ? { aspectRatio: image.aspectRatio } : undefined}
+    >
       {image.imageSrc ? (
         <img
           {...responsiveImageProps(
@@ -37,19 +40,55 @@ function GalleryFigure({ image, variant }: GalleryFigureProps) {
   )
 }
 
+/**
+ * The pairs shown under the case overview, before the columns: introPair, then
+ * horizontalTopPair (which the gallery below then leaves out).
+ */
+export function CaseDetailIntroPair({ gallery }: CaseDetailGalleryProps) {
+  const pairs = [gallery.introPair, gallery.horizontalTopPair].filter((pair) => pair !== undefined)
+  if (pairs.length === 0) return null
+
+  return (
+    <section className="case-detail-intro-pair" aria-label={gallery.ariaLabel}>
+      <Container>
+        <div className="case-detail-gallery">
+          {pairs.map((pair) => (
+            <div key={pair[0].imageAlt} className="case-detail-gallery-pair">
+              <GalleryFigure image={pair[0]} variant="vertical" />
+              <GalleryFigure image={pair[1]} variant="vertical" />
+            </div>
+          ))}
+        </div>
+      </Container>
+    </section>
+  )
+}
+
 export function CaseDetailGallery({ gallery }: CaseDetailGalleryProps) {
   return (
     <section className="case-detail-gallery-section" aria-label={gallery.ariaLabel}>
       <Container>
         <div className="case-detail-gallery">
-          <GalleryFigure image={gallery.horizontalTop} variant="horizontal" />
+          {gallery.verticalPairTop && (
+            <div className="case-detail-gallery-pair">
+              <GalleryFigure image={gallery.verticalPairTop[0]} variant="vertical" />
+              <GalleryFigure image={gallery.verticalPairTop[1]} variant="vertical" />
+            </div>
+          )}
 
-          <div className="case-detail-gallery-pair">
-            <GalleryFigure image={gallery.verticalPairTop[0]} variant="vertical" />
-            <GalleryFigure image={gallery.verticalPairTop[1]} variant="vertical" />
-          </div>
+          {/* A horizontalTopPair is shown above the columns (CaseDetailIntroPair). */}
+          {!gallery.horizontalTopPair && (
+            <GalleryFigure image={gallery.horizontalTop} variant="horizontal" />
+          )}
 
-          <GalleryFigure image={gallery.horizontalBottom} variant="horizontal" />
+          {gallery.horizontalBottomPair ? (
+            <div className="case-detail-gallery-pair">
+              <GalleryFigure image={gallery.horizontalBottomPair[0]} variant="vertical" />
+              <GalleryFigure image={gallery.horizontalBottomPair[1]} variant="vertical" />
+            </div>
+          ) : (
+            <GalleryFigure image={gallery.horizontalBottom} variant="horizontal" />
+          )}
 
           <div className="case-detail-gallery-pair">
             <GalleryFigure image={gallery.verticalPairBottom[0]} variant="vertical" />

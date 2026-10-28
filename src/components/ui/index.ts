@@ -1,4 +1,6 @@
 export { CtaPillButton } from './CtaPillButton'
+export { ContactButton } from './ContactButton'
+export { ArrowChipButton } from './ArrowChipButton'
 export { ArrowIcon } from './ArrowIcon'
 export { BrandMonogram } from './BrandMonogram'
 export { BrandWordmark } from './BrandWordmark'

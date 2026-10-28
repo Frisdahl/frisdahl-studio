@@ -17,9 +17,13 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
       imageSrc: '/cases/nordwear/category--16-9.jpg',
       imageAlt: 'Nordwear kategori',
     },
-    verticalPairTop: [
-      { imageSrc: '/cases/nordwear/production--5-6.jpg', imageAlt: 'Nordwear produktion' },
-      { imageSrc: '/cases/nordwear/cart--5-6.jpg', imageAlt: 'Nordwear kurv' },
+    horizontalTopPair: [
+      { imageSrc: '/cases/nordwear/nordwear-mockup-alle-produkter--3-2.webp', imageAlt: 'Nordwear produktoversigt på en MacBook', aspectRatio: '3 / 2' },
+      { imageSrc: '/cases/nordwear/nordwear-mockup-produktside--3-2.webp', imageAlt: 'Nordwear produktside på en MacBook', aspectRatio: '3 / 2' },
+    ],
+    introPair: [
+      { imageSrc: '/cases/nordwear/nordwear-macbook-right--5-4.webp', imageAlt: 'Nordwear hjemmeside på en bærbar (højre)', aspectRatio: '5 / 4', transparent: true },
+      { imageSrc: '/cases/nordwear/nordwear-macbook-left--5-4.webp', imageAlt: 'Nordwear hjemmeside på en bærbar (venstre)', aspectRatio: '5 / 4', transparent: true },
     ],
     verticalPairBottom: [
       { imageSrc: '/cases/nordwear/mobile--5-6.jpg', imageAlt: 'Nordwear forside' },
@@ -29,6 +33,10 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
       imageSrc: '/cases/nordwear/production--16-9.jpg',
       imageAlt: 'Nordwear oversigt',
     },
+    horizontalBottomPair: [
+      { imageSrc: '/cases/nordwear/nordwear-iphones-forside--3-2.webp', imageAlt: 'Nordwear forside og produktside på to iPhones', aspectRatio: '3 / 2', transparent: true },
+      { imageSrc: '/cases/nordwear/nordwear-iphones-produkter--3-2.webp', imageAlt: 'Nordwear produktoversigt og produktinfo på to iPhones', aspectRatio: '3 / 2', transparent: true },
+    ],
   },
   'fresh-cut': {
     horizontalTop: {

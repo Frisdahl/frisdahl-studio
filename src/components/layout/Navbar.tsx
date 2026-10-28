@@ -5,7 +5,7 @@ import { useContactDrawer } from '../../context/ContactDrawerContext'
 import { getFooterContent } from '../../data/footer'
 import { getNavigation } from '../../data/navigation'
 import { toAppHref } from '../../lib/routes'
-import { Container, CtaPillButton, LanguageSwitcher } from '../ui'
+import { ContactButton, Container, LanguageSwitcher } from '../ui'
 import { HeaderBrand } from './HeaderBrand'
 
 interface MenuToggleIconProps {
@@ -203,9 +203,7 @@ export function Navbar() {
             <HeaderBrand label={logoLabel} />
 
             <div className="site-header-actions">
-              <CtaPillButton className="header-contact" fillOnHover onClick={() => openDrawer('contact')}>
-                {contactLabel}
-              </CtaPillButton>
+              <ContactButton onClick={() => openDrawer('contact')}>{contactLabel}</ContactButton>
 
               <button
                 type="button"

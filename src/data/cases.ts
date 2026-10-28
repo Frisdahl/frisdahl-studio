@@ -225,11 +225,12 @@ export function getCaseCategoryLabel(
 
 export interface CaseItemSummary {
   client: string
+  industry: string
   category: CaseCategory
   keywords: string[]
 }
 
-/** Client, category and keywords for one case, used to build the case-detail hero. */
+/** Client, industry, category and keywords for one case, used to build the case-detail hero and overview. */
 export function getCaseItemSummary(
   locale: Locale,
   caseId: string,
@@ -237,5 +238,5 @@ export function getCaseItemSummary(
   const item = casesPageContent[locale].items.find((entry) => entry.id === caseId)
   if (!item) return null
 
-  return { client: item.client, category: item.category, keywords: [...item.keywords] }
+  return { client: item.client, industry: item.industry, category: item.category, keywords: [...item.keywords] }
 }

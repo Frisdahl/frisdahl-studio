@@ -5,6 +5,8 @@
    the whole site; the former heading font and the (never shipped) body font
    were both removed. */
 @import "@fontsource-variable/manrope/wght.css";
+/* Montserrat for the Nordwear type specimen; only downloaded where it is used. */
+@import "@fontsource-variable/montserrat/wght.css";
 
 @theme {
   /* Typography. One family for the whole site: Manrope (variable, 200–800). */
@@ -68,18 +70,18 @@
   --text-caption: 0.75rem;
   --text-caption--line-height: 1.5;
 
-  /* Colors. The page itself is white; the soft/muted tokens below stay light
-     grey for panels that need to stand off it. */
-  --color-page-cream: #ffffff;
-  --color-home-page: #ffffff;
-  --color-cases-page: #ffffff;
-  --color-background: #ffffff;
-  --color-background-alt: #ffffff;
+  /* Colors. The page is #ebe8e8 and the ink #131313; surfaces (cards, gallery
+     frames) stay white so they stand off the page. */
+  --color-page-cream: #ebe8e8;
+  --color-home-page: #ebe8e8;
+  --color-cases-page: #ebe8e8;
+  --color-background: #ebe8e8;
+  --color-background-alt: #ebe8e8;
   --color-background-soft: #f0efef;
   --color-surface: #ffffff;
   --color-surface-muted: #f8f8f8;
   --color-surface-gray: #e5e5e5;
-  --color-primary: #030008;
+  --color-primary: #131313;
   --color-secondary: #696869;
   --color-text-body: #696869;
   --color-muted: #555555;
@@ -89,12 +91,12 @@
   --color-accent-yellow: #fec627;
   --color-peach: color-mix(in srgb, var(--color-accent) 32%, white);
   --color-peach-hover: color-mix(in srgb, var(--color-accent) 44%, white);
-  --color-contact-bg: #ffffff;
-  --color-concept-step-bg: #030008;
+  --color-contact-bg: #ebe8e8;
+  --color-concept-step-bg: #131313;
   --color-border: #e5e5e5;
   --color-border-light: #f8f8f8;
-  --color-overlay: #03000814;
-  --color-overlay-strong: #030008e6;
+  --color-overlay: #13131314;
+  --color-overlay-strong: #131313e6;
 
   --color-accent-soft: color-mix(in srgb, var(--color-accent) 12%, transparent);
   --color-primary-soft: color-mix(
@@ -180,6 +182,8 @@
     scroll-padding-top: var(--site-header-height);
     overflow-x: clip;
     scrollbar-gutter: stable;
+    /* The canvas behind the scrollbar gutter and overscroll matches the pages. */
+    background-color: var(--color-background);
   }
 
   html.lenis,
@@ -366,8 +370,8 @@
 
   .hero-cta-btn {
     @apply inline-flex cursor-pointer items-center gap-4 rounded-pill py-1.5 pl-6 pr-1.5 text-button font-semibold tracking-wide text-[#fffefe] no-underline transition-[background-color,color,border-color] duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:gap-5 sm:pl-7 sm:pr-1.5;
-    background-color: #030008;
-    border: 1.5px solid #030008;
+    background-color: #131313;
+    border: 1.5px solid #131313;
   }
 
   .hero-section .hero-cta-btn {
@@ -378,7 +382,7 @@
   .hero-cta-btn:hover,
   .hero-cta-btn:focus-visible {
     background-color: transparent;
-    color: #030008;
+    color: #131313;
   }
 
   .cases-section-cta {
@@ -581,13 +585,13 @@
   }
 
   .contact-section-eyebrow {
-    color: #030008;
+    color: #131313;
   }
 
   .contact-section-title {
     @apply text-h2;
     font-weight: var(--heading-weight);
-    color: #030008;
+    color: #131313;
   }
 
   .contact-section-description {
@@ -602,12 +606,12 @@
 
   .contact-section .btn-secondary {
     border-width: 1px;
-    color: #030008;
-    border-color: #030008;
+    color: #131313;
+    border-color: #131313;
   }
 
   .contact-section .btn-secondary:hover {
-    background-color: #030008;
+    background-color: #131313;
     color: #fffefe;
   }
 
@@ -894,7 +898,7 @@
 
   .process-slider-section {
     --process-slider-copy-width: 50%;
-    --process-slider-bg: #030008;
+    --process-slider-bg: #131313;
     --process-slider-text: #fffefe;
     --process-slider-text-muted: #bababa;
     position: relative;
@@ -1835,7 +1839,7 @@
 
   .horizontal-drag-slider-indicator-active {
     height: 1.625rem;
-    background-color: #030008;
+    background-color: #131313;
   }
 
   .horizontal-drag-slider-progress {
@@ -1846,7 +1850,7 @@
 
   .horizontal-drag-slider-progress-fill {
     @apply absolute inset-y-0 left-0 w-full;
-    background-color: #030008;
+    background-color: #131313;
     transform: scaleX(calc(var(--progress, 0) / 100));
     transform-origin: left center;
     transition: transform var(--slider-transition-duration) var(--slider-transition-easing);
@@ -1984,7 +1988,7 @@
 
   .pricing-card {
     @apply relative flex h-full min-h-[36rem] flex-col rounded-control-sm bg-[#f7f7f7] p-6 sm:p-7 lg:min-h-[40rem] lg:p-8;
-    color: #030008;
+    color: #131313;
     font-weight: 400;
     transition:
       background-color 0.35s var(--ease-smooth),
@@ -2057,8 +2061,8 @@
     @apply inline-flex cursor-pointer items-center justify-center rounded-pill focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
     /* The 2px border is always there (in the fill colour at rest), so the
        outlined hover state does not shift the layout. */
-    border: 2px solid #030008;
-    background-color: #030008;
+    border: 2px solid #131313;
+    background-color: #131313;
     color: #fffefe;
     font-family: var(--font-nav);
     transition:
@@ -2083,14 +2087,14 @@
   .pricing-card-featured .pricing-card-action-icon {
     border-color: #fffefe;
     background-color: #fffefe;
-    color: #030008;
+    color: #131313;
   }
 
   /* Hovering either button: the label button becomes an outline with text in
      the card's own text colour, and the plus button turns orange and rotates. */
   :is(.pricing-card-actions:hover, .pricing-card-actions:has(:focus-visible)) .pricing-card-action-primary {
     background-color: transparent;
-    color: #030008;
+    color: #131313;
   }
 
   .pricing-card-featured :is(.pricing-card-actions:hover, .pricing-card-actions:has(:focus-visible)) .pricing-card-action-primary {
@@ -2164,7 +2168,7 @@
   .language-switcher-trigger:focus-visible,
   .language-switcher-trigger[aria-expanded='true'] {
     background-color: var(--color-surface);
-    color: #030008;
+    color: #131313;
   }
 
   .language-switcher-flag {
@@ -2173,7 +2177,7 @@
 
   .language-switcher-code {
     @apply leading-none;
-    color: #030008;
+    color: #131313;
   }
 
   .language-switcher-chevron {
@@ -2192,24 +2196,24 @@
 
   .language-switcher-menu {
     @apply absolute right-0 top-[calc(100%+0.5rem)] z-50 min-w-[9.5rem] overflow-hidden rounded-control border border-border-light bg-surface p-1 shadow-medium;
-    --color-primary: #030008;
+    --color-primary: #131313;
     --color-secondary: #555555;
   }
 
   .language-switcher-option {
     @apply flex w-full items-center gap-2.5 rounded-control-sm px-3 py-2.5 text-left text-button font-medium transition-[background-color,color];
-    color: #030008;
+    color: #131313;
   }
 
   .language-switcher-option:hover,
   .language-switcher-option:focus-visible {
     background-color: var(--color-background-soft);
-    color: #030008;
+    color: #131313;
   }
 
   .language-switcher-option-active {
     background-color: var(--color-background-soft);
-    color: #030008;
+    color: #131313;
   }
 
   .btn {
@@ -2346,12 +2350,72 @@
     @apply inline-flex items-center gap-2 text-primary transition-colors hover:text-accent focus-visible:text-accent;
   }
 
+  /* Overview under the hero image: heading left, content right, one row
+     for the description and one for the project details. */
+  .case-detail-overview {
+    @apply relative z-[1] mt-4xl lg:mt-5xl;
+    /* Project details: rules and labels in the ink colour at low opacity. */
+    --overview-rule: rgb(19 19 19 / 0.15);
+    --overview-label: rgb(19 19 19 / 0.5);
+  }
+
+  /* The content column sits to the right, capped at 42rem. */
+  .case-detail-overview-row {
+    @apply grid gap-md lg:grid-cols-[minmax(0,1fr)_minmax(0,42rem)] lg:gap-16;
+  }
+
+  .case-detail-overview-row + .case-detail-overview-row {
+    @apply mt-3xl;
+  }
+
+  .case-detail-overview-title {
+    @apply text-h3 text-primary;
+    font-weight: var(--heading-weight);
+  }
+
+  .case-detail-overview-description {
+    @apply flex max-w-[40rem] flex-col gap-md text-body-lg text-secondary;
+  }
+
+  /* One row per detail, label left and value right, with rules above, between
+     and below the rows. */
+  .case-detail-overview-details {
+    @apply border-y;
+    border-color: var(--overview-rule);
+  }
+
+  .case-detail-overview-detail {
+    @apply grid grid-cols-[minmax(0,9rem)_minmax(0,1fr)] items-baseline gap-6 py-md sm:grid-cols-[minmax(0,11rem)_minmax(0,1fr)];
+  }
+
+  .case-detail-overview-detail + .case-detail-overview-detail {
+    @apply border-t;
+    border-color: var(--overview-rule);
+  }
+
+  .case-detail-overview-label {
+    @apply text-caption font-bold uppercase tracking-[0.12em];
+    color: var(--overview-label);
+  }
+
+  .case-detail-overview-value {
+    @apply text-body font-bold text-primary;
+  }
+
   .case-detail-columns-section {
     @apply relative z-[1];
   }
 
   .case-detail-columns {
-    @apply grid gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-12;
+    @apply grid gap-10 sm:grid-cols-2 lg:gap-16;
+  }
+
+  /* Desktop: three text-width columns, centred as a group. */
+  @media (min-width: 1024px) {
+    .case-detail-columns {
+      grid-template-columns: repeat(3, minmax(0, 24rem));
+      justify-content: center;
+    }
   }
 
   .case-detail-column {
@@ -2380,10 +2444,90 @@
 
   .case-detail-column-body {
     @apply mt-md flex flex-col gap-lg;
+    /* Shorter lines than a full column below desktop (desktop columns are this wide). */
+    max-width: 24rem;
   }
 
   .case-detail-column-text {
     @apply text-body text-secondary;
+  }
+
+  /* Type specimen: info and the big glyph left, an a–z grid right. Shares the
+     overview's column split and rule colours. */
+  .case-detail-typography {
+    @apply relative z-[1] mt-4xl lg:mt-5xl;
+    --overview-rule: rgb(19 19 19 / 0.15);
+    --overview-label: rgb(19 19 19 / 0.5);
+  }
+
+  /* Side by side from 1280px; below that the letter grid would squeeze the
+     specimen, so the two stack. */
+  .case-detail-typography-grid {
+    @apply grid gap-2xl xl:grid-cols-[minmax(0,1fr)_minmax(0,46rem)] xl:gap-32;
+  }
+
+  .case-detail-typography-description {
+    @apply mt-md max-w-[34rem] text-body text-secondary;
+  }
+
+  .case-detail-typography-facts {
+    @apply mt-xl grid grid-cols-2 gap-6;
+  }
+
+  .case-detail-typography-fact-value {
+    @apply mt-1 text-body font-bold text-primary;
+  }
+
+  .case-detail-typography-specimen {
+    @apply mt-2xl;
+  }
+
+  /* A rule with its label on the left; the label covers the start of the line. */
+  .case-detail-typography-rule {
+    @apply relative block h-px;
+    background-color: var(--overview-rule);
+  }
+
+  .case-detail-typography-rule .case-detail-overview-label {
+    @apply absolute left-0 top-1/2 -translate-y-1/2 pr-3 leading-none;
+    background-color: var(--color-background);
+  }
+
+  /* The SVG's top and bottom are the cap height and the baseline, so it sits
+     flush between the two rules; descenders and ascenders may cross them. It
+     starts after a gutter for the rule labels, so wide pairs (Mm, Ww) never
+     run under them. */
+  .case-detail-typography-glyph {
+    @apply block overflow-visible text-primary;
+    margin-left: 7.5rem;
+    width: calc(100% - 7.5rem);
+    max-width: 30rem;
+    fill: currentColor;
+  }
+
+  /* Squares share their borders: no gap, and each cell overlaps the next by
+     the border width so neighbouring lines draw once. */
+  .case-detail-typography-letters {
+    @apply grid grid-cols-6 self-start sm:grid-cols-7;
+    padding: 0 1px 1px 0;
+  }
+
+  .case-detail-typography-letter {
+    @apply relative flex aspect-square cursor-pointer items-center justify-center text-h4 text-primary transition-colors duration-200 focus-visible:z-[2] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+    margin: 0 -1px -1px 0;
+    border: 1px solid rgb(19 19 19 / 0.35);
+    background-color: transparent;
+  }
+
+  .case-detail-typography-letter[aria-pressed='true'] {
+    z-index: 1;
+    border-color: #eb4b3d;
+    background-color: #eb4b3d;
+    color: #fffefe;
+  }
+
+  .case-detail-intro-pair {
+    @apply relative z-[1] mt-3xl lg:mt-4xl;
   }
 
   .case-detail-gallery-section {
@@ -2400,6 +2544,11 @@
 
   .case-detail-gallery-item {
     @apply m-0 overflow-hidden rounded-panel bg-surface shadow-soft;
+  }
+
+  .case-detail-gallery-item-transparent {
+    background-color: transparent;
+    box-shadow: none;
   }
 
   .case-detail-gallery-item-horizontal {
@@ -2421,7 +2570,7 @@
   }
 
   .case-detail-next-media {
-    @apply relative m-0 w-full overflow-hidden bg-[#030008];
+    @apply relative m-0 w-full overflow-hidden bg-[#131313];
     aspect-ratio: 16 / 7;
     min-height: clamp(14rem, 36vw, 24rem);
     border-top-left-radius: var(--radius-panel-xl);
@@ -2495,6 +2644,88 @@
   .horizontal-drag-slider-slide img,
   .case-detail-gallery-item img {
     @apply h-full w-full object-cover object-center;
+  }
+
+  /* Case detail CTA bar: previous / "Se hjemmeside" / next, floating at the
+     bottom centre of the screen. The middle one is the header contact button
+     (ContactButton); the arrow chips match its height. */
+  .case-detail-cta-bar {
+    position: fixed;
+    left: 50%;
+    bottom: clamp(1rem, 3svh, 1.5rem);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transform: translateX(-50%);
+  }
+
+  /* Arrow chip (ArrowChipButton): the header contact chip at button height,
+     dark like the contact button and filled with its hover red on hover. GSAP
+     turns the chip and slides the arrows. */
+  .arrow-chip-btn {
+    @apply inline-flex shrink-0 cursor-pointer rounded-[0.375rem] p-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+    border: 0;
+    background: transparent;
+  }
+
+  .arrow-chip-btn-chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.375rem;
+    height: 2.375rem;
+    border-radius: 0.375rem;
+    background-color: #131313;
+    transition: background-color 500ms var(--ease-smooth);
+    /* See .cta-fill-hover .hero-cta-btn-icon: clips the sliding arrows to the
+       rounded chip while it rotates. */
+    clip-path: inset(0 round 0.375rem);
+  }
+
+  .arrow-chip-btn:is(:hover, :focus-visible) .arrow-chip-btn-chip {
+    background-color: #eb4b3d;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .arrow-chip-btn-chip {
+      transition: none;
+    }
+  }
+
+  .arrow-chip-btn-arrow-wrap {
+    display: flex;
+  }
+
+  .arrow-chip-btn-arrows {
+    position: relative;
+    display: flex;
+  }
+
+  .arrow-chip-btn-arrow {
+    width: 0.875rem;
+    height: 0.875rem;
+    color: #fffefe;
+  }
+
+  /* The arrow waiting outside, two arrow widths behind the visible one. Placed
+     with left, since ArrowIcon's own transform carries its rotation. */
+  .arrow-chip-btn-arrow-next {
+    position: absolute;
+    top: 0;
+  }
+
+  .arrow-chip-btn-right .arrow-chip-btn-arrow-next {
+    left: -200%;
+  }
+
+  .arrow-chip-btn-left .arrow-chip-btn-arrow-next {
+    left: 200%;
+  }
+
+  /* Keep the fixed bar from covering page content. */
+  .case-detail-page {
+    padding-bottom: 5rem;
   }
 
   .cases-hero-slider {
@@ -2621,7 +2852,7 @@
     font-family: var(--font-nav);
     @apply inline-flex items-center rounded-pill border border-[#ccc] py-2.5 pl-5 pr-5 text-button font-medium normal-case;
     gap: 0;
-    color: #030008;
+    color: #131313;
     transition:
       background-color 0.25s var(--ease-smooth),
       border-color 0.25s var(--ease-smooth),
@@ -2633,15 +2864,15 @@
   .cases-filter-btn:hover,
   .cases-filter-btn:focus-visible {
     background-color: transparent;
-    border-color: #030008;
-    color: #030008;
+    border-color: #131313;
+    color: #131313;
   }
 
   .cases-filter-btn-active,
   .cases-filter-btn-active:hover,
   .cases-filter-btn-active:focus-visible {
     @apply gap-2 border-transparent pr-4 text-[#fffefe];
-    background-color: #030008;
+    background-color: #131313;
   }
 
   .cases-filter-btn-label {
@@ -2809,7 +3040,7 @@
     gap: var(--spacing-sm);
     padding: clamp(1.25rem, 2vw, 1.75rem);
     background-color: color-mix(in srgb, var(--color-primary) 90%, transparent);
-    color: var(--color-background);
+    color: #fffefe;
     opacity: 0;
     transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
@@ -2826,7 +3057,7 @@
 
   .meet-us-member-overlay-text {
     @apply text-body-sm;
-    color: color-mix(in srgb, var(--color-background) 92%, transparent);
+    color: color-mix(in srgb, #fffefe 92%, transparent);
   }
 
   /* No reliable hover on touch devices, and no room for a hover panel on a
@@ -2999,18 +3230,18 @@
      and 100% around the screen's centre) and the title plus keywords sit
      outside it, at its top right. Phones stack the text under the image. */
   /* --cases-light runs 0 → 1 (CasesSection scrubs it as the section rolls
-     in): black with light text at 0, white with dark text at 1. Every colour
+     in): dark (#131313) with light text at 0, the page colour with dark text at 1. Every colour
      below mixes from it, so the whole section turns over as one. It rests at
      1 without the animation (reduced motion). */
   .home-cases {
     --cases-light: 1;
     --cases-mix: calc(var(--cases-light) * 100%);
-    --cases-bg: color-mix(in srgb, #ffffff var(--cases-mix), #000000);
-    --cases-ink: color-mix(in srgb, #030008 var(--cases-mix), #fffefe);
-    --cases-muted: color-mix(in srgb, rgb(3 0 8 / 0.55) var(--cases-mix), #a3a3a3);
-    --cases-label: color-mix(in srgb, rgb(3 0 8 / 0.45) var(--cases-mix), #7a7a7a);
-    --cases-value: color-mix(in srgb, #030008 var(--cases-mix), #f3f3f3);
-    --cases-rule: color-mix(in srgb, rgb(3 0 8 / 0.12) var(--cases-mix), rgb(243 243 243 / 0.18));
+    --cases-bg: color-mix(in srgb, var(--color-home-page) var(--cases-mix), #131313);
+    --cases-ink: color-mix(in srgb, #131313 var(--cases-mix), #fffefe);
+    --cases-muted: color-mix(in srgb, rgb(19 19 19 / 0.55) var(--cases-mix), #a3a3a3);
+    --cases-label: color-mix(in srgb, rgb(19 19 19 / 0.45) var(--cases-mix), #7a7a7a);
+    --cases-value: color-mix(in srgb, #131313 var(--cases-mix), #f3f3f3);
+    --cases-rule: color-mix(in srgb, rgb(19 19 19 / 0.12) var(--cases-mix), rgb(243 243 243 / 0.18));
     --cases-placeholder: color-mix(in srgb, #ececec var(--cases-mix), #1a1a1a);
     /* The CTA: the header's dark button on white, its light version on black. */
     --cases-button: color-mix(in srgb, #131313 var(--cases-mix), #fffefe);
@@ -3171,7 +3402,7 @@
     --added-value-number-width: 3.75rem;
     @apply py-section-sm lg:py-section;
     background-color: var(--color-home-page);
-    color: #030008;
+    color: #131313;
   }
 
   .added-value-inner {
@@ -3201,7 +3432,7 @@
     align-items: center;
     gap: 0.75rem;
     margin: 0;
-    color: #030008;
+    color: #131313;
     font-family: var(--font-sans);
     font-size: 0.8125rem;
     font-weight: 600;
@@ -3262,7 +3493,7 @@
   .added-value-number {
     flex-shrink: 0;
     width: var(--added-value-number-width);
-    color: rgb(3 0 8 / 0.4);
+    color: rgb(19 19 19 / 0.4);
     font-family: var(--font-sans);
     font-size: 0.875rem;
     font-weight: 500;
@@ -3281,7 +3512,7 @@
 
   .added-value-trigger:hover .added-value-title,
   .added-value-item.is-active .added-value-title {
-    color: #030008;
+    color: #131313;
   }
 
   .added-value-panel {
@@ -3303,7 +3534,7 @@
     max-width: 30rem;
     margin: 0;
     padding: 0.5rem 0 clamp(1.25rem, 2vw, 1.75rem) var(--added-value-number-width);
-    color: rgb(3 0 8 / 0.55);
+    color: rgb(19 19 19 / 0.55);
     font-size: 1rem;
     line-height: 1.6;
     opacity: 0;
@@ -3533,12 +3764,12 @@
 
   .contact-drawer-panel .btn-secondary {
     @apply border-2 bg-transparent;
-    color: #030008;
-    border-color: #030008;
+    color: #131313;
+    border-color: #131313;
   }
 
   .contact-drawer-panel .btn-secondary:hover {
-    background-color: #030008;
+    background-color: #131313;
     color: #fffefe;
   }
 
@@ -3552,7 +3783,7 @@
   }
 
   .site-footer {
-    @apply bg-[#030008] pt-section-sm pb-8 text-[#fffefe] lg:pt-section lg:pb-10;
+    @apply bg-[#131313] pt-section-sm pb-8 text-[#fffefe] lg:pt-section lg:pb-10;
   }
 
   .site-footer-top {

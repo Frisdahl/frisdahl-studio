@@ -5,9 +5,12 @@ import { getCaseDetail } from '../data/caseDetails'
 import { getNextCasePreview } from '../data/caseNavigation'
 import { CASES_PATH } from '../lib/routes'
 import {
-  CaseDetailColumns,
+  CaseDetailCtaBar,
   CaseDetailGallery,
   CaseDetailHero,
+  CaseDetailIntroPair,
+  CaseDetailOverview,
+  CaseDetailTypography,
   CaseDetailNextSection,
   ContactSection,
 } from '../components/sections'
@@ -26,10 +29,13 @@ export function CaseDetailPage() {
     <main className="page-surface case-detail-page bg-background">
       <PageMeta title={detail.hero.title} description={detail.hero.description} />
       <CaseDetailHero hero={detail.hero} />
-      <CaseDetailColumns columns={detail.columns} />
+      <CaseDetailOverview overview={detail.overview} />
+      <CaseDetailIntroPair gallery={detail.gallery} />
+      {detail.typography ? <CaseDetailTypography typography={detail.typography} /> : null}
       <CaseDetailGallery gallery={detail.gallery} />
       <ContactSection />
       {nextCase ? <CaseDetailNextSection nextCase={nextCase} /> : null}
+      <CaseDetailCtaBar />
     </main>
   )
 }
