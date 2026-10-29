@@ -24,17 +24,20 @@ const LEAVE_DURATION = 0.5
 const FORWARD_EASE = 'power1.out'
 // The page starts sliding off this long before it has finished shrinking.
 const OVERLAP = 0.2
-// The red card follows the page down this close behind, so only its top shows.
-const FOLLOW = 0.05
+// The red card starts down this long after the page, so it trails a little
+// behind it instead of moving with it.
+const FOLLOW = 0.12
 // The longest the new page waits for its first screen's images before it shows.
 const IMAGE_WAIT = 1000
 // The front card's size: this share of the screen. The whole stack (the front
 // card plus the cards rising behind it) is centred on the screen.
 const CARD_SCALE = 0.86
 // Each card further back in the stack is this much taller (it rises above the
-// card in front) and this much narrower on each side, in screen pixels.
+// card in front), in screen pixels.
 const STACK_RISE = 24
-const STACK_NARROW = 28
+// Every card is this much narrower on each side than CARD_SCALE gives, so all
+// three share one width, in screen pixels.
+const STACK_NARROW = 56
 // Each card further back is this much darker, as if in the shadow of the stack.
 const STACK_DIM = 0.2
 // Card corners, in screen pixels (the red card's border-radius matches).
@@ -48,7 +51,7 @@ const STACK_SIZE = 3
 /** A stacked card's edges on screen: 0 is the front card, 1 the one behind it, and so on. */
 function cardEdges(depth: number, { width, height }: Viewport) {
   const margin = (1 - CARD_SCALE) / 2
-  const side = width * margin + depth * STACK_NARROW
+  const side = width * margin + STACK_NARROW
   // Shift the stack down by half the height the cards behind add, so it is centred.
   const shift = ((STACK_SIZE - 1) * STACK_RISE) / 2
   return {
@@ -60,11 +63,20 @@ function cardEdges(depth: number, { width, height }: Viewport) {
   }
 }
 
-/** The page's scale and offset to sit at a depth in the stack (the page scales about the screen centre). */
+/**
+ * The page's scale and offset to sit at a depth in the stack (the page scales
+ * about the screen centre). It scales to the card's width, so the card is
+ * taller than one screen of the page: `extra` is how much more of the page,
+ * below the screen, it shows to fill the card's height, in page pixels.
+ */
 function pageAt(depth: number, viewport: Viewport) {
-  const { top, left } = cardEdges(depth, viewport)
+  const { top, bottom, left } = cardEdges(depth, viewport)
   const scale = (viewport.width - 2 * left) / viewport.width
-  return { scale, y: top - (viewport.height * (1 - scale)) / 2 }
+  return {
+    scale,
+    y: top - (viewport.height * (1 - scale)) / 2,
+    extra: (viewport.height - top - bottom) / scale - viewport.height,
+  }
 }
 
 /** Resolves with the new route's <main> once it has replaced `previous` (lazy pages load first). */
@@ -168,7 +180,7 @@ export function PageTransition() {
       const viewport = { width: window.innerWidth, height: window.innerHeight }
       // The page's clip, with corners that look `radius` on screen at this scale.
       const clip = (top: number, bottom: number, scale: number, radius = RADIUS) =>
-        `inset(${top}px 0px ${bottom}px 0px round ${radius / scale}px)`
+        `inset(${top}px 0px ${Math.max(0, bottom)}px 0px round ${radius / scale}px)`
 
       // 1. The current page becomes the front card: clipped to the screen it
       //    shows, it shrinks to card size and uncovers the stack behind it.
@@ -191,7 +203,17 @@ export function PageTransition() {
       const stack = gsap
         .timeline()
         .timeScale(1 / SLOW_MOTION)
-        .to(shell, { scale: front.scale, y: front.y, clipPath: clip(top, bottom, CARD_SCALE), duration: SCALE_DURATION, ease: EASE }, 0)
+        .to(
+          shell,
+          {
+            scale: front.scale,
+            y: front.y,
+            clipPath: clip(top, bottom - front.extra, front.scale),
+            duration: SCALE_DURATION,
+            ease: EASE,
+          },
+          0,
+        )
         .to(shell, { y: viewport.height, duration: LEAVE_DURATION, ease: LEAVE_EASE }, leave)
         .to(
           red,
@@ -218,13 +240,13 @@ export function PageTransition() {
       //    corners keep the cards' radius on screen all the way, and only
       //    square off once it fills the screen.
       const pageBottom = shell.offsetHeight - viewport.height
-      const corner = { radius: RADIUS }
+      const corner = { radius: RADIUS, extra: front.extra }
       const clipPage = () => {
         gsap.set(shell, {
-          clipPath: clip(0, pageBottom, Number(gsap.getProperty(shell, 'scaleX')), corner.radius),
+          clipPath: clip(0, pageBottom - corner.extra, Number(gsap.getProperty(shell, 'scaleX')), corner.radius),
         })
       }
-      gsap.set(shell, { ...front, transformOrigin: `50% ${viewport.height / 2}px` })
+      gsap.set(shell, { scale: front.scale, y: front.y, transformOrigin: `50% ${viewport.height / 2}px` })
       clipPage()
       shell.classList.replace('is-card', 'is-behind')
       await Promise.all([
@@ -233,6 +255,7 @@ export function PageTransition() {
           .timeScale(1 / SLOW_MOTION)
           .to(next, { top: 0, bottom: 0, left: 0, right: 0, duration: GROW_DURATION, ease: EASE }, 0)
           .to(next, { autoAlpha: 0, duration: 0.2, ease: 'none' }, 0)
+          .to(corner, { extra: 0, duration: GROW_DURATION, ease: EASE }, 0)
           .to(shell, { scale: 1, y: 0, duration: GROW_DURATION, ease: EASE, onUpdate: clipPage }, 0)
           .to(corner, { radius: 0, duration: CORNER_DURATION, ease: 'power2.out', onUpdate: clipPage }, GROW_DURATION)
           .then(),
