@@ -39,8 +39,8 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
       imageAlt: 'Nordwear oversigt',
     },
     horizontalBottomPair: [
-      { imageSrc: '/cases/nordwear/nordwear-iphones-forside--3-2.webp', imageAlt: 'Nordwear forside og produktside på to iPhones', aspectRatio: '3 / 2', transparent: true },
-      { imageSrc: '/cases/nordwear/nordwear-iphones-produkter--3-2.webp', imageAlt: 'Nordwear produktoversigt og produktinfo på to iPhones', aspectRatio: '3 / 2', transparent: true },
+      { imageSrc: '/cases/nordwear/nordwear-iphones-forside--4-3.webp', imageAlt: 'Nordwear forside og produktside på to iPhones', aspectRatio: '4 / 3', transparent: true },
+      { imageSrc: '/cases/nordwear/nordwear-iphones-produkter--4-3.webp', imageAlt: 'Nordwear produktoversigt og produktinfo på to iPhones', aspectRatio: '4 / 3', transparent: true },
     ],
   },
   'fresh-cut': {
