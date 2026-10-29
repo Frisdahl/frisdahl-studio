@@ -63,6 +63,10 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
   },
   'peter-salling': {
     introPair: [
+      { imageSrc: '/cases/peter-salling/macbook-air-sikkerheden-er-paa-spil--4-3.webp', imageAlt: 'Peter Sallings forside med Sikkerheden er på spil på en MacBook Air', aspectRatio: '4 / 3' },
+      { imageSrc: '/cases/peter-salling/macbook-pro-live-life-in-colour--4-3.webp', imageAlt: 'Live Life in Colour på Peter Sallings Commercial-side på en MacBook Pro', aspectRatio: '4 / 3' },
+    ],
+    verticalPairTop: [
       { imageSrc: '/cases/peter-salling/mobiler-presse-priser--4-3.webp', imageAlt: 'Premierebilleder, anmeldelse og festivalpriser på to iPhones', aspectRatio: '4 / 3', transparent: true },
       { imageSrc: '/cases/peter-salling/mobiler-forside-strandet--4-3.webp', imageAlt: 'Forsiden og Strandet på to iPhones', aspectRatio: '4 / 3', transparent: true },
     ],
