@@ -10,15 +10,20 @@ interface CaseDetailNextSectionProps {
   nextCase: CaseDetailNext
 }
 
+// How far the image zooms in while the card is pinned (1 = no zoom).
+const IMAGE_ZOOM = 0.12
+
 /**
  * The next case at the end of the page. The card sticks while the section's
- * extra scroll room passes; the bar under the title fills with that scroll,
- * and when it is full the page moves on to the next case.
+ * extra scroll room passes; the bar under the title fills with that scroll and
+ * the image zooms in with it, and when it is full the page moves on to the
+ * next case.
  */
 export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) {
   const { href, name, label, image, ariaLabel } = nextCase
   const trackRef = useRef<HTMLElement>(null)
   const barRef = useRef<HTMLSpanElement>(null)
+  const imageRef = useRef<HTMLImageElement & HTMLDivElement>(null)
   const hasNavigatedRef = useRef(false)
   const navigate = useNavigate()
   const shouldReduceMotion = useReducedMotion()
@@ -30,6 +35,9 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
   const onProgress = useCallback(
     (progress: number) => {
       if (barRef.current) barRef.current.style.transform = `scaleX(${progress})`
+      if (imageRef.current && !shouldReduceMotion) {
+        imageRef.current.style.transform = `scale(${1 + IMAGE_ZOOM * progress})`
+      }
 
       // Reduced motion: the bar still shows progress, but the page never
       // changes without a click.
@@ -49,6 +57,7 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
           <Link to={href} className="case-detail-next" aria-label={ariaLabel}>
             {image.imageSrc ? (
               <img
+                ref={imageRef}
                 {...responsiveImageProps(image.imageSrc, IMAGE_SIZES.container)}
                 alt=""
                 className="case-detail-next-image"
@@ -57,6 +66,7 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
               />
             ) : (
               <div
+                ref={imageRef}
                 className={`case-detail-next-image ${image.placeholderClassName ?? 'bg-peach'}`}
                 aria-hidden="true"
               />

@@ -2914,16 +2914,20 @@
     padding-bottom: var(--page-gutter);
   }
 
+  /* The main images' 16:10, as tall as the screen allows: from just under the
+     fixed header down to the bottom gutter. */
   .case-detail-next {
     @apply relative block w-full overflow-hidden rounded-panel no-underline;
-    aspect-ratio: 16 / 9;
-    /* Leaves room for the fixed header above. */
-    max-height: calc(100svh - var(--site-header-height) - 2 * var(--page-gutter));
+    aspect-ratio: 16 / 10;
+    max-height: calc(100svh - var(--site-header-height) - var(--page-gutter));
     background-color: #131313;
   }
 
+  /* Zooms in from the centre with the scroll (CaseDetailNextSection). */
   .case-detail-next-image {
     @apply absolute inset-0 h-full w-full object-cover;
+    transform-origin: 50% 50%;
+    will-change: transform;
   }
 
   .case-detail-next-overlay {
