@@ -2890,8 +2890,10 @@
     @apply grid grid-cols-1 gap-6 sm:grid-cols-2 lg:gap-8;
   }
 
+  /* Same corners as the case hero image (.case-detail-hero-image). */
   .case-detail-gallery-item {
-    @apply m-0 overflow-hidden rounded-panel bg-surface shadow-soft;
+    @apply m-0 overflow-hidden bg-surface shadow-soft;
+    border-radius: var(--radius-control-sm);
   }
 
   .case-detail-gallery-item-transparent {
@@ -2930,7 +2932,8 @@
      the same gutter above and below: the header slides away and the CTA bar
      fades out as the card arrives (CaseDetailNextSection). */
   .case-detail-next {
-    @apply relative block w-full overflow-hidden rounded-panel no-underline;
+    @apply relative block w-full overflow-hidden no-underline;
+    border-radius: var(--radius-control-sm);
     aspect-ratio: 16 / 10;
     max-height: calc(100svh - 2 * var(--page-gutter));
     background-color: #131313;
