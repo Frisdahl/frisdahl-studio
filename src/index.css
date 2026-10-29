@@ -2193,51 +2193,32 @@
     background-color: var(--color-background);
   }
 
-  /* Page transition (PageTransition), back to front: the backdrop (40), the
-     new page once it takes the next card's place (.page-shell.is-behind, 41),
-     the next-page card (42, over the page so it can fade into it), the red
-     card (43), and the current page shrunk
-     to the front card (.page-shell.is-card, 45); the header (50) stays on top.
-     GSAP positions the cards in the stack (cardEdges); the inset here only
-     roughly matches the front card. The
-     backdrop is dark so the cream cards read as a stack. */
-  .page-transition-backdrop {
-    @apply pointer-events-none fixed inset-0 z-40;
-    background-color: #131313;
+  /* Page transition (PageTransition): two full-screen panels, over everything
+     including the header (50). Hidden until a transition runs; GSAP owns the
+     panels' transform and clip. The dark panel comes later in the DOM, so it
+     covers the accent one. */
+  .page-transition {
+    @apply pointer-events-none fixed inset-0 z-[60];
     visibility: hidden;
   }
 
-  /* Hidden until a transition runs; GSAP owns its position and transform. */
-  .page-transition-card {
-    @apply pointer-events-none fixed z-[43];
-    inset: 5vh 5vw;
-    border-radius: 1rem;
-    background-color: #eb4b3d;
-    visibility: hidden;
-    /* Each card casts a soft shadow up onto the card behind it, so the stack has depth. */
-    box-shadow: 0 -0.25rem 1rem rgb(0 0 0 / 0.4);
-    will-change: transform;
+  .page-transition-panel {
+    @apply absolute inset-0;
+    clip-path: inset(75% 0% 0% 0%);
+    will-change: transform, clip-path;
   }
 
-  /* Stands in for the next page until it has loaded (the pages share the cream). */
-  .page-transition-card--next {
-    z-index: 42;
-    background-color: var(--color-background);
+  .page-transition-panel--accent {
+    background-color: var(--color-accent);
   }
 
-  /* Nothing on the page reacts to the pointer mid-transition, and the page
-     keeps its own compositor layer so it moves without repainting. */
+  .page-transition-panel--dark {
+    background-color: var(--color-primary);
+  }
+
+  /* Nothing on the page reacts to the pointer mid-transition. */
   .is-page-transitioning .page-shell {
     pointer-events: none;
-    will-change: transform;
-  }
-
-  .page-shell.is-card {
-    z-index: 45;
-  }
-
-  .page-shell.is-behind {
-    z-index: 41;
   }
 
   .menu-active .page-shell {

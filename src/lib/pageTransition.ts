@@ -1,4 +1,4 @@
-// The stacked-cards page transition is run by <PageTransition>, which
+// The page transition is run by <PageTransition>, which
 // registers itself here so code outside it (the menu) can start one too.
 type TransitionNavigate = (href: string) => void
 
