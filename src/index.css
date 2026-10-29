@@ -2914,12 +2914,13 @@
     padding-bottom: var(--page-gutter);
   }
 
-  /* The main images' 16:10, as tall as the screen allows: from just under the
-     fixed header down to the bottom gutter. */
+  /* Always the main images' 16:10, so none of the image is cropped: as wide as
+     the container, or, where the screen is too short for that, as tall as it
+     allows (from just under the fixed header to the bottom gutter) and centred. */
   .case-detail-next {
-    @apply relative block w-full overflow-hidden rounded-panel no-underline;
+    @apply relative mx-auto block overflow-hidden rounded-panel no-underline;
     aspect-ratio: 16 / 10;
-    max-height: calc(100svh - var(--site-header-height) - var(--page-gutter));
+    width: min(100%, (100svh - var(--site-header-height) - var(--page-gutter)) * 16 / 10);
     background-color: #131313;
   }
 
