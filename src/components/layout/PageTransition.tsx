@@ -191,6 +191,13 @@ export function PageTransition() {
       const pageGone = new Promise<void>((resolve) => {
         offScreen = resolve
       })
+      // The new page only grows once the red card is off the screen too, so it
+      // never grows wider than a card still in front of it.
+      const redTop = cardEdges(1, viewport).top
+      let redOffScreen: () => void = () => {}
+      const redGone = new Promise<void>((resolve) => {
+        redOffScreen = resolve
+      })
       const stack = gsap
         .timeline()
         .timeScale(1 / SLOW_MOTION)
@@ -214,7 +221,19 @@ export function PageTransition() {
           },
           leave,
         )
-        .to(red, { y: viewport.height, duration: LEAVE_DURATION, ease: LEAVE_EASE }, leave + FOLLOW)
+        .to(
+          red,
+          {
+            y: viewport.height,
+            duration: LEAVE_DURATION,
+            ease: LEAVE_EASE,
+            onUpdate: () => {
+              if (redTop + Number(gsap.getProperty(red, 'y')) >= viewport.height) redOffScreen()
+            },
+            onComplete: () => redOffScreen(),
+          },
+          leave + FOLLOW,
+        )
 
       await pageGone
       const previous = shell.querySelector(':scope > main')
@@ -222,7 +241,7 @@ export function PageTransition() {
       const main = await waitForPage(shell, previous)
       window.scrollTo(0, 0)
       lenis?.scrollTo(0, { immediate: true, force: true })
-      await firstScreenImages(main, viewport.height)
+      await Promise.all([firstScreenImages(main, viewport.height), redGone])
 
       // 3. The new page takes the next card's place at the back of the stack,
       //    under it (the next card grows with it and fades, so the stand-in
