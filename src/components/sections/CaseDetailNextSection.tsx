@@ -23,6 +23,7 @@ const IMAGE_ZOOM = 0.06
 export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) {
   const { href, name, label, image, ariaLabel } = nextCase
   const trackRef = useRef<HTMLElement>(null)
+  const cardRef = useRef<HTMLAnchorElement>(null)
   const barRef = useRef<HTMLSpanElement>(null)
   const imageRef = useRef<HTMLImageElement & HTMLDivElement>(null)
   const hasNavigatedRef = useRef(false)
@@ -51,11 +52,41 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
 
   useScrollTrackProgress(trackRef, onProgress)
 
+  // Clears the way for the card: the case CTA bar fades out once the card is on
+  // the screen, and the header slides away once the card reaches it (just
+  // before it pins), so the card can fill the screen between equal gutters.
+  useEffect(() => {
+    const root = document.documentElement
+    let frame = 0
+    const update = () => {
+      frame = 0
+      const card = cardRef.current
+      const header = document.querySelector<HTMLElement>('.site-header')
+      if (!card) return
+      const top = card.getBoundingClientRect().top
+      root.classList.toggle('is-next-case-visible', top < window.innerHeight)
+      root.classList.toggle('is-next-case-pinned', top <= (header?.offsetHeight ?? 0))
+    }
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update)
+    }
+
+    update()
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', schedule)
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', schedule)
+      root.classList.remove('is-next-case-visible', 'is-next-case-pinned')
+    }
+  }, [href])
+
   return (
     <section ref={trackRef} className="case-detail-next-section" aria-label={label}>
       <div className="case-detail-next-sticky">
         <Container>
-          <Link to={href} className="case-detail-next" aria-label={ariaLabel}>
+          <Link ref={cardRef} to={href} className="case-detail-next" aria-label={ariaLabel}>
             {image.imageSrc ? (
               <img
                 ref={imageRef}
