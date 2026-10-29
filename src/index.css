@@ -90,7 +90,7 @@
   --color-text-body: #696869;
   --color-muted: #555555;
   --color-disabled: #bababa;
-  --color-accent: #fa470d;
+  --color-accent: #eb4b3d;
   --color-accent-hover: color-mix(in srgb, var(--color-accent) 88%, white);
   --color-accent-yellow: #fec627;
   --color-peach: color-mix(in srgb, var(--color-accent) 32%, white);
