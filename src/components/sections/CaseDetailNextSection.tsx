@@ -10,8 +10,9 @@ interface CaseDetailNextSectionProps {
   nextCase: CaseDetailNext
 }
 
-// How far the image zooms in while the card is pinned (1 = no zoom).
-const IMAGE_ZOOM = 0.12
+// How far the image zooms in while the card is pinned (0 = no zoom). Kept
+// small enough that the mockup's screen stays in view.
+const IMAGE_ZOOM = 0.06
 
 /**
  * The next case at the end of the page. The card sticks while the section's

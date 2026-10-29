@@ -2914,20 +2914,24 @@
     padding-bottom: var(--page-gutter);
   }
 
-  /* Always the main images' 16:10, so none of the image is cropped: as wide as
-     the container, or, where the screen is too short for that, as tall as it
-     allows (from just under the fixed header to the bottom gutter) and centred. */
+  /* Full width at the main images' 16:10, as tall as the screen allows: from
+     just under the fixed header to the bottom gutter. */
   .case-detail-next {
-    @apply relative mx-auto block overflow-hidden rounded-panel no-underline;
+    @apply relative block w-full overflow-hidden rounded-panel no-underline;
     aspect-ratio: 16 / 10;
-    width: min(100%, (100svh - var(--site-header-height) - var(--page-gutter)) * 16 / 10);
+    max-height: calc(100svh - var(--site-header-height) - var(--page-gutter));
     background-color: #131313;
   }
 
-  /* Zooms in from the centre with the scroll (CaseDetailNextSection). */
+  /* Where the card is wider than 16:10, the image is cropped from the bottom:
+     the main images are mockups with the screen in their upper part, and the
+     whole screen should stay in view. It zooms in with the scroll
+     (CaseDetailNextSection) from below the middle, so the top of the screen
+     stays in view too. */
   .case-detail-next-image {
     @apply absolute inset-0 h-full w-full object-cover;
-    transform-origin: 50% 50%;
+    object-position: 50% 5%;
+    transform-origin: 50% 65%;
     will-change: transform;
   }
 
