@@ -1,4 +1,11 @@
-import { useLayoutEffect, useRef, useState, type AnimationEvent } from 'react'
+import {
+  useLayoutEffect,
+  useRef,
+  useState,
+  type AnimationEvent,
+  type FocusEvent,
+  type PointerEvent,
+} from 'react'
 import { gsap } from 'gsap'
 import { ArrowIcon } from './ArrowIcon'
 
@@ -86,6 +93,23 @@ export function CtaPillButton({
 
   const handleLeave = () => animateHover(0, 0.6)
 
+  // Only a real mouse hovers: a tap fires an enter but no leave, which left
+  // the hover state on until the next tap elsewhere.
+  const handlePointerEnter = (event: PointerEvent) => {
+    if (event.pointerType === 'mouse') handleEnter()
+  }
+
+  const handlePointerLeave = (event: PointerEvent) => {
+    if (event.pointerType === 'mouse') handleLeave()
+  }
+
+  // Only keyboard focus (:focus-visible) shows the hover state. The browser
+  // also gives focus back to a clicked link when the visitor returns to the
+  // tab (e.g. after it opened a new one), which showed it with no hover.
+  const handleFocus = (event: FocusEvent<HTMLElement>) => {
+    if (event.currentTarget.matches(':focus-visible')) handleEnter()
+  }
+
   const handleAnimationEnd = (event: AnimationEvent) => {
     if (event.animationName === 'hero-cta-arrow-slide') setIsArrowPlaying(false)
   }
@@ -101,9 +125,9 @@ export function CtaPillButton({
 
   const interactionProps = {
     className: classes,
-    onMouseEnter: handleEnter,
-    onMouseLeave: handleLeave,
-    onFocus: handleEnter,
+    onPointerEnter: handlePointerEnter,
+    onPointerLeave: handlePointerLeave,
+    onFocus: handleFocus,
     onBlur: handleLeave,
     onAnimationEnd: handleAnimationEnd,
   }

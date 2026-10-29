@@ -26,7 +26,7 @@ export function CaseDetailCtaBar({ previousHref, nextHref, liveUrl }: CaseDetail
         external
         onClick={() => openDrawer('contact')}
       >
-        {isDa ? 'Se hjemmeside' : 'Visit website'}
+        {isDa ? 'Se live' : 'View live'}
       </ContactButton>
       <ArrowChipButton
         direction="right"
