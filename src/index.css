@@ -1548,12 +1548,18 @@
   .site-header {
     @apply fixed top-0 right-0 left-0 z-50 px-4 sm:px-5 lg:px-6;
     padding-inline: var(--page-gutter);
-    transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition:
+      opacity 300ms ease,
+      visibility 0s linear 0s;
   }
 
-  /* Slides away while the next-case card fills the screen (CaseDetailNextSection). */
+  /* Fades out while the next-case card fills the screen (CaseDetailNextSection). */
   .is-next-case-pinned .site-header {
-    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 300ms ease,
+      visibility 0s linear 300ms;
   }
 
   /* Progressive blur behind the header: two blurred layers masked to fade
@@ -3001,7 +3007,6 @@
     transform: translateX(-50%);
     transition:
       opacity 300ms ease,
-      transform 400ms cubic-bezier(0.22, 1, 0.36, 1),
       visibility 0s linear 0s;
   }
 
@@ -3009,10 +3014,8 @@
   .is-next-case-visible .case-detail-cta-bar {
     opacity: 0;
     visibility: hidden;
-    transform: translate(-50%, 0.75rem);
     transition:
       opacity 300ms ease,
-      transform 400ms cubic-bezier(0.22, 1, 0.36, 1),
       visibility 0s linear 300ms;
   }
 

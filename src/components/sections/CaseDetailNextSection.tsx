@@ -53,7 +53,7 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
   useScrollTrackProgress(trackRef, onProgress)
 
   // Clears the way for the card: the case CTA bar fades out once the card is on
-  // the screen, and the header slides away once the card reaches it (just
+  // the screen, and the header fades out once the card reaches it (just
   // before it pins), so the card can fill the screen between equal gutters.
   useEffect(() => {
     const root = document.documentElement
