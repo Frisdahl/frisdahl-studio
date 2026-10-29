@@ -42,7 +42,7 @@ const casesPageContent = {
         industry: 'Film',
         category: 'website',
         href: '/cases/peter-salling',
-        imageSrc: '/cases/peter-salling/hero-skaerm--6-7.webp',
+        imageSrc: '/cases/peter-salling/official--6-7.webp',
         imageAlt: 'Peter Salling case',
         keywords: ['Website', 'Design', 'Udvikling', 'CMS'],
         description:
@@ -133,7 +133,7 @@ const casesPageContent = {
         industry: 'Film',
         category: 'website',
         href: '/cases/peter-salling',
-        imageSrc: '/cases/peter-salling/hero-skaerm--6-7.webp',
+        imageSrc: '/cases/peter-salling/official--6-7.webp',
         imageAlt: 'Peter Salling case',
         keywords: ['Website', 'Design', 'Development', 'CMS'],
         description:

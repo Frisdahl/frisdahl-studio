@@ -107,7 +107,7 @@ const caseDetails = {
           'En redaktionel og filmisk portfolio, hvor filmene er i centrum, og hvor Peter selv styrer indholdet i et indbygget admin-panel.',
         sliderAriaLabel: 'Automatisk gennemløb af Peter Salling case-billeder',
         slides: [
-          { imageSrc: '/cases/peter-salling/hero-skaerm--16-10.webp', imageAlt: 'Peter Sallings forside med Sikkerheden er på spil på en skærm' },
+          { imageSrc: '/cases/peter-salling/official--16-10.webp', imageAlt: 'Peter Sallings forside med Alt jeg forventede på en skærm' },
         ],
       },
       columns: [
@@ -333,7 +333,7 @@ const caseDetails = {
           'An editorial, cinematic portfolio that puts the films first, with content Peter manages himself in a built-in admin panel.',
         sliderAriaLabel: 'Automatic slideshow of Peter Salling case images',
         slides: [
-          { imageSrc: '/cases/peter-salling/hero-skaerm--16-10.webp', imageAlt: 'Peter Salling homepage featuring Sikkerheden er på spil on a display' },
+          { imageSrc: '/cases/peter-salling/official--16-10.webp', imageAlt: 'Peter Salling homepage featuring Alt jeg forventede on a display' },
         ],
       },
       columns: [
