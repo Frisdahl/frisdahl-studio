@@ -73,13 +73,11 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
       { imageSrc: '/cases/det-kollektive-klaedeskab/macbook-medlemskab--4-3.webp', imageAlt: 'Det Kollektive Klædeskabs side Vælg dit medlemskab på en MacBook', aspectRatio: '4 / 3' },
       { imageSrc: '/cases/det-kollektive-klaedeskab/macbook-produkter--4-3.webp', imageAlt: 'Det Kollektive Klædeskabs produktoversigt på en MacBook', aspectRatio: '4 / 3' },
     ],
+    verticalPairTop: [
+      { imageSrc: '/cases/det-kollektive-klaedeskab/iphones-medlemskab-saadan-goer-du--4-3.webp', imageAlt: 'Det Kollektive Klædeskabs sider Medlemskab og Sådan gør du på to iPhones', aspectRatio: '4 / 3', transparent: true },
+      { imageSrc: '/cases/det-kollektive-klaedeskab/iphones-produkter-gavekort--4-3.webp', imageAlt: 'Det Kollektive Klædeskabs sider Produkter og Gavekort på to iPhones', aspectRatio: '4 / 3', transparent: true },
+    ],
     horizontalTop: {
-      imageSrc: '/cases/det-kollektive-klaedeskab/iphones-medlemskab-saadan-goer-du--16-10.webp',
-      imageAlt: 'Det Kollektive Klædeskabs sider Medlemskab og Sådan gør du på to iPhones',
-      aspectRatio: '16 / 10',
-      transparent: true,
-    },
-    horizontalBottom: {
       imageSrc: '/cases/det-kollektive-klaedeskab/nyeste-fund--16-9.webp',
       imageAlt: 'Nyeste fund i garderoben',
     },
