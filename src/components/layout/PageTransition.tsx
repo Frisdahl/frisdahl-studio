@@ -11,37 +11,36 @@ gsap.registerPlugin(ScrollTrigger)
 // many times slower. Set back to 1 before shipping.
 const SLOW_MOTION = 4
 
-// Shrinking to a card, and growing back to full size: soft at both ends.
+// Shrinking into the stack: soft at both ends.
 const EASE = 'power2.inOut'
-const SCALE_DURATION = 0.45
-const GROW_DURATION = 0.6
+const SCALE_DURATION = 0.6
+// The new page growing from the back of the stack to full size.
+const GROW_EASE = 'power3.inOut'
+const GROW_DURATION = 0.7
 // Once the new page fills the screen, its corners square off, as the last step.
 const CORNER_DURATION = 0.3
-// A card leaving the stack accelerates away (it is going off the screen, so
-// it never slows down); a card moving forward decelerates into its place.
-const LEAVE_EASE = 'power1.in'
-const LEAVE_DURATION = 0.5
-const FORWARD_EASE = 'power1.out'
+// The page and the red card leave down off the screen: a slow start, then
+// fast (they are off the screen before they would slow down again).
+const LEAVE_EASE = 'power3.inOut'
+const LEAVE_DURATION = 0.9
 // The page starts sliding off this long before it has finished shrinking.
-const OVERLAP = 0.2
+const OVERLAP = 0.05
 // The red card starts down this long after the page, so it trails a little
 // behind it instead of moving with it.
 const FOLLOW = 0.12
 // The longest the new page waits for its first screen's images before it shows.
 const IMAGE_WAIT = 1000
-// The front card's size: this share of the screen. The whole stack (the front
-// card plus the cards rising behind it) is centred on the screen.
-const CARD_SCALE = 0.86
-// Each card further back in the stack is this much taller (it rises above the
-// card in front), in screen pixels.
-const STACK_RISE = 24
-// Every card is this much narrower on each side than CARD_SCALE gives, so all
-// three share one width, in screen pixels.
-const STACK_NARROW = 56
-// Each card further back is this much darker, as if in the shadow of the stack.
-const STACK_DIM = 0.2
+// The front card's size, as a share of the screen; each card further back is
+// this much smaller, so the stack steps in.
+const FRONT_SCALE = 0.95
+const STACK_STEP = 0.075
+// The back card's top, and how much lower each card in front of it sits, as
+// shares of the screen height. The back card is centred; the cards in front
+// run off the bottom of the screen.
+const BACK_TOP = 0.1
+const STACK_RISE = 0.06
 // Card corners, in screen pixels (the red card's border-radius matches).
-const RADIUS = 24
+const RADIUS = 16
 
 type Viewport = { width: number; height: number }
 
@@ -50,34 +49,21 @@ const STACK_SIZE = 3
 
 /** A stacked card's edges on screen: 0 is the front card, 1 the one behind it, and so on. */
 function cardEdges(depth: number, { width, height }: Viewport) {
-  const margin = (1 - CARD_SCALE) / 2
-  const side = width * margin + STACK_NARROW
-  // Shift the stack down by half the height the cards behind add, so it is centred.
-  const shift = ((STACK_SIZE - 1) * STACK_RISE) / 2
-  return {
-    top: height * margin + shift - depth * STACK_RISE,
-    bottom: height * margin - shift,
-    left: side,
-    right: side,
-    filter: `brightness(${1 - depth * STACK_DIM})`,
-  }
+  const scale = FRONT_SCALE - depth * STACK_STEP
+  const top = height * (BACK_TOP + (STACK_SIZE - 1 - depth) * STACK_RISE)
+  const side = (width * (1 - scale)) / 2
+  return { top, bottom: height * (1 - scale) - top, left: side, right: side }
 }
 
-/**
- * The page's scale and offset to sit at a depth in the stack (the page scales
- * about the screen centre). It scales to the card's width, so the card is
- * taller than one screen of the page: `extra` is how much more of the page,
- * below the screen, it shows to fill the card's height, in page pixels.
- */
+/** The page's scale and offset to sit at a depth in the stack (the page scales about the screen centre). */
 function pageAt(depth: number, viewport: Viewport) {
-  const { top, bottom, left } = cardEdges(depth, viewport)
+  const { top, left } = cardEdges(depth, viewport)
   const scale = (viewport.width - 2 * left) / viewport.width
-  return {
-    scale,
-    y: top - (viewport.height * (1 - scale)) / 2,
-    extra: (viewport.height - top - bottom) / scale - viewport.height,
-  }
+  return { scale, y: top - (viewport.height * (1 - scale)) / 2 }
 }
+
+// A card's edges at full screen, where every card starts and the new page ends.
+const FULL_SCREEN = { top: 0, bottom: 0, left: 0, right: 0 }
 
 /** Resolves with the new route's <main> once it has replaced `previous` (lazy pages load first). */
 function waitForPage(shell: HTMLElement, previous: Element | null) {
@@ -137,14 +123,13 @@ function transitionHref(event: MouseEvent, currentPath: string): string | null {
 }
 
 /**
- * Stacked-cards page transition: as the current page shrinks to a card, the
- * stack behind it shows (the red card, and the next page behind that), each
- * card a little taller than the one in front. The page slides down off the
- * stack with the red card close behind it, and the next card moves to the
- * front; the route changes once the page is off the screen, and the new page
- * takes the next card's place and grows back to full size. Handles in-app
- * link clicks anywhere on the site;
- * reduced motion navigates directly.
+ * Stacked-cards page transition: the current page, the red card and the next
+ * page's card shrink together into a stack, each card further back smaller
+ * and higher. The page slides down off the screen with the red card a moment
+ * behind it; the route changes once the page is off the screen, and the new
+ * page takes the next card's place at the back and grows from there to full
+ * size. Handles in-app link clicks anywhere on the site; reduced motion
+ * navigates directly.
  */
 export function PageTransition() {
   const navigate = useNavigate()
@@ -180,53 +165,58 @@ export function PageTransition() {
       const viewport = { width: window.innerWidth, height: window.innerHeight }
       // The page's clip, with corners that look `radius` on screen at this scale.
       const clip = (top: number, bottom: number, scale: number, radius = RADIUS) =>
-        `inset(${top}px 0px ${Math.max(0, bottom)}px 0px round ${radius / scale}px)`
+        `inset(${top}px 0px ${bottom}px 0px round ${radius / scale}px)`
 
-      // 1. The current page becomes the front card: clipped to the screen it
-      //    shows, it shrinks to card size and uncovers the stack behind it.
-      // 2. Before it settles, it slides down off the stack with the red card
-      //    close behind it (only the red card's top shows), while the next
-      //    card moves forward to the front.
+      // 1. All three cards start full screen and shrink together into the
+      //    stack: the current page (clipped to the screen it shows) in front,
+      //    the red card behind it and the next page's card at the back, each
+      //    smaller and higher than the one in front.
+      // 2. The page slides down off the screen, and the red card follows a
+      //    moment later at its own size; the next card stays at the back.
       const top = window.scrollY
       const bottom = shell.offsetHeight - top - viewport.height
       gsap.set(backdrop, { autoAlpha: 1 })
-      gsap.set(red, { ...cardEdges(1, viewport), y: 0, autoAlpha: 1 })
-      gsap.set(next, { ...cardEdges(2, viewport), autoAlpha: 1 })
+      gsap.set([red, next], { ...FULL_SCREEN, y: 0, autoAlpha: 1 })
       gsap.set(shell, {
         transformOrigin: `50% ${top + viewport.height / 2}px`,
         clipPath: clip(top, bottom, 1, 0),
       })
       shell.classList.add('is-card')
       const front = pageAt(0, viewport)
+      const frontTop = cardEdges(0, viewport).top
       const leave = SCALE_DURATION - OVERLAP
-      const offScreen = leave + LEAVE_DURATION
+      // Change the page as soon as the old one is off the screen, so the new
+      // one loads while the red card leaves.
+      let offScreen: () => void = () => {}
+      const pageGone = new Promise<void>((resolve) => {
+        offScreen = resolve
+      })
       const stack = gsap
         .timeline()
         .timeScale(1 / SLOW_MOTION)
         .to(
           shell,
-          {
-            scale: front.scale,
-            y: front.y,
-            clipPath: clip(top, bottom - front.extra, front.scale),
-            duration: SCALE_DURATION,
-            ease: EASE,
-          },
+          { scale: front.scale, y: front.y, clipPath: clip(top, bottom, front.scale), duration: SCALE_DURATION, ease: EASE },
           0,
         )
-        .to(shell, { y: viewport.height, duration: LEAVE_DURATION, ease: LEAVE_EASE }, leave)
+        .to(red, { ...cardEdges(1, viewport), duration: SCALE_DURATION, ease: EASE }, 0)
+        .to(next, { ...cardEdges(2, viewport), duration: SCALE_DURATION, ease: EASE }, 0)
         .to(
-          red,
-          { ...cardEdges(0, viewport), y: viewport.height, duration: LEAVE_DURATION, ease: LEAVE_EASE },
-          leave + FOLLOW,
+          shell,
+          {
+            y: front.y + viewport.height,
+            duration: LEAVE_DURATION,
+            ease: LEAVE_EASE,
+            onUpdate: () => {
+              if (frontTop + Number(gsap.getProperty(shell, 'y')) - front.y >= viewport.height) offScreen()
+            },
+            onComplete: () => offScreen(),
+          },
+          leave,
         )
-        .to(next, { ...cardEdges(0, viewport), duration: LEAVE_DURATION - FOLLOW, ease: FORWARD_EASE }, leave + FOLLOW)
+        .to(red, { y: viewport.height, duration: LEAVE_DURATION, ease: LEAVE_EASE }, leave + FOLLOW)
 
-      // Change the page as soon as the old one is off the screen (the next card
-      // is in front by then), so the new one loads while the red card leaves.
-      await new Promise<void>((resolve) => {
-        stack.call(resolve, undefined, offScreen)
-      })
+      await pageGone
       const previous = shell.querySelector(':scope > main')
       navigate(href)
       const main = await waitForPage(shell, previous)
@@ -234,35 +224,37 @@ export function PageTransition() {
       lenis?.scrollTo(0, { immediate: true, force: true })
       await firstScreenImages(main, viewport.height)
 
-      // 3. The new page takes the next card's place at the front, under it
-      //    (the next card grows with it and fades, so the stand-in eases into
-      //    the page instead of jumping), and grows to fill the screen. Its
-      //    corners keep the cards' radius on screen all the way, and only
-      //    square off once it fills the screen.
+      // 3. The new page takes the next card's place at the back of the stack,
+      //    under it (the next card grows with it and fades, so the stand-in
+      //    eases into the page instead of jumping), and grows straight from
+      //    there to fill the screen. Its corners keep the cards' radius on
+      //    screen all the way, and only square off once it fills the screen.
+      const back = pageAt(STACK_SIZE - 1, viewport)
       const pageBottom = shell.offsetHeight - viewport.height
-      const corner = { radius: RADIUS, extra: front.extra }
+      const corner = { radius: RADIUS }
       const clipPage = () => {
         gsap.set(shell, {
-          clipPath: clip(0, pageBottom - corner.extra, Number(gsap.getProperty(shell, 'scaleX')), corner.radius),
+          clipPath: clip(0, pageBottom, Number(gsap.getProperty(shell, 'scaleX')), corner.radius),
         })
       }
-      gsap.set(shell, { scale: front.scale, y: front.y, transformOrigin: `50% ${viewport.height / 2}px` })
+      // The old page's slide is still running (the page changed as it left the screen).
+      gsap.killTweensOf(shell)
+      gsap.set(shell, { ...back, transformOrigin: `50% ${viewport.height / 2}px` })
       clipPage()
       shell.classList.replace('is-card', 'is-behind')
       await Promise.all([
         gsap
           .timeline()
           .timeScale(1 / SLOW_MOTION)
-          .to(next, { top: 0, bottom: 0, left: 0, right: 0, duration: GROW_DURATION, ease: EASE }, 0)
+          .to(next, { ...FULL_SCREEN, duration: GROW_DURATION, ease: GROW_EASE }, 0)
           .to(next, { autoAlpha: 0, duration: 0.2, ease: 'none' }, 0)
-          .to(corner, { extra: 0, duration: GROW_DURATION, ease: EASE }, 0)
-          .to(shell, { scale: 1, y: 0, duration: GROW_DURATION, ease: EASE, onUpdate: clipPage }, 0)
+          .to(shell, { scale: 1, y: 0, duration: GROW_DURATION, ease: GROW_EASE, onUpdate: clipPage }, 0)
           .to(corner, { radius: 0, duration: CORNER_DURATION, ease: 'power2.out', onUpdate: clipPage }, GROW_DURATION)
           .then(),
         stack.then(),
       ])
 
-      gsap.set([red, next], { autoAlpha: 0, clearProps: 'top,bottom,left,right,transform,filter' })
+      gsap.set([red, next], { autoAlpha: 0, clearProps: 'top,bottom,left,right,transform' })
       gsap.set(backdrop, { autoAlpha: 0 })
       gsap.set(shell, { clearProps: 'transform,transformOrigin,clipPath' })
       shell.classList.remove('is-behind')

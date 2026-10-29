@@ -2211,7 +2211,7 @@
   .page-transition-card {
     @apply pointer-events-none fixed z-[43];
     inset: 5vh 5vw;
-    border-radius: 1.5rem;
+    border-radius: 1rem;
     background-color: #eb4b3d;
     visibility: hidden;
     /* Each card casts a soft shadow up onto the card behind it, so the stack has depth. */
