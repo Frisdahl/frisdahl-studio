@@ -143,7 +143,7 @@ const caseDetails = {
           'Et redesign-koncept til en fælles garderobe i København, hvor medlemmer låner, bytter og deler tøj med point i stedet for at købe nyt.',
         sliderAriaLabel: 'Automatisk gennemløb af Det Kollektive Klædeskab case-billeder',
         slides: [
-          { imageSrc: '/cases/det-kollektive-klaedeskab/forside--16-10.webp', imageAlt: 'Det Kollektive Klædeskabs forside' },
+          { imageSrc: '/cases/det-kollektive-klaedeskab/official--16-10.webp', imageAlt: 'Det Kollektive Klædeskabs side Sådan gør du på en MacBook' },
         ],
       },
       columns: [
@@ -369,7 +369,7 @@ const caseDetails = {
           'A redesign concept for a shared wardrobe in Copenhagen, where members borrow, swap and share clothes using points instead of buying new.',
         sliderAriaLabel: 'Automatic slideshow of Det Kollektive Klædeskab case images',
         slides: [
-          { imageSrc: '/cases/det-kollektive-klaedeskab/forside--16-10.webp', imageAlt: 'Det Kollektive Klædeskab homepage' },
+          { imageSrc: '/cases/det-kollektive-klaedeskab/official--16-10.webp', imageAlt: 'The How it works page of Det Kollektive Klædeskab on a MacBook' },
         ],
       },
       columns: [

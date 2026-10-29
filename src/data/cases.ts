@@ -79,7 +79,7 @@ const casesPageContent = {
         industry: 'Cirkulær mode',
         category: 'website',
         href: '/cases/det-kollektive-klaedeskab',
-        imageSrc: '/cases/det-kollektive-klaedeskab/forside--6-7.webp',
+        imageSrc: '/cases/det-kollektive-klaedeskab/official--6-7.webp',
         imageAlt: 'Det Kollektive Klædeskab case',
         keywords: ['Website', 'Redesign', 'UX-design', 'Udvikling'],
         description:
@@ -170,7 +170,7 @@ const casesPageContent = {
         industry: 'Circular fashion',
         category: 'website',
         href: '/cases/det-kollektive-klaedeskab',
-        imageSrc: '/cases/det-kollektive-klaedeskab/forside--6-7.webp',
+        imageSrc: '/cases/det-kollektive-klaedeskab/official--6-7.webp',
         imageAlt: 'Det Kollektive Klædeskab case',
         keywords: ['Website', 'Redesign', 'UX design', 'Development'],
         description:
