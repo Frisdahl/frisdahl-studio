@@ -27,6 +27,9 @@
     position: sticky;
     top: var(--site-header-height);
     z-index: 0;
+    /* The content drifts up out of the hero as the cases section covers it
+       (see Hero.tsx); clipping it here would cut off the video's top. */
+    overflow: visible;
   }
 
   .inner {

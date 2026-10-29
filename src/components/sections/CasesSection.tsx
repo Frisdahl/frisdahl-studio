@@ -53,7 +53,7 @@ export function CasesSection() {
 
     const mm = gsap.matchMedia()
 
-    // The section arrives black and turns white as it rolls in: --cases-light
+    // The section arrives grey and turns light as it rolls in: --cases-light
     // (which every colour in .home-cases mixes from) runs 0 → 1 from the
     // section entering at the bottom until its top is 60% down the
     // screen, so it's light well before the first project is centred, and

@@ -82,7 +82,7 @@ export function Footer() {
     }
   }, [isCaseDetailPage, pathname])
 
-  // The footer arrives dark and turns light as it rolls in: --footer-light
+  // The footer arrives grey and turns light as it rolls in: --footer-light
   // (which every colour in .site-footer mixes from) runs 0 → 1 from the footer
   // entering at the bottom of the screen until it reaches the bottom of the
   // page, so the colours are settled exactly when the page ends. Without the

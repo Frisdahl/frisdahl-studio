@@ -3586,13 +3586,13 @@
      and 100% around the screen's centre) and the title plus keywords sit
      outside it, at its top right. Phones stack the text under the image. */
   /* --cases-light runs 0 → 1 (CasesSection scrubs it as the section rolls
-     in): dark (#131313) with light text at 0, the page colour with dark text at 1. Every colour
+     in): grey (#8a8989) with light text at 0, the page colour with dark text at 1. Every colour
      below mixes from it, so the whole section turns over as one. It rests at
      1 without the animation (reduced motion). */
   .home-cases {
     --cases-light: 1;
     --cases-mix: calc(var(--cases-light) * 100%);
-    --cases-bg: color-mix(in srgb, var(--color-home-page) var(--cases-mix), #131313);
+    --cases-bg: color-mix(in srgb, var(--color-home-page) var(--cases-mix), #8a8989);
     --cases-ink: color-mix(in srgb, #131313 var(--cases-mix), #fffefe);
     --cases-muted: color-mix(in srgb, rgb(19 19 19 / 0.55) var(--cases-mix), #a3a3a3);
     --cases-label: color-mix(in srgb, rgb(19 19 19 / 0.45) var(--cases-mix), #7a7a7a);
@@ -4205,7 +4205,7 @@
     z-index: 0;
   }
 
-  /* The footer's background arrives dark and turns light as it rolls in:
+  /* The footer's background arrives grey and turns light as it rolls in:
      --footer-light runs 0 → 1 with the scroll, the way .home-cases does, and
      rests at 1 without the animation (reduced motion). The text stays dark
      throughout, so it never flips from light to dark mid-scroll.
@@ -4214,7 +4214,7 @@
     --footer-light: 1;
     --footer-mix: calc(var(--footer-light) * 100%);
     /* The footer's own light colour, a touch cooler than the page. */
-    --footer-bg: color-mix(in srgb, #e8e9e9 var(--footer-mix), #131313);
+    --footer-bg: color-mix(in srgb, #e8e9e9 var(--footer-mix), #8a8989);
     --footer-ink: #131313;
     --footer-muted: rgb(19 19 19 / 0.6);
     --footer-label: rgb(19 19 19 / 0.45);
