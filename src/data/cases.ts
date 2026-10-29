@@ -85,30 +85,6 @@ const casesPageContent = {
         description:
           'Et redesign-koncept til en fælles garderobe i København, hvor medlemmer låner, bytter og deler tøj med point.',
       },
-      {
-        id: 'northline',
-        client: 'Northline',
-        industry: 'Rådgivning',
-        category: 'content',
-        href: '/cases/northline',
-        imageSrc: null,
-        imageAlt: 'Northline content case',
-        keywords: ['Content', 'Strategi', 'Tekst', 'Tone of voice'],
-        description:
-          'Contentstrategi og tekstunivers til en vækstvirksomhed med behov for klar kommunikation på tværs af kanaler.',
-      },
-      {
-        id: 'urban-supply',
-        client: 'Urban Supply',
-        industry: 'Retail',
-        category: 'ecommerce',
-        href: '/cases/urban-supply',
-        imageSrc: null,
-        imageAlt: 'Urban Supply e-commerce case',
-        keywords: ['E-commerce', 'Platform', 'Integration', 'Automation'],
-        description:
-          'Skalerbar e-commerce løsning med fokus på drift, produktdata og en strømlinet kundeoplevelse.',
-      },
     ],
   },
   en: {
@@ -175,30 +151,6 @@ const casesPageContent = {
         keywords: ['Website', 'Redesign', 'UX design', 'Development'],
         description:
           'A redesign concept for a shared wardrobe in Copenhagen, where members borrow, swap and share clothes using points.',
-      },
-      {
-        id: 'northline',
-        client: 'Northline',
-        industry: 'Consulting',
-        category: 'content',
-        href: '/cases/northline',
-        imageSrc: null,
-        imageAlt: 'Northline content case',
-        keywords: ['Content', 'Strategy', 'Copy', 'Tone of voice'],
-        description:
-          'Content strategy and copy for a growth company needing clear communication across channels.',
-      },
-      {
-        id: 'urban-supply',
-        client: 'Urban Supply',
-        industry: 'Retail',
-        category: 'ecommerce',
-        href: '/cases/urban-supply',
-        imageSrc: null,
-        imageAlt: 'Urban Supply e-commerce case',
-        keywords: ['E-commerce', 'Platform', 'Integration', 'Automation'],
-        description:
-          'Scalable e-commerce setup focused on operations, product data, and a streamlined customer experience.',
       },
     ],
   },

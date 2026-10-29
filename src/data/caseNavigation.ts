@@ -18,8 +18,6 @@ export const caseOrder = [
   'nordwear',
   'fresh-cut',
   'det-kollektive-klaedeskab',
-  'northline',
-  'urban-supply',
 ] as const
 
 export type CaseSlug = (typeof caseOrder)[number]
@@ -29,8 +27,6 @@ const caseYears: Record<CaseSlug, string> = {
   'fresh-cut': '2026',
   'peter-salling': '2026',
   'det-kollektive-klaedeskab': '2026',
-  northline: '2024',
-  'urban-supply': '2024',
 }
 
 export function getCaseYear(caseSlug: string): string | null {
@@ -48,16 +44,12 @@ const nextCaseAriaLabels: Record<Locale, Record<(typeof caseOrder)[number], stri
     'fresh-cut': 'Se næste case: Fresh Cut',
     'peter-salling': 'Se næste case: Peter Salling',
     'det-kollektive-klaedeskab': 'Se næste case: Det Kollektive Klædeskab',
-    northline: 'Se næste case: Northline',
-    'urban-supply': 'Se næste case: Urban Supply',
   },
   en: {
     nordwear: 'View next case: Nordwear',
     'fresh-cut': 'View next case: Fresh Cut',
     'peter-salling': 'View next case: Peter Salling',
     'det-kollektive-klaedeskab': 'View next case: Det Kollektive Klædeskab',
-    northline: 'View next case: Northline',
-    'urban-supply': 'View next case: Urban Supply',
   },
 }
 

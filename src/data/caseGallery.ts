@@ -1,15 +1,7 @@
-import type { CaseDetailGallery, CaseDetailGalleryImage } from '../types/caseDetail'
+import type { CaseDetailGallery } from '../types/caseDetail'
 import type { Locale } from './navigation'
 
 type CaseGalleryAssets = Omit<CaseDetailGallery, 'ariaLabel'>
-
-const placeholderPair = (
-  altA: string,
-  altB: string,
-): [CaseDetailGalleryImage, CaseDetailGalleryImage] => [
-  { imageSrc: null, imageAlt: altA, placeholderClassName: 'bg-peach' },
-  { imageSrc: null, imageAlt: altB, placeholderClassName: 'bg-peach-hover' },
-]
 
 const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
   nordwear: {
@@ -96,34 +88,6 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
       { imageSrc: '/cases/det-kollektive-klaedeskab/mobil-bund--5-6.webp', imageAlt: 'Det Kollektive Klædeskab på mobil' },
     ],
   },
-  northline: {
-    horizontalTop: {
-      imageSrc: null,
-      imageAlt: 'Northline forside',
-      placeholderClassName: 'bg-peach',
-    },
-    verticalPairTop: placeholderPair('Northline content', 'Northline tone of voice'),
-    verticalPairBottom: placeholderPair('Northline artikel', 'Northline strategi'),
-    horizontalBottom: {
-      imageSrc: null,
-      imageAlt: 'Northline oversigt',
-      placeholderClassName: 'bg-peach-hover',
-    },
-  },
-  'urban-supply': {
-    horizontalTop: {
-      imageSrc: null,
-      imageAlt: 'Urban Supply shop',
-      placeholderClassName: 'bg-peach-hover',
-    },
-    verticalPairTop: placeholderPair('Urban Supply produktkatalog', 'Urban Supply kategori'),
-    verticalPairBottom: placeholderPair('Urban Supply produktside', 'Urban Supply kurv'),
-    horizontalBottom: {
-      imageSrc: null,
-      imageAlt: 'Urban Supply oversigt',
-      placeholderClassName: 'bg-peach',
-    },
-  },
 }
 
 const caseGalleryAriaLabels: Record<Locale, Record<string, string>> = {
@@ -132,16 +96,12 @@ const caseGalleryAriaLabels: Record<Locale, Record<string, string>> = {
     'fresh-cut': 'Projektbilleder fra Fresh Cut',
     'peter-salling': 'Projektbilleder fra Peter Salling',
     'det-kollektive-klaedeskab': 'Projektbilleder fra Det Kollektive Klædeskab',
-    northline: 'Projektbilleder fra Northline',
-    'urban-supply': 'Projektbilleder fra Urban Supply',
   },
   en: {
     nordwear: 'Project images from Nordwear',
     'fresh-cut': 'Project images from Fresh Cut',
     'peter-salling': 'Project images from Peter Salling',
     'det-kollektive-klaedeskab': 'Project images from Det Kollektive Klædeskab',
-    northline: 'Project images from Northline',
-    'urban-supply': 'Project images from Urban Supply',
   },
 }
 

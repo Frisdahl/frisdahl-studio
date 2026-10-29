@@ -170,82 +170,6 @@ const caseDetails = {
         },
       ],
     },
-    northline: {
-      id: 'northline',
-      hero: {
-        eyebrow: 'Case · Content',
-        title: 'Northline — contentstrategi med klar tone of voice',
-        description:
-          'Contentstrategi og tone of voice til en vækstvirksomhed — bygget til klar kommunikation på tværs af kanaler.',
-        sliderAriaLabel: 'Automatisk gennemløb af Northline case-billeder',
-        slides: [
-          { imageSrc: null, imageAlt: 'Northline content', placeholderClassName: 'bg-peach' },
-          { imageSrc: null, imageAlt: 'Northline tone of voice', placeholderClassName: 'bg-peach-hover' },
-          { imageSrc: null, imageAlt: 'Northline strategi', placeholderClassName: 'bg-peach' },
-        ],
-      },
-      columns: [
-        {
-          title: 'Kunde',
-          paragraphs: [
-            'Northline er en vækstvirksomhed inden for rådgivning med behov for klar og troværdig kommunikation.',
-            'De ønskede et tekstunivers, der gør komplekse budskaber tilgængelige uden at miste faglig dybde.',
-          ],
-        },
-        {
-          title: 'Ydelser',
-          paragraphs: [
-            'Jeg leverede contentstrategi, tone of voice, tekst og struktur på tværs af website og salgskanaler.',
-            'Budskaber og formater blev tilpasset målgrupper og touchpoints for at skabe sammenhæng i kommunikationen.',
-          ],
-        },
-        {
-          title: 'Resultat',
-          paragraphs: [
-            'Et tekstunivers, der skaber tillid og gør Northlines ekspertise tydelig for både nye og eksisterende kunder.',
-            'Kommunikationen er nu mere ensartet og lettere at videreudvikle i takt med virksomhedens vækst.',
-          ],
-        },
-      ],
-    },
-    'urban-supply': {
-      id: 'urban-supply',
-      hero: {
-        eyebrow: 'Case · E-commerce',
-        title: 'Urban Supply — skalerbar e-commerce til retail',
-        description:
-          'Skalerbar e-commerce med fokus på drift, produktdata og en strømlinet kundeoplevelse i hverdagen.',
-        sliderAriaLabel: 'Automatisk gennemløb af Urban Supply case-billeder',
-        slides: [
-          { imageSrc: null, imageAlt: 'Urban Supply shop', placeholderClassName: 'bg-peach-hover' },
-          { imageSrc: null, imageAlt: 'Urban Supply produktkatalog', placeholderClassName: 'bg-peach' },
-          { imageSrc: null, imageAlt: 'Urban Supply checkout', placeholderClassName: 'bg-peach-hover' },
-        ],
-      },
-      columns: [
-        {
-          title: 'Kunde',
-          paragraphs: [
-            'Urban Supply er en retail-virksomhed med behov for skalerbar e-commerce og stabil drift i hverdagen.',
-            'De ønskede en platform, der kan vokse med sortimentet uden at gå på kompromis med kundeoplevelsen.',
-          ],
-        },
-        {
-          title: 'Ydelser',
-          paragraphs: [
-            'Jeg byggede e-commerce platform, integrationer, produktdata-struktur og automatisering af centrale flows.',
-            'Fokus var på driftssikkerhed, overskuelig administration og en strømlinet rejse fra produkt til checkout.',
-          ],
-        },
-        {
-          title: 'Resultat',
-          paragraphs: [
-            'En strømlinet shop, der understøtter vækst og giver kunderne en pålidelig oplevelse på tværs af enheder.',
-            'Løsningen gør det lettere for teamet at vedligeholde sortiment og optimere salget over tid.',
-          ],
-        },
-      ],
-    },
   },
   en: {
     nordwear: {
@@ -396,82 +320,6 @@ const caseDetails = {
         },
       ],
     },
-    northline: {
-      id: 'northline',
-      hero: {
-        eyebrow: 'Case · Content',
-        title: 'Northline — content strategy with a clear tone of voice',
-        description:
-          'Content strategy and tone of voice for a growth company — built for clear communication across channels.',
-        sliderAriaLabel: 'Automatic showcase of Northline case images',
-        slides: [
-          { imageSrc: null, imageAlt: 'Northline content', placeholderClassName: 'bg-peach' },
-          { imageSrc: null, imageAlt: 'Northline tone of voice', placeholderClassName: 'bg-peach-hover' },
-          { imageSrc: null, imageAlt: 'Northline strategy', placeholderClassName: 'bg-peach' },
-        ],
-      },
-      columns: [
-        {
-          title: 'Client',
-          paragraphs: [
-            'Northline is a growth company in consulting with a need for clear and trustworthy communication.',
-            'They wanted a copy universe that makes complex messages accessible without losing professional depth.',
-          ],
-        },
-        {
-          title: 'Services',
-          paragraphs: [
-            'I delivered content strategy, tone of voice, copy, and structure across website and sales channels.',
-            'Messages and formats were tailored to audiences and touchpoints to create cohesion in communication.',
-          ],
-        },
-        {
-          title: 'Result',
-          paragraphs: [
-            'A copy universe that builds trust and makes Northline’s expertise clear to both new and existing clients.',
-            'Communication is now more consistent and easier to develop as the company continues to grow.',
-          ],
-        },
-      ],
-    },
-    'urban-supply': {
-      id: 'urban-supply',
-      hero: {
-        eyebrow: 'Case · E-commerce',
-        title: 'Urban Supply — scalable e-commerce for retail',
-        description:
-          'Scalable e-commerce focused on operations, product data, and a streamlined customer experience day to day.',
-        sliderAriaLabel: 'Automatic showcase of Urban Supply case images',
-        slides: [
-          { imageSrc: null, imageAlt: 'Urban Supply shop', placeholderClassName: 'bg-peach-hover' },
-          { imageSrc: null, imageAlt: 'Urban Supply product catalog', placeholderClassName: 'bg-peach' },
-          { imageSrc: null, imageAlt: 'Urban Supply checkout', placeholderClassName: 'bg-peach-hover' },
-        ],
-      },
-      columns: [
-        {
-          title: 'Client',
-          paragraphs: [
-            'Urban Supply is a retail business needing scalable e-commerce and stable day-to-day operations.',
-            'They wanted a platform that could grow with the assortment without compromising the customer experience.',
-          ],
-        },
-        {
-          title: 'Services',
-          paragraphs: [
-            'I built the e-commerce platform, integrations, product data structure, and automation of core flows.',
-            'The focus was on operational reliability, clear administration, and a streamlined journey from product to checkout.',
-          ],
-        },
-        {
-          title: 'Result',
-          paragraphs: [
-            'A streamlined shop that supports growth and gives customers a reliable experience across devices.',
-            'The solution makes it easier for the team to maintain the assortment and optimize sales over time.',
-          ],
-        },
-      ],
-    },
   },
 } as const satisfies Record<Locale, Record<string, CaseDetailBase>>
 
@@ -494,8 +342,6 @@ const caseLiveUrls: Record<string, string | null> = {
   'fresh-cut': null,
   'peter-salling': 'https://petersalling.com',
   'det-kollektive-klaedeskab': null,
-  northline: null,
-  'urban-supply': null,
 }
 
 /** The case's own website, or null when it has no live site yet. */
