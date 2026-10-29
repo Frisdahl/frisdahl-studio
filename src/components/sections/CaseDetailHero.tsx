@@ -1,6 +1,6 @@
 import type { CaseDetailHero as CaseDetailHeroContent } from '../../types/caseDetail'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
-import { ArrowIcon, Container } from '../ui'
+import { ArrowChipButton, ArrowIcon, Container } from '../ui'
 
 interface CaseDetailHeroProps {
   hero: CaseDetailHeroContent
@@ -22,7 +22,15 @@ export function CaseDetailHero({ hero }: CaseDetailHeroProps) {
                 <div key={item.label} className="case-detail-hero-meta-item">
                   <dt className="case-detail-hero-meta-label">{item.label}</dt>
                   <dd className="case-detail-hero-meta-value">
-                    {item.href && item.value ? (
+                    {item.button && item.value ? (
+                      <ArrowChipButton
+                        direction="right"
+                        label={item.value}
+                        text={item.value}
+                        href={item.href}
+                        external
+                      />
+                    ) : item.href && item.value ? (
                       <a
                         className="case-detail-hero-meta-link"
                         href={item.href}

@@ -5,8 +5,12 @@
    the whole site; the former heading font and the (never shipped) body font
    were both removed. */
 @import "@fontsource-variable/manrope/wght.css";
-/* Montserrat for the Nordwear type specimen; only downloaded where it is used. */
+/* Specimen fonts for the case pages (Montserrat: Nordwear, Raleway: Peter
+   Salling, DM Serif Display: Det Kollektive Klædeskab); each is only
+   downloaded where it is used. */
 @import "@fontsource-variable/montserrat/wght.css";
+@import "@fontsource-variable/raleway/wght.css";
+@import "@fontsource/dm-serif-display/400.css";
 
 @theme {
   /* Typography. One family for the whole site: Manrope (variable, 200–800). */
@@ -177,12 +181,13 @@
 @layer base {
   html {
     scroll-behavior: auto;
-    /* The header is fixed at every width, so hash targets (/#priser, /#contact)
+    /* The header is fixed at every width, so hash targets (/#contact)
        land below it instead of underneath it. Lenis reads scroll-padding too. */
     scroll-padding-top: var(--site-header-height);
     overflow-x: clip;
-    scrollbar-gutter: stable;
-    /* The canvas behind the scrollbar gutter and overscroll matches the pages. */
+    /* No visible scrollbar, at any time (scrolling still works). */
+    scrollbar-width: none;
+    /* The canvas behind overscroll matches the pages. */
     background-color: var(--color-background);
   }
 
@@ -1545,6 +1550,39 @@
     padding-inline: var(--page-gutter);
   }
 
+  /* Progressive blur behind the header: two blurred layers masked to fade
+     downwards, the stronger one only near the top, so content blurs most at
+     the top edge and clears gradually just below the bar. */
+  .site-header::before,
+  .site-header::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: -1;
+    height: calc(100% + 2.5rem);
+    pointer-events: none;
+  }
+
+  .site-header::before {
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 100%);
+  }
+
+  /* No blur while the menu is open: it would soften the top of the page card. */
+  .menu-active .site-header::before,
+  .menu-active .site-header::after {
+    display: none;
+  }
+
+  .site-header::after {
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 55%);
+    mask-image: linear-gradient(to bottom, #000 0%, transparent 55%);
+  }
+
   .site-header > .site-container {
     width: 100%;
     max-width: calc(var(--page-max-width) - 2 * var(--page-gutter));
@@ -2124,36 +2162,304 @@
     @apply fixed inset-0 bg-black/55;
   }
 
-  .mobile-menu-content {
-    @apply flex flex-col gap-8 px-2 py-8 pb-10 sm:px-3;
+  /* Menu: the page (.page-shell) shrinks a little and slides left; the menu
+     shows in the space it left, on the page colour. The header stays put (the
+     X keeps the burger's spot); only Kontakt fades out. Navbar sets the clip and origin
+     variables from the scroll position and toggles .menu-active (clip, menu
+     visible) and .menu-open (moved). */
+  :root {
+    --menu-panel-width: min(24rem, 62vw);
+    --menu-scale: 0.97;
+    /* Scaling pulls the right edge in by (1 - scale) / 2 of the width; the
+       shift moves it the rest of the way, a small gap short of the menu. */
+    --menu-shift: calc((1 - var(--menu-scale)) / 2 * 100vw - var(--menu-panel-width) - 1.5rem);
+    /* Opening and closing share the same glide: fast at first, then settling
+       (ease-out). */
+    --menu-open-duration: 0.9s;
+    --menu-close-duration: 1s;
+    --menu-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --menu-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    /* Kept for the burger icon. */
+    --menu-ease: var(--menu-ease-in-out);
   }
 
-  /* Language sits at the top of the menu so its listbox opens into free space
-     instead of being clipped by the panel's scroll container. */
-  .mobile-menu-language {
-    @apply -mt-2 flex items-center justify-between;
+  html::-webkit-scrollbar {
+    display: none;
   }
 
-  .mobile-nav-heading {
-    @apply text-body-sm font-semibold tracking-wide text-muted uppercase;
+  .page-shell {
+    position: relative;
+    z-index: 2;
+    background-color: var(--color-background);
   }
 
-  .mobile-nav-list {
-    @apply mt-3 flex flex-col gap-2;
+  /* Page transition (PageTransition), back to front: the backdrop (40), the
+     new page once it takes the next card's place (.page-shell.is-behind, 41),
+     the next-page card (42, over the page so it can fade into it), the red
+     card (43), and the current page shrunk
+     to the front card (.page-shell.is-card, 45); the header (50) stays on top.
+     GSAP positions the cards in the stack (cardEdges); the inset here only
+     roughly matches the front card. The
+     backdrop is dark so the cream cards read as a stack. */
+  .page-transition-backdrop {
+    @apply pointer-events-none fixed inset-0 z-40;
+    background-color: #131313;
+    visibility: hidden;
   }
 
-  .mobile-nav-link {
-    @apply -mx-2 block rounded-control px-2 py-3.5 text-left text-h3 font-medium text-primary transition-all hover:bg-peach-hover/40 hover:text-accent focus-visible:bg-peach-hover/40 focus-visible:text-accent sm:-mx-3 sm:px-3;
+  /* Hidden until a transition runs; GSAP owns its position and transform. */
+  .page-transition-card {
+    @apply pointer-events-none fixed z-[43];
+    inset: 5vh 5vw;
+    border-radius: 1.5rem;
+    background-color: #eb4b3d;
+    visibility: hidden;
+    /* Each card casts a soft shadow up onto the card behind it, so the stack has depth. */
+    box-shadow: 0 -0.25rem 1rem rgb(0 0 0 / 0.4);
+    will-change: transform;
   }
 
-  .mobile-menu-panel {
-    /* The sheet hangs directly under the fixed header at every width. */
-    @apply fixed inset-x-0 z-45 max-h-[calc(100dvh_-_var(--site-header-height))] overflow-y-auto border-t border-border-light bg-background shadow-medium;
-    top: var(--site-header-height);
+  /* Stands in for the next page until it has loaded (the pages share the cream). */
+  .page-transition-card--next {
+    z-index: 42;
+    background-color: var(--color-background);
   }
 
-  .mobile-menu-overlay {
-    @apply z-40;
+  /* Nothing on the page reacts to the pointer mid-transition, and the page
+     keeps its own compositor layer so it moves without repainting. */
+  .is-page-transitioning .page-shell {
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  .page-shell.is-card {
+    z-index: 45;
+  }
+
+  .page-shell.is-behind {
+    z-index: 41;
+  }
+
+  .menu-active .page-shell {
+    clip-path: inset(var(--shell-clip-top) 0 calc(100% - var(--shell-clip-top) - 100vh) 0 round 0);
+    transform-origin: 50% var(--shell-origin-y);
+    will-change: transform;
+    transition:
+      transform var(--menu-close-duration) var(--menu-ease-out),
+      clip-path var(--menu-close-duration) var(--menu-ease-out);
+  }
+
+  .menu-open .page-shell {
+    clip-path: inset(var(--shell-clip-top) 0 calc(100% - var(--shell-clip-top) - 100vh) 0 round var(--radius-panel));
+    transform: translateX(var(--menu-shift)) scale(var(--menu-scale));
+    transition:
+      transform var(--menu-open-duration) var(--menu-ease-out),
+      clip-path var(--menu-open-duration) var(--menu-ease-out);
+  }
+
+  /* Kontakt fades out as the menu opens, and back in only once the page has
+     slid back (the delay is about the length of the closing move). */
+  .site-header .header-contact {
+    transition:
+      opacity 0.4s ease 0.65s,
+      visibility 0.4s 0.65s;
+  }
+
+  .menu-open .site-header .header-contact {
+    opacity: 0;
+    visibility: hidden;
+    transition-delay: 0s;
+  }
+
+  /* A dark layer over the page card while the menu is open, so the menu reads
+     as the foreground. It covers the visible part of the page (the clip) and
+     moves with it. */
+  .page-shell::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: var(--shell-clip-top, 0);
+    z-index: 100;
+    height: 100vh;
+    background-color: rgb(19 19 19 / 0.4);
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transition:
+      opacity var(--menu-close-duration) var(--menu-ease-out),
+      visibility var(--menu-close-duration);
+  }
+
+  .menu-active .page-shell::after {
+    visibility: visible;
+  }
+
+  .menu-open .page-shell::after {
+    opacity: 1;
+    transition:
+      opacity var(--menu-open-duration) var(--menu-ease-out),
+      visibility var(--menu-open-duration);
+  }
+
+  .menu-panel {
+    @apply fixed inset-0 flex justify-end;
+    z-index: 0;
+    background-color: var(--color-background);
+    visibility: hidden;
+  }
+
+  .menu-active .menu-panel {
+    visibility: visible;
+  }
+
+  /* Starts just under the header; its right edge lines up with the X. */
+  .menu-panel-content {
+    @apply flex h-full flex-col gap-10 overflow-y-auto pb-12;
+    width: var(--menu-panel-width);
+    padding-top: calc(var(--site-header-height) + 4.5rem);
+    padding-right: var(--page-gutter);
+  }
+
+  /* RollLabel: the label rolls up out of its mask and an identical copy rises
+     from below while its link is hovered or focused; the transition plays
+     backwards on the way out. An ease-in-out, so it starts and settles
+     gently. Used by the footer and the menu links. */
+  /* The mask reaches a little past the line box (padding, cancelled by the
+     negative margin), so tight line heights don't clip descenders like the g
+     in "Om mig". The copies sit a --roll-gap apart and the roll covers a line
+     plus the gap, so neither copy shows in the padding while at rest. */
+  .roll-label {
+    --roll-gap: 0.15em;
+    @apply block overflow-hidden;
+    padding-block: 0.1em;
+    margin-block: -0.1em;
+  }
+
+  .roll-label-track {
+    @apply relative block;
+    transition: transform 550ms cubic-bezier(0.65, 0, 0.35, 1);
+    will-change: transform;
+  }
+
+  .roll-label-next {
+    @apply absolute left-0;
+    top: calc(100% + var(--roll-gap));
+  }
+
+  :is(a, button):is(:hover, :focus-visible) > .roll-label .roll-label-track {
+    transform: translateY(calc(-100% - var(--roll-gap)));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .roll-label-track {
+      transition: none;
+    }
+  }
+
+  .menu-links {
+    @apply flex flex-col gap-4;
+  }
+
+  /* Links slide in from the right (no fade) as the page starts to move, top to
+     bottom; on closing they slide back out and fade, and slide back out to the right the same way when the menu
+     closes. The active page sits on a red rectangle. */
+  .menu-link {
+    @apply block w-full px-3 py-1 text-left no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#131313];
+    font-size: clamp(2rem, 3vw, 2.75rem);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: #131313;
+    opacity: 0;
+    transform: translateX(3rem);
+    transition:
+      transform 0.7s var(--menu-ease-out),
+      opacity 0.55s ease;
+  }
+
+  .menu-link.is-active {
+    background-color: #eb4b3d;
+    color: #131313;
+  }
+
+  .menu-open .menu-link {
+    opacity: 1;
+    transform: none;
+    /* Opening: slide only, the text is there at once (the delays below hold
+       back the slide, not the opacity). */
+    transition:
+      transform 0.8s var(--menu-ease-out),
+      opacity 0s;
+  }
+
+  /* Closing (no .menu-open): out in the same order after a short pause. */
+  .menu-links li:nth-child(1) .menu-link { transition-delay: 0.1s; }
+  .menu-links li:nth-child(2) .menu-link { transition-delay: 0.14s; }
+  .menu-links li:nth-child(3) .menu-link { transition-delay: 0.18s; }
+  .menu-links li:nth-child(4) .menu-link { transition-delay: 0.22s; }
+
+  .menu-open .menu-links li:nth-child(1) .menu-link { transition-delay: 0.08s, 0s; }
+  .menu-open .menu-links li:nth-child(2) .menu-link { transition-delay: 0.14s, 0s; }
+  .menu-open .menu-links li:nth-child(3) .menu-link { transition-delay: 0.2s, 0s; }
+  .menu-open .menu-links li:nth-child(4) .menu-link { transition-delay: 0.26s, 0s; }
+
+  .menu-language {
+    @apply mt-2;
+    opacity: 0;
+    transition: opacity 0.55s ease 0.26s;
+  }
+
+  .menu-open .menu-language {
+    opacity: 1;
+    transition: none;
+  }
+
+  /* In the menu the language list opens straight down from its button, and
+     the button's hover shape uses the same corners as that list. */
+  .menu-language .language-switcher-menu {
+    left: 0;
+    right: auto;
+  }
+
+  .menu-language .language-switcher-trigger {
+    @apply rounded-control;
+  }
+
+  /* Transparent cover over the page card: clicking the page closes the menu. */
+  .menu-page-close {
+    @apply fixed inset-y-0 left-0 cursor-pointer;
+    z-index: 40;
+    right: calc(var(--menu-panel-width) + 1.5rem);
+    background: transparent;
+    border: 0;
+  }
+
+  /* Burger to X: each line moves to the middle and turns 45°. */
+  .menu-toggle-line {
+    transform-box: view-box;
+    transform-origin: 12px 12px;
+    transition: transform 0.5s var(--menu-ease);
+  }
+
+  /* rotate() is written first so it applies last: each line moves to the
+     centre, then turns about it, giving an X centred on (12, 12). */
+  .menu-toggle-icon.is-open .menu-toggle-line-top {
+    transform: rotate(45deg) translateY(4px);
+  }
+
+  .menu-toggle-icon.is-open .menu-toggle-line-bottom {
+    transform: rotate(-45deg) translateY(-4px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menu-active .page-shell,
+    .page-shell::after,
+    .site-header .header-contact,
+    .menu-link,
+    .menu-language,
+    .menu-toggle-line {
+      transition: none;
+    }
   }
 
   .language-switcher-trigger {
@@ -2526,6 +2832,55 @@
     color: #fffefe;
   }
 
+  /* Colour palette: shares the typography split; rounded, borderless swatches
+     with the name and hex top left. */
+  .case-detail-palette {
+    @apply relative z-[1] pb-section-sm lg:pb-section;
+  }
+
+  /* Bento on a 6 × 4 grid with the letter grid's footprint (7 × 4 squares,
+     so a 7:4 box, edge to edge): the main colour (first swatch) is 4 wide
+     over three rows, the next three stack beside it, and the last two split
+     the bottom row. All four rows share the height equally. Phones use two
+     columns: the main colour across the top, the rest in pairs. */
+  .case-detail-palette-swatches {
+    @apply grid grid-cols-2 gap-3 self-start sm:aspect-[7/4] sm:grid-cols-6 sm:grid-rows-4 sm:gap-4 lg:gap-5;
+  }
+
+  .case-detail-palette-swatch {
+    @apply flex aspect-[2/1] min-h-0 flex-col items-start gap-1 rounded-panel p-4 sm:col-span-2 sm:aspect-auto;
+    color: #131313;
+  }
+
+  .case-detail-palette-swatch:first-child {
+    @apply col-span-2 aspect-[16/10] sm:col-span-4 sm:row-span-3 sm:aspect-auto sm:p-5;
+  }
+
+  .case-detail-palette-swatch:nth-child(n + 5) {
+    @apply sm:col-span-3;
+  }
+
+  .case-detail-palette-swatch:last-child:nth-child(even) {
+    @apply col-span-2 aspect-[4/1] sm:col-span-3 sm:aspect-auto;
+  }
+
+  .case-detail-palette-swatch:first-child .case-detail-palette-name {
+    @apply text-h3;
+  }
+
+  .case-detail-palette-swatch.is-dark {
+    color: #fffefe;
+  }
+
+  .case-detail-palette-name {
+    @apply text-body font-bold;
+  }
+
+  .case-detail-palette-hex {
+    @apply text-caption font-bold uppercase tracking-[0.12em];
+    opacity: 0.7;
+  }
+
   .case-detail-intro-pair {
     @apply relative z-[1] mt-3xl lg:mt-4xl;
   }
@@ -2561,83 +2916,72 @@
     aspect-ratio: 5 / 6;
   }
 
+  /* Next case: a tall track at the end of the page. The card sticks in the
+     middle of the screen while the extra 100svh scrolls past, and the bar
+     under the title fills with it (CaseDetailNextSection). */
   .case-detail-next-section {
-    @apply relative pt-2xl lg:pt-3xl;
+    @apply relative;
+    height: 200svh;
+  }
+
+  /* The card sits at the bottom of the screen, as far from the bottom edge
+     as the content is from the sides. Column flex keeps the Container's own
+     width and side margins. */
+  .case-detail-next-sticky {
+    @apply sticky top-0 flex flex-col justify-end;
+    height: 100svh;
+    padding-bottom: var(--page-gutter);
   }
 
   .case-detail-next {
-    @apply block no-underline;
-  }
-
-  .case-detail-next-media {
-    @apply relative m-0 w-full overflow-hidden bg-[#131313];
-    aspect-ratio: 16 / 7;
-    min-height: clamp(14rem, 36vw, 24rem);
-    border-top-left-radius: var(--radius-panel-xl);
-    border-top-right-radius: var(--radius-panel-xl);
+    @apply relative block w-full overflow-hidden rounded-panel no-underline;
+    aspect-ratio: 16 / 9;
+    /* Leaves room for the fixed header above. */
+    max-height: calc(100svh - var(--site-header-height) - 2 * var(--page-gutter));
+    background-color: #131313;
   }
 
   .case-detail-next-image {
-    @apply h-full w-full object-cover;
+    @apply absolute inset-0 h-full w-full object-cover;
   }
 
   .case-detail-next-overlay {
     @apply absolute inset-0;
-    background-color: rgb(0 0 0 / 0.84);
-    transition: background-color 0.65s ease;
+    background-color: rgb(19 19 19 / 0.45);
   }
 
-  .case-detail-next-media--revealed .case-detail-next-overlay {
-    background-color: rgb(0 0 0 / 0.2);
-  }
-
-  .case-detail-next-meta {
-    @apply absolute inset-x-0 top-0 z-[1] grid grid-cols-[1fr_auto_1fr] items-center gap-6 px-6 py-5 sm:px-10 sm:py-6 lg:px-12 lg:py-7;
+  .case-detail-next-content {
+    @apply absolute inset-0 flex flex-col items-center justify-center px-6 text-center;
+    color: #fffefe;
   }
 
   .case-detail-next-label {
-    @apply text-body-lg font-semibold uppercase tracking-[0.1em] text-white lg:text-[1.5rem];
-    font-family: var(--font-nav);
+    @apply text-caption font-bold uppercase tracking-[0.12em];
+    opacity: 0.85;
   }
 
-  .case-detail-next-icon-wrap {
-    @apply flex justify-center;
+  /* Shrinks to the title, so the bar below is exactly as wide as the name. */
+  .case-detail-next-title {
+    @apply mt-md inline-flex max-w-full flex-col;
   }
 
-  .case-detail-next-icon {
-    @apply relative flex h-16 w-16 items-center justify-center text-white lg:h-[4.75rem] lg:w-[4.75rem];
+  /* Same scale as the case hero's name. */
+  .case-detail-next-name {
+    font-size: clamp(3rem, 9vw, 8rem);
+    font-weight: var(--heading-weight);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
   }
 
-  .case-detail-next-icon-ring {
-    @apply absolute inset-0 h-full w-full;
+  .case-detail-next-bar {
+    @apply mt-lg block h-[5px] w-full overflow-hidden rounded-pill;
+    background-color: rgb(255 254 254 / 0.3);
   }
 
-  .case-detail-next-ring-track {
-    fill: none;
-    stroke: #555555;
-    stroke-width: 2;
-  }
-
-  .case-detail-next-ring-progress {
-    fill: none;
-    stroke: #fffefe;
-    stroke-width: 2;
-    stroke-linecap: round;
-  }
-
-  .case-detail-next-icon-arrow {
-    @apply relative z-[1] h-7 w-7 lg:h-8 lg:w-8;
-  }
-
-  .case-detail-next-year {
-    @apply justify-self-end text-body-lg font-semibold tracking-[0.06em] text-white lg:text-[1.5rem];
-    font-family: var(--font-nav);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .case-detail-next-ring-progress {
-      transition: none;
-    }
+  .case-detail-next-bar-fill {
+    @apply block h-full w-full origin-left;
+    background-color: #fffefe;
+    transform: scaleX(0);
   }
 
   .cases-hero-slider-slide img,
@@ -2713,6 +3057,37 @@
   .arrow-chip-btn-arrow-next {
     position: absolute;
     top: 0;
+  }
+
+  /* Text before the chip: a one-line window over two stacked copies; the
+     hover timeline lifts the track a full line so the copy below takes over. */
+  .arrow-chip-btn-with-text {
+    @apply items-center gap-2 text-body-sm font-bold text-primary;
+  }
+
+  .arrow-chip-btn-text {
+    @apply block overflow-hidden;
+    line-height: 1.25;
+  }
+
+  /* The chip matches the text's line box (1.25em), so both share one height. */
+  .arrow-chip-btn-with-text .arrow-chip-btn-chip {
+    width: 1.25em;
+    height: 1.25em;
+    border-radius: 0.25rem;
+  }
+
+  .arrow-chip-btn-with-text .arrow-chip-btn-arrow {
+    width: 0.625em;
+    height: 0.625em;
+  }
+
+  .arrow-chip-btn-text-track {
+    @apply relative block;
+  }
+
+  .arrow-chip-btn-text-next {
+    @apply absolute left-0 top-full;
   }
 
   .arrow-chip-btn-right .arrow-chip-btn-arrow-next {
@@ -3254,8 +3629,66 @@
     color: var(--cases-ink);
   }
 
+  /* Intro above the projects: heading left, text right (the case pages'
+     overview split), then the list's own heading. Colours follow the
+     section's black-to-white roll-in. */
+  /* Title in the left column; the text's paragraphs stack in the right one. */
+  .home-cases-intro {
+    @apply grid gap-md pt-2xl lg:grid-cols-[minmax(0,1fr)_minmax(0,42rem)] lg:gap-x-16 lg:gap-y-lg lg:pt-4xl;
+  }
+
+  .home-cases-intro > .home-cases-intro-text + .home-cases-intro-text {
+    @apply lg:col-start-2;
+  }
+
+  .home-cases-intro-title {
+    @apply text-h3;
+    font-weight: var(--heading-weight);
+    color: var(--cases-ink);
+  }
+
+  .home-cases-intro-text {
+    @apply text-body-lg font-medium;
+    color: var(--cases-muted);
+  }
+
+  .home-cases-intro-link {
+    color: var(--cases-ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    transition: color 300ms var(--ease-smooth);
+  }
+
+  .home-cases-intro-link:is(:hover, :focus-visible) {
+    color: var(--color-accent);
+  }
+
+  /* The section's h2: a step up from the regular h2, but always smaller than
+     the hero's h1 (64px at 1440, 48px at 1024, 36px on phones). */
+  .home-cases-list-title {
+    @apply mt-5xl mb-2xl lg:mt-[12rem];
+    font-size: clamp(2.125rem, 3.9vw, 3.5rem);
+    font-weight: var(--heading-weight);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--cases-ink);
+    will-change: transform;
+  }
+
+  /* Desktop: the image column is exactly 16:9 of the full image height, so the
+     16:9 case images show uncropped. CasesSection scales each image's height
+     and width (as a % of this column) by the same factor, which keeps 16:9
+     while the rows grow and shrink. */
   .case-card {
-    @apply grid grid-cols-1 lg:grid-cols-[3fr_2fr];
+    @apply grid grid-cols-1;
+    --case-media-height: clamp(22rem, 32vw, 38rem);
+  }
+
+  @media (min-width: 1024px) {
+    .case-card {
+      grid-template-columns: calc(var(--case-media-height) * 16 / 9) minmax(0, 1fr);
+    }
   }
 
   .case-card-media-link {
@@ -3263,7 +3696,7 @@
   }
 
   .case-card-media {
-    @apply relative aspect-[4/3] overflow-hidden;
+    @apply relative aspect-video overflow-hidden;
     /* Also the placeholder for cases without an image yet. */
     background-color: var(--cases-placeholder);
   }
@@ -3272,7 +3705,7 @@
      CasesSection, which sizes each image between 80% and 100% of it). */
   @media (min-width: 1024px) {
     .case-card-media {
-      height: clamp(22rem, 32vw, 38rem);
+      height: var(--case-media-height);
       aspect-ratio: auto;
     }
   }
@@ -3300,8 +3733,8 @@
     margin: 0;
     color: var(--cases-ink);
     font-family: var(--font-heading);
-    /* Stays below the hero h1 (clamp(2.25rem, 4.7vw, 4rem)) at every width. */
-    font-size: clamp(2rem, 3.6vw, 3.5rem);
+    /* h3: a step below the "Seneste projekter" h2 at every width. */
+    font-size: clamp(1.5rem, 2.4vw, 2.25rem);
     font-weight: var(--heading-weight);
     line-height: 1;
     letter-spacing: -0.035em;
@@ -3321,7 +3754,7 @@
     margin: 0.875rem 0 0;
     color: var(--cases-muted);
     font-size: 0.8125rem;
-    font-weight: 500;
+    font-weight: 700;
     line-height: 1.5;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -3335,15 +3768,14 @@
     line-height: 1.6;
   }
 
-  /* Divider, then role / technologies / year with a rule between each. */
+  /* Role / technologies / year with a rule between each, set off from the
+     description by space alone. */
   .case-card-facts {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     width: 100%;
     max-width: 36rem;
-    margin: 2rem 0 0;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--cases-rule);
+    margin: 3rem 0 0;
   }
 
   .case-card-fact {
@@ -3782,121 +4214,107 @@
     pointer-events: auto;
   }
 
+  /* The page under the footer: sticky with its top at "screen height minus
+     its own height" (--page-stick-top, set by Footer), so it holds still once
+     its bottom reaches the bottom of the screen and the footer slides up over
+     it, like the home cases section over the hero. */
+  .page-shell > .is-under-footer {
+    position: sticky;
+    top: var(--page-stick-top, auto);
+    z-index: 0;
+  }
+
+  /* The footer's background arrives dark and turns light as it rolls in:
+     --footer-light runs 0 → 1 with the scroll, the way .home-cases does, and
+     rests at 1 without the animation (reduced motion). The text stays dark
+     throughout, so it never flips from light to dark mid-scroll.
+     One screen tall: the four columns, then the wordmark along the bottom. */
   .site-footer {
-    @apply bg-[#131313] pt-section-sm pb-8 text-[#fffefe] lg:pt-section lg:pb-10;
+    --footer-light: 1;
+    --footer-mix: calc(var(--footer-light) * 100%);
+    /* The footer's own light colour, a touch cooler than the page. */
+    --footer-bg: color-mix(in srgb, #e8e9e9 var(--footer-mix), #131313);
+    --footer-ink: #131313;
+    --footer-muted: rgb(19 19 19 / 0.6);
+    --footer-label: rgb(19 19 19 / 0.45);
+
+    @apply relative flex flex-col pt-section-sm pb-6 lg:pt-section lg:pb-8;
+    z-index: 1;
+    min-height: 100vh;
+    min-height: 100svh;
+    background-color: var(--footer-bg);
+    color: var(--footer-ink);
   }
 
-  .site-footer-top {
-    @apply flex flex-col gap-10 pb-6 lg:flex-row lg:items-start lg:justify-between lg:pb-8;
+  .site-footer > .site-footer-inner {
+    @apply flex flex-col;
+    flex: 1;
   }
 
-  .site-footer-logo {
-    @apply shrink-0 text-[#fffefe] transition-colors hover:text-accent;
-    font-family: var(--font-brand);
-    @apply inline-block font-semibold uppercase tracking-[0.02em];
-    font-size: 1.25rem;
+  .site-footer > .site-footer-inner > .site-grid-full {
+    @apply flex flex-col;
+    flex: 1;
   }
 
-  @media (min-width: 640px) {
-    .site-footer-logo {
-      font-size: 1.5rem;
-    }
-  }
-
-  .site-footer-logo .brand-wordmark-reg {
-    color: inherit;
-  }
-
-  /* Logo with the social icons stacked underneath it, on the left. */
-  .site-footer-brand {
-    @apply flex shrink-0 flex-col items-start gap-5;
-  }
-
-  .site-footer-nav {
-    @apply w-full lg:ml-auto lg:min-w-0 lg:flex-1 lg:pl-12 xl:pl-16;
-  }
-
-  /* lg:flex-wrap lets a column that does not fit move to a new row instead of
-     pushing the footer (and the page) wider than the viewport. justify-end
-     keeps every column on the right-hand side of the footer. */
+  /* Four columns (two on tablets, one on phones), each under a small label.
+     mt-auto keeps them low, just above the wordmark. */
   .site-footer-columns {
-    @apply grid grid-cols-2 gap-x-8 gap-y-10 sm:gap-x-10 lg:flex lg:w-full lg:flex-wrap lg:justify-end lg:gap-x-8 xl:gap-x-16;
+    @apply mt-auto grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-10;
   }
 
   .site-footer-column {
-    @apply shrink-0;
+    @apply flex min-w-0 flex-col items-start gap-3;
+  }
+
+  .site-footer-column-title {
+    @apply mb-2 text-caption font-bold uppercase tracking-[0.12em];
+    color: var(--footer-label);
   }
 
   .site-footer-links {
-    @apply flex flex-col gap-3;
+    @apply flex flex-col items-start gap-1.5;
+  }
+
+  .site-footer-link,
+  .site-footer-strong {
+    @apply text-body font-bold;
+    color: var(--footer-ink);
+  }
+
+  /* Same line height as the rolling labels, so "København" lines up with the
+     first link in the other columns. */
+  .site-footer-strong {
+    line-height: 1.3;
+  }
+
+  .site-footer-links-nav .site-footer-link {
+    @apply uppercase tracking-[0.04em];
   }
 
   .site-footer-link {
-    @apply text-body text-[#bababa] transition-colors hover:text-[#fffefe];
+    line-height: 1.3;
   }
 
-  .site-footer-divider {
-    @apply border-0 border-t border-[#333333];
+  /* The contact entry is a button: it opens the contact drawer, not a page. */
+  button.site-footer-link {
+    @apply cursor-pointer border-0 bg-transparent p-0 text-left;
   }
 
-  .site-footer-top + .site-footer-divider {
-    @apply mt-12 mb-4 lg:mt-16 lg:mb-6;
-  }
-
-  .site-footer-middle + .site-footer-divider {
-    @apply mt-4 mb-10 lg:mt-6 lg:mb-12;
-  }
-
-  .site-footer-location {
-    @apply shrink-0 text-left;
-  }
-
-  .site-footer-location-title {
-    @apply text-body-sm font-semibold tracking-wide text-[#fffefe] uppercase;
-  }
-
-  .site-footer-address {
-    @apply mt-2 text-body text-[#bababa];
-  }
-
-  .site-footer-contact-link {
-    @apply inline-flex shrink-0 items-center gap-2 text-body whitespace-nowrap text-[#bababa] transition-colors hover:text-[#fffefe];
-  }
-
-  .site-footer-contact-icon {
-    @apply h-[1.125rem] w-[1.125rem] shrink-0;
-  }
-
-  .site-footer-middle {
-    @apply flex flex-col items-start gap-6 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between;
-  }
-
-  .site-footer-bottom {
-    @apply flex flex-col gap-6 pt-4 lg:flex-row lg:items-center lg:justify-between lg:pt-6;
-  }
-
-  .site-footer-social {
-    @apply flex shrink-0 items-center gap-4;
-  }
-
-  .site-footer-social-link {
-    @apply inline-flex h-10 w-10 items-center justify-center rounded-full text-[#fffefe] transition-colors hover:text-accent;
-  }
-
-  .site-footer-meta {
-    @apply flex flex-wrap items-center gap-x-6 gap-y-2 lg:justify-end;
+  .site-footer-text {
+    @apply max-w-[22rem] text-body;
+    color: var(--footer-muted);
   }
 
   .site-footer-copyright {
-    @apply text-body-sm text-[#bababa];
+    @apply mt-3 text-body-sm;
+    color: var(--footer-muted);
   }
 
-  .site-footer-legal {
-    @apply flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-6 sm:gap-y-2;
-  }
-
-  .site-footer-legal-link {
-    @apply text-body-sm text-[#bababa] transition-colors hover:text-[#fffefe];
+  /* "Frisdahl Studio" across the full width: the path's viewBox hugs its
+     outline (see FooterWordmark), so width: 100% sets its size. */
+  .site-footer-wordmark {
+    @apply mt-3xl block h-auto w-full lg:mt-4xl;
+    fill: var(--footer-ink);
   }
 
 

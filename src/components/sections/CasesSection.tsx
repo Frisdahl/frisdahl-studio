@@ -1,14 +1,18 @@
 import { useLayoutEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { SplitText } from 'gsap/SplitText'
+import { Link } from 'react-router-dom'
 import { CaseCard } from '../cards/CaseCard'
+import { Container } from '../ui'
+import { MEET_US_PATH } from '../../lib/routes'
 import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
 import { getCaseRole } from '../../data/caseDetails'
 import { getCaseYear } from '../../data/caseNavigation'
 import { getCasesPageContent } from '../../data/cases'
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger, SplitText)
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
 // Symmetric ease: smoothstep(t) + smoothstep(1 - t) === 1, so the row that
@@ -34,32 +38,79 @@ export function CasesSection() {
     getCasesPageContent(locale).items.map((item) => [item.id, item.description]),
   )
   const sectionRef = useRef<HTMLElement>(null)
+  const introRef = useRef<HTMLDivElement>(null)
+  const listTitleRef = useRef<HTMLHeadingElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const spacerRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
     const section = sectionRef.current
+    const intro = introRef.current
+    const listTitle = listTitleRef.current
     const list = listRef.current
     const spacer = spacerRef.current
-    if (!section || !list || !spacer) return
+    if (!section || !intro || !listTitle || !list || !spacer) return
 
     const mm = gsap.matchMedia()
 
     // The section arrives black and turns white as it rolls in: --cases-light
     // (which every colour in .home-cases mixes from) runs 0 → 1 from the
-    // section entering at the bottom until its top is a quarter down the
+    // section entering at the bottom until its top is 60% down the
     // screen, so it's light well before the first project is centred, and
     // before it reaches the header (which therefore stays in its normal mode).
-    mm.add('(prefers-reduced-motion: no-preference)', () => {
+    mm.add('(prefers-reduced-motion: no-preference)', (context) => {
       gsap.fromTo(
         section,
         { '--cases-light': 0 },
         {
           '--cases-light': 1,
           ease: 'none',
-          scrollTrigger: { trigger: section, start: 'top bottom', end: 'top 25%', scrub: true },
+          scrollTrigger: { trigger: section, start: 'top bottom', end: 'top 60%', scrub: true },
         },
       )
+
+      // The intro slides up line by line, each line rising out of its own
+      // mask, once the background has turned light (the colour scrub above
+      // ends at 'top 60%'). The heading leads, the text follows; "Seneste
+      // projekter" rises the same way when it scrolls into view. The text is
+      // split only once the web fonts are in, so the lines are measured with
+      // the real font (with the fallback they overflow and wrap mid-line).
+      // Each split is undone afterwards so the text reflows on resize.
+      const splits: SplitText[] = []
+      let cancelled = false
+
+      const slideUp = (targets: Element | NodeListOf<Element>, start: string, trigger: Element) => {
+        const split = SplitText.create(targets, {
+          type: 'lines',
+          mask: 'lines',
+          linesClass: 'home-cases-intro-line',
+        })
+        splits.push(split)
+        gsap.set(split.lines, { yPercent: 100 })
+        gsap.to(split.lines, {
+          yPercent: 0,
+          duration: 1,
+          ease: 'power3.out',
+          stagger: 0.08,
+          scrollTrigger: { trigger, start, once: true },
+          onComplete: () => split.revert(),
+        })
+      }
+
+      document.fonts.ready.then(() => {
+        if (cancelled) return
+        // context.add runs this now and records its tweens in the matchMedia
+        // context, so they are reverted with it although they start late.
+        context.add(() => {
+          slideUp(intro.querySelectorAll('.home-cases-intro-title, .home-cases-intro-text'), 'top 60%', section)
+          slideUp(listTitle, 'top 85%', listTitle)
+        })
+      })
+
+      return () => {
+        cancelled = true
+        splits.forEach((split) => split.revert())
+      }
     })
 
     // Desktop only: on phones the rows stack at full size with the text shown.
@@ -81,6 +132,7 @@ export function CasesSection() {
         maxH = fullHeight()
         minH = maxH * SMALL
         list.style.transform = ''
+        listTitle.style.transform = ''
         listTop = list.getBoundingClientRect().top + window.scrollY
         // The lag runs from the list's top entering at the bottom of the screen
         // until the last row's centre reaches the screen's centre. Over that
@@ -93,6 +145,14 @@ export function CasesSection() {
         lagRange = (viewport / 2 + lastRowCentre) / (1 - (2 * LAG) / Math.PI)
         spacer.style.height = `${(2 * LAG * lagRange) / Math.PI}px`
         lag = -1
+      }
+
+      // The list and its heading lag together, so the heading stays right
+      // above the first project instead of scrolling away from it.
+      const setLag = (offset: number) => {
+        const transform = `translate3d(0, ${offset}px, 0)`
+        list.style.transform = transform
+        listTitle.style.transform = transform
       }
 
       // Integral of LAG·sin(π·u) over the scroll: 0 before, full shift after.
@@ -147,7 +207,7 @@ export function CasesSection() {
         const offset = lagOffset()
         if (offset !== lag) {
           lag = offset
-          list.style.transform = `translate3d(0, ${offset}px, 0)`
+          setLag(offset)
         }
 
         const target = targetPosition(offset)
@@ -164,7 +224,7 @@ export function CasesSection() {
       const snap = () => {
         measure()
         lag = lagOffset()
-        list.style.transform = `translate3d(0, ${lag}px, 0)`
+        setLag(lag)
         position = targetPosition(lag)
         render()
       }
@@ -180,6 +240,7 @@ export function CasesSection() {
         ScrollTrigger.removeEventListener('refresh', snap)
         window.removeEventListener('resize', snap)
         list.style.transform = ''
+        listTitle.style.transform = ''
         spacer.style.height = ''
         medias.forEach((media) => {
           media.style.height = ''
@@ -199,6 +260,23 @@ export function CasesSection() {
       className="home-cases py-section-sm lg:pt-section lg:pb-0"
       aria-label={cases.ariaLabel}
     >
+      <Container>
+        <div ref={introRef} className="home-cases-intro">
+          <h2 className="home-cases-intro-title">{cases.intro.title}</h2>
+          <p className="home-cases-intro-text">
+            {cases.intro.textBefore}
+            <Link to={MEET_US_PATH} className="home-cases-intro-link">
+              {cases.intro.name}
+            </Link>
+            {cases.intro.textAfter}
+          </p>
+          <p className="home-cases-intro-text">{cases.intro.textMore}</p>
+        </div>
+        <h2 ref={listTitleRef} className="home-cases-list-title">
+          {cases.listTitle}
+        </h2>
+      </Container>
+
       <div ref={listRef}>
         {cases.items.map((item) => (
           <CaseCard

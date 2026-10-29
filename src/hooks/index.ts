@@ -1,5 +1,4 @@
 export { useAutoplaySlider } from './useAutoplaySlider'
 export { useHorizontalDragSlider } from './useHorizontalDragSlider'
-export { useNextCaseTimerProgress } from './useNextCaseTimerProgress'
 export { useStickyScrollSteps } from './useStickyScrollSteps'
 export { useUnderlineHover } from './useUnderlineHover'

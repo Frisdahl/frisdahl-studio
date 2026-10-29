@@ -4,6 +4,8 @@ export interface CaseDetailHeroMeta {
   label: string
   value?: string
   href?: string
+  /** Render the value as the text-and-arrow-chip link button. */
+  button?: boolean
 }
 
 export interface CaseDetailHero {
@@ -30,6 +32,21 @@ export interface CaseDetailOverview {
   description: string[]
   detailsTitle: string
   details: CaseDetailFact[]
+}
+
+/** One colour of a case's palette. */
+export interface CaseDetailSwatch {
+  name: string
+  hex: string
+  /** Light label text for dark swatches. */
+  dark: boolean
+}
+
+export interface CaseDetailPalette {
+  title: string
+  /** How the case uses its colours. */
+  description: string
+  swatches: CaseDetailSwatch[]
 }
 
 /** The case's typeface, shown as a specimen under the intro images. */
@@ -76,6 +93,8 @@ export interface CaseDetailGallery {
   verticalPairTop?: [CaseDetailGalleryImage, CaseDetailGalleryImage]
   verticalPairBottom: [CaseDetailGalleryImage, CaseDetailGalleryImage]
   horizontalBottom: CaseDetailGalleryImage
+  /** One full-width image in place of verticalPairBottom. */
+  bottomWide?: CaseDetailGalleryImage
   /** Shown as a two-column pair in horizontalBottom's gallery slot. */
   horizontalBottomPair?: [CaseDetailGalleryImage, CaseDetailGalleryImage]
 }
@@ -85,6 +104,7 @@ export interface CaseDetailContent {
   hero: CaseDetailHero
   overview: CaseDetailOverview
   typography?: CaseDetailTypography
+  palette?: CaseDetailPalette
   columns: [CaseDetailColumn, CaseDetailColumn, CaseDetailColumn]
   gallery: CaseDetailGallery
   nextCase: CaseDetailNext
@@ -92,6 +112,8 @@ export interface CaseDetailContent {
 
 export interface CaseDetailNext {
   href: string
+  /** The next case's client name, shown as the big title. */
+  name: string
   label: string
   year: string
   image: CaseDetailGalleryImage

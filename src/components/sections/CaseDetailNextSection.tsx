@@ -1,106 +1,81 @@
 import { useReducedMotion } from 'framer-motion'
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useNextCaseTimerProgress } from '../../hooks/useNextCaseTimerProgress'
+import { useScrollTrackProgress } from '../../hooks/useScrollTrackProgress'
 import type { CaseDetailNext } from '../../types/caseDetail'
-import { responsiveImageProps } from '../../lib/responsiveImage'
-import { ArrowIcon } from '../ui/ArrowIcon'
+import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
+import { Container } from '../ui'
 
 interface CaseDetailNextSectionProps {
   nextCase: CaseDetailNext
 }
 
-const RING_SIZE = 76
-const RING_CENTER = RING_SIZE / 2
-const RING_RADIUS = 34
-const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS
-
+/**
+ * The next case at the end of the page. The card sticks while the section's
+ * extra scroll room passes; the bar under the title fills with that scroll,
+ * and when it is full the page moves on to the next case.
+ */
 export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) {
-  const { href, label, year, image, ariaLabel } = nextCase
-  const mediaRef = useRef<HTMLElement>(null)
+  const { href, name, label, image, ariaLabel } = nextCase
+  const trackRef = useRef<HTMLElement>(null)
+  const barRef = useRef<HTMLSpanElement>(null)
   const hasNavigatedRef = useRef(false)
   const navigate = useNavigate()
   const shouldReduceMotion = useReducedMotion()
-  const { progress, displayProgress, revealProgress, isRevealed } = useNextCaseTimerProgress(
-    mediaRef,
-    shouldReduceMotion,
-  )
-  const strokeDashoffset = RING_CIRCUMFERENCE * (1 - displayProgress)
-  const clipInset = shouldReduceMotion ? 0 : (1 - revealProgress) * 100
 
   useEffect(() => {
     hasNavigatedRef.current = false
   }, [href])
 
-  useEffect(() => {
-    if (shouldReduceMotion || progress < 1 || hasNavigatedRef.current) return
+  const onProgress = useCallback(
+    (progress: number) => {
+      if (barRef.current) barRef.current.style.transform = `scaleX(${progress})`
 
-    hasNavigatedRef.current = true
-    navigate(href)
-  }, [href, navigate, progress, shouldReduceMotion])
+      // Reduced motion: the bar still shows progress, but the page never
+      // changes without a click.
+      if (progress < 1 || shouldReduceMotion || hasNavigatedRef.current) return
+      hasNavigatedRef.current = true
+      navigate(href)
+    },
+    [href, navigate, shouldReduceMotion],
+  )
+
+  useScrollTrackProgress(trackRef, onProgress)
 
   return (
-    <div className="case-detail-next-section" aria-label={label}>
-      <Link to={href} className="case-detail-next group block" aria-label={ariaLabel}>
-        <figure
-          ref={mediaRef}
-          className={`case-detail-next-media${isRevealed ? ' case-detail-next-media--revealed' : ''}`}
-          style={{
-            clipPath: `inset(${clipInset}% 0 0 0 round var(--radius-panel-xl) var(--radius-panel-xl) 0 0)`,
-          }}
-        >
-          {image.imageSrc ? (
-            <img
-              {...responsiveImageProps(image.imageSrc, '100vw')}
-              alt=""
-              className="case-detail-next-image"
-              loading="lazy"
-              decoding="async"
-            />
-          ) : (
-            <div
-              className={`case-detail-next-image ${image.placeholderClassName ?? 'bg-peach'}`}
-              aria-hidden="true"
-            />
-          )}
+    <section ref={trackRef} className="case-detail-next-section" aria-label={label}>
+      <div className="case-detail-next-sticky">
+        <Container>
+          <Link to={href} className="case-detail-next" aria-label={ariaLabel}>
+            {image.imageSrc ? (
+              <img
+                {...responsiveImageProps(image.imageSrc, IMAGE_SIZES.container)}
+                alt=""
+                className="case-detail-next-image"
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <div
+                className={`case-detail-next-image ${image.placeholderClassName ?? 'bg-peach'}`}
+                aria-hidden="true"
+              />
+            )}
 
-          <div className="case-detail-next-overlay" aria-hidden="true" />
+            <div className="case-detail-next-overlay" aria-hidden="true" />
 
-          <figcaption className="case-detail-next-meta">
-            <span className="case-detail-next-label">{label}</span>
-
-            <span className="case-detail-next-icon-wrap" aria-hidden="true">
-              <span className="case-detail-next-icon">
-                <svg
-                  className="case-detail-next-icon-ring"
-                  viewBox={`0 0 ${RING_SIZE} ${RING_SIZE}`}
-                  aria-hidden="true"
-                  focusable="false"
-                >
-                  <circle
-                    className="case-detail-next-ring-track"
-                    cx={RING_CENTER}
-                    cy={RING_CENTER}
-                    r={RING_RADIUS}
-                  />
-                  <circle
-                    className="case-detail-next-ring-progress"
-                    cx={RING_CENTER}
-                    cy={RING_CENTER}
-                    r={RING_RADIUS}
-                    strokeDasharray={RING_CIRCUMFERENCE}
-                    strokeDashoffset={strokeDashoffset}
-                    transform={`rotate(-90 ${RING_CENTER} ${RING_CENTER})`}
-                  />
-                </svg>
-                <ArrowIcon className="case-detail-next-icon-arrow" rotate={90} />
+            <div className="case-detail-next-content">
+              <span className="case-detail-next-label">{label}</span>
+              <span className="case-detail-next-title">
+                <span className="case-detail-next-name">{name}</span>
+                <span className="case-detail-next-bar" aria-hidden="true">
+                  <span ref={barRef} className="case-detail-next-bar-fill" />
+                </span>
               </span>
-            </span>
-
-            <span className="case-detail-next-year">{year}</span>
-          </figcaption>
-        </figure>
-      </Link>
-    </div>
+            </div>
+          </Link>
+        </Container>
+      </div>
+    </section>
   )
 }

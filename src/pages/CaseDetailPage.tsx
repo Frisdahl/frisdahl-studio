@@ -1,8 +1,8 @@
 import { Navigate, useParams } from 'react-router-dom'
 import { PageMeta } from '../components/layout'
 import { useLocale } from '../context/LocaleContext'
-import { getCaseDetail } from '../data/caseDetails'
-import { getNextCasePreview } from '../data/caseNavigation'
+import { getCaseDetail, getCaseLiveUrl } from '../data/caseDetails'
+import { getAdjacentCaseHrefs, getNextCasePreview } from '../data/caseNavigation'
 import { CASES_PATH } from '../lib/routes'
 import {
   CaseDetailCtaBar,
@@ -10,9 +10,9 @@ import {
   CaseDetailHero,
   CaseDetailIntroPair,
   CaseDetailOverview,
+  CaseDetailPalette,
   CaseDetailTypography,
   CaseDetailNextSection,
-  ContactSection,
 } from '../components/sections'
 
 export function CaseDetailPage() {
@@ -20,6 +20,8 @@ export function CaseDetailPage() {
   const { locale } = useLocale()
   const detail = caseSlug ? getCaseDetail(locale, caseSlug) : null
   const nextCase = caseSlug ? getNextCasePreview(locale, caseSlug) : null
+  const adjacent = caseSlug ? getAdjacentCaseHrefs(caseSlug) : null
+  const liveUrl = caseSlug ? getCaseLiveUrl(caseSlug) : null
 
   if (!detail) {
     return <Navigate to={CASES_PATH} replace />
@@ -33,9 +35,15 @@ export function CaseDetailPage() {
       <CaseDetailIntroPair gallery={detail.gallery} />
       {detail.typography ? <CaseDetailTypography typography={detail.typography} /> : null}
       <CaseDetailGallery gallery={detail.gallery} />
-      <ContactSection />
+      {detail.palette ? <CaseDetailPalette palette={detail.palette} /> : null}
       {nextCase ? <CaseDetailNextSection nextCase={nextCase} /> : null}
-      <CaseDetailCtaBar />
+      {adjacent ? (
+        <CaseDetailCtaBar
+          previousHref={adjacent.previous}
+          nextHref={adjacent.next}
+          liveUrl={liveUrl}
+        />
+      ) : null}
     </main>
   )
 }

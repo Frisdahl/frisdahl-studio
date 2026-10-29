@@ -5,6 +5,8 @@ import { ArrowIcon } from './ArrowIcon'
 interface CtaPillButtonProps {
   children: string
   href?: string
+  /** Open href as an external page in a new tab. */
+  external?: boolean
   onClick?: () => void
   className?: string
   /** Hover slides a colour overlay up, rolls the label to a copy and turns the arrow chip. */
@@ -16,6 +18,7 @@ const prefersReducedMotion = () =>
 
 export function CtaPillButton({
   href,
+  external = false,
   onClick,
   children,
   className = '',
@@ -137,7 +140,11 @@ export function CtaPillButton({
 
   if (href) {
     return (
-      <a href={href} {...interactionProps}>
+      <a
+        href={href}
+        {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : null)}
+        {...interactionProps}
+      >
         {content}
       </a>
     )

@@ -3,6 +3,8 @@ import { CtaPillButton } from './CtaPillButton'
 interface ContactButtonProps {
   children: string
   href?: string
+  /** Open href as an external page in a new tab. */
+  external?: boolean
   onClick?: () => void
   className?: string
 }

@@ -1,10 +1,4 @@
-import {
-  CASES_PATH,
-  MEET_US_PATH,
-  PRICING_PATH,
-  PRIVACY_POLICY_PATH,
-  PROCESS_PATH,
-} from '../lib/routes'
+import { CASES_PATH, MEET_US_PATH, PRIVACY_POLICY_PATH, PROCESS_PATH } from '../lib/routes'
 import type { Locale } from './navigation'
 import { defaultLocale } from './navigation'
 
@@ -13,38 +7,29 @@ export interface FooterLink {
   href: string
 }
 
-export interface FooterColumn {
-  links: FooterLink[]
-}
-
 export interface FooterSocialLink {
   label: string
   href: string
-  icon: 'facebook' | 'behance' | 'github'
 }
 
 const footerContent = {
   da: {
     logoLabel: 'Frisdahl Studio',
-    columnsAriaLabel: 'Footer navigation',
-    // Every href here is a route that exists; no #anchors.
-    columns: [
-      {
-        links: [
-          { label: 'Cases', href: CASES_PATH },
-          { label: 'Proces', href: PROCESS_PATH },
-          { label: 'Priser', href: PRICING_PATH },
-        ],
-      },
-      {
-        links: [
-          { label: 'Mød mig', href: MEET_US_PATH },
-          { label: 'Kontakt', href: '/#contact' },
-        ],
-      },
+    navAriaLabel: 'Footer navigation',
+    // The four columns' small headings, left to right.
+    columnTitles: { contact: 'Kontakt', nav: 'Navigation', studio: 'Studio', legal: 'Privatliv' },
+    // Tagensvej 55, 2200 Nørrebro (OpenStreetMap).
+    coordinates: '55.7003° N, 12.5523° E',
+    // The full-width wordmark along the bottom.
+    wordmark: 'Frisdahl Studio',
+    // '/#contact' opens the contact drawer (see Footer); the rest are routes.
+    links: [
+      { label: 'Cases', href: CASES_PATH },
+      { label: 'Proces', href: PROCESS_PATH },
+      { label: 'Mød mig', href: MEET_US_PATH },
+      { label: 'Kontakt', href: '/#contact' },
     ],
     locationTitle: 'København',
-    address: 'Tagensvej 55, 2200 Nørrebro',
     email: 'hello@frisdahlstudio.dk',
     emailHref: 'mailto:hello@frisdahlstudio.dk',
     copyright: '© Frisdahl Studio. Alle rettigheder forbeholdes.',
@@ -58,41 +43,31 @@ const footerContent = {
       {
         label: 'Facebook',
         href: 'https://www.facebook.com/frisdahlstudio',
-        icon: 'facebook',
       },
       {
-        label: 'Behance',
-        href: 'https://www.behance.net/frisdahlstudio',
-        icon: 'behance',
+        label: 'Instagram',
+        href: 'https://www.instagram.com/frisdahlstudio',
       },
       {
         label: 'GitHub',
         href: 'https://github.com/frisdahlstudio',
-        icon: 'github',
       },
     ] as FooterSocialLink[],
   },
   en: {
     logoLabel: 'Frisdahl Studio',
-    columnsAriaLabel: 'Footer navigation',
-    // Every href here is a route that exists; no #anchors.
-    columns: [
-      {
-        links: [
-          { label: 'Cases', href: CASES_PATH },
-          { label: 'Process', href: PROCESS_PATH },
-          { label: 'Pricing', href: PRICING_PATH },
-        ],
-      },
-      {
-        links: [
-          { label: 'Meet me', href: MEET_US_PATH },
-          { label: 'Contact', href: '/#contact' },
-        ],
-      },
+    navAriaLabel: 'Footer navigation',
+    columnTitles: { contact: 'Contact', nav: 'Navigation', studio: 'Studio', legal: 'Privacy' },
+    coordinates: '55.7003° N, 12.5523° E',
+    wordmark: 'Frisdahl Studio',
+    // '/#contact' opens the contact drawer (see Footer); the rest are routes.
+    links: [
+      { label: 'Cases', href: CASES_PATH },
+      { label: 'Process', href: PROCESS_PATH },
+      { label: 'Meet me', href: MEET_US_PATH },
+      { label: 'Contact', href: '/#contact' },
     ],
     locationTitle: 'Copenhagen',
-    address: 'Tagensvej 55, 2200 Nørrebro',
     email: 'hello@frisdahlstudio.dk',
     emailHref: 'mailto:hello@frisdahlstudio.dk',
     copyright: '© Frisdahl Studio. All rights reserved.',
@@ -106,17 +81,14 @@ const footerContent = {
       {
         label: 'Facebook',
         href: 'https://www.facebook.com/frisdahlstudio',
-        icon: 'facebook',
       },
       {
-        label: 'Behance',
-        href: 'https://www.behance.net/frisdahlstudio',
-        icon: 'behance',
+        label: 'Instagram',
+        href: 'https://www.instagram.com/frisdahlstudio',
       },
       {
         label: 'GitHub',
         href: 'https://github.com/frisdahlstudio',
-        icon: 'github',
       },
     ] as FooterSocialLink[],
   },

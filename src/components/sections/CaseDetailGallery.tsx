@@ -90,10 +90,14 @@ export function CaseDetailGallery({ gallery }: CaseDetailGalleryProps) {
             <GalleryFigure image={gallery.horizontalBottom} variant="horizontal" />
           )}
 
-          <div className="case-detail-gallery-pair">
-            <GalleryFigure image={gallery.verticalPairBottom[0]} variant="vertical" />
-            <GalleryFigure image={gallery.verticalPairBottom[1]} variant="vertical" />
-          </div>
+          {gallery.bottomWide ? (
+            <GalleryFigure image={gallery.bottomWide} variant="horizontal" />
+          ) : (
+            <div className="case-detail-gallery-pair">
+              <GalleryFigure image={gallery.verticalPairBottom[0]} variant="vertical" />
+              <GalleryFigure image={gallery.verticalPairBottom[1]} variant="vertical" />
+            </div>
+          )}
         </div>
       </Container>
     </section>

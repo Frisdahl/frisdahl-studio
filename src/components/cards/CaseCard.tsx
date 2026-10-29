@@ -53,12 +53,12 @@ export function CaseCard({
       </Link>
 
       <div className="case-card-meta">
-        {/* The section has no heading, so each title is the h2 under the hero's h1. */}
-        <h2 className="case-card-client">
+        {/* Each title is an h3 under the section's "Latest projects" h2. */}
+        <h3 className="case-card-client">
           <Link to={href} className="case-card-title-link">
             {client}
           </Link>
-        </h2>
+        </h3>
         <p className="case-card-keywords">{keywords}</p>
         {description ? <p className="case-card-description">{description}</p> : null}
 
