@@ -63,7 +63,7 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
   },
   'peter-salling': {
     introPair: [
-      { imageSrc: '/cases/peter-salling/mobiler-projektsider--4-3.webp', imageAlt: 'Trailer, premierebilleder og festivalpriser på tre iPhones', aspectRatio: '4 / 3', transparent: true },
+      { imageSrc: '/cases/peter-salling/mobiler-presse-priser--4-3.webp', imageAlt: 'Premierebilleder, anmeldelse og festivalpriser på to iPhones', aspectRatio: '4 / 3' },
       { imageSrc: '/cases/peter-salling/mobiler-forside-strandet--4-3.webp', imageAlt: 'Forsiden og Strandet på to iPhones', aspectRatio: '4 / 3', transparent: true },
     ],
     horizontalTop: {
