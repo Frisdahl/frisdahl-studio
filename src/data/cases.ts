@@ -37,6 +37,18 @@ const casesPageContent = {
     ],
     items: [
       {
+        id: 'peter-salling',
+        client: 'Peter Salling',
+        industry: 'Film',
+        category: 'website',
+        href: '/cases/peter-salling',
+        imageSrc: '/cases/peter-salling/hero-skaerm--6-7.webp',
+        imageAlt: 'Peter Salling case',
+        keywords: ['Website', 'Design', 'Udvikling', 'CMS'],
+        description:
+          'En filmisk portfolio til filmproducer Peter Salling, hvor filmene er i centrum, og indholdet styres i et indbygget admin-panel.',
+      },
+      {
         id: 'nordwear',
         client: 'Nordwear',
         industry: 'Mode',
@@ -62,28 +74,16 @@ const casesPageContent = {
           'En levende hjemmeside til en lokal salon med tydelig bookingflow og et udtryk, der matcher brandet.',
       },
       {
-        id: 'atelier-noir',
-        client: 'Atelier Noir',
-        industry: 'Mode',
-        category: 'webshop',
-        href: '/cases/atelier-noir',
-        imageSrc: null,
-        imageAlt: 'Atelier Noir webshop case',
-        keywords: ['Webshop', 'E-commerce', 'UX-design', 'Integration'],
+        id: 'det-kollektive-klaedeskab',
+        client: 'Det Kollektive Klædeskab',
+        industry: 'Cirkulær mode',
+        category: 'website',
+        href: '/cases/det-kollektive-klaedeskab',
+        imageSrc: '/cases/det-kollektive-klaedeskab/forside--6-7.webp',
+        imageAlt: 'Det Kollektive Klædeskab case',
+        keywords: ['Website', 'Redesign', 'UX-design', 'Udvikling'],
         description:
-          'En elegant webshop med fokus på produktoplevelse, hurtig checkout og en premium brandfølelse.',
-      },
-      {
-        id: 'forma-studio',
-        client: 'Forma Studio',
-        industry: 'Arkitektur',
-        category: 'grafisk',
-        href: '/cases/forma-studio',
-        imageSrc: null,
-        imageAlt: 'Forma Studio grafisk case',
-        keywords: ['Grafisk', 'Identitet', 'Print', 'Art direction'],
-        description:
-          'Visuel identitet og designmanual til et arkitekturstudio med fokus på balance mellem ro og præcision.',
+          'Et redesign-koncept til en fælles garderobe i København, hvor medlemmer låner, bytter og deler tøj med point.',
       },
       {
         id: 'northline',
@@ -128,6 +128,18 @@ const casesPageContent = {
     ],
     items: [
       {
+        id: 'peter-salling',
+        client: 'Peter Salling',
+        industry: 'Film',
+        category: 'website',
+        href: '/cases/peter-salling',
+        imageSrc: '/cases/peter-salling/hero-skaerm--6-7.webp',
+        imageAlt: 'Peter Salling case',
+        keywords: ['Website', 'Design', 'Development', 'CMS'],
+        description:
+          'A cinematic portfolio for film producer Peter Salling that puts the films first, with content managed in a built-in admin panel.',
+      },
+      {
         id: 'nordwear',
         client: 'Nordwear',
         industry: 'Fashion',
@@ -153,28 +165,16 @@ const casesPageContent = {
           'A vibrant website for a local salon with a clear booking flow and an expression that matches the brand.',
       },
       {
-        id: 'atelier-noir',
-        client: 'Atelier Noir',
-        industry: 'Fashion',
-        category: 'webshop',
-        href: '/cases/atelier-noir',
-        imageSrc: null,
-        imageAlt: 'Atelier Noir webshop case',
-        keywords: ['Webshop', 'E-commerce', 'UX-design', 'Integration'],
+        id: 'det-kollektive-klaedeskab',
+        client: 'Det Kollektive Klædeskab',
+        industry: 'Circular fashion',
+        category: 'website',
+        href: '/cases/det-kollektive-klaedeskab',
+        imageSrc: '/cases/det-kollektive-klaedeskab/forside--6-7.webp',
+        imageAlt: 'Det Kollektive Klædeskab case',
+        keywords: ['Website', 'Redesign', 'UX design', 'Development'],
         description:
-          'An elegant webshop focused on product experience, fast checkout, and a premium brand feel.',
-      },
-      {
-        id: 'forma-studio',
-        client: 'Forma Studio',
-        industry: 'Architecture',
-        category: 'grafisk',
-        href: '/cases/forma-studio',
-        imageSrc: null,
-        imageAlt: 'Forma Studio graphic case',
-        keywords: ['Graphic', 'Identity', 'Print', 'Art direction'],
-        description:
-          'Visual identity and design guidelines for an architecture studio balancing calm and precision.',
+          'A redesign concept for a shared wardrobe in Copenhagen, where members borrow, swap and share clothes using points.',
       },
       {
         id: 'northline',
@@ -225,11 +225,12 @@ export function getCaseCategoryLabel(
 
 export interface CaseItemSummary {
   client: string
+  industry: string
   category: CaseCategory
   keywords: string[]
 }
 
-/** Client, category and keywords for one case, used to build the case-detail hero. */
+/** Client, industry, category and keywords for one case, used to build the case-detail hero and overview. */
 export function getCaseItemSummary(
   locale: Locale,
   caseId: string,
@@ -237,5 +238,5 @@ export function getCaseItemSummary(
   const item = casesPageContent[locale].items.find((entry) => entry.id === caseId)
   if (!item) return null
 
-  return { client: item.client, category: item.category, keywords: [...item.keywords] }
+  return { client: item.client, industry: item.industry, category: item.category, keywords: [...item.keywords] }
 }

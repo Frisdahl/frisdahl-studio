@@ -87,24 +87,16 @@ export const navDropdownHrefs = new Set<string>()
 export const navItems: NavItem[] = [
   { href: CASES_PATH, labels: { da: 'Cases', en: 'Cases' } },
   { href: MEET_US_PATH, labels: { da: 'Om mig', en: 'About me' } },
-  { href: '/#priser', labels: { da: 'Priser', en: 'Pricing' } },
   { href: '/#contact', labels: { da: 'Kontakt', en: 'Contact' } },
 ]
 
-const mobileNavGroups = [
-  {
-    title: { da: 'Samarbejde', en: 'Collaboration' },
-    hrefs: ['/#priser'],
-  },
-  {
-    title: { da: 'Om mig', en: 'About me' },
-    hrefs: [CASES_PATH, MEET_US_PATH, '/#contact'],
-  },
-] as const
+/** The burger menu's links, in order. '/' is the front page, labelled by homeLabel. */
+const menuLinkHrefs = ['/', CASES_PATH, MEET_US_PATH, '/#contact'] as const
 
 const navigationCopy = {
   da: {
     cta: 'Start et projekt',
+    homeLabel: 'Forside',
     navAriaLabel: 'Hovednavigation',
     menuOpen: '\u00c5bn navigationsmenu',
     menuClose: 'Luk navigationsmenu',
@@ -116,6 +108,7 @@ const navigationCopy = {
   },
   en: {
     cta: 'Start a project',
+    homeLabel: 'Home',
     navAriaLabel: 'Main navigation',
     menuOpen: 'Open navigation menu',
     menuClose: 'Close navigation menu',
@@ -129,7 +122,7 @@ const navigationCopy = {
 
 export interface NavigationContent {
   items: { href: string; label: string }[]
-  mobileGroups: { title: string; items: { href: string; label: string }[] }[]
+  menuLinks: { href: string; label: string }[]
   aboutUsDropdown: NavDropdownColumn[]
   cta: string
   navAriaLabel: string
@@ -158,14 +151,13 @@ export function getNavigation(locale: Locale = defaultLocale): NavigationContent
 
   const itemsByHref = Object.fromEntries(items.map((item) => [item.href, item]))
 
-  const mobileGroups = mobileNavGroups.map(({ title, hrefs }) => ({
-    title: title[locale],
-    items: hrefs.map((href) => itemsByHref[href]),
-  }))
+  const menuLinks = menuLinkHrefs.map((href) =>
+    href === '/' ? { href, label: navigationCopy[locale].homeLabel } : itemsByHref[href],
+  )
 
   return {
     items,
-    mobileGroups,
+    menuLinks,
     aboutUsDropdown: [...aboutUsDropdownColumns[locale]],
     ...navigationCopy[locale],
   }

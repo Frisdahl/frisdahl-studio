@@ -11,7 +11,7 @@ export function ScrollToTop() {
     const changedPage = previousPathname.current !== pathname
     previousPathname.current = pathname
 
-    // Links like "/#priser" scroll to that section: jump there on load or when
+    // Links like "/#contact" scroll to that section: jump there on load or when
     // arriving from another page, glide there when already on the page.
     const target = hash ? document.getElementById(decodeURIComponent(hash.slice(1))) : null
     if (target) {

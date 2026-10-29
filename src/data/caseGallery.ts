@@ -14,19 +14,22 @@ const placeholderPair = (
 const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
   nordwear: {
     horizontalTop: {
-      imageSrc: '/cases/nordwear/gallery-forside--16-9.webp',
-      imageAlt: 'Nordwear forside på en MacBook Air',
+      imageSrc: '/cases/nordwear/category--16-9.jpg',
+      imageAlt: 'Nordwear kategori',
     },
-    verticalPairTop: [
-      {
-        imageSrc: '/cases/nordwear/gallery-udvalgte-produkter--5-6.webp',
-        imageAlt: 'Nordwear udvalgte produkter på en MacBook',
-      },
-      {
-        imageSrc: '/cases/nordwear/gallery-alle-produkter--5-6.webp',
-        imageAlt: 'Nordwear produktoversigt på en MacBook',
-      },
+    horizontalTopPair: [
+      { imageSrc: '/cases/nordwear/nordwear-mockup-alle-produkter--3-2.webp', imageAlt: 'Nordwear produktoversigt på en MacBook', aspectRatio: '3 / 2' },
+      { imageSrc: '/cases/nordwear/nordwear-mockup-produktside--3-2.webp', imageAlt: 'Nordwear produktside på en MacBook', aspectRatio: '3 / 2' },
     ],
+    introPair: [
+      { imageSrc: '/cases/nordwear/nordwear-macbook-right--5-4.webp', imageAlt: 'Nordwear hjemmeside på en bærbar (højre)', aspectRatio: '5 / 4', transparent: true },
+      { imageSrc: '/cases/nordwear/nordwear-macbook-left--5-4.webp', imageAlt: 'Nordwear hjemmeside på en bærbar (venstre)', aspectRatio: '5 / 4', transparent: true },
+    ],
+    bottomWide: {
+      imageSrc: '/cases/nordwear/nordwear-ipad-produktside--3-2.webp',
+      imageAlt: 'Nordwear produktside på en iPad',
+      aspectRatio: '3 / 2',
+    },
     verticalPairBottom: [
       { imageSrc: '/cases/nordwear/mobile--5-6.jpg', imageAlt: 'Nordwear forside' },
       { imageSrc: '/cases/nordwear/mobile2--5-6.jpg', imageAlt: 'Nordwear mobilvisning' },
@@ -35,6 +38,10 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
       imageSrc: '/cases/nordwear/production--16-9.jpg',
       imageAlt: 'Nordwear oversigt',
     },
+    horizontalBottomPair: [
+      { imageSrc: '/cases/nordwear/nordwear-iphones-forside--3-2.webp', imageAlt: 'Nordwear forside og produktside på to iPhones', aspectRatio: '3 / 2', transparent: true },
+      { imageSrc: '/cases/nordwear/nordwear-iphones-produkter--3-2.webp', imageAlt: 'Nordwear produktoversigt og produktinfo på to iPhones', aspectRatio: '3 / 2', transparent: true },
+    ],
   },
   'fresh-cut': {
     horizontalTop: {
@@ -54,33 +61,37 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
       imageAlt: 'Fresh Cut oversigt',
     },
   },
-  'atelier-noir': {
+  'peter-salling': {
+    introPair: [
+      { imageSrc: '/cases/peter-salling/mobiler-projektsider--4-3.webp', imageAlt: 'Trailer, premierebilleder og festivalpriser på tre iPhones', aspectRatio: '4 / 3', transparent: true },
+      { imageSrc: '/cases/peter-salling/mobiler-forside-strandet--4-3.webp', imageAlt: 'Forsiden og Strandet på to iPhones', aspectRatio: '4 / 3', transparent: true },
+    ],
     horizontalTop: {
-      imageSrc: null,
-      imageAlt: 'Atelier Noir forside',
-      placeholderClassName: 'bg-peach',
+      imageSrc: '/cases/peter-salling/forside--16-9.webp',
+      imageAlt: 'Peter Sallings forside med kortfilmen Sælhud',
     },
-    verticalPairTop: placeholderPair('Atelier Noir produktside', 'Atelier Noir kollektion'),
-    verticalPairBottom: placeholderPair('Atelier Noir kurv', 'Atelier Noir checkout'),
     horizontalBottom: {
-      imageSrc: null,
-      imageAlt: 'Atelier Noir oversigt',
-      placeholderClassName: 'bg-peach-hover',
+      imageSrc: '/cases/peter-salling/projektside--16-9.webp',
+      imageAlt: 'Peter Sallings projektside for Sælhud',
     },
+    verticalPairBottom: [
+      { imageSrc: '/cases/peter-salling/mobil-top--5-6.webp', imageAlt: 'Peter Sallings forside på mobil' },
+      { imageSrc: '/cases/peter-salling/mobil-bund--5-6.webp', imageAlt: 'Peter Sallings projekter på mobil' },
+    ],
   },
-  'forma-studio': {
+  'det-kollektive-klaedeskab': {
     horizontalTop: {
-      imageSrc: null,
-      imageAlt: 'Forma Studio identitet',
-      placeholderClassName: 'bg-peach-hover',
+      imageSrc: '/cases/det-kollektive-klaedeskab/forside--16-9.webp',
+      imageAlt: 'Det Kollektive Klædeskabs forside',
     },
-    verticalPairTop: placeholderPair('Forma Studio typografi', 'Forma Studio print'),
-    verticalPairBottom: placeholderPair('Forma Studio layout', 'Forma Studio guidelines'),
     horizontalBottom: {
-      imageSrc: null,
-      imageAlt: 'Forma Studio oversigt',
-      placeholderClassName: 'bg-peach',
+      imageSrc: '/cases/det-kollektive-klaedeskab/nyeste-fund--16-9.webp',
+      imageAlt: 'Nyeste fund i garderoben',
     },
+    verticalPairBottom: [
+      { imageSrc: '/cases/det-kollektive-klaedeskab/mobil-top--5-6.webp', imageAlt: 'Det Kollektive Klædeskabs forside på mobil' },
+      { imageSrc: '/cases/det-kollektive-klaedeskab/mobil-bund--5-6.webp', imageAlt: 'Det Kollektive Klædeskab på mobil' },
+    ],
   },
   northline: {
     horizontalTop: {
@@ -116,16 +127,16 @@ const caseGalleryAriaLabels: Record<Locale, Record<string, string>> = {
   da: {
     nordwear: 'Projektbilleder fra Nordwear',
     'fresh-cut': 'Projektbilleder fra Fresh Cut',
-    'atelier-noir': 'Projektbilleder fra Atelier Noir',
-    'forma-studio': 'Projektbilleder fra Forma Studio',
+    'peter-salling': 'Projektbilleder fra Peter Salling',
+    'det-kollektive-klaedeskab': 'Projektbilleder fra Det Kollektive Klædeskab',
     northline: 'Projektbilleder fra Northline',
     'urban-supply': 'Projektbilleder fra Urban Supply',
   },
   en: {
     nordwear: 'Project images from Nordwear',
     'fresh-cut': 'Project images from Fresh Cut',
-    'atelier-noir': 'Project images from Atelier Noir',
-    'forma-studio': 'Project images from Forma Studio',
+    'peter-salling': 'Project images from Peter Salling',
+    'det-kollektive-klaedeskab': 'Project images from Det Kollektive Klædeskab',
     northline: 'Project images from Northline',
     'urban-supply': 'Project images from Urban Supply',
   },

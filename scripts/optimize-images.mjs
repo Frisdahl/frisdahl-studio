@@ -75,7 +75,12 @@ async function processImage(src) {
     const output = join(PUBLIC, url)
     if (!(await isFresh(output, sourceMtime))) {
       await mkdir(dirname(output), { recursive: true })
-      await sharp(sourcePath).resize({ width: w }).webp({ quality: QUALITY, smartSubsample: true }).toFile(output)
+      // fastShrinkOnLoad off: libvips' shrink-on-load for JPEG/WebP sources
+      // dropped up to a third of fine detail (small UI text in mockups read soft).
+      await sharp(sourcePath)
+        .resize({ width: w, fastShrinkOnLoad: false })
+        .webp({ quality: QUALITY, smartSubsample: true })
+        .toFile(output)
     }
     variants.push([w, url])
   }
