@@ -73,9 +73,15 @@ export function getAdjacentCaseHrefs(
   return { previous: at(-1), next: at(1) }
 }
 
+/**
+ * The next case's preview card. `mainImage` resolves a case's main image (the
+ * image at the top of its page); without it the card falls back to the first
+ * gallery image.
+ */
 export function getNextCasePreview(
   locale: Locale,
   currentSlug: string,
+  mainImage?: (caseSlug: string) => CaseDetailGalleryImage | null,
 ): CaseDetailNext | null {
   const currentIndex = caseOrder.indexOf(currentSlug as (typeof caseOrder)[number])
   if (currentIndex === -1) return null
@@ -89,7 +95,7 @@ export function getNextCasePreview(
     name: getCaseItemSummary(locale, nextSlug)?.client ?? nextSlug,
     label: nextCaseLabels[locale],
     year: caseYears[nextSlug],
-    image: gallery.horizontalTop,
+    image: mainImage?.(nextSlug) ?? gallery.horizontalTop,
     ariaLabel: nextCaseAriaLabels[locale][nextSlug],
   }
 }

@@ -2,7 +2,7 @@ import { Navigate, useParams } from 'react-router-dom'
 import { PageMeta } from '../components/layout'
 import { useLocale } from '../context/LocaleContext'
 import { getCaseDetail, getCaseLiveUrl } from '../data/caseDetails'
-import { getAdjacentCaseHrefs, getNextCasePreview } from '../data/caseNavigation'
+import { getAdjacentCaseHrefs } from '../data/caseNavigation'
 import { CASES_PATH } from '../lib/routes'
 import {
   CaseDetailCtaBar,
@@ -19,7 +19,6 @@ export function CaseDetailPage() {
   const { caseSlug } = useParams<{ caseSlug: string }>()
   const { locale } = useLocale()
   const detail = caseSlug ? getCaseDetail(locale, caseSlug) : null
-  const nextCase = caseSlug ? getNextCasePreview(locale, caseSlug) : null
   const adjacent = caseSlug ? getAdjacentCaseHrefs(caseSlug) : null
   const liveUrl = caseSlug ? getCaseLiveUrl(caseSlug) : null
 
@@ -36,7 +35,7 @@ export function CaseDetailPage() {
       {detail.typography ? <CaseDetailTypography typography={detail.typography} /> : null}
       <CaseDetailGallery gallery={detail.gallery} />
       {detail.palette ? <CaseDetailPalette palette={detail.palette} /> : null}
-      {nextCase ? <CaseDetailNextSection nextCase={nextCase} /> : null}
+      <CaseDetailNextSection nextCase={detail.nextCase} />
       {adjacent ? (
         <CaseDetailCtaBar
           previousHref={adjacent.previous}

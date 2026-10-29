@@ -801,6 +801,12 @@ function getCaseHeroMeta(locale: Locale, caseSlug: string): CaseDetailHeroMeta[]
   return meta
 }
 
+/** A case's main image: the first slide of its hero, the image at the top of its page. */
+function getCaseMainImage(locale: Locale, caseSlug: string) {
+  const localeDetails = caseDetails[locale] as Record<string, CaseDetailBase>
+  return localeDetails[caseSlug]?.hero.slides[0] ?? null
+}
+
 export function getCaseDetail(
   locale: Locale = defaultLocale,
   caseSlug: string,
@@ -813,7 +819,7 @@ export function getCaseDetail(
   const gallery = getCaseGallery(locale, caseSlug)
   if (!gallery) return null
 
-  const nextCase = getNextCasePreview(locale, caseSlug)
+  const nextCase = getNextCasePreview(locale, caseSlug, (slug) => getCaseMainImage(locale, slug))
   if (!nextCase) return null
 
   return {
