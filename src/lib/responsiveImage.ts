@@ -29,13 +29,14 @@ export function responsiveImageProps(src: string, sizes: string) {
 }
 
 /**
- * `sizes` for the common layouts. The container stops growing at 96rem (1536px),
- * so above that the largest images never need more than its width.
+ * `sizes` for the common layouts. From desktop the container stops growing at
+ * 120rem (1920px, --content-max-width), reached at about 125rem with the
+ * gutters, so above that the largest images never need more than its width.
  */
 export const IMAGE_SIZES = {
-  container: '(min-width: 96rem) 96rem, 100vw',
-  halfContainer: '(min-width: 96rem) 48rem, (min-width: 48rem) 50vw, 100vw',
-  halfFromDesktop: '(min-width: 96rem) 48rem, (min-width: 64rem) 50vw, 100vw',
+  container: '(min-width: 125rem) 120rem, 100vw',
+  halfContainer: '(min-width: 125rem) 60rem, (min-width: 48rem) 50vw, 100vw',
+  halfFromDesktop: '(min-width: 125rem) 60rem, (min-width: 64rem) 50vw, 100vw',
   // Full-bleed split panel: object-cover fills a frame taller than the image's
   // 1.24:1 ratio (min 52rem desktop, 29rem mobile), so it renders wider than its column.
   splitPanel: '(min-width: 130rem) 50vw, (min-width: 64rem) 65rem, (min-width: 36rem) 100vw, 36rem',
