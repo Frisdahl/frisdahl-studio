@@ -91,8 +91,9 @@ export interface CaseDetailGallery {
   horizontalTopPair?: [CaseDetailGalleryImage, CaseDetailGalleryImage]
   /** Optional: a case can leave the top pair out. */
   verticalPairTop?: [CaseDetailGalleryImage, CaseDetailGalleryImage]
-  verticalPairBottom: [CaseDetailGalleryImage, CaseDetailGalleryImage]
-  horizontalBottom: CaseDetailGalleryImage
+  /** Optional, like horizontalBottom: without both, the gallery ends after horizontalTop. */
+  verticalPairBottom?: [CaseDetailGalleryImage, CaseDetailGalleryImage]
+  horizontalBottom?: CaseDetailGalleryImage
   /** One full-width image in place of verticalPairBottom. */
   bottomWide?: CaseDetailGalleryImage
   /** Shown as a two-column pair in horizontalBottom's gallery slot. */

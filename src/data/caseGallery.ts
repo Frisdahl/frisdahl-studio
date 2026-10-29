@@ -71,17 +71,10 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
       { imageSrc: '/cases/peter-salling/mobiler-forside-strandet--4-3.webp', imageAlt: 'Forsiden og Strandet på to iPhones', aspectRatio: '4 / 3', transparent: true },
     ],
     horizontalTop: {
-      imageSrc: '/cases/peter-salling/forside--16-9.webp',
-      imageAlt: 'Peter Sallings forside med kortfilmen Sælhud',
+      imageSrc: '/cases/peter-salling/iphone-projekt-kamma--16-10.webp',
+      imageAlt: 'Peter Sallings projektside for kortfilmen Kamma på en iPhone',
+      aspectRatio: '16 / 10',
     },
-    horizontalBottom: {
-      imageSrc: '/cases/peter-salling/projektside--16-9.webp',
-      imageAlt: 'Peter Sallings projektside for Sælhud',
-    },
-    verticalPairBottom: [
-      { imageSrc: '/cases/peter-salling/mobil-top--5-6.webp', imageAlt: 'Peter Sallings forside på mobil' },
-      { imageSrc: '/cases/peter-salling/mobil-bund--5-6.webp', imageAlt: 'Peter Sallings projekter på mobil' },
-    ],
   },
   'det-kollektive-klaedeskab': {
     horizontalTop: {
