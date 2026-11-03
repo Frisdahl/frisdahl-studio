@@ -69,9 +69,7 @@ const caseDetails = {
           'En levende hjemmeside med tydeligt bookingflow og et udtryk, der matcher salonens personlighed og kvalitetsfølelse.',
         sliderAriaLabel: 'Automatisk gennemløb af Fresh Cut case-billeder',
         slides: [
-          { imageSrc: '/cases/fresh-cut/mobile1--16-10.jpg', imageAlt: 'Fresh Cut forside' },
-          { imageSrc: '/cases/fresh-cut/mobile2--16-10.jpg', imageAlt: 'Fresh Cut booking' },
-          { imageSrc: '/cases/fresh-cut/thumbnail--16-10.jpg', imageAlt: 'Fresh Cut mobilvisning' },
+          { imageSrc: '/cases/fresh-cut/official--16-10.webp', imageAlt: 'Fresh Cut forside på en bærbar i en lænestol af cognacfarvet læder' },
         ],
       },
       columns: [
@@ -143,7 +141,7 @@ const caseDetails = {
           'Et redesign-koncept til en fælles garderobe i København, hvor medlemmer låner, bytter og deler tøj med point i stedet for at købe nyt.',
         sliderAriaLabel: 'Automatisk gennemløb af Det Kollektive Klædeskab case-billeder',
         slides: [
-          { imageSrc: '/cases/det-kollektive-klaedeskab/forside--16-10.webp', imageAlt: 'Det Kollektive Klædeskabs forside' },
+          { imageSrc: '/cases/det-kollektive-klaedeskab/official--16-10.webp', imageAlt: 'Det Kollektive Klædeskabs forside på en bærbar i et lyst garderobestudie' },
         ],
       },
       columns: [
@@ -166,82 +164,6 @@ const caseDetails = {
           paragraphs: [
             'Et site, der forklarer konceptet trin for trin og gør det nemt at forstå, hvordan point, bytte og medlemskab hænger sammen.',
             'Sitet er bygget mobile-first og indeholder også et prototype-admin til produkter, blogindlæg og gavekort.',
-          ],
-        },
-      ],
-    },
-    northline: {
-      id: 'northline',
-      hero: {
-        eyebrow: 'Case · Content',
-        title: 'Northline — contentstrategi med klar tone of voice',
-        description:
-          'Contentstrategi og tone of voice til en vækstvirksomhed — bygget til klar kommunikation på tværs af kanaler.',
-        sliderAriaLabel: 'Automatisk gennemløb af Northline case-billeder',
-        slides: [
-          { imageSrc: null, imageAlt: 'Northline content', placeholderClassName: 'bg-peach' },
-          { imageSrc: null, imageAlt: 'Northline tone of voice', placeholderClassName: 'bg-peach-hover' },
-          { imageSrc: null, imageAlt: 'Northline strategi', placeholderClassName: 'bg-peach' },
-        ],
-      },
-      columns: [
-        {
-          title: 'Kunde',
-          paragraphs: [
-            'Northline er en vækstvirksomhed inden for rådgivning med behov for klar og troværdig kommunikation.',
-            'De ønskede et tekstunivers, der gør komplekse budskaber tilgængelige uden at miste faglig dybde.',
-          ],
-        },
-        {
-          title: 'Ydelser',
-          paragraphs: [
-            'Jeg leverede contentstrategi, tone of voice, tekst og struktur på tværs af website og salgskanaler.',
-            'Budskaber og formater blev tilpasset målgrupper og touchpoints for at skabe sammenhæng i kommunikationen.',
-          ],
-        },
-        {
-          title: 'Resultat',
-          paragraphs: [
-            'Et tekstunivers, der skaber tillid og gør Northlines ekspertise tydelig for både nye og eksisterende kunder.',
-            'Kommunikationen er nu mere ensartet og lettere at videreudvikle i takt med virksomhedens vækst.',
-          ],
-        },
-      ],
-    },
-    'urban-supply': {
-      id: 'urban-supply',
-      hero: {
-        eyebrow: 'Case · E-commerce',
-        title: 'Urban Supply — skalerbar e-commerce til retail',
-        description:
-          'Skalerbar e-commerce med fokus på drift, produktdata og en strømlinet kundeoplevelse i hverdagen.',
-        sliderAriaLabel: 'Automatisk gennemløb af Urban Supply case-billeder',
-        slides: [
-          { imageSrc: null, imageAlt: 'Urban Supply shop', placeholderClassName: 'bg-peach-hover' },
-          { imageSrc: null, imageAlt: 'Urban Supply produktkatalog', placeholderClassName: 'bg-peach' },
-          { imageSrc: null, imageAlt: 'Urban Supply checkout', placeholderClassName: 'bg-peach-hover' },
-        ],
-      },
-      columns: [
-        {
-          title: 'Kunde',
-          paragraphs: [
-            'Urban Supply er en retail-virksomhed med behov for skalerbar e-commerce og stabil drift i hverdagen.',
-            'De ønskede en platform, der kan vokse med sortimentet uden at gå på kompromis med kundeoplevelsen.',
-          ],
-        },
-        {
-          title: 'Ydelser',
-          paragraphs: [
-            'Jeg byggede e-commerce platform, integrationer, produktdata-struktur og automatisering af centrale flows.',
-            'Fokus var på driftssikkerhed, overskuelig administration og en strømlinet rejse fra produkt til checkout.',
-          ],
-        },
-        {
-          title: 'Resultat',
-          paragraphs: [
-            'En strømlinet shop, der understøtter vækst og giver kunderne en pålidelig oplevelse på tværs af enheder.',
-            'Løsningen gør det lettere for teamet at vedligeholde sortiment og optimere salget over tid.',
           ],
         },
       ],
@@ -295,9 +217,7 @@ const caseDetails = {
           'A vibrant website with a clear booking flow and an expression that matches the salon’s personality and quality feel.',
         sliderAriaLabel: 'Automatic showcase of Fresh Cut case images',
         slides: [
-          { imageSrc: '/cases/fresh-cut/mobile1--16-10.jpg', imageAlt: 'Fresh Cut homepage' },
-          { imageSrc: '/cases/fresh-cut/mobile2--16-10.jpg', imageAlt: 'Fresh Cut booking' },
-          { imageSrc: '/cases/fresh-cut/thumbnail--16-10.jpg', imageAlt: 'Fresh Cut mobile view' },
+          { imageSrc: '/cases/fresh-cut/official--16-10.webp', imageAlt: 'Fresh Cut homepage on a laptop in a cognac leather armchair' },
         ],
       },
       columns: [
@@ -369,7 +289,7 @@ const caseDetails = {
           'A redesign concept for a shared wardrobe in Copenhagen, where members borrow, swap and share clothes using points instead of buying new.',
         sliderAriaLabel: 'Automatic slideshow of Det Kollektive Klædeskab case images',
         slides: [
-          { imageSrc: '/cases/det-kollektive-klaedeskab/forside--16-10.webp', imageAlt: 'Det Kollektive Klædeskab homepage' },
+          { imageSrc: '/cases/det-kollektive-klaedeskab/official--16-10.webp', imageAlt: 'Det Kollektive Klædeskab homepage on a laptop in a bright wardrobe studio' },
         ],
       },
       columns: [
@@ -396,82 +316,6 @@ const caseDetails = {
         },
       ],
     },
-    northline: {
-      id: 'northline',
-      hero: {
-        eyebrow: 'Case · Content',
-        title: 'Northline — content strategy with a clear tone of voice',
-        description:
-          'Content strategy and tone of voice for a growth company — built for clear communication across channels.',
-        sliderAriaLabel: 'Automatic showcase of Northline case images',
-        slides: [
-          { imageSrc: null, imageAlt: 'Northline content', placeholderClassName: 'bg-peach' },
-          { imageSrc: null, imageAlt: 'Northline tone of voice', placeholderClassName: 'bg-peach-hover' },
-          { imageSrc: null, imageAlt: 'Northline strategy', placeholderClassName: 'bg-peach' },
-        ],
-      },
-      columns: [
-        {
-          title: 'Client',
-          paragraphs: [
-            'Northline is a growth company in consulting with a need for clear and trustworthy communication.',
-            'They wanted a copy universe that makes complex messages accessible without losing professional depth.',
-          ],
-        },
-        {
-          title: 'Services',
-          paragraphs: [
-            'I delivered content strategy, tone of voice, copy, and structure across website and sales channels.',
-            'Messages and formats were tailored to audiences and touchpoints to create cohesion in communication.',
-          ],
-        },
-        {
-          title: 'Result',
-          paragraphs: [
-            'A copy universe that builds trust and makes Northline’s expertise clear to both new and existing clients.',
-            'Communication is now more consistent and easier to develop as the company continues to grow.',
-          ],
-        },
-      ],
-    },
-    'urban-supply': {
-      id: 'urban-supply',
-      hero: {
-        eyebrow: 'Case · E-commerce',
-        title: 'Urban Supply — scalable e-commerce for retail',
-        description:
-          'Scalable e-commerce focused on operations, product data, and a streamlined customer experience day to day.',
-        sliderAriaLabel: 'Automatic showcase of Urban Supply case images',
-        slides: [
-          { imageSrc: null, imageAlt: 'Urban Supply shop', placeholderClassName: 'bg-peach-hover' },
-          { imageSrc: null, imageAlt: 'Urban Supply product catalog', placeholderClassName: 'bg-peach' },
-          { imageSrc: null, imageAlt: 'Urban Supply checkout', placeholderClassName: 'bg-peach-hover' },
-        ],
-      },
-      columns: [
-        {
-          title: 'Client',
-          paragraphs: [
-            'Urban Supply is a retail business needing scalable e-commerce and stable day-to-day operations.',
-            'They wanted a platform that could grow with the assortment without compromising the customer experience.',
-          ],
-        },
-        {
-          title: 'Services',
-          paragraphs: [
-            'I built the e-commerce platform, integrations, product data structure, and automation of core flows.',
-            'The focus was on operational reliability, clear administration, and a streamlined journey from product to checkout.',
-          ],
-        },
-        {
-          title: 'Result',
-          paragraphs: [
-            'A streamlined shop that supports growth and gives customers a reliable experience across devices.',
-            'The solution makes it easier for the team to maintain the assortment and optimize sales over time.',
-          ],
-        },
-      ],
-    },
   },
 } as const satisfies Record<Locale, Record<string, CaseDetailBase>>
 
@@ -494,8 +338,6 @@ const caseLiveUrls: Record<string, string | null> = {
   'fresh-cut': null,
   'peter-salling': 'https://petersalling.com',
   'det-kollektive-klaedeskab': null,
-  northline: null,
-  'urban-supply': null,
 }
 
 /** The case's own website, or null when it has no live site yet. */
@@ -560,6 +402,16 @@ const caseProjectDetails: Record<
       deliverables: 'UX/UI-design, frontend, videoafspiller og admin-panel',
       scope: 'Portfolio, projektsider, video, CMS, SEO',
     },
+    'fresh-cut': {
+      // Describes what the Fresh Cut site actually does (see the theshearroom repository); no invented results.
+      description: [
+        'Fresh Cut er en hjemmeside til en moderne barbershop, bygget til at føre den besøgende fra første indtryk til en booket tid. Udtrykket er maskulint og raffineret med lyse flader, mørkt træ, varme tan-accenter og store geometriske overskrifter, så stemningen fra salonen kan mærkes allerede online.',
+        'Forsiden samler det vigtigste øverst: et klart løfte, kundernes vurderinger i tal og en tydelig Book nu-knap. Derfra fører siden videre til en bookingformular, hvor man vælger lokation, ydelse, frisør, dato og tid, en prisliste opdelt i Mænd, Kvinder og Børn & Unge, et særligt tilbud, anmeldelser med karakterer for hygiejne, service, tilfredshed og professionalisme og et kort over salonerne i København, Aarhus og Odense.',
+        'Sitet er bygget i React og TypeScript med Tailwind CSS og tænkt mobilen først, så priser og booking fungerer lige så godt på telefonen som på en stor skærm. GSAP står for de rolige animationer, når sektionerne glider ind, og for menuen, der giver hurtige genveje til ydelser, lokationer, tilbud og anmeldelser.',
+      ],
+      deliverables: 'UX/UI-design, frontend og bookingflow',
+      scope: 'Website, booking, prisliste, anmeldelser, lokationer',
+    },
     'det-kollektive-klaedeskab': {
       description: [
         'Det Kollektive Klædeskab er en fælles garderobe i København, hvor medlemmer låner, bytter og deler tøj i stedet for at købe nyt. Projektet er et redesign-koncept, jeg har lavet på eget initiativ, og ikke et site, der er leveret til dem.',
@@ -589,6 +441,15 @@ const caseProjectDetails: Record<
       ],
       deliverables: 'UX/UI design, frontend, video player and admin panel',
       scope: 'Portfolio, project pages, video, CMS, SEO',
+    },
+    'fresh-cut': {
+      description: [
+        'Fresh Cut is a website for a modern barbershop, built to take visitors from the first impression to a booked appointment. The look is masculine and refined, with light surfaces, dark wood, warm tan accents and large geometric headings, so the feel of the shop comes through online.',
+        "The homepage puts the essentials up front: a clear promise, the customers' ratings in numbers and a prominent Book nu button. From there the page leads on to a booking form where you choose location, service, barber, date and time, a price list split into Men, Women and Kids & Teens, a special offer, reviews with scores for hygiene, service, satisfaction and professionalism, and a map of the shops in Copenhagen, Aarhus and Odense.",
+        'The site is built with React and TypeScript on Tailwind CSS and designed mobile-first, so prices and booking work as well on a phone as on a large screen. GSAP drives the calm animations as sections slide in, and the menu that gives quick shortcuts to services, locations, offers and reviews.',
+      ],
+      deliverables: 'UX/UI design, frontend and booking flow',
+      scope: 'Website, booking, price list, reviews, locations',
     },
     'det-kollektive-klaedeskab': {
       description: [
@@ -665,6 +526,16 @@ const caseTypefaces: Partial<
     fontFamily: "'Montserrat Variable', sans-serif",
     capHeight: 0.7,
   },
+  'fresh-cut': {
+    typeface: 'Urbanist',
+    category: { da: 'Geometrisk sans-serif', en: 'Geometric sans-serif' },
+    description: {
+      da: 'Urbanist bærer alle overskrifter – fra den store forsidetitel "Ultimativ pleje for mænd" til tal, sektioner og bookingformularen. De runde, geometriske former giver et moderne og maskulint udtryk med selvsikker tyngde, mens brødteksten står i den rolige sans-serif Manrope, så priser og ydelser er lette at læse.',
+      en: 'Urbanist carries every heading – from the large homepage title "Ultimativ pleje for mænd" to the figures, sections and booking form. Its round, geometric shapes give a modern, masculine look with confident weight, while the body text is set in the calm sans-serif Manrope so services and prices stay easy to read.',
+    },
+    fontFamily: "'Urbanist Variable', sans-serif",
+    capHeight: 0.7,
+  },
   'peter-salling': {
     typeface: 'Raleway',
     category: { da: 'Elegant sans-serif', en: 'Elegant sans-serif' },
@@ -713,6 +584,10 @@ const casePaletteDescriptions: Partial<Record<string, Record<Locale, string>>> =
     da: 'Paletten er næsten ren sort og hvid, så filmenes egne farver får hele opmærksomheden. Kul er baggrunden på hele sitet, hvid bruges til titler og navigation, og de grå toner er hvid med lavere gennemsigtighed – til brødtekst, linjer og flader oven på det mørke.',
     en: 'The palette is almost pure black and white, so the films’ own colours get all the attention. Charcoal is the background of the whole site, white is used for titles and navigation, and the greys are white at lower opacity – for body text, rules and surfaces on the dark.',
   },
+  'fresh-cut': {
+    da: 'Paletten er stram og maskulin. Kul bruges til overskrifter, tekst og knapper, mens den varme tan-farve er brandets accent – i logoet, på priser, tal og streger. De lyse flader i hvid og råhvid giver ro omkring ydelserne, grafit bærer de mørke sektioner med lokationer og footer, og den grå tone holder brødteksten afdæmpet.',
+    en: 'The palette is tight and masculine. Charcoal is used for headings, text and buttons, while the warm tan is the brand accent – in the logo, on prices, figures and rules. The white and off-white surfaces give the services room to breathe, graphite carries the dark sections with locations and footer, and the grey keeps the body text subdued.',
+  },
   'det-kollektive-klaedeskab': {
     da: 'Paletten er varm og blød uden ren hvid og sort. Taupe er den primære farve på knapper og links, den lyse sandtone er baggrunden, og den rosa sand er accent på de vigtigste knapper. Mørk espresso bruges til overskrifter og den varme brun til brødtekst, så alt hænger sammen i samme jordnære toneskala.',
     en: 'The palette is warm and soft, with no pure white or black. Taupe is the primary colour for buttons and links, the light sand tone is the background, and the rosy sand accents the key buttons. Dark espresso is used for headings and the warm brown for body text, keeping everything in one earthy range.',
@@ -738,6 +613,14 @@ const casePalettes: Partial<
     { name: { da: 'Lys grå', en: 'Light grey' }, hex: '#A7A7A7', dark: false },
     { name: { da: 'Grå', en: 'Grey' }, hex: '#484848', dark: true },
     { name: { da: 'Grafit', en: 'Graphite' }, hex: '#1A1A1A', dark: true },
+  ],
+  'fresh-cut': [
+    { name: { da: 'Tan', en: 'Tan' }, hex: '#D4A373', dark: false },
+    { name: { da: 'Kul', en: 'Charcoal' }, hex: '#1A1A1A', dark: true },
+    { name: { da: 'Hvid', en: 'White' }, hex: '#FFFFFF', dark: false },
+    { name: { da: 'Grafit', en: 'Graphite' }, hex: '#202121', dark: true },
+    { name: { da: 'Råhvid', en: 'Off-white' }, hex: '#F9FAFB', dark: false },
+    { name: { da: 'Grå', en: 'Grey' }, hex: '#6B7280', dark: true },
   ],
   'det-kollektive-klaedeskab': [
     { name: { da: 'Taupe', en: 'Taupe' }, hex: '#847165', dark: true },

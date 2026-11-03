@@ -6,9 +6,10 @@
    were both removed. */
 @import "@fontsource-variable/manrope/wght.css";
 /* Specimen fonts for the case pages (Montserrat: Nordwear, Raleway: Peter
-   Salling, DM Serif Display: Det Kollektive Klædeskab); each is only
-   downloaded where it is used. */
+   Salling, DM Serif Display: Det Kollektive Klædeskab, Urbanist: Fresh Cut);
+   each is only downloaded where it is used. */
 @import "@fontsource-variable/montserrat/wght.css";
+@import "@fontsource-variable/urbanist/wght.css";
 @import "@fontsource-variable/raleway/wght.css";
 @import "@fontsource/dm-serif-display/400.css";
 
