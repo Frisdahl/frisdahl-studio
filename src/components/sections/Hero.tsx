@@ -42,7 +42,7 @@ interface HeroSlide {
 }
 
 const heroSlides: HeroSlide[] = [
-  { imageSrc: '/images/hero/peter-salling-skaerm.webp', alt: { da: 'Peter Sallings forside på en skærm', en: 'Peter Salling homepage on a display' } },
+  { imageSrc: '/images/hero/peter-salling-display.webp', alt: { da: 'Peter Sallings forside med Alt jeg forventede på en skærm', en: 'Peter Salling homepage featuring Alt jeg forventede on a display' } },
   { imageSrc: '/images/hero/noma-living-skaerm.webp', alt: { da: 'Landingsside-koncept for Noma Living på en skærm', en: 'Noma Living landing page concept on a display' } },
   { imageSrc: '/images/hero/poster-frisdahl-studio-2.webp', alt: { da: 'Frisdahl Studio-plakat på en trævæg', en: 'Frisdahl Studio poster on a wooden wall' } },
   { imageSrc: '/images/hero/fresh-cut-laenestol.webp', alt: { da: 'Fresh Cut på en bærbar i en lænestol', en: 'Fresh Cut on a laptop in an armchair' } },
