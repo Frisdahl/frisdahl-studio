@@ -1627,18 +1627,24 @@
     }
   }
 
-  /* Header monogram: "F", then a lower "S". `top` moves the S without
-     changing the header's height. */
+  /* Header wordmark: "Frisdahl", then "Studio" on the line below, both
+     left-aligned. Normal case, unlike the header's uppercase defaults. */
   .brand-monogram {
-    @apply inline-flex items-start font-bold leading-none;
-    font-size: 1.15em;
-    letter-spacing: -0.02em;
+    @apply inline-flex flex-col items-start font-semibold normal-case;
+    font-size: 0.95em;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+  }
+
+  /* Desktop: about as tall as the header contact button's text block. */
+  @media (min-width: 1024px) {
+    .brand-monogram {
+      font-size: 0.8em;
+    }
   }
 
   .brand-monogram-low {
-    @apply relative inline-block;
-    top: 0.3em;
-    margin-left: -0.04em;
+    @apply inline-block;
   }
 
   .brand-wordmark-inner {

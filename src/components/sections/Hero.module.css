@@ -1,22 +1,10 @@
 .hero {
   position: relative;
-  display: flex;
-  align-items: center;
   overflow: hidden;
   background: var(--color-home-page);
   color: #131313;
   margin-bottom: clamp(3rem, 6vw, 6rem);
-}
-
-.inner {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(2rem, 5vw, 4rem);
-  width: 100%;
-  max-width: var(--page-max-width);
-  margin-inline: auto;
-  padding: clamp(5.5rem, 12vh, 8rem) var(--page-gutter) clamp(3rem, 7vh, 5rem);
+  --hero-slide-gap: clamp(0.5rem, 0.6vw, 0.75rem);
 }
 
 @media (min-width: 1024px) {
@@ -28,63 +16,77 @@
     top: var(--site-header-height);
     z-index: 0;
     /* The content drifts up out of the hero as the cases section covers it
-       (see Hero.tsx); clipping it here would cut off the video's top. */
+       (see Hero.tsx); clipping it here would cut off the carousel's top. */
     overflow: visible;
-  }
-
-  .inner {
-    /* The video takes the larger share and the gap is kept tight, so the text
-       and the video read as one composition without a wide empty strip. */
-    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.6fr);
-    /* The hero fills exactly the first screen; the copy and video row takes
-       all of it. The small top padding lets the video start close under the
-       header. */
-    grid-template-rows: minmax(0, 1fr);
-    min-height: calc(100svh - var(--site-header-height));
-    gap: clamp(0.5rem, 1vw, 1rem);
-    padding-block: 0 clamp(2rem, 5vh, 3.5rem);
-  }
-
-  /* The copy sits at the bottom of the row, so its last line lines up with
-     the video's bottom edge. */
-  .copy {
-    align-self: end;
+    overflow-x: clip;
   }
 }
 
-.copy {
+.content {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  min-width: 0;
+  gap: clamp(2rem, 4.5vh, 3.25rem);
+  padding-block: clamp(1.75rem, 4vh, 3.5rem) clamp(1.5rem, 3vh, 2.5rem);
+}
+
+/* Heading on the left; the intro and the button on the right, their bottom
+   lined up with the heading's last line. */
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.75rem, 4vw, 3rem);
+  width: 100%;
+  max-width: var(--page-max-width);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+@media (min-width: 900px) {
+  .inner {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    align-items: end;
+  }
 }
 
 .title {
-  /* Three explicit lines. The old 20ch cap (~504px at 64px) is narrower than
-     the longest line ("digitale oplevelser", 518px at 64px) and would re-wrap
-     it, so the box follows the longest line instead. */
   max-width: none;
   margin: 0;
   color: #131313;
   font-family: var(--font-heading);
-  font-size: clamp(2.25rem, 4.7vw, 4rem);
+  font-size: clamp(2.25rem, 4.4vw, 4rem);
   font-weight: var(--heading-weight);
   line-height: 1.04;
   letter-spacing: -0.035em;
 }
 
-.titleMuted {
-  color: #b2b2b2;
-}
-
 /* Same red as the header contact button's hover fill. */
-.titleDot {
+.titleAccent {
   color: #eb4b3d;
 }
 
+/* A round dot in place of the full stop, sitting on the baseline. */
+.titleDot {
+  display: inline-block;
+  width: 0.17em;
+  height: 0.17em;
+  margin-left: 0.06em;
+  border-radius: 50%;
+  background: #eb4b3d;
+  vertical-align: baseline;
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(1.25rem, 2.5vh, 1.75rem);
+  /* Lines the paragraph up with the heading's last line, not its descenders. */
+  padding-bottom: 0.35rem;
+}
+
 .intro {
-  max-width: 30rem;
-  margin: clamp(1.5rem, 3vh, 2rem) 0 0;
+  max-width: 26rem;
+  margin: 0;
   /* The heading's dark ink at lower opacity. */
   color: rgb(19 19 19 / 0.55);
   font-family: var(--font-sans);
@@ -94,48 +96,107 @@
   letter-spacing: -0.01em;
 }
 
-.media {
-  position: relative;
-  min-width: 0;
+/* Carousel: full-bleed, 3.5 portrait slides across a desktop screen. */
+.carousel {
+  width: 100%;
   overflow: hidden;
-  aspect-ratio: 16 / 9;
-  border-radius: clamp(0.375rem, 0.7vw, 0.625rem);
+  cursor: grab;
+  user-select: none;
+  /* Horizontal drags move the carousel; vertical swipes still scroll the page. */
+  touch-action: pan-y;
 }
 
-.media video {
+.dragging {
+  cursor: grabbing;
+}
+
+/* Moved by the effect in Hero.tsx, which also sets --hero-slide-scale. */
+.track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.group {
+  display: flex;
+  gap: var(--hero-slide-gap);
+  padding-right: var(--hero-slide-gap);
+}
+
+.slide {
+  flex: none;
+  /* 1.4 slides on phones, 2.3 on tablets, 3.5 from desktop (gaps included). */
+  width: calc((100vw - var(--hero-slide-gap)) / 1.4);
+  aspect-ratio: 4 / 5;
+  margin: 0;
+  overflow: hidden;
+  background: var(--color-surface-gray);
+  /* Shrinks while the carousel moves fast; its layout box keeps its size, so
+     the visible gaps between slides open up. */
+  transform: scale(var(--hero-slide-scale, 1));
+  will-change: transform;
+}
+
+@media (min-width: 640px) {
+  .slide {
+    width: calc((100vw - 2 * var(--hero-slide-gap)) / 2.3);
+  }
+}
+
+@media (min-width: 1024px) {
+  /* The hero fills the first screen below the header; the carousel takes the
+     height left under the copy, so the slides always end a gap above the
+     bottom of the screen. */
+  .content {
+    height: calc(100svh - var(--site-header-height));
+    min-height: 34rem;
+    padding-bottom: var(--hero-slide-gap);
+  }
+
+  .carousel {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .track,
+  .group {
+    height: 100%;
+  }
+
+  /* Slides sit on the bottom of the carousel, so the gap below them stays the
+     same and any spare height goes between the copy and the slides. */
+  .group {
+    align-items: flex-end;
+  }
+
+  /* 3.5 slides across, unless the screen is too short for their 4:5 height:
+     then they shrink to the height that is left (and keep their ratio). */
+  .slide {
+    height: min(100%, calc((100vw - 3 * var(--hero-slide-gap)) / 3.5 * 1.25));
+    width: auto;
+  }
+}
+
+.slide img,
+.slide video {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* Desktop: the video fills the height left in the first screen (see .inner),
-   between 18rem (on very short screens the hero grows instead) and 52rem.
-   It is anchored to the bottom of the row like the copy, so their bottom
-   edges line up even when the 52rem cap leaves space above (very tall screens). */
-@media (min-width: 1024px) {
-  .media {
-    align-self: end;
-    height: 100%;
-    aspect-ratio: auto;
-    min-height: 18rem;
-    max-height: 52rem;
-  }
-
-  .media video {
-    position: absolute;
-    inset: 0;
-  }
+.slide img {
+  pointer-events: none;
 }
 
 @media (max-width: 1023px) {
+  /* Not pinned below the header here: the hero starts at the top of the page,
+     under the fixed header, so its height is added to the top padding. */
+  .content {
+    padding-top: calc(var(--site-header-height) + clamp(1.5rem, 4vh, 2.5rem));
+  }
+
   .title {
     letter-spacing: -0.03em;
-  }
-}
-
-@media (max-width: 700px) {
-  .intro {
-    max-width: 28rem;
   }
 }
