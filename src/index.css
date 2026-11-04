@@ -3753,12 +3753,10 @@
     display: block;
   }
 
-  /* One 16:9 frame for every case, rounded like the case pages' images
-     (--radius-control-sm). */
+  /* One 16:9 frame for every case, with square corners. */
   .case-card-media {
     @apply relative overflow-hidden;
     aspect-ratio: 16 / 9;
-    border-radius: var(--radius-control-sm);
     /* Also the placeholder for cases without an image yet. */
     background-color: var(--cases-placeholder);
   }

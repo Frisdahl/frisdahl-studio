@@ -101,9 +101,8 @@ export function CasesSection() {
         button: row.querySelector<HTMLElement>('.case-card-button'),
       }))
 
-      // The wipe keeps the frame's rounded corners (--radius-control-sm).
-      const clipHidden = 'inset(0% 0% 100% 0% round 0.75rem)'
-      const clipShown = 'inset(0% 0% 0% 0% round 0.75rem)'
+      const clipHidden = 'inset(0% 0% 100% 0%)'
+      const clipShown = 'inset(0% 0% 0% 0%)'
 
       // Hidden straight away (not after the fonts), so nothing flashes.
       rows.forEach(({ media, image, texts, button }) => {
