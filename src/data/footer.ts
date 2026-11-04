@@ -1,4 +1,4 @@
-import { CASES_PATH, MEET_US_PATH, PRIVACY_POLICY_PATH, PROCESS_PATH } from '../lib/routes'
+import { CASES_PATH, CONTACT_PATH, MEET_US_PATH, PRIVACY_POLICY_PATH, PROCESS_PATH } from '../lib/routes'
 import type { Locale } from './navigation'
 import { defaultLocale } from './navigation'
 
@@ -22,12 +22,11 @@ const footerContent = {
     coordinates: '55.7003° N, 12.5523° E',
     // The full-width wordmark along the bottom.
     wordmark: 'Frisdahl Studio',
-    // '/#contact' opens the contact drawer (see Footer); the rest are routes.
     links: [
       { label: 'Cases', href: CASES_PATH },
       { label: 'Proces', href: PROCESS_PATH },
       { label: 'Mød mig', href: MEET_US_PATH },
-      { label: 'Kontakt', href: '/#contact' },
+      { label: 'Kontakt', href: CONTACT_PATH },
     ],
     locationTitle: 'København',
     email: 'hello@frisdahlstudio.dk',
@@ -60,12 +59,11 @@ const footerContent = {
     columnTitles: { contact: 'Contact', nav: 'Navigation', studio: 'Studio', legal: 'Privacy' },
     coordinates: '55.7003° N, 12.5523° E',
     wordmark: 'Frisdahl Studio',
-    // '/#contact' opens the contact drawer (see Footer); the rest are routes.
     links: [
       { label: 'Cases', href: CASES_PATH },
       { label: 'Process', href: PROCESS_PATH },
       { label: 'Meet me', href: MEET_US_PATH },
-      { label: 'Contact', href: '/#contact' },
+      { label: 'Contact', href: CONTACT_PATH },
     ],
     locationTitle: 'Copenhagen',
     email: 'hello@frisdahlstudio.dk',

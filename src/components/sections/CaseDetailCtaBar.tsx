@@ -1,16 +1,15 @@
-import { useContactDrawer } from '../../context/ContactDrawerContext'
 import { useLocale } from '../../context/LocaleContext'
+import { CONTACT_PATH } from '../../lib/routes'
 import { ArrowChipButton, ContactButton } from '../ui'
 
 interface CaseDetailCtaBarProps {
   previousHref: string
   nextHref: string
-  /** The case's own website; without one the button falls back to the contact drawer. */
+  /** The case's own website; without one the button falls back to the contact page. */
   liveUrl: string | null
 }
 
 export function CaseDetailCtaBar({ previousHref, nextHref, liveUrl }: CaseDetailCtaBarProps) {
-  const { openDrawer } = useContactDrawer()
   const { locale } = useLocale()
   const isDa = locale === 'da'
 
@@ -22,9 +21,8 @@ export function CaseDetailCtaBar({ previousHref, nextHref, liveUrl }: CaseDetail
         href={previousHref}
       />
       <ContactButton
-        href={liveUrl ?? undefined}
-        external
-        onClick={() => openDrawer('contact')}
+        href={liveUrl ?? CONTACT_PATH}
+        external={Boolean(liveUrl)}
       >
         {isDa ? 'Se live' : 'View live'}
       </ContactButton>

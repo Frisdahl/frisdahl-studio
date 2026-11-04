@@ -1,11 +1,10 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useLocale } from '../../context/LocaleContext'
-import { useContactDrawer } from '../../context/ContactDrawerContext'
 import { getFooterContent } from '../../data/footer'
 import { navigateWithTransition } from '../../lib/pageTransition'
 import { getNavigation } from '../../data/navigation'
-import { CASES_PATH, toAppHref } from '../../lib/routes'
+import { CASES_PATH, CONTACT_PATH, toAppHref } from '../../lib/routes'
 import { getSmoothScroll, prefersReducedMotion } from '../../lib/smoothScroll'
 import { ContactButton, Container, LanguageSwitcher, RollLabel } from '../ui'
 import { HeaderBrand } from './HeaderBrand'
@@ -43,12 +42,11 @@ export function Navbar() {
   const [isOnDark, setIsOnDark] = useState(false)
   const headerRef = useRef<HTMLElement>(null)
   const { locale } = useLocale()
-  const { openDrawer } = useContactDrawer()
   const { pathname, hash } = useLocation()
   const { items, menuLinks, navAriaLabel, menuOpen, menuClose } = getNavigation(locale)
   const { logoLabel } = getFooterContent(locale)
   const contactLabel =
-    items.find((item) => item.href === '/#contact')?.label ?? 'Kontakt'
+    items.find((item) => item.href === CONTACT_PATH)?.label ?? 'Kontakt'
 
   // The header is fixed at every width, so its height positions the menu
   // panel and offsets the page surface below it.
@@ -100,9 +98,15 @@ export function Navbar() {
     schedule()
     window.addEventListener('scroll', schedule, { passive: true })
     window.addEventListener('resize', schedule)
+    // Lazy pages mount after the route changes (and after the page
+    // transition), so check again whenever the page itself is swapped.
+    const shell = document.querySelector('.page-shell')
+    const observer = shell ? new MutationObserver(schedule) : null
+    if (shell) observer?.observe(shell, { childList: true })
 
     return () => {
       cancelAnimationFrame(frame)
+      observer?.disconnect()
       window.removeEventListener('scroll', schedule)
       window.removeEventListener('resize', schedule)
     }
@@ -202,32 +206,19 @@ export function Navbar() {
           <ul className="menu-links">
             {menuLinks.map(({ label, href }) => (
               <li key={href}>
-                {href === '/#contact' ? (
-                  <button
-                    type="button"
-                    className="menu-link"
-                    onClick={() => {
-                      openDrawer('contact')
-                      closeMenu()
-                    }}
-                  >
-                    <RollLabel>{label}</RollLabel>
-                  </button>
-                ) : (
-                  <Link
-                    to={toAppHref(href)}
-                    className={`menu-link${isActiveLink(href) ? ' is-active' : ''}`}
-                    aria-current={isActiveLink(href) ? 'page' : undefined}
-                    onClick={(event) => {
-                      // Plain clicks wait for the menu to close; new-tab clicks behave as usual.
-                      if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return
-                      event.preventDefault()
-                      closeMenuAndGo(toAppHref(href))
-                    }}
-                  >
-                    <RollLabel>{label}</RollLabel>
-                  </Link>
-                )}
+                <Link
+                  to={toAppHref(href)}
+                  className={`menu-link${isActiveLink(href) ? ' is-active' : ''}`}
+                  aria-current={isActiveLink(href) ? 'page' : undefined}
+                  onClick={(event) => {
+                    // Plain clicks wait for the menu to close; new-tab clicks behave as usual.
+                    if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return
+                    event.preventDefault()
+                    closeMenuAndGo(toAppHref(href))
+                  }}
+                >
+                  <RollLabel>{label}</RollLabel>
+                </Link>
               </li>
             ))}
           </ul>
@@ -244,7 +235,7 @@ export function Navbar() {
             <HeaderBrand label={logoLabel} />
 
             <div className="site-header-actions">
-              <ContactButton onClick={() => openDrawer('contact')}>{contactLabel}</ContactButton>
+              <ContactButton href={CONTACT_PATH}>{contactLabel}</ContactButton>
 
               <button
                 type="button"

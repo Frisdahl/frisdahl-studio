@@ -75,8 +75,15 @@
   --text-caption: 0.75rem;
   --text-caption--line-height: 1.5;
 
-  /* Colors. The page is #ebe8e8 and the ink #131313; surfaces (cards, gallery
-     frames) stay white so they stand off the page. */
+  /* Colors. The page is #ebe8e8 and the ink is --color-dark; surfaces (cards,
+     gallery frames) stay white so they stand off the page.
+     --color-light and --color-dark are the brand's white and near-black:
+     change them here and every use follows (see-through versions mix them
+     with transparent, e.g. color-mix(in srgb, var(--color-dark) 12%,
+     transparent)). public/favicon.svg can't read CSS variables and repeats
+     both values. */
+  --color-light: #fefffe;
+  --color-dark: #131313;
   --color-page-cream: #ebe8e8;
   --color-home-page: #ebe8e8;
   --color-cases-page: #ebe8e8;
@@ -86,7 +93,7 @@
   --color-surface: #ffffff;
   --color-surface-muted: #f8f8f8;
   --color-surface-gray: #e5e5e5;
-  --color-primary: #131313;
+  --color-primary: var(--color-dark);
   --color-secondary: #696869;
   --color-text-body: #696869;
   --color-muted: #555555;
@@ -97,11 +104,11 @@
   --color-peach: color-mix(in srgb, var(--color-accent) 32%, white);
   --color-peach-hover: color-mix(in srgb, var(--color-accent) 44%, white);
   --color-contact-bg: #ebe8e8;
-  --color-concept-step-bg: #131313;
+  --color-concept-step-bg: var(--color-dark);
   --color-border: #e5e5e5;
   --color-border-light: #f8f8f8;
-  --color-overlay: #13131314;
-  --color-overlay-strong: #131313e6;
+  --color-overlay: color-mix(in srgb, var(--color-dark) 8%, transparent);
+  --color-overlay-strong: color-mix(in srgb, var(--color-dark) 90%, transparent);
 
   --color-accent-soft: color-mix(in srgb, var(--color-accent) 12%, transparent);
   --color-primary-soft: color-mix(
@@ -375,9 +382,9 @@
   }
 
   .hero-cta-btn {
-    @apply inline-flex cursor-pointer items-center gap-4 rounded-pill py-1.5 pl-6 pr-1.5 text-button font-semibold tracking-wide text-[#fffefe] no-underline transition-[background-color,color,border-color] duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:gap-5 sm:pl-7 sm:pr-1.5;
-    background-color: #131313;
-    border: 1.5px solid #131313;
+    @apply inline-flex cursor-pointer items-center gap-4 rounded-pill py-1.5 pl-6 pr-1.5 text-button font-semibold tracking-wide text-light no-underline transition-[background-color,color,border-color] duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:gap-5 sm:pl-7 sm:pr-1.5;
+    background-color: var(--color-dark);
+    border: 1.5px solid var(--color-dark);
   }
 
   .hero-section .hero-cta-btn {
@@ -388,7 +395,7 @@
   .hero-cta-btn:hover,
   .hero-cta-btn:focus-visible {
     background-color: transparent;
-    color: #131313;
+    color: var(--color-dark);
   }
 
   .cases-section-cta {
@@ -478,7 +485,7 @@
 
   .hero-cta-btn-arrow {
     @apply h-5 w-5;
-    color: #fffefe;
+    color: var(--color-light);
   }
 
   .hero-section .hero-cta-btn-arrow {
@@ -591,13 +598,13 @@
   }
 
   .contact-section-eyebrow {
-    color: #131313;
+    color: var(--color-dark);
   }
 
   .contact-section-title {
     @apply text-h2;
     font-weight: var(--heading-weight);
-    color: #131313;
+    color: var(--color-dark);
   }
 
   .contact-section-description {
@@ -612,13 +619,13 @@
 
   .contact-section .btn-secondary {
     border-width: 1px;
-    color: #131313;
-    border-color: #131313;
+    color: var(--color-dark);
+    border-color: var(--color-dark);
   }
 
   .contact-section .btn-secondary:hover {
-    background-color: #131313;
-    color: #fffefe;
+    background-color: var(--color-dark);
+    color: var(--color-light);
   }
 
   .contact-section .btn {
@@ -697,7 +704,7 @@
     @apply inline-flex shrink-0 rounded-pill bg-primary px-4 py-2 text-[0.9375rem] font-medium leading-snug normal-case;
     font-family: var(--font-nav);
     letter-spacing: -0.01em;
-    color: #fffefe;
+    color: var(--color-light);
   }
 
   .why-choose-marquee-row-left .why-choose-marquee-track {
@@ -904,8 +911,8 @@
 
   .process-slider-section {
     --process-slider-copy-width: 50%;
-    --process-slider-bg: #131313;
-    --process-slider-text: #fffefe;
+    --process-slider-bg: var(--color-dark);
+    --process-slider-text: var(--color-light);
     --process-slider-text-muted: #bababa;
     position: relative;
     overflow-x: clip;
@@ -1684,7 +1691,7 @@
     padding: 0.5625rem 0.5625rem 0.5625rem 1.375rem;
     border: 0;
     border-radius: 0.375rem;
-    background-color: #131313;
+    background-color: var(--color-dark);
     font-size: 0.875rem;
     font-weight: 600;
     letter-spacing: 0.01em;
@@ -1694,8 +1701,8 @@
      colours stay put underneath it. */
   .header-contact:hover,
   .header-contact:focus-visible {
-    background-color: #131313;
-    color: #fffefe;
+    background-color: var(--color-dark);
+    color: var(--color-light);
   }
 
   /* Fill hover (CtaPillButton fillOnHover): GSAP slides the overlay up from
@@ -1764,7 +1771,7 @@
   .header-contact .hero-cta-btn-arrow {
     width: 0.625rem;
     height: 0.625rem;
-    color: #131313;
+    color: var(--color-dark);
   }
 
   .header-menu-toggle {
@@ -1787,25 +1794,25 @@
   }
 
   .site-header.is-on-dark :is(.site-header-logo, .header-menu-toggle) {
-    color: #fffefe;
+    color: var(--color-light);
   }
 
   .site-header.is-on-dark .header-contact {
-    background-color: #fffefe;
-    color: #131313;
+    background-color: var(--color-light);
+    color: var(--color-dark);
   }
 
   .site-header.is-on-dark .header-contact:is(:hover, :focus-visible) {
-    background-color: #fffefe;
-    color: #fffefe;
+    background-color: var(--color-light);
+    color: var(--color-light);
   }
 
   .site-header.is-on-dark .header-contact .hero-cta-btn-icon {
-    background-color: #131313;
+    background-color: var(--color-dark);
   }
 
   .site-header.is-on-dark .header-contact .hero-cta-btn-arrow {
-    color: #fffefe;
+    color: var(--color-light);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -1896,7 +1903,7 @@
 
   .horizontal-drag-slider-indicator-active {
     height: 1.625rem;
-    background-color: #131313;
+    background-color: var(--color-dark);
   }
 
   .horizontal-drag-slider-progress {
@@ -1907,7 +1914,7 @@
 
   .horizontal-drag-slider-progress-fill {
     @apply absolute inset-y-0 left-0 w-full;
-    background-color: #131313;
+    background-color: var(--color-dark);
     transform: scaleX(calc(var(--progress, 0) / 100));
     transform-origin: left center;
     transition: transform var(--slider-transition-duration) var(--slider-transition-easing);
@@ -2045,7 +2052,7 @@
 
   .pricing-card {
     @apply relative flex h-full min-h-[36rem] flex-col rounded-control-sm bg-[#f7f7f7] p-6 sm:p-7 lg:min-h-[40rem] lg:p-8;
-    color: #131313;
+    color: var(--color-dark);
     font-weight: 400;
     transition:
       background-color 0.35s var(--ease-smooth),
@@ -2118,9 +2125,9 @@
     @apply inline-flex cursor-pointer items-center justify-center rounded-pill focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
     /* The 2px border is always there (in the fill colour at rest), so the
        outlined hover state does not shift the layout. */
-    border: 2px solid #131313;
-    background-color: #131313;
-    color: #fffefe;
+    border: 2px solid var(--color-dark);
+    background-color: var(--color-dark);
+    color: var(--color-light);
     font-family: var(--font-nav);
     transition:
       background-color 0.35s var(--ease-smooth),
@@ -2142,26 +2149,26 @@
 
   .pricing-card-featured .pricing-card-action-primary,
   .pricing-card-featured .pricing-card-action-icon {
-    border-color: #fffefe;
-    background-color: #fffefe;
-    color: #131313;
+    border-color: var(--color-light);
+    background-color: var(--color-light);
+    color: var(--color-dark);
   }
 
   /* Hovering either button: the label button becomes an outline with text in
      the card's own text colour, and the plus button turns orange and rotates. */
   :is(.pricing-card-actions:hover, .pricing-card-actions:has(:focus-visible)) .pricing-card-action-primary {
     background-color: transparent;
-    color: #131313;
+    color: var(--color-dark);
   }
 
   .pricing-card-featured :is(.pricing-card-actions:hover, .pricing-card-actions:has(:focus-visible)) .pricing-card-action-primary {
-    color: #fffefe;
+    color: var(--color-light);
   }
 
   :is(.pricing-card-actions:hover, .pricing-card-actions:has(:focus-visible)) .pricing-card-action-icon {
     border-color: var(--color-accent);
     background-color: var(--color-accent);
-    color: #fffefe;
+    color: var(--color-light);
   }
 
   :is(.pricing-card-actions:hover, .pricing-card-actions:has(:focus-visible)) .pricing-card-action-icon svg {
@@ -2281,7 +2288,7 @@
     top: var(--shell-clip-top, 0);
     z-index: 100;
     height: 100vh;
-    background-color: rgb(19 19 19 / 0.4);
+    background-color: color-mix(in srgb, var(--color-dark) 40%, transparent);
     opacity: 0;
     pointer-events: none;
     visibility: hidden;
@@ -2364,12 +2371,12 @@
      bottom; on closing they slide back out and fade, and slide back out to the right the same way when the menu
      closes. The active page sits on a red rectangle. */
   .menu-link {
-    @apply block w-full px-3 py-1 text-left no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#131313];
+    @apply block w-full px-3 py-1 text-left no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark;
     font-size: clamp(2rem, 3vw, 2.75rem);
     font-weight: 500;
     line-height: 1.15;
     letter-spacing: -0.02em;
-    color: #131313;
+    color: var(--color-dark);
     opacity: 0;
     transform: translateX(3rem);
     transition:
@@ -2379,7 +2386,7 @@
 
   .menu-link.is-active {
     background-color: #eb4b3d;
-    color: #131313;
+    color: var(--color-dark);
   }
 
   .menu-open .menu-link {
@@ -2474,7 +2481,7 @@
   .language-switcher-trigger:focus-visible,
   .language-switcher-trigger[aria-expanded='true'] {
     background-color: var(--color-surface);
-    color: #131313;
+    color: var(--color-dark);
   }
 
   .language-switcher-flag {
@@ -2483,7 +2490,7 @@
 
   .language-switcher-code {
     @apply leading-none;
-    color: #131313;
+    color: var(--color-dark);
   }
 
   .language-switcher-chevron {
@@ -2502,24 +2509,24 @@
 
   .language-switcher-menu {
     @apply absolute right-0 top-[calc(100%+0.5rem)] z-50 min-w-[9.5rem] overflow-hidden rounded-control border border-border-light bg-surface p-1 shadow-medium;
-    --color-primary: #131313;
+    --color-primary: var(--color-dark);
     --color-secondary: #555555;
   }
 
   .language-switcher-option {
     @apply flex w-full items-center gap-2.5 rounded-control-sm px-3 py-2.5 text-left text-button font-medium transition-[background-color,color];
-    color: #131313;
+    color: var(--color-dark);
   }
 
   .language-switcher-option:hover,
   .language-switcher-option:focus-visible {
     background-color: var(--color-background-soft);
-    color: #131313;
+    color: var(--color-dark);
   }
 
   .language-switcher-option-active {
     background-color: var(--color-background-soft);
-    color: #131313;
+    color: var(--color-dark);
   }
 
   .btn {
@@ -2661,8 +2668,8 @@
   .case-detail-overview {
     @apply relative z-[1] mt-4xl lg:mt-5xl;
     /* Project details: rules and labels in the ink colour at low opacity. */
-    --overview-rule: rgb(19 19 19 / 0.15);
-    --overview-label: rgb(19 19 19 / 0.5);
+    --overview-rule: color-mix(in srgb, var(--color-dark) 15%, transparent);
+    --overview-label: color-mix(in srgb, var(--color-dark) 50%, transparent);
   }
 
   /* The content column sits to the right, capped at 42rem. */
@@ -2762,8 +2769,8 @@
      overview's column split and rule colours. */
   .case-detail-typography {
     @apply relative z-[1] mt-4xl lg:mt-5xl;
-    --overview-rule: rgb(19 19 19 / 0.15);
-    --overview-label: rgb(19 19 19 / 0.5);
+    --overview-rule: color-mix(in srgb, var(--color-dark) 15%, transparent);
+    --overview-label: color-mix(in srgb, var(--color-dark) 50%, transparent);
   }
 
   /* Side by side from 1280px; below that the letter grid would squeeze the
@@ -2821,7 +2828,7 @@
   .case-detail-typography-letter {
     @apply relative flex aspect-square cursor-pointer items-center justify-center text-h4 text-primary transition-colors duration-200 focus-visible:z-[2] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
     margin: 0 -1px -1px 0;
-    border: 1px solid rgb(19 19 19 / 0.35);
+    border: 1px solid color-mix(in srgb, var(--color-dark) 35%, transparent);
     background-color: transparent;
   }
 
@@ -2829,7 +2836,7 @@
     z-index: 1;
     border-color: #eb4b3d;
     background-color: #eb4b3d;
-    color: #fffefe;
+    color: var(--color-light);
   }
 
   /* Colour palette: shares the typography split; rounded, borderless swatches
@@ -2849,7 +2856,7 @@
 
   .case-detail-palette-swatch {
     @apply flex aspect-[2/1] min-h-0 flex-col items-start gap-1 rounded-panel p-4 sm:col-span-2 sm:aspect-auto;
-    color: #131313;
+    color: var(--color-dark);
   }
 
   .case-detail-palette-swatch:first-child {
@@ -2869,7 +2876,7 @@
   }
 
   .case-detail-palette-swatch.is-dark {
-    color: #fffefe;
+    color: var(--color-light);
   }
 
   .case-detail-palette-name {
@@ -2943,7 +2950,7 @@
     border-radius: var(--radius-control-sm);
     aspect-ratio: 16 / 10;
     max-height: calc(100svh - 2 * var(--page-gutter));
-    background-color: #131313;
+    background-color: var(--color-dark);
   }
 
   /* Where the card is wider than 16:10, the image is cropped from the bottom:
@@ -2960,12 +2967,12 @@
 
   .case-detail-next-overlay {
     @apply absolute inset-0;
-    background-color: rgb(19 19 19 / 0.45);
+    background-color: color-mix(in srgb, var(--color-dark) 45%, transparent);
   }
 
   .case-detail-next-content {
     @apply absolute inset-0 flex flex-col items-center justify-center px-6 text-center;
-    color: #fffefe;
+    color: var(--color-light);
   }
 
   .case-detail-next-label {
@@ -2988,12 +2995,12 @@
 
   .case-detail-next-bar {
     @apply mt-lg block h-[5px] w-full overflow-hidden rounded-pill;
-    background-color: rgb(255 254 254 / 0.3);
+    background-color: color-mix(in srgb, var(--color-light) 30%, transparent);
   }
 
   .case-detail-next-bar-fill {
     @apply block h-full w-full origin-left;
-    background-color: #fffefe;
+    background-color: var(--color-light);
     transform: scaleX(0);
   }
 
@@ -3052,7 +3059,7 @@
     width: 2.375rem;
     height: 2.375rem;
     border-radius: 0.375rem;
-    background-color: #131313;
+    background-color: var(--color-dark);
     transition: background-color 500ms var(--ease-smooth);
     /* See .cta-fill-hover .hero-cta-btn-icon: clips the sliding arrows to the
        rounded chip while it rotates. */
@@ -3081,7 +3088,7 @@
   .arrow-chip-btn-arrow {
     width: 0.875rem;
     height: 0.875rem;
-    color: #fffefe;
+    color: var(--color-light);
   }
 
   /* The arrow waiting outside, two arrow widths behind the visible one. Placed
@@ -3259,7 +3266,7 @@
     font-family: var(--font-nav);
     @apply inline-flex items-center rounded-pill border border-[#ccc] py-2.5 pl-5 pr-5 text-button font-medium normal-case;
     gap: 0;
-    color: #131313;
+    color: var(--color-dark);
     transition:
       background-color 0.25s var(--ease-smooth),
       border-color 0.25s var(--ease-smooth),
@@ -3271,15 +3278,15 @@
   .cases-filter-btn:hover,
   .cases-filter-btn:focus-visible {
     background-color: transparent;
-    border-color: #131313;
-    color: #131313;
+    border-color: var(--color-dark);
+    color: var(--color-dark);
   }
 
   .cases-filter-btn-active,
   .cases-filter-btn-active:hover,
   .cases-filter-btn-active:focus-visible {
-    @apply gap-2 border-transparent pr-4 text-[#fffefe];
-    background-color: #131313;
+    @apply gap-2 border-transparent pr-4 text-light;
+    background-color: var(--color-dark);
   }
 
   .cases-filter-btn-label {
@@ -3447,7 +3454,7 @@
     gap: var(--spacing-sm);
     padding: clamp(1.25rem, 2vw, 1.75rem);
     background-color: color-mix(in srgb, var(--color-primary) 90%, transparent);
-    color: #fffefe;
+    color: var(--color-light);
     opacity: 0;
     transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
@@ -3464,7 +3471,7 @@
 
   .meet-us-member-overlay-text {
     @apply text-body-sm;
-    color: color-mix(in srgb, #fffefe 92%, transparent);
+    color: color-mix(in srgb, var(--color-light) 92%, transparent);
   }
 
   /* No reliable hover on touch devices, and no room for a hover panel on a
@@ -3644,15 +3651,15 @@
     --cases-light: 1;
     --cases-mix: calc(var(--cases-light) * 100%);
     --cases-bg: color-mix(in srgb, var(--color-home-page) var(--cases-mix), #8a8989);
-    --cases-ink: color-mix(in srgb, #131313 var(--cases-mix), #fffefe);
-    --cases-muted: color-mix(in srgb, rgb(19 19 19 / 0.55) var(--cases-mix), #a3a3a3);
-    --cases-label: color-mix(in srgb, rgb(19 19 19 / 0.45) var(--cases-mix), #7a7a7a);
-    --cases-value: color-mix(in srgb, #131313 var(--cases-mix), #f3f3f3);
-    --cases-rule: color-mix(in srgb, rgb(19 19 19 / 0.12) var(--cases-mix), rgb(243 243 243 / 0.18));
+    --cases-ink: color-mix(in srgb, var(--color-dark) var(--cases-mix), var(--color-light));
+    --cases-muted: color-mix(in srgb, color-mix(in srgb, var(--color-dark) 55%, transparent) var(--cases-mix), #a3a3a3);
+    --cases-label: color-mix(in srgb, color-mix(in srgb, var(--color-dark) 45%, transparent) var(--cases-mix), #7a7a7a);
+    --cases-value: color-mix(in srgb, var(--color-dark) var(--cases-mix), #f3f3f3);
+    --cases-rule: color-mix(in srgb, color-mix(in srgb, var(--color-dark) 12%, transparent) var(--cases-mix), rgb(243 243 243 / 0.18));
     --cases-placeholder: color-mix(in srgb, #ececec var(--cases-mix), #1a1a1a);
     /* The CTA: the header's dark button on white, its light version on black. */
-    --cases-button: color-mix(in srgb, #131313 var(--cases-mix), #fffefe);
-    --cases-button-ink: color-mix(in srgb, #fffefe var(--cases-mix), #131313);
+    --cases-button: color-mix(in srgb, var(--color-dark) var(--cases-mix), var(--color-light));
+    --cases-button-ink: color-mix(in srgb, var(--color-light) var(--cases-mix), var(--color-dark));
 
     /* Above the pinned hero, which it rolls up over. */
     position: relative;
@@ -3854,7 +3861,7 @@
     --added-value-number-width: 3.75rem;
     @apply py-section-sm lg:py-section;
     background-color: var(--color-home-page);
-    color: #131313;
+    color: var(--color-dark);
   }
 
   .added-value-inner {
@@ -3884,7 +3891,7 @@
     align-items: center;
     gap: 0.75rem;
     margin: 0;
-    color: #131313;
+    color: var(--color-dark);
     font-family: var(--font-sans);
     font-size: 0.8125rem;
     font-weight: 600;
@@ -3945,7 +3952,7 @@
   .added-value-number {
     flex-shrink: 0;
     width: var(--added-value-number-width);
-    color: rgb(19 19 19 / 0.4);
+    color: color-mix(in srgb, var(--color-dark) 40%, transparent);
     font-family: var(--font-sans);
     font-size: 0.875rem;
     font-weight: 500;
@@ -3964,7 +3971,7 @@
 
   .added-value-trigger:hover .added-value-title,
   .added-value-item.is-active .added-value-title {
-    color: #131313;
+    color: var(--color-dark);
   }
 
   .added-value-panel {
@@ -3986,7 +3993,7 @@
     max-width: 30rem;
     margin: 0;
     padding: 0.5rem 0 clamp(1.25rem, 2vw, 1.75rem) var(--added-value-number-width);
-    color: rgb(19 19 19 / 0.55);
+    color: color-mix(in srgb, var(--color-dark) 55%, transparent);
     font-size: 1rem;
     line-height: 1.6;
     opacity: 0;
@@ -4050,6 +4057,137 @@
     .added-value-image {
       transition: none;
     }
+  }
+
+  /* Reviews: arrows and a 01/03 counter above the quote, a 15-second progress
+     bar under it on the left; the reviewer's circular portrait, name and role
+     on the right. */
+  .reviews-section {
+    background-color: var(--color-home-page);
+    color: var(--color-dark);
+  }
+
+  /* Same narrower width as the added-value section above (82rem). */
+  .reviews-inner {
+    width: 100%;
+    max-width: calc(82rem + 2 * var(--page-gutter));
+    margin-inline: auto;
+    padding-inline: var(--page-gutter);
+  }
+
+  .reviews-grid {
+    @apply grid gap-3xl lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-32;
+  }
+
+  /* Shares the quote's width so the counter ends where the review ends. */
+  .reviews-controls {
+    @apply flex max-w-[46rem] items-center gap-sm;
+  }
+
+  /* Bare arrow glyphs; the button keeps its tap area without a visible circle. */
+  .reviews-arrow {
+    @apply flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center text-primary transition-opacity duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+    font-size: 1.25rem;
+  }
+
+  .reviews-arrow:hover {
+    opacity: 0.55;
+  }
+
+  .reviews-counter {
+    @apply ml-auto text-caption font-semibold;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+  }
+
+  /* The quote's lines animate in masks (see ReviewsSection); it shares the
+     controls' width so the counter and bar align with the text. */
+  .reviews-quote {
+    position: relative;
+    @apply mt-2xl max-w-[46rem];
+    /* Between h3 and h2; the measure layer inherits it, so the line breaks
+       match the visible wrap. */
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    font-weight: 500;
+    color: var(--color-primary);
+  }
+
+  /* Masked-lines animation (shared by the reviews quote and the added-value
+     heading; see MaskedLines). Hidden word layer the rendered lines are
+     measured from. */
+  .masked-lines-measure {
+    position: absolute;
+    inset-inline: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .masked-lines-stack {
+    display: block;
+  }
+
+  /* Each line clips its own text, so it can slide in and out of view. */
+  .masked-lines-mask {
+    display: block;
+    overflow: hidden;
+  }
+
+  .masked-lines-line {
+    display: block;
+    will-change: transform;
+  }
+
+  /* The bar spans the quote's full width; the fill is the timer. */
+  .reviews-progress {
+    @apply mt-2xl h-[2px] w-full max-w-[46rem] overflow-hidden;
+    background-color: color-mix(in srgb, var(--color-dark) 12%, transparent);
+  }
+
+  /* One hidden copy per review at the quote's width; the tallest sets the
+     height the block reserves (see ReviewsSection). */
+  .reviews-body {
+    position: relative;
+  }
+
+  .reviews-quote-probes {
+    position: absolute;
+    inset-inline: 0;
+    max-width: 46rem;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .reviews-progress-fill {
+    @apply block h-full;
+    background-color: var(--color-dark);
+    transform-origin: left;
+    will-change: transform;
+  }
+
+  .reviews-person {
+    @apply flex flex-col items-start;
+  }
+
+  .reviews-avatar {
+    @apply aspect-square object-cover;
+    width: 9rem;
+    border-radius: 9999px;
+    background-color: #ececec;
+  }
+
+  /* Explicit ink: the base p colour would otherwise make the name as grey as
+     the role under it. */
+  .reviews-name {
+    @apply mt-xl text-h4;
+    color: var(--color-primary);
+    font-weight: var(--heading-weight);
+    letter-spacing: -0.02em;
+  }
+
+  .reviews-role {
+    @apply mt-xs text-body text-secondary;
   }
 
   .contact-drawer-overlay {
@@ -4162,67 +4300,185 @@
     @apply shrink-0 rounded-panel px-9 py-4 text-button font-medium whitespace-nowrap;
   }
 
+  /* Contact page (/kontakt): the site's dark ink as the page colour, so the
+     header turns light (data-header-theme="dark"). The heading on the left,
+     a narrow form on the right, the pair centred in a capped column and in
+     the screen's height on desktop; phones stack them. */
+  .contact-page {
+    --contact-ink: var(--color-light);
+    --contact-muted: #8a8989;
+    --contact-rule: color-mix(in srgb, var(--color-light) 60%, transparent);
+
+    position: relative;
+    background-color: var(--color-dark);
+    color: var(--contact-ink);
+    color-scheme: dark;
+  }
+
+  .contact-page-grid {
+    @apply mx-auto grid w-full max-w-[96rem] grid-cols-1 gap-3xl pt-[calc(var(--spacing-section-sm)+2.5rem)] pb-section-sm;
+  }
+
+  @media (min-width: 1024px) {
+    .contact-page-grid {
+      /* The form takes up to 32rem but never more than 44% of the row, so
+         the heading column keeps room on small laptops. */
+      grid-template-columns: minmax(0, 1fr) min(32rem, 44%);
+      /* The heading's top lines up with the form's first labels. */
+      align-items: start;
+      align-content: center;
+      column-gap: clamp(4rem, 9vw, 10rem);
+      min-height: calc(100svh - var(--site-header-height));
+      padding-block: 4rem;
+    }
+  }
+
+  .contact-page-intro {
+    container-type: inline-size;
+  }
+
+  /* 6.2vw up to 7rem (3rem on phones), but never wider than its column:
+     "noget smukt." is about 5.8em wide, so 16.5cqi still fits on one line. */
+  .contact-page-heading {
+    margin: 0;
+    color: var(--contact-ink);
+    font-family: var(--font-heading);
+    font-size: min(max(3rem, 6.2vw), 16.5cqi, 7rem);
+    /* A step lighter than the site's 600 headings: large and airy. */
+    font-weight: 500;
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    text-wrap: initial;
+    /* Trim the line box to the capitals, so the top of the "L" is the top of
+       the heading (browsers without text-box keep the half-leading). */
+    text-box: trim-both cap alphabetic;
+  }
+
+  /* Line 2 in the site's grey, like the home hero's second line. */
+  .contact-page-heading-muted {
+    color: var(--contact-muted);
+  }
+
+  .contact-page-form {
+    @apply min-w-0;
+  }
+
+  /* One step between every line of fields, stacked or side by side. */
   .contact-form {
-    @apply flex flex-col gap-6;
+    @apply flex flex-col gap-16;
   }
 
   .contact-form-row {
-    @apply grid grid-cols-1 gap-6 sm:grid-cols-2;
+    @apply grid grid-cols-1 gap-16 sm:grid-cols-2 sm:gap-x-6;
   }
 
   .contact-form-field {
     @apply flex flex-col;
   }
 
+  /* Trimmed to the capitals at the top, so the first labels share the
+     heading's top edge exactly. */
   .contact-form-label {
-    @apply text-body-sm font-semibold tracking-wide text-primary uppercase;
+    @apply text-caption font-bold uppercase tracking-[0.12em];
+    color: var(--contact-ink);
+    text-box: trim-start cap alphabetic;
   }
 
-  .contact-form-input-shell {
-    @apply mt-2;
+  /* The required-field marker, in the accent red. */
+  .contact-form-required {
+    color: var(--color-accent);
   }
 
+  /* Underline fields: no box, just a rule that turns the accent red on focus. */
   .contact-form-input {
-    @apply w-full rounded-pill border-2 border-[#e5e5e5] bg-[#f8f8f8] px-5 py-3.5 text-body text-primary outline-none;
+    @apply w-full text-body outline-none;
+    /* Tighter than body copy's 1.65, so the text sits close to the rule. */
+    line-height: 1.35;
+    padding: 0.25rem 0 0.375rem;
+    border: 0;
+    border-bottom: 1px solid var(--contact-rule);
+    border-radius: 0;
+    background: transparent;
+    color: var(--contact-ink);
+    transition: border-color 300ms var(--ease-smooth);
+  }
+
+  .contact-form-input:hover {
+    border-bottom-color: color-mix(in srgb, var(--color-light) 80%, transparent);
   }
 
   .contact-form-input:focus {
-    @apply border-primary;
+    border-bottom-color: var(--color-accent);
   }
 
   .contact-form-input::placeholder {
-    @apply text-[#bababa];
+    color: color-mix(in srgb, var(--color-light) 32%, transparent);
   }
 
+  /* Keep autofilled fields on the page colour instead of the browser's fill. */
+  .contact-form-input:-webkit-autofill {
+    -webkit-text-fill-color: var(--contact-ink);
+    box-shadow: 0 0 0 100px var(--color-dark) inset;
+    caret-color: var(--contact-ink);
+  }
+
+  /* The message is an underline too: one line that grows with the text. */
   .contact-form-textarea {
-    @apply min-h-72 resize-none rounded-control;
+    resize: none;
+    field-sizing: content;
+    min-height: calc(1lh + 0.5625rem);
+    max-height: 12rem;
   }
 
-  .contact-form-checkbox {
-    @apply flex items-start gap-3;
+  @media (prefers-reduced-motion: reduce) {
+    .contact-form-input {
+      transition: none;
+    }
   }
 
-  .contact-form-checkbox-input {
-    @apply mt-0.5 h-6 w-6 shrink-0 cursor-pointer accent-accent;
+  .contact-form-footer {
+    @apply mt-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4;
   }
 
-  .contact-form-checkbox-label {
-    @apply cursor-pointer text-body-sm text-secondary;
+  .contact-form-note {
+    @apply m-0 text-body-sm;
+    color: var(--contact-muted);
   }
 
-  .contact-form-link {
-    @apply text-accent underline underline-offset-2 transition-colors hover:text-accent-hover;
+  .contact-form-status {
+    @apply m-0 -mt-4 text-body-sm empty:hidden;
+    color: var(--contact-muted);
+  }
+
+  /* The submit button: the header contact button with a white fill (its
+     version over dark sections), the label turning light on the red hover. */
+  .contact-page .header-contact {
+    background-color: var(--color-light);
+    border-color: var(--color-light);
+    color: var(--color-dark);
+  }
+
+  .contact-page .header-contact:is(:hover, :focus-visible) {
+    color: var(--color-light);
+  }
+
+  .contact-page .header-contact .hero-cta-btn-icon {
+    background-color: var(--color-dark);
+  }
+
+  .contact-page .header-contact .hero-cta-btn-arrow {
+    color: var(--color-light);
   }
 
   .contact-drawer-panel .btn-secondary {
     @apply border-2 bg-transparent;
-    color: #131313;
-    border-color: #131313;
+    color: var(--color-dark);
+    border-color: var(--color-dark);
   }
 
   .contact-drawer-panel .btn-secondary:hover {
-    background-color: #131313;
-    color: #fffefe;
+    background-color: var(--color-dark);
+    color: var(--color-light);
   }
 
   .contact-drawer-panel .btn:not(:disabled) {
@@ -4254,9 +4510,9 @@
     --footer-mix: calc(var(--footer-light) * 100%);
     /* The footer's own light colour, a touch cooler than the page. */
     --footer-bg: color-mix(in srgb, #e8e9e9 var(--footer-mix), #8a8989);
-    --footer-ink: #131313;
-    --footer-muted: rgb(19 19 19 / 0.6);
-    --footer-label: rgb(19 19 19 / 0.45);
+    --footer-ink: var(--color-dark);
+    --footer-muted: color-mix(in srgb, var(--color-dark) 60%, transparent);
+    --footer-label: color-mix(in srgb, var(--color-dark) 45%, transparent);
 
     @apply relative flex flex-col pt-section-sm pb-6 lg:pt-section lg:pb-8;
     z-index: 1;

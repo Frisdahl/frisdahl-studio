@@ -21,7 +21,8 @@ const panelVariants = {
   },
 }
 
-export type ContactDrawerView = 'contact' | 'book'
+// Writing to the studio has its own page (/kontakt); only booking uses the drawer.
+export type ContactDrawerView = 'book'
 
 interface ContactDrawerProps {
   isOpen: boolean
