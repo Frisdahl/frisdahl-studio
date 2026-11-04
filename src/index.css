@@ -3716,25 +3716,24 @@
     }
   }
 
-  /* Desktop: the image column keeps its width (a 16:9 frame of
-     clamp(22rem, 32vw, 38rem) height, about 57% of the page) while the image
-     fills the full screen height, running up under the transparent header,
-     so the tall portrait (6:7) case images fit with little cropping. Rows
-     alternate: the image sits flush to the left edge, then the right, with
-     the text beside it. */
+  /* Rows sit inside the content container, so the images line up with the
+     page's side margins. Each image keeps its own aspect ratio (the portrait
+     6:7 case images, Nordwear's 16:9), uncropped. Desktop: the image column
+     is a little over half the content width, capped so a 6:7 image is at
+     most 88% of the screen height; rows alternate the image left and right,
+     with the text in the other column. */
   .case-card {
     @apply grid grid-cols-1;
-    --case-media-width: calc(clamp(22rem, 32vw, 38rem) * 16 / 9);
-    /* Never shorter than 32rem, so very short screens still get a tall image. */
-    --case-media-height: max(32rem, 100svh);
+    --case-media-width: min(54%, calc(88svh * 6 / 7));
     /* Space between the image and the text. */
-    --case-gap: clamp(2.5rem, 4.5vw, 5rem);
+    --case-gap: clamp(2.5rem, 5vw, 6rem);
   }
 
   @media (min-width: 1024px) {
     .case-card {
       grid-template-columns: var(--case-media-width) minmax(0, 1fr);
       grid-template-areas: 'media meta';
+      column-gap: var(--case-gap);
     }
 
     .case-card:nth-child(even) {
@@ -3755,30 +3754,24 @@
     display: block;
   }
 
-  /* Phones: a portrait frame matching the 6:7 case images. */
+  /* Rounded like the case pages' images (--radius-control-sm); the height
+     follows the image. */
   .case-card-media {
     @apply relative overflow-hidden;
-    aspect-ratio: 6 / 7;
+    border-radius: var(--radius-control-sm);
     /* Also the placeholder for cases without an image yet. */
     background-color: var(--cases-placeholder);
   }
 
-  /* Desktop: full screen height (see .case-card). */
-  @media (min-width: 1024px) {
-    .case-card-media {
-      height: var(--case-media-height);
-      aspect-ratio: auto;
-    }
+  .case-card-media:empty {
+    aspect-ratio: 6 / 7;
   }
 
-  /* Nordwear only has a landscape main image. Its laptop is a little wider
-     than the tall frame, so this centres it and trims both edges evenly. */
-  .case-card[data-case='nordwear'] .case-card-image {
-    object-position: 61% 50%;
-  }
-
+  /* Its width/height attributes reserve the space before it loads. */
   .case-card-image {
-    @apply h-full w-full object-cover;
+    display: block;
+    width: 100%;
+    height: auto;
   }
 
   /* A slow, slight zoom while the row's image, title or button is hovered.
@@ -3800,24 +3793,18 @@
   }
 
   /* Phones: the text stacks under the image. Desktop: the column spans the
-     image's height, the number near its top and the text block at its bottom
-     edge, so the space between them reads as deliberate. The number sits a
-     header's height down, so it stays clear of the header (logo, contact
-     button) while the image fills the screen behind it. */
+     image's height, the number at its top edge and the text block at its
+     bottom edge, so the space between them reads as deliberate. */
   .case-card-meta {
     @apply flex flex-col items-start self-start;
-    padding: 1.5rem var(--page-gutter) 3.5rem;
+    padding: 1.5rem 0 3.5rem;
   }
 
   @media (min-width: 1024px) {
     .case-card-meta {
       align-self: stretch;
       justify-content: space-between;
-      padding: calc(var(--site-header-height) + 1rem) var(--page-gutter) 0 var(--case-gap);
-    }
-
-    .case-card:nth-child(even) .case-card-meta {
-      padding: calc(var(--site-header-height) + 1rem) var(--case-gap) 0 var(--page-gutter);
+      padding: 0;
     }
   }
 

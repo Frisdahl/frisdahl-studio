@@ -3,8 +3,6 @@ import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 import { ArrowChipButton } from '../ui/ArrowChipButton'
 
 export interface CaseCardProps {
-  /** The case's id; per-case image crops hook onto it (data-case in index.css). */
-  caseId: string
   /** 1-based position in the list, shown as "01", "02"… */
   index: number
   client: string
@@ -17,14 +15,13 @@ export interface CaseCardProps {
 }
 
 /**
- * One home-page case row: the image flush to one side of the page (the side
- * alternates per row, see .case-card in index.css) and the text beside it.
- * The project number lines up with the image's top edge; title, keywords,
- * description and CTA line up with its bottom edge. The image, the title and
- * the CTA link to the case.
+ * One home-page case row: the image, in its own aspect ratio, on one side of
+ * the content area (the side alternates per row, see .case-card in
+ * index.css) and the text beside it. The project number lines up with the
+ * image's top edge; title, keywords, description and CTA line up with its
+ * bottom edge. The image, the title and the CTA link to the case.
  */
 export function CaseCard({
-  caseId,
   index,
   client,
   keywords,
@@ -35,7 +32,7 @@ export function CaseCard({
   linkLabel,
 }: CaseCardProps) {
   return (
-    <div className="case-card" data-case={caseId}>
+    <div className="case-card">
       {/* Same target as the title link, so it's left out of the tab order and
           the accessibility tree to avoid a duplicate link. */}
       <Link to={href} className="case-card-media-link" tabIndex={-1} aria-hidden="true">

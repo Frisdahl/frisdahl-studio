@@ -104,9 +104,13 @@ export function CasesSection() {
         button: row.querySelector<HTMLElement>('.case-card-button'),
       }))
 
+      // The wipe keeps the frame's rounded corners (--radius-control-sm).
+      const clipHidden = 'inset(0% 0% 100% 0% round 0.75rem)'
+      const clipShown = 'inset(0% 0% 0% 0% round 0.75rem)'
+
       // Hidden straight away (not after the fonts), so nothing flashes.
       rows.forEach(({ media, image, texts, button }) => {
-        gsap.set(media, { clipPath: 'inset(0% 0% 100% 0%)' })
+        gsap.set(media, { clipPath: clipHidden })
         if (image) gsap.set(image, { yPercent: -8, scale: 1.12, transformOrigin: '50% 0%' })
         gsap.set(texts, { autoAlpha: 0 })
         if (button) gsap.set(button, { autoAlpha: 0 })
@@ -127,7 +131,7 @@ export function CasesSection() {
             row.classList.add('is-revealed')
           },
         })
-        timeline.to(media, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.3, ease: 'power3.inOut' }, 0)
+        timeline.to(media, { clipPath: clipShown, duration: 1.3, ease: 'power3.inOut' }, 0)
         if (image) timeline.to(image, { yPercent: 0, scale: 1, duration: 1.6 }, 0)
         timeline.to(split.lines, { yPercent: 0, duration: 1, stagger: 0.08 }, 0.35)
         if (button) timeline.to(button, { autoAlpha: 1, duration: 0.8, ease: 'power2.out' }, '>-0.45')
@@ -158,8 +162,7 @@ export function CasesSection() {
     <section
       ref={sectionRef}
       id="portfolio"
-      // No bottom padding on desktop: the last image sits flush with the section's end.
-      className="home-cases py-section-sm lg:pt-section lg:pb-0"
+      className="home-cases py-section-sm lg:py-section"
       aria-label={cases.ariaLabel}
     >
       <Container>
@@ -177,26 +180,27 @@ export function CasesSection() {
         <h2 ref={listTitleRef} className="home-cases-list-title">
           {cases.listTitle}
         </h2>
-      </Container>
 
-      <div ref={listRef} className="home-cases-list">
-        {cases.items.map((item, index) => (
-          <CaseCard
-            key={item.id}
-            caseId={item.id}
-            index={index + 1}
-            client={item.client}
-            keywords={item.keywords}
-            // The description comes from the shared case data, so it always
-            // matches the case pages.
-            description={caseDescriptions.get(item.id) ?? ''}
-            imageSrc={item.imageSrc}
-            imageAlt={item.imageAlt}
-            href={item.href}
-            linkLabel={cases.linkLabel}
-          />
-        ))}
-      </div>
+        {/* Inside the content container, so the images line up with the
+            page's side margins like the text above. */}
+        <div ref={listRef} className="home-cases-list">
+          {cases.items.map((item, index) => (
+            <CaseCard
+              key={item.id}
+              index={index + 1}
+              client={item.client}
+              keywords={item.keywords}
+              // The description comes from the shared case data, so it always
+              // matches the case pages.
+              description={caseDescriptions.get(item.id) ?? ''}
+              imageSrc={item.imageSrc}
+              imageAlt={item.imageAlt}
+              href={item.href}
+              linkLabel={cases.linkLabel}
+            />
+          ))}
+        </div>
+      </Container>
     </section>
   )
 }
