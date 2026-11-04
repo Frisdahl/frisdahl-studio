@@ -3,6 +3,8 @@ import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 import { ArrowChipButton } from '../ui/ArrowChipButton'
 
 export interface CaseCardProps {
+  /** 1-based position in the list, shown as "01", "02"… */
+  index: number
   client: string
   keywords: string
   description: string
@@ -13,10 +15,14 @@ export interface CaseCardProps {
 }
 
 /**
- * One home-page case row: the image on the left; title, keywords, description
- * and a CTA at its top right. The image, the title and the CTA link to the case.
+ * One home-page case row: the image flush to one side of the page (the side
+ * alternates per row, see .case-card in index.css) and the text beside it.
+ * The project number lines up with the image's top edge; title, keywords,
+ * description and CTA line up with its bottom edge. The image, the title and
+ * the CTA link to the case.
  */
 export function CaseCard({
+  index,
   client,
   keywords,
   description,
@@ -44,23 +50,30 @@ export function CaseCard({
       </Link>
 
       <div className="case-card-meta">
-        {/* Each title is an h3 under the section's "Latest projects" h2. */}
-        <h3 className="case-card-client">
-          <Link to={href} className="case-card-title-link">
-            {client}
-          </Link>
-        </h3>
-        <p className="case-card-keywords">{keywords}</p>
-        {description ? <p className="case-card-description">{description}</p> : null}
+        {/* Visual numbering only; the list order already carries it. */}
+        <p className="case-card-index" aria-hidden="true">
+          {String(index).padStart(2, '0')}
+        </p>
 
-        {/* Same text + arrow-chip button as the project page hero. */}
-        <ArrowChipButton
-          direction="right"
-          label={linkLabel}
-          text={linkLabel}
-          href={href}
-          className="case-card-button"
-        />
+        <div className="case-card-body">
+          {/* Each title is an h3 under the section's "Latest projects" h2. */}
+          <h3 className="case-card-client">
+            <Link to={href} className="case-card-title-link">
+              {client}
+            </Link>
+          </h3>
+          <p className="case-card-keywords">{keywords}</p>
+          {description ? <p className="case-card-description">{description}</p> : null}
+
+          {/* Same text + arrow-chip button as the project page hero. */}
+          <ArrowChipButton
+            direction="right"
+            label={linkLabel}
+            text={linkLabel}
+            href={href}
+            className="case-card-button"
+          />
+        </div>
       </div>
     </div>
   )

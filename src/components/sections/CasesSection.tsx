@@ -86,16 +86,20 @@ export function CasesSection() {
 
       // Project rows: each reveals once as it scrolls in. The image frame
       // grows taller from its top edge (a clip-path wipe downwards) while the
-      // image inside settles down into place from a slight zoom; the title,
-      // keywords and description then rise line by line out of their masks,
-      // and the button fades in last. Only clip-path, transform and opacity
-      // animate, so nothing reflows while it runs.
+      // image inside settles down into place from a slight zoom; the number,
+      // title, keywords and description then rise line by line out of their
+      // masks, and the button fades in last. Only clip-path, transform and
+      // opacity animate, so nothing reflows while it runs. Once done, the
+      // inline styles are cleared and .is-revealed turns on the CSS hover zoom
+      // (which the inline transform would otherwise block).
       const rows = Array.from(list.querySelectorAll<HTMLElement>('.case-card')).map((row) => ({
         row,
         media: row.querySelector<HTMLElement>('.case-card-media')!,
         image: row.querySelector<HTMLElement>('.case-card-image'),
         texts: Array.from(
-          row.querySelectorAll<HTMLElement>('.case-card-client, .case-card-keywords, .case-card-description'),
+          row.querySelectorAll<HTMLElement>(
+            '.case-card-index, .case-card-client, .case-card-keywords, .case-card-description',
+          ),
         ),
         button: row.querySelector<HTMLElement>('.case-card-button'),
       }))
@@ -116,7 +120,12 @@ export function CasesSection() {
         const timeline = gsap.timeline({
           scrollTrigger: { trigger: row, start: ROW_START, once: true },
           defaults: { ease: 'power3.out' },
-          onComplete: () => split.revert(),
+          onComplete: () => {
+            split.revert()
+            gsap.set(media, { clearProps: 'clipPath' })
+            if (image) gsap.set(image, { clearProps: 'transform,transformOrigin' })
+            row.classList.add('is-revealed')
+          },
         })
         timeline.to(media, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.3, ease: 'power3.inOut' }, 0)
         if (image) timeline.to(image, { yPercent: 0, scale: 1, duration: 1.6 }, 0)
@@ -138,6 +147,7 @@ export function CasesSection() {
       return () => {
         cancelled = true
         splits.forEach((split) => split.revert())
+        rows.forEach(({ row }) => row.classList.remove('is-revealed'))
       }
     })
 
@@ -170,9 +180,10 @@ export function CasesSection() {
       </Container>
 
       <div ref={listRef} className="home-cases-list">
-        {cases.items.map((item) => (
+        {cases.items.map((item, index) => (
           <CaseCard
             key={item.id}
+            index={index + 1}
             client={item.client}
             keywords={item.keywords}
             // The description comes from the shared case data, so it always

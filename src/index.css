@@ -3717,15 +3717,33 @@
   }
 
   /* Desktop: the image column is exactly 16:9 of the image height, so the
-     16:9 case images show uncropped at their full size. */
+     16:9 case images show uncropped at their full size. Rows alternate: the
+     image sits flush to the left edge, then the right, and so on, with the
+     text in the remaining column. */
   .case-card {
     @apply grid grid-cols-1;
     --case-media-height: clamp(22rem, 32vw, 38rem);
+    /* Space between the image and the text. */
+    --case-gap: clamp(2.5rem, 4.5vw, 5rem);
   }
 
   @media (min-width: 1024px) {
     .case-card {
       grid-template-columns: calc(var(--case-media-height) * 16 / 9) minmax(0, 1fr);
+      grid-template-areas: 'media meta';
+    }
+
+    .case-card:nth-child(even) {
+      grid-template-columns: minmax(0, 1fr) calc(var(--case-media-height) * 16 / 9);
+      grid-template-areas: 'meta media';
+    }
+
+    .case-card-media-link {
+      grid-area: media;
+    }
+
+    .case-card-meta {
+      grid-area: meta;
     }
   }
 
@@ -3751,8 +3769,27 @@
     @apply h-full w-full object-cover;
   }
 
-  /* Rhythm: tight title-keywords pair, then larger steps to the description
-     and the CTA. */
+  /* A slow, slight zoom while the row's image, title or button is hovered.
+     Only after the reveal (CasesSection adds .is-revealed and clears its
+     inline transform), and never with reduced motion. */
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .case-card-image {
+      transition: transform 900ms var(--ease-smooth);
+    }
+
+    .case-card.is-revealed:has(
+        .case-card-media-link:hover,
+        .case-card-title-link:hover,
+        .case-card-button:hover
+      )
+      .case-card-image {
+      transform: scale(1.035);
+    }
+  }
+
+  /* Phones: the text stacks under the image. Desktop: the column spans the
+     image's height, the number at its top edge and the text block at its
+     bottom edge, so the space between them reads as deliberate. */
   .case-card-meta {
     @apply flex flex-col items-start self-start;
     padding: 1.5rem var(--page-gutter) 3.5rem;
@@ -3760,8 +3797,40 @@
 
   @media (min-width: 1024px) {
     .case-card-meta {
-      padding: 0 var(--page-gutter) 0 clamp(2rem, 3vw, 3.5rem);
+      align-self: stretch;
+      justify-content: space-between;
+      padding: 0 var(--page-gutter) 0 var(--case-gap);
     }
+
+    .case-card:nth-child(even) .case-card-meta {
+      padding: 0 var(--case-gap) 0 var(--page-gutter);
+    }
+  }
+
+  /* Small, muted and tabular, in the keywords' label style. */
+  .case-card-index {
+    margin: 0 0 1rem;
+    color: var(--cases-muted);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (min-width: 1024px) {
+    .case-card-index {
+      margin: 0;
+    }
+  }
+
+  /* Rhythm: tight title-keywords pair, then larger steps to the description
+     and the CTA. */
+  .case-card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 32rem;
   }
 
   /* Explicit colours: the base h2 / p styles would otherwise win over the
