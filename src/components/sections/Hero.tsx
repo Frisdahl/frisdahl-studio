@@ -47,17 +47,10 @@ const heroSlides: HeroSlide[] = [
   { imageSrc: '/images/hero/poster-frisdahl-studio-2.webp', alt: { da: 'Frisdahl Studio-plakat på en trævæg', en: 'Frisdahl Studio poster on a wooden wall' } },
   { imageSrc: '/images/hero/fresh-cut-laenestol.webp', alt: { da: 'Fresh Cut på en bærbar i en lænestol', en: 'Fresh Cut on a laptop in an armchair' } },
   { imageSrc: '/images/hero/auren-mobil.webp', alt: { da: 'Landingsside-koncept for Auren på en mobil op ad en lerkrukke', en: 'Auren landing page concept on a phone against a clay pot' } },
-  { imageSrc: '/images/hero/dkk-baenk.webp', alt: { da: 'Det Kollektive Klædeskab på en bærbar', en: 'Det Kollektive Klædeskab on a laptop' } },
-  { imageSrc: '/images/hero/nordwear-mobil.webp', alt: { da: 'Nordwear på en mobil', en: 'Nordwear on a phone' } },
   { imageSrc: '/images/hero/montra-elina-skaerme.webp', alt: { da: 'Landingsside-koncepter for Montra og Elina Vestergaard på to skærme', en: 'Montra and Elina Vestergaard landing page concepts on two displays' } },
-  { imageSrc: '/images/hero/fresh-cut-iphones.webp', alt: { da: 'Fresh Cut booking og lokationer på to iPhones', en: 'Fresh Cut booking and locations on two iPhones' } },
-  { imageSrc: '/images/hero/dkk-iphones.webp', alt: { da: 'Det Kollektive Klædeskab på to iPhones', en: 'Det Kollektive Klædeskab on two iPhones' } },
-  { imageSrc: '/images/hero/montra-mobil.webp', alt: { da: 'Landingsside-koncept for Montra på en mobil i en hånd', en: 'Montra landing page concept on a phone held in a hand' } },
-  { imageSrc: '/images/hero/poster-frisdahl-studio-1.webp', alt: { da: 'Frisdahl Studio-plakat med grå cirkel på en trævæg', en: 'Frisdahl Studio poster with a grey circle on a wooden wall' } },
   { imageSrc: '/images/hero/peter-salling-sikkerheden.webp', alt: { da: 'Sikkerheden er på spil på Peter Sallings forside', en: 'Sikkerheden er på spil on Peter Salling’s homepage' } },
-  { imageSrc: '/images/hero/nordwear-iphones.webp', alt: { da: 'Nordwear på to iPhones', en: 'Nordwear on two iPhones' } },
+  { imageSrc: '/images/hero/montra-mobil.webp', alt: { da: 'Landingsside-koncept for Montra på en mobil i en hånd', en: 'Montra landing page concept on a phone held in a hand' } },
   { imageSrc: '/images/hero/poster-frisdahl-studio-3.webp', alt: { da: 'Rød Frisdahl Studio-plakat på en betonvæg i sollys', en: 'Red Frisdahl Studio poster on a concrete wall in sunlight' } },
-  { imageSrc: '/images/hero/peter-salling-iphones.webp', alt: { da: 'Peter Sallings presse og priser på to iPhones', en: 'Peter Salling press and awards on two iPhones' } },
 ]
 
 /** Carousel drift in px per second (right to left). */
