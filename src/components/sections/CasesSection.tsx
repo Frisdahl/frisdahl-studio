@@ -183,6 +183,7 @@ export function CasesSection() {
         {cases.items.map((item, index) => (
           <CaseCard
             key={item.id}
+            caseId={item.id}
             index={index + 1}
             client={item.client}
             keywords={item.keywords}

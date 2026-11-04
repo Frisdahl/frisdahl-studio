@@ -35,7 +35,7 @@ const homeContent = {
           client: "Peter Salling",
           keywords: "Website • Design • CMS",
           href: '/cases/peter-salling',
-          imageSrc: "/cases/peter-salling/official--16-9.webp",
+          imageSrc: "/cases/peter-salling/official--6-7.webp",
           imageAlt: "Peter Salling case",
         },
         {
@@ -51,7 +51,7 @@ const homeContent = {
           client: "Fresh Cut",
           keywords: "Website • Branding • Booking",
           href: '/cases/fresh-cut',
-          imageSrc: "/cases/fresh-cut/official--16-9.webp",
+          imageSrc: "/cases/fresh-cut/official--6-7.webp",
           imageAlt: "Fresh Cut case",
         },
         {
@@ -59,7 +59,7 @@ const homeContent = {
           client: "Det Kollektive Klædeskab",
           keywords: "Redesign • UX-design • Udvikling",
           href: '/cases/det-kollektive-klaedeskab',
-          imageSrc: "/cases/det-kollektive-klaedeskab/official--16-9.webp",
+          imageSrc: "/cases/det-kollektive-klaedeskab/official--6-7.webp",
           imageAlt: "Det Kollektive Klædeskab case",
         },
       ],
@@ -334,7 +334,7 @@ const homeContent = {
           client: "Peter Salling",
           keywords: "Website • Design • CMS",
           href: '/cases/peter-salling',
-          imageSrc: "/cases/peter-salling/official--16-9.webp",
+          imageSrc: "/cases/peter-salling/official--6-7.webp",
           imageAlt: "Peter Salling case",
         },
         {
@@ -350,7 +350,7 @@ const homeContent = {
           client: "Fresh Cut",
           keywords: "Website • Branding • Booking",
           href: '/cases/fresh-cut',
-          imageSrc: "/cases/fresh-cut/official--16-9.webp",
+          imageSrc: "/cases/fresh-cut/official--6-7.webp",
           imageAlt: "Fresh Cut case",
         },
         {
@@ -358,7 +358,7 @@ const homeContent = {
           client: "Det Kollektive Klædeskab",
           keywords: "Redesign • UX design • Development",
           href: '/cases/det-kollektive-klaedeskab',
-          imageSrc: "/cases/det-kollektive-klaedeskab/official--16-9.webp",
+          imageSrc: "/cases/det-kollektive-klaedeskab/official--6-7.webp",
           imageAlt: "Det Kollektive Klædeskab case",
         },
       ],

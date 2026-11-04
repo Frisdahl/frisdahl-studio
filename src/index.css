@@ -3716,25 +3716,28 @@
     }
   }
 
-  /* Desktop: the image column is exactly 16:9 of the image height, so the
-     16:9 case images show uncropped at their full size. Rows alternate: the
-     image sits flush to the left edge, then the right, and so on, with the
-     text in the remaining column. */
+  /* Desktop: the image column keeps its width (a 16:9 frame of
+     clamp(22rem, 32vw, 38rem) height, about 57% of the page) while the image
+     fills the screen's height below the header, so the tall portrait (6:7)
+     case images fit with little cropping. Rows alternate: the image sits
+     flush to the left edge, then the right, with the text beside it. */
   .case-card {
     @apply grid grid-cols-1;
-    --case-media-height: clamp(22rem, 32vw, 38rem);
+    --case-media-width: calc(clamp(22rem, 32vw, 38rem) * 16 / 9);
+    /* Never shorter than 32rem, so very short screens still get a tall image. */
+    --case-media-height: max(32rem, calc(100svh - var(--site-header-height)));
     /* Space between the image and the text. */
     --case-gap: clamp(2.5rem, 4.5vw, 5rem);
   }
 
   @media (min-width: 1024px) {
     .case-card {
-      grid-template-columns: calc(var(--case-media-height) * 16 / 9) minmax(0, 1fr);
+      grid-template-columns: var(--case-media-width) minmax(0, 1fr);
       grid-template-areas: 'media meta';
     }
 
     .case-card:nth-child(even) {
-      grid-template-columns: minmax(0, 1fr) calc(var(--case-media-height) * 16 / 9);
+      grid-template-columns: minmax(0, 1fr) var(--case-media-width);
       grid-template-areas: 'meta media';
     }
 
@@ -3751,18 +3754,26 @@
     display: block;
   }
 
+  /* Phones: a portrait frame matching the 6:7 case images. */
   .case-card-media {
-    @apply relative aspect-video overflow-hidden;
+    @apply relative overflow-hidden;
+    aspect-ratio: 6 / 7;
     /* Also the placeholder for cases without an image yet. */
     background-color: var(--cases-placeholder);
   }
 
-  /* Desktop: a capped fixed height; the width follows at 16:9. */
+  /* Desktop: full screen height (see .case-card). */
   @media (min-width: 1024px) {
     .case-card-media {
       height: var(--case-media-height);
       aspect-ratio: auto;
     }
+  }
+
+  /* Nordwear only has a landscape main image. Its laptop is a little wider
+     than the tall frame, so this centres it and trims both edges evenly. */
+  .case-card[data-case='nordwear'] .case-card-image {
+    object-position: 61% 50%;
   }
 
   .case-card-image {
@@ -3839,11 +3850,12 @@
     margin: 0;
     color: var(--cases-ink);
     font-family: var(--font-heading);
-    /* h3: a step below the "Seneste projekter" h2 at every width. */
-    font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+    /* h3: large beside the tall images (52px at 1440, 37px at 1024, 32px on
+       phones), still just under the "Seneste projekter" h2 at every width. */
+    font-size: clamp(2rem, 3.6vw, 3.25rem);
     font-weight: var(--heading-weight);
-    line-height: 1;
-    letter-spacing: -0.035em;
+    line-height: 1.02;
+    letter-spacing: -0.04em;
   }
 
   .case-card-title-link {
