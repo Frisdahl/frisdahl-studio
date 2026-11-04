@@ -5,6 +5,7 @@ import { ContactDrawerProvider } from './context/ContactDrawerProvider'
 import { LocaleProvider } from './context/LocaleProvider'
 import {
   CASES_PATH,
+  CONTACT_PATH,
   MEET_US_PATH,
   PRICING_PATH,
   PRIVACY_POLICY_PATH,
@@ -19,6 +20,9 @@ const CaseDetailPage = lazy(() =>
   import('./pages/CaseDetailPage').then((m) => ({ default: m.CaseDetailPage })),
 )
 const MeetUsPage = lazy(() => import('./pages/MeetUsPage').then((m) => ({ default: m.MeetUsPage })))
+const ContactPage = lazy(() =>
+  import('./pages/ContactPage').then((m) => ({ default: m.ContactPage })),
+)
 const ProcessPage = lazy(() => import('./pages/ProcessPage').then((m) => ({ default: m.ProcessPage })))
 const PrivacyPolicyPage = lazy(() =>
   import('./pages/PrivacyPolicyPage').then((m) => ({ default: m.PrivacyPolicyPage })),
@@ -47,6 +51,7 @@ function App() {
                 <Route path={CASES_PATH} element={<CasesPage />} />
                 <Route path={`${CASES_PATH}/:caseSlug`} element={<CaseDetailPage />} />
                 <Route path={MEET_US_PATH} element={<MeetUsPage />} />
+                <Route path={CONTACT_PATH} element={<ContactPage />} />
                 <Route path={PROCESS_PATH} element={<ProcessPage />} />
                 <Route path={PRIVACY_POLICY_PATH} element={<PrivacyPolicyPage />} />
                 <Route path="*" element={<NotFoundPage />} />

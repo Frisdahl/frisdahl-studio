@@ -6,6 +6,7 @@ interface ContactButtonProps {
   /** Open href as an external page in a new tab. */
   external?: boolean
   onClick?: () => void
+  type?: 'button' | 'submit'
   className?: string
 }
 

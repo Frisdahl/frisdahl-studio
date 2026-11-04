@@ -4,6 +4,7 @@ import {
   CasesSection,
   FaqSection,
   Hero,
+  ReviewsSection,
   SplitPanelSection,
 } from '../components/sections'
 import { useLocale } from '../context/LocaleContext'
@@ -25,6 +26,7 @@ export function HomePage() {
         <CasesSection />
       </div>
       <AddedValueSection />
+      <ReviewsSection />
       <SplitPanelSection content={splitPanel} />
       <FaqSection content={faq} />
     </main>

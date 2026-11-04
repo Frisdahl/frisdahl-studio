@@ -15,6 +15,8 @@ interface CtaPillButtonProps {
   /** Open href as an external page in a new tab. */
   external?: boolean
   onClick?: () => void
+  /** Button type when there is no href; 'submit' sends the surrounding form. */
+  type?: 'button' | 'submit'
   className?: string
   /** Hover slides a colour overlay up, rolls the label to a copy and turns the arrow chip. */
   fillOnHover?: boolean
@@ -27,6 +29,7 @@ export function CtaPillButton({
   href,
   external = false,
   onClick,
+  type = 'button',
   children,
   className = '',
   fillOnHover = false,
@@ -175,7 +178,7 @@ export function CtaPillButton({
   }
 
   return (
-    <button type="button" onClick={onClick} {...interactionProps}>
+    <button type={type} onClick={onClick} {...interactionProps}>
       {content}
     </button>
   )

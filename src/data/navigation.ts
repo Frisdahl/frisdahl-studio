@@ -1,4 +1,4 @@
-import { CASES_PATH, MEET_US_PATH, PROCESS_PATH } from '../lib/routes'
+import { CASES_PATH, CONTACT_PATH, MEET_US_PATH, PROCESS_PATH } from '../lib/routes'
 
 export type Locale = 'da' | 'en'
 
@@ -87,11 +87,11 @@ export const navDropdownHrefs = new Set<string>()
 export const navItems: NavItem[] = [
   { href: CASES_PATH, labels: { da: 'Cases', en: 'Cases' } },
   { href: MEET_US_PATH, labels: { da: 'Om mig', en: 'About me' } },
-  { href: '/#contact', labels: { da: 'Kontakt', en: 'Contact' } },
+  { href: CONTACT_PATH, labels: { da: 'Kontakt', en: 'Contact' } },
 ]
 
 /** The burger menu's links, in order. '/' is the front page, labelled by homeLabel. */
-const menuLinkHrefs = ['/', CASES_PATH, MEET_US_PATH, '/#contact'] as const
+const menuLinkHrefs = ['/', CASES_PATH, MEET_US_PATH, CONTACT_PATH] as const
 
 const navigationCopy = {
   da: {

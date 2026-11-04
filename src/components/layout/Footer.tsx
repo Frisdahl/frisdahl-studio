@@ -2,7 +2,6 @@ import { useLayoutEffect, useRef } from 'react'
 import { matchPath, useLocation } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { useContactDrawer } from '../../context/ContactDrawerContext'
 import { useLocale } from '../../context/LocaleContext'
 import { getFooterContent } from '../../data/footer'
 import { CASES_PATH } from '../../lib/routes'
@@ -27,7 +26,6 @@ function FooterWordmark({ label }: { label: string }) {
 export function Footer() {
   const { locale } = useLocale()
   const { pathname } = useLocation()
-  const { openDrawer } = useContactDrawer()
   const isCaseDetailPage = Boolean(
     matchPath({ path: `${CASES_PATH}/:caseSlug`, end: true }, pathname),
   )
@@ -151,21 +149,9 @@ export function Footer() {
             <ul className="site-footer-links site-footer-links-nav">
               {footer.links.map((link) => (
                 <li key={link.href}>
-                  {/* No contact section to scroll to on the homepage, so the
-                      contact link opens the drawer like the header CTA. */}
-                  {link.href === '/#contact' ? (
-                    <button
-                      type="button"
-                      className="site-footer-link"
-                      onClick={() => openDrawer('contact')}
-                    >
-                      <RollLabel>{link.label}</RollLabel>
-                    </button>
-                  ) : (
-                    <a href={link.href} className="site-footer-link">
-                      <RollLabel>{link.label}</RollLabel>
-                    </a>
-                  )}
+                  <a href={link.href} className="site-footer-link">
+                    <RollLabel>{link.label}</RollLabel>
+                  </a>
                 </li>
               ))}
             </ul>

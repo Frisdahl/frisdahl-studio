@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState, type ReactNode } from 'react'
 import { BookMeetingPanel } from '../components/contact/BookMeetingPanel'
 import { ContactDrawer, type ContactDrawerView } from '../components/contact/ContactDrawer'
-import { ContactWritePanel } from '../components/contact/ContactWritePanel'
 import { getHomeContent } from '../data/home'
 import { ContactDrawerContext } from './ContactDrawerContext'
 import { useLocale } from './LocaleContext'
@@ -36,11 +35,7 @@ export function ContactDrawerProvider({ children }: { children: ReactNode }) {
         onClose={closeDrawer}
         closeLabel={contact.drawer.closeLabel}
       >
-        {drawerView === 'book' ? (
-          <BookMeetingPanel onClose={closeDrawer} />
-        ) : drawerView === 'contact' ? (
-          <ContactWritePanel onClose={closeDrawer} />
-        ) : null}
+        {drawerView === 'book' ? <BookMeetingPanel onClose={closeDrawer} /> : null}
       </ContactDrawer>
     </ContactDrawerContext.Provider>
   )
