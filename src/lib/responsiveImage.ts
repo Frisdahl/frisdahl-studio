@@ -40,7 +40,7 @@ export const IMAGE_SIZES = {
   // Full-bleed split panel: object-cover fills a frame taller than the image's
   // 1.24:1 ratio (min 52rem desktop, 29rem mobile), so it renders wider than its column.
   splitPanel: '(min-width: 130rem) 50vw, (min-width: 64rem) 65rem, (min-width: 36rem) 100vw, 36rem',
-  // Home case rows: about half the content width from desktop up (at most
-  // 54%, capped by screen height); full width minus the gutters on phones.
-  homeCaseRow: '(min-width: 64rem) 52vw, 100vw',
+  // Home case rows: 58% of the content width from desktop up; full width
+  // minus the gutters on phones.
+  homeCaseRow: '(min-width: 64rem) 56vw, 100vw',
 } as const

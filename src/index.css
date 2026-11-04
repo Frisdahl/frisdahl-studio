@@ -3717,14 +3717,13 @@
   }
 
   /* Rows sit inside the content container, so the images line up with the
-     page's side margins. Each image keeps its own aspect ratio (the portrait
-     6:7 case images, Nordwear's 16:9), uncropped. Desktop: the image column
-     is a little over half the content width, capped so a 6:7 image is at
-     most 88% of the screen height; rows alternate the image left and right,
-     with the text in the other column. */
+     page's side margins. Every case shows its landscape main image in the
+     same 16:9 frame. Desktop: the image column takes 58% of the content
+     width; rows alternate the image left and right, with the text in the
+     other column. */
   .case-card {
     @apply grid grid-cols-1;
-    --case-media-width: min(54%, calc(88svh * 6 / 7));
+    --case-media-width: 58%;
     /* Space between the image and the text. */
     --case-gap: clamp(2.5rem, 5vw, 6rem);
   }
@@ -3754,24 +3753,22 @@
     display: block;
   }
 
-  /* Rounded like the case pages' images (--radius-control-sm); the height
-     follows the image. */
+  /* One 16:9 frame for every case, rounded like the case pages' images
+     (--radius-control-sm). */
   .case-card-media {
     @apply relative overflow-hidden;
+    aspect-ratio: 16 / 9;
     border-radius: var(--radius-control-sm);
     /* Also the placeholder for cases without an image yet. */
     background-color: var(--cases-placeholder);
   }
 
-  .case-card-media:empty {
-    aspect-ratio: 6 / 7;
-  }
-
-  /* Its width/height attributes reserve the space before it loads. */
+  /* Fills the 16:9 frame; the case images are 16:9, so nothing is cropped. */
   .case-card-image {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
   }
 
   /* A slow, slight zoom while the row's image, title or button is hovered.
