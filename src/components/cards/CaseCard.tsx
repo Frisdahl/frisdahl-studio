@@ -3,8 +3,6 @@ import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 import { ArrowChipButton } from '../ui/ArrowChipButton'
 
 export interface CaseCardProps {
-  /** 1-based position in the list, shown as "01", "02"… */
-  index: number
   client: string
   keywords: string
   description: string
@@ -15,14 +13,12 @@ export interface CaseCardProps {
 }
 
 /**
- * One home-page case row: the image, in its own aspect ratio, on one side of
- * the content area (the side alternates per row, see .case-card in
- * index.css) and the text beside it. The project number lines up with the
- * image's top edge; title, keywords, description and CTA line up with its
- * bottom edge. The image, the title and the CTA link to the case.
+ * One home-page case row: the 16:9 image on one side of the content area (the
+ * side alternates per row, see .case-card in index.css) and the text beside
+ * it, lined up with the image's bottom edge. The image, the title and the CTA
+ * link to the case.
  */
 export function CaseCard({
-  index,
   client,
   keywords,
   description,
@@ -50,11 +46,6 @@ export function CaseCard({
       </Link>
 
       <div className="case-card-meta">
-        {/* Visual numbering only; the list order already carries it. */}
-        <p className="case-card-index" aria-hidden="true">
-          {String(index).padStart(2, '0')}
-        </p>
-
         <div className="case-card-body">
           {/* Each title is an h3 under the section's "Latest projects" h2. */}
           <h3 className="case-card-client">
