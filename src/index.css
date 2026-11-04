@@ -3718,14 +3718,15 @@
 
   /* Desktop: the image column keeps its width (a 16:9 frame of
      clamp(22rem, 32vw, 38rem) height, about 57% of the page) while the image
-     fills the screen's height below the header, so the tall portrait (6:7)
-     case images fit with little cropping. Rows alternate: the image sits
-     flush to the left edge, then the right, with the text beside it. */
+     fills the full screen height, running up under the transparent header,
+     so the tall portrait (6:7) case images fit with little cropping. Rows
+     alternate: the image sits flush to the left edge, then the right, with
+     the text beside it. */
   .case-card {
     @apply grid grid-cols-1;
     --case-media-width: calc(clamp(22rem, 32vw, 38rem) * 16 / 9);
     /* Never shorter than 32rem, so very short screens still get a tall image. */
-    --case-media-height: max(32rem, calc(100svh - var(--site-header-height)));
+    --case-media-height: max(32rem, 100svh);
     /* Space between the image and the text. */
     --case-gap: clamp(2.5rem, 4.5vw, 5rem);
   }
@@ -3799,8 +3800,10 @@
   }
 
   /* Phones: the text stacks under the image. Desktop: the column spans the
-     image's height, the number at its top edge and the text block at its
-     bottom edge, so the space between them reads as deliberate. */
+     image's height, the number near its top and the text block at its bottom
+     edge, so the space between them reads as deliberate. The number sits a
+     header's height down, so it stays clear of the header (logo, contact
+     button) while the image fills the screen behind it. */
   .case-card-meta {
     @apply flex flex-col items-start self-start;
     padding: 1.5rem var(--page-gutter) 3.5rem;
@@ -3810,11 +3813,11 @@
     .case-card-meta {
       align-self: stretch;
       justify-content: space-between;
-      padding: 0 var(--page-gutter) 0 var(--case-gap);
+      padding: calc(var(--site-header-height) + 1rem) var(--page-gutter) 0 var(--case-gap);
     }
 
     .case-card:nth-child(even) .case-card-meta {
-      padding: 0 var(--case-gap) 0 var(--page-gutter);
+      padding: calc(var(--site-header-height) + 1rem) var(--case-gap) 0 var(--page-gutter);
     }
   }
 
