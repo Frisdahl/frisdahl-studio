@@ -3632,10 +3632,10 @@
     }
   }
 
-  /* Home cases: full-bleed rows stacked with no gap on black. On desktop the
-     image fills the left 60% of the page (CasesSection sizes it between 80%
-     and 100% around the screen's centre) and the title plus keywords sit
-     outside it, at its top right. Phones stack the text under the image. */
+  /* Home cases: full-bleed rows. On desktop the image fills the left 60% of
+     the page at a fixed size, with the text at its top right; each row
+     reveals once as it scrolls in (CasesSection). Phones stack the text
+     under the image. */
   /* --cases-light runs 0 → 1 (CasesSection scrubs it as the section rolls
      in): grey (#8a8989) with light text at 0, the page colour with dark text at 1. Every colour
      below mixes from it, so the whole section turns over as one. It rests at
@@ -3696,22 +3696,28 @@
     color: var(--color-accent);
   }
 
-  /* The section's h2: a step up from the regular h2, but always smaller than
-     the hero's h1 (64px at 1440, 48px at 1024, 36px on phones). */
+  /* The section's h2, centred over the projects: a step up from the regular
+     h2, but always smaller than the hero's h1 (64px at 1440, 48px at 1024,
+     36px on phones). */
   .home-cases-list-title {
-    @apply mt-5xl mb-2xl lg:mt-[12rem];
+    @apply mt-5xl mb-2xl text-center lg:mt-[12rem] lg:mb-4xl;
     font-size: clamp(2.125rem, 3.9vw, 3.5rem);
     font-weight: var(--heading-weight);
     line-height: 1.05;
     letter-spacing: -0.03em;
     color: var(--cases-ink);
-    will-change: transform;
   }
 
-  /* Desktop: the image column is exactly 16:9 of the full image height, so the
-     16:9 case images show uncropped. CasesSection scales each image's height
-     and width (as a % of this column) by the same factor, which keeps 16:9
-     while the rows grow and shrink. */
+  /* Desktop: room between the rows, so each image reveals on its own. */
+  @media (min-width: 1024px) {
+    .home-cases-list {
+      display: grid;
+      row-gap: clamp(4rem, 7vw, 7.5rem);
+    }
+  }
+
+  /* Desktop: the image column is exactly 16:9 of the image height, so the
+     16:9 case images show uncropped at their full size. */
   .case-card {
     @apply grid grid-cols-1;
     --case-media-height: clamp(22rem, 32vw, 38rem);
@@ -3733,8 +3739,7 @@
     background-color: var(--cases-placeholder);
   }
 
-  /* Desktop: a capped full height (mirrored by fullHeight() in
-     CasesSection, which sizes each image between 80% and 100% of it). */
+  /* Desktop: a capped fixed height; the width follows at 16:9. */
   @media (min-width: 1024px) {
     .case-card-media {
       height: var(--case-media-height);
