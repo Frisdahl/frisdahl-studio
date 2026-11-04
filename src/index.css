@@ -3746,8 +3746,8 @@
     @apply h-full w-full object-cover;
   }
 
-  /* Rhythm: tight title-keywords pair, then progressively larger steps to the
-     description, the facts and the CTA. */
+  /* Rhythm: tight title-keywords pair, then larger steps to the description
+     and the CTA. */
   .case-card-meta {
     @apply flex flex-col items-start self-start;
     padding: 1.5rem var(--page-gutter) 3.5rem;
@@ -3800,63 +3800,16 @@
     line-height: 1.6;
   }
 
-  /* Role / technologies / year with a rule between each, set off from the
-     description by space alone. */
-  .case-card-facts {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    width: 100%;
-    max-width: 36rem;
-    margin: 3rem 0 0;
-  }
-
-  .case-card-fact {
-    padding-inline: 1.25rem;
-    border-left: 1px solid var(--cases-rule);
-  }
-
-  .case-card-fact:first-child {
-    padding-left: 0;
-    border-left: 0;
-  }
-
-  .case-card-fact-label {
-    color: var(--cases-label);
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .case-card-fact-value {
-    margin: 0.5rem 0 0;
-    color: var(--cases-value);
-    font-size: 0.875rem;
-    line-height: 1.45;
-  }
-
+  /* The project page hero's text + arrow-chip button; its text follows the
+     section's grey-to-light roll-in like the rest of the card. */
   .case-card-button {
     margin-top: 2rem;
   }
 
-  /* Follows the section from light-on-black to dark-on-white; the label still
-     turns light over the red hover fill. */
+  /* No colour transition: the global link one would lag the scrubbed fade. */
   .home-cases .case-card-button {
-    background-color: var(--cases-button);
-    color: var(--cases-button-ink);
-  }
-
-  .home-cases .case-card-button:is(:hover, :focus-visible) {
-    background-color: var(--cases-button);
-    color: #fffefe;
-  }
-
-  .home-cases .case-card-button .hero-cta-btn-icon {
-    background-color: var(--cases-button-ink);
-  }
-
-  .home-cases .case-card-button .hero-cta-btn-arrow {
-    color: var(--cases-button);
+    color: var(--cases-ink);
+    transition: none;
   }
 
   /* Added value ("Hvad jeg kan tilbyde"): numbered accordion rows on the left,

@@ -29,12 +29,10 @@ const homeContent = {
       },
       listTitle: "Seneste projekter",
       linkLabel: "Se projekt",
-      metaLabels: { role: "Rolle", technologies: "Teknologier", year: "År" },
       items: [
         {
           id: 'peter-salling',
           client: "Peter Salling",
-          technologies: "React, TypeScript, Supabase",
           keywords: "Website • Design • CMS",
           href: '/cases/peter-salling',
           imageSrc: "/cases/peter-salling/official--16-9.webp",
@@ -43,7 +41,6 @@ const homeContent = {
         {
           id: 'nordwear',
           client: "Nordwear",
-          technologies: "Shopify, Liquid, Figma",
           keywords: "E-commerce • Design • Udvikling",
           href: '/cases/nordwear',
           imageSrc: "/cases/nordwear/official--16-9.webp",
@@ -52,7 +49,6 @@ const homeContent = {
         {
           id: 'fresh-cut',
           client: "Fresh Cut",
-          technologies: "React, TypeScript, Tailwind CSS",
           keywords: "Website • Branding • Booking",
           href: '/cases/fresh-cut',
           imageSrc: "/cases/fresh-cut/official--16-9.webp",
@@ -61,7 +57,6 @@ const homeContent = {
         {
           id: 'det-kollektive-klaedeskab',
           client: "Det Kollektive Klædeskab",
-          technologies: "React, Vite, Tailwind CSS",
           keywords: "Redesign • UX-design • Udvikling",
           href: '/cases/det-kollektive-klaedeskab',
           imageSrc: "/cases/det-kollektive-klaedeskab/official--16-9.webp",
@@ -333,12 +328,10 @@ const homeContent = {
       },
       listTitle: "Latest projects",
       linkLabel: "View project",
-      metaLabels: { role: "Role", technologies: "Technologies", year: "Year" },
       items: [
         {
           id: 'peter-salling',
           client: "Peter Salling",
-          technologies: "React, TypeScript, Supabase",
           keywords: "Website • Design • CMS",
           href: '/cases/peter-salling',
           imageSrc: "/cases/peter-salling/official--16-9.webp",
@@ -347,7 +340,6 @@ const homeContent = {
         {
           id: 'nordwear',
           client: "Nordwear",
-          technologies: "Shopify, Liquid, Figma",
           keywords: "E-commerce • Design • Development",
           href: '/cases/nordwear',
           imageSrc: "/cases/nordwear/official--16-9.webp",
@@ -356,7 +348,6 @@ const homeContent = {
         {
           id: 'fresh-cut',
           client: "Fresh Cut",
-          technologies: "React, TypeScript, Tailwind CSS",
           keywords: "Website • Branding • Booking",
           href: '/cases/fresh-cut',
           imageSrc: "/cases/fresh-cut/official--16-9.webp",
@@ -365,7 +356,6 @@ const homeContent = {
         {
           id: 'det-kollektive-klaedeskab',
           client: "Det Kollektive Klædeskab",
-          technologies: "React, Vite, Tailwind CSS",
           keywords: "Redesign • UX design • Development",
           href: '/cases/det-kollektive-klaedeskab',
           imageSrc: "/cases/det-kollektive-klaedeskab/official--16-9.webp",

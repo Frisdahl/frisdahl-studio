@@ -8,8 +8,6 @@ import { Container } from '../ui'
 import { MEET_US_PATH } from '../../lib/routes'
 import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
-import { getCaseRole } from '../../data/caseDetails'
-import { getCaseYear } from '../../data/caseNavigation'
 import { getCasesPageContent } from '../../data/cases'
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
@@ -283,14 +281,9 @@ export function CasesSection() {
             key={item.id}
             client={item.client}
             keywords={item.keywords}
-            // Description, role and year come from the shared case data, so
-            // they always match the case pages.
+            // The description comes from the shared case data, so it always
+            // matches the case pages.
             description={caseDescriptions.get(item.id) ?? ''}
-            meta={[
-              { label: cases.metaLabels.role, value: getCaseRole(locale, item.id) },
-              { label: cases.metaLabels.technologies, value: item.technologies },
-              { label: cases.metaLabels.year, value: getCaseYear(item.id) },
-            ]}
             imageSrc={item.imageSrc}
             imageAlt={item.imageAlt}
             href={item.href}

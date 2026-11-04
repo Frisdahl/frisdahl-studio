@@ -1,18 +1,11 @@
 import { Link } from 'react-router-dom'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
-import { CtaPillButton } from '../ui/CtaPillButton'
-
-export interface CaseCardMeta {
-  label: string
-  /** null shows a dash until the value exists. */
-  value: string | null
-}
+import { ArrowChipButton } from '../ui/ArrowChipButton'
 
 export interface CaseCardProps {
   client: string
   keywords: string
   description: string
-  meta: CaseCardMeta[]
   imageSrc: string | null
   imageAlt: string
   href: string
@@ -20,15 +13,13 @@ export interface CaseCardProps {
 }
 
 /**
- * One home-page case row: the image on the left; title, keywords, description,
- * a three-column meta row and a CTA at its top right. The image, the title and
- * the CTA link to the case.
+ * One home-page case row: the image on the left; title, keywords, description
+ * and a CTA at its top right. The image, the title and the CTA link to the case.
  */
 export function CaseCard({
   client,
   keywords,
   description,
-  meta,
   imageSrc,
   imageAlt,
   href,
@@ -62,19 +53,14 @@ export function CaseCard({
         <p className="case-card-keywords">{keywords}</p>
         {description ? <p className="case-card-description">{description}</p> : null}
 
-        <dl className="case-card-facts">
-          {meta.map(({ label, value }) => (
-            <div key={label} className="case-card-fact">
-              <dt className="case-card-fact-label">{label}</dt>
-              <dd className="case-card-fact-value">{value ?? '—'}</dd>
-            </div>
-          ))}
-        </dl>
-
-        {/* The header contact button's style; its colours follow the section (see .home-cases). */}
-        <CtaPillButton href={href} className="header-contact case-card-button" fillOnHover>
-          {linkLabel}
-        </CtaPillButton>
+        {/* Same text + arrow-chip button as the project page hero. */}
+        <ArrowChipButton
+          direction="right"
+          label={linkLabel}
+          text={linkLabel}
+          href={href}
+          className="case-card-button"
+        />
       </div>
     </div>
   )
