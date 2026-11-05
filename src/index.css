@@ -1796,12 +1796,11 @@
   }
 
   /* Header colours. The header blends with the page (mix-blend-mode:
-     difference on .site-header), so everything in it is drawn as its own
-     inverse against the light page: the logo and burger light, the contact
-     button with a light fill, dark label, dark chip and light arrow. Over the
-     light page they read as the usual dark logo and dark button; over dark
-     backgrounds they turn light on their own. The red hovers use red's
-     inverse (#14b3c1) so they show as the brand red on the light page. */
+     difference on .site-header), so the logo and burger are drawn light:
+     over the light page they read dark, over dark backgrounds they turn
+     light on their own. The logo's red hover uses red's inverse (#14b3c1) so
+     it shows as the brand red on the light page. The contact button doesn't
+     invert: it sits in its own layer (.site-header-cta, below). */
   .site-header-logo,
   .header-menu-toggle,
   .header-contact,
@@ -1820,22 +1819,46 @@
     color: #14b3c1;
   }
 
-  .site-header .header-contact,
-  .site-header .header-contact:is(:hover, :focus-visible) {
+  /* The contact button's layer: the header's twin, laid out the same (a
+     hidden burger holds its place) but not blended, so the button keeps its
+     own dark colours and red hover. Only the button takes clicks. */
+  .site-header-cta {
+    z-index: 51;
+    mix-blend-mode: normal;
+    pointer-events: none;
+  }
+
+  .site-header-cta .header-contact {
+    pointer-events: auto;
+  }
+
+  /* On the dark contact page the button is its light version: white with a
+     dark chip, the label turning light on the red hover. */
+  :root:has(.contact-page) .site-header-cta .header-contact,
+  :root:has(.contact-page) .site-header-cta .header-contact:is(:hover, :focus-visible) {
     background-color: var(--color-light);
+  }
+
+  :root:has(.contact-page) .site-header-cta .header-contact {
     color: var(--color-dark);
   }
 
-  .site-header .header-contact .hero-cta-btn-icon {
-    background-color: var(--color-dark);
-  }
-
-  .site-header .header-contact .hero-cta-btn-arrow {
+  :root:has(.contact-page) .site-header-cta .header-contact:is(:hover, :focus-visible) {
     color: var(--color-light);
   }
 
-  .site-header .header-contact .cta-fill-hover-overlay {
-    background-color: #14b3c1;
+  :root:has(.contact-page) .site-header-cta .header-contact .hero-cta-btn-icon {
+    background-color: var(--color-dark);
+  }
+
+  :root:has(.contact-page) .site-header-cta .header-contact .hero-cta-btn-arrow {
+    color: var(--color-light);
+  }
+
+  /* Placeholders that hold a place in one header layer for an item that
+     lives in the other. */
+  .header-placeholder {
+    visibility: hidden;
   }
 
   @media (prefers-reduced-motion: reduce) {

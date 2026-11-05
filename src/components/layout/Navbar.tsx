@@ -196,7 +196,11 @@ export function Navbar() {
             <HeaderBrand label={logoLabel} />
 
             <div className="site-header-actions">
-              <ContactButton href={CONTACT_PATH}>{contactLabel}</ContactButton>
+              {/* Holds the contact button's place; the real one is in the
+                  layer below, outside the blend. */}
+              <div className="header-placeholder" aria-hidden="true">
+                <ContactButton href={CONTACT_PATH}>{contactLabel}</ContactButton>
+              </div>
 
               <button
                 type="button"
@@ -212,6 +216,21 @@ export function Navbar() {
           </div>
         </Container>
       </header>
+      {/* The contact button keeps its own colours instead of inverting with
+          the header, so it sits in a matching fixed layer above it. */}
+      <div className="site-header site-header-cta">
+        <Container fullWidth>
+          <div className="site-header-bar">
+            <div className="site-header-actions">
+              <ContactButton href={CONTACT_PATH}>{contactLabel}</ContactButton>
+              {/* Holds the burger's place, so the button lines up. */}
+              <span className="header-menu-toggle header-placeholder" aria-hidden="true">
+                <MenuToggleIcon isOpen={isOpen} />
+              </span>
+            </div>
+          </div>
+        </Container>
+      </div>
     </>
   )
 }
