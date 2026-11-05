@@ -12,6 +12,9 @@ gsap.registerPlugin(ScrollTrigger)
 /** How far the pinned hero's content drifts up while the cases section covers it. */
 const DRIFT_PX = 80
 
+/** How dark the hero gets once the cases section has covered it (shade opacity). */
+const SHADE_MAX = 0.92
+
 const heroContent = {
   da: {
     // Two lines in the dark ink; "design" in the accent red, a red dot to end on.
@@ -68,16 +71,48 @@ export function Hero() {
   const content = heroContent[locale]
   const heroRef = useRef<HTMLElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
+  const shadeRef = useRef<HTMLDivElement>(null)
 
-  // Desktop only, where the hero is pinned (see Hero.module.css): its content
-  // drifts up a little, scrubbed over the scroll it takes the cases section
-  // to cover it, so it seems to move with the section rolling over it.
   useLayoutEffect(() => {
     const hero = heroRef.current
     const inner = innerRef.current
-    if (!hero || !inner) return
+    const shade = shadeRef.current
+    if (!hero || !inner || !shade) return
 
     const mm = gsap.matchMedia()
+
+    // The hero darkens as the cases section rolls up over it: the shade
+    // (which also covers the strip behind the header) fades to the brand dark,
+    // scrubbed from the first scroll until the hero is covered (on phones,
+    // until it has scrolled away). Once it's mostly dark it marks itself
+    // dark, so the header switches to its light variant over it.
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      gsap.fromTo(
+        shade,
+        { opacity: 0 },
+        {
+          opacity: SHADE_MAX,
+          ease: 'none',
+          scrollTrigger: {
+            start: 0,
+            end: () => hero.offsetHeight,
+            scrub: true,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              if (self.progress > 0.5) shade.dataset.headerTheme = 'dark'
+              else delete shade.dataset.headerTheme
+            },
+          },
+        },
+      )
+      return () => {
+        delete shade.dataset.headerTheme
+      }
+    })
+
+    // Desktop only, where the hero is pinned (see Hero.module.css): its content
+    // drifts up a little, scrubbed over the scroll it takes the cases section
+    // to cover it, so it seems to move with the section rolling over it.
     mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
       gsap.to(inner, {
         y: -DRIFT_PX,
@@ -192,6 +227,7 @@ export function Hero() {
 
   return (
     <section ref={heroRef} className={styles.hero} aria-labelledby="home-hero-title">
+      <div ref={shadeRef} className={styles.shade} aria-hidden="true" />
       <div ref={innerRef} className={styles.content}>
         <div className={styles.inner}>
           <h1 id="home-hero-title" className={styles.title}>
