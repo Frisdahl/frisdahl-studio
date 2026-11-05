@@ -1552,17 +1552,20 @@
 
   /* Fixed at every width: the burger and the contact button have to stay
      reachable after scrolling, now that there is no pinned desktop nav. The
-     opaque background matches the page surfaces below it (both white). */
+     header is transparent and blends with the page as one layer
+     (mix-blend-mode: difference, see the header colours further down), so
+     its content inverts against whatever is behind it. */
   .site-header {
     @apply fixed top-0 right-0 left-0 z-50 px-4 sm:px-5 lg:px-6;
     padding-inline: var(--page-gutter);
+    mix-blend-mode: difference;
     transition:
       opacity 300ms ease,
       visibility 0s linear 0s;
   }
 
   /* Fades out while the next-case card fills the screen (CaseDetailNextSection). */
-  .is-next-case-pinned .site-header {
+  .is-next-case-pinned :is(.site-header, .site-header-blur) {
     opacity: 0;
     visibility: hidden;
     transition:
@@ -1572,18 +1575,31 @@
 
   /* Progressive blur behind the header: two blurred layers masked to fade
      downwards, the stronger one only near the top, so content blurs most at
-     the top edge and clears gradually just below the bar. */
-  .site-header::before,
-  .site-header::after {
+     the top edge and clears gradually just below the bar. It's its own fixed
+     layer under the header (Navbar renders it just before): inside the
+     blended header it would be inverted along with the content. */
+  .site-header-blur {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 49;
+    height: calc(var(--site-header-height) + 2.5rem);
+    pointer-events: none;
+    transition:
+      opacity 300ms ease,
+      visibility 0s linear 0s;
+  }
+
+  .site-header-blur::before,
+  .site-header-blur::after {
     content: '';
     position: absolute;
-    inset: 0 0 auto;
-    z-index: -1;
-    height: calc(100% + 2.5rem);
+    inset: 0;
     pointer-events: none;
   }
 
-  .site-header::before {
+  .site-header-blur::before {
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
     -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 100%);
@@ -1591,12 +1607,11 @@
   }
 
   /* No blur while the menu is open: it would soften the top of the page card. */
-  .menu-active .site-header::before,
-  .menu-active .site-header::after {
+  .menu-active .site-header-blur {
     display: none;
   }
 
-  .site-header::after {
+  .site-header-blur::after {
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
     -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 55%);
@@ -1780,9 +1795,13 @@
     border: 0;
   }
 
-  /* Light header over dark sections (Navbar sets .is-on-dark): light logo and
-     burger, and the contact button inverts to white with a dark chip. Its
-     label turns light on hover so it stays readable on the red fill. */
+  /* Header colours. The header blends with the page (mix-blend-mode:
+     difference on .site-header), so everything in it is drawn as its own
+     inverse against the light page: the logo and burger light, the contact
+     button with a light fill, dark label, dark chip and light arrow. Over the
+     light page they read as the usual dark logo and dark button; over dark
+     backgrounds they turn light on their own. The red hovers use red's
+     inverse (#14b3c1) so they show as the brand red on the light page. */
   .site-header-logo,
   .header-menu-toggle,
   .header-contact,
@@ -1793,26 +1812,30 @@
       background-color 400ms var(--ease-smooth);
   }
 
-  .site-header.is-on-dark :is(.site-header-logo, .header-menu-toggle) {
+  .site-header :is(.site-header-logo, .header-menu-toggle) {
     color: var(--color-light);
   }
 
-  .site-header.is-on-dark .header-contact {
+  .site-header .site-header-logo:is(:hover, :focus-visible) {
+    color: #14b3c1;
+  }
+
+  .site-header .header-contact,
+  .site-header .header-contact:is(:hover, :focus-visible) {
     background-color: var(--color-light);
     color: var(--color-dark);
   }
 
-  .site-header.is-on-dark .header-contact:is(:hover, :focus-visible) {
-    background-color: var(--color-light);
-    color: var(--color-light);
-  }
-
-  .site-header.is-on-dark .header-contact .hero-cta-btn-icon {
+  .site-header .header-contact .hero-cta-btn-icon {
     background-color: var(--color-dark);
   }
 
-  .site-header.is-on-dark .header-contact .hero-cta-btn-arrow {
+  .site-header .header-contact .hero-cta-btn-arrow {
     color: var(--color-light);
+  }
+
+  .site-header .header-contact .cta-fill-hover-overlay {
+    background-color: #14b3c1;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -3038,6 +3061,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     .site-header,
+    .site-header-blur,
     .case-detail-cta-bar {
       transition: none;
     }
@@ -4300,8 +4324,8 @@
     @apply shrink-0 rounded-panel px-9 py-4 text-button font-medium whitespace-nowrap;
   }
 
-  /* Contact page (/kontakt): the site's dark ink as the page colour, so the
-     header turns light (data-header-theme="dark"). The heading on the left,
+  /* Contact page (/kontakt): the site's dark ink as the page colour (the
+     header inverts to light over it on its own). The heading on the left,
      a narrow form on the right, the pair centred in a capped column and in
      the screen's height on desktop; phones stack them. */
   .contact-page {

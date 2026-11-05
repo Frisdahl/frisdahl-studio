@@ -39,7 +39,6 @@ export function Navbar() {
   // A link chosen in the menu: followed once the page has slid back.
   const pendingHrefRef = useRef<string | null>(null)
   const navigate = useNavigate()
-  const [isOnDark, setIsOnDark] = useState(false)
   const headerRef = useRef<HTMLElement>(null)
   const { locale } = useLocale()
   const { pathname, hash } = useLocation()
@@ -72,45 +71,6 @@ export function Navbar() {
       window.removeEventListener('resize', sync)
     }
   }, [])
-
-  // The header is transparent, so it switches to its light variant while a
-  // section marked data-header-theme="dark" is behind its middle line.
-  useEffect(() => {
-    const header = headerRef.current
-    if (!header) return
-
-    let frame = 0
-    const check = () => {
-      frame = 0
-      const line = header.offsetHeight / 2
-      const onDark = Array.from(
-        document.querySelectorAll('[data-header-theme="dark"]'),
-      ).some((section) => {
-        const rect = section.getBoundingClientRect()
-        return rect.top <= line && rect.bottom >= line
-      })
-      setIsOnDark(onDark)
-    }
-    const schedule = () => {
-      if (!frame) frame = requestAnimationFrame(check)
-    }
-
-    schedule()
-    window.addEventListener('scroll', schedule, { passive: true })
-    window.addEventListener('resize', schedule)
-    // Lazy pages mount after the route changes (and after the page
-    // transition), so check again whenever the page itself is swapped.
-    const shell = document.querySelector('.page-shell')
-    const observer = shell ? new MutationObserver(schedule) : null
-    if (shell) observer?.observe(shell, { childList: true })
-
-    return () => {
-      cancelAnimationFrame(frame)
-      observer?.disconnect()
-      window.removeEventListener('scroll', schedule)
-      window.removeEventListener('resize', schedule)
-    }
-  }, [pathname])
 
   useEffect(() => {
     setIsOpen(false)
@@ -229,7 +189,8 @@ export function Navbar() {
         </div>
       </nav>
 
-      <header ref={headerRef} className={`site-header${isOnDark ? ' is-on-dark' : ''}`}>
+      <div className="site-header-blur" aria-hidden="true" />
+      <header ref={headerRef} className="site-header">
         <Container fullWidth>
           <div className="site-header-bar">
             <HeaderBrand label={logoLabel} />

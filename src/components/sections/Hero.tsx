@@ -84,8 +84,8 @@ export function Hero() {
     // The hero darkens as the cases section rolls up over it: the shade
     // (which also covers the strip behind the header) fades to the brand dark,
     // scrubbed from the first scroll until the hero is covered (on phones,
-    // until it has scrolled away). Once it's mostly dark it marks itself
-    // dark, so the header switches to its light variant over it.
+    // until it has scrolled away). The header needs no cue: its content
+    // inverts against whatever is behind it (mix-blend-mode, index.css).
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       gsap.fromTo(
         shade,
@@ -98,16 +98,9 @@ export function Hero() {
             end: () => hero.offsetHeight,
             scrub: true,
             invalidateOnRefresh: true,
-            onUpdate: (self) => {
-              if (self.progress > 0.5) shade.dataset.headerTheme = 'dark'
-              else delete shade.dataset.headerTheme
-            },
           },
         },
       )
-      return () => {
-        delete shade.dataset.headerTheme
-      }
     })
 
     // Desktop only, where the hero is pinned (see Hero.module.css): its content
