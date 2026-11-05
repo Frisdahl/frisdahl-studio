@@ -44,6 +44,10 @@ export function CtaPillButton({
   const arrowWrapRef = useRef<HTMLSpanElement>(null)
   const arrowTrackRef = useRef<HTMLSpanElement>(null)
   const hoverTimeline = useRef<gsap.core.Timeline | null>(null)
+  // With or without href it renders a different element (<a> or <button>), so
+  // React replaces every node inside it; the timeline is then built again for
+  // the new ones (a case without a live site swaps "Se live" to a button).
+  const isLink = Boolean(href)
 
   // One paused, linear timeline that is scrubbed by an eased progress tween.
   // Both directions then start fast and settle softly (a reversed timeline
@@ -55,7 +59,9 @@ export function CtaPillButton({
     const ctx = gsap.context(() => {
       hoverTimeline.current = gsap
         .timeline({ paused: true, defaults: { ease: 'none' } })
-        .fromTo(overlayRef.current, { yPercent: 101 }, { yPercent: 0, duration: 0.85 }, 0)
+        // y: 0 clears the CSS starting offset, which GSAP would otherwise read in
+        // as pixels on top of yPercent.
+        .fromTo(overlayRef.current, { y: 0, yPercent: 101 }, { y: 0, yPercent: 0, duration: 0.85 }, 0)
         // The label follows the overlay a beat later so the layers read separately.
         .to(labelTrackRef.current, { yPercent: -100, duration: 0.85 }, 0.15)
         .to(iconRef.current, { rotation: 90, duration: 1 }, 0)
@@ -71,7 +77,7 @@ export function CtaPillButton({
       ctx.revert()
       hoverTimeline.current = null
     }
-  }, [fillOnHover])
+  }, [fillOnHover, isLink])
 
   const playArrow = () => {
     if (!isArrowPlaying && !prefersReducedMotion()) setIsArrowPlaying(true)

@@ -1734,7 +1734,9 @@
     inset: 0;
     z-index: -1;
     background-color: #eb4b3d;
-    /* Starts below the button; GSAP sets yPercent before first paint. */
+    /* Starts below the button (GSAP then owns it), so a freshly rendered
+       button never shows the fill before its hover timeline exists. */
+    transform: translateY(101%);
     pointer-events: none;
   }
 
