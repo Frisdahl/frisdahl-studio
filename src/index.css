@@ -75,20 +75,20 @@
   --text-caption: 0.75rem;
   --text-caption--line-height: 1.5;
 
-  /* Colors. The page is #ebe8e8 and the ink is --color-dark; surfaces (cards,
+  /* Colors. The page is #fffefe and the ink is --color-dark; surfaces (cards,
      gallery frames) stay white so they stand off the page.
      --color-light and --color-dark are the brand's white and near-black:
      change them here and every use follows (see-through versions mix them
      with transparent, e.g. color-mix(in srgb, var(--color-dark) 12%,
      transparent)). public/favicon.svg can't read CSS variables and repeats
      both values. */
-  --color-light: #fefffe;
+  --color-light: #fffefe;
   --color-dark: #131313;
-  --color-page-cream: #ebe8e8;
-  --color-home-page: #ebe8e8;
-  --color-cases-page: #ebe8e8;
-  --color-background: #ebe8e8;
-  --color-background-alt: #ebe8e8;
+  --color-page-cream: #fffefe;
+  --color-home-page: #fffefe;
+  --color-cases-page: #fffefe;
+  --color-background: #fffefe;
+  --color-background-alt: #fffefe;
   --color-background-soft: #f0efef;
   --color-surface: #ffffff;
   --color-surface-muted: #f8f8f8;
@@ -103,7 +103,7 @@
   --color-accent-yellow: #fec627;
   --color-peach: color-mix(in srgb, var(--color-accent) 32%, white);
   --color-peach-hover: color-mix(in srgb, var(--color-accent) 44%, white);
-  --color-contact-bg: #ebe8e8;
+  --color-contact-bg: #fffefe;
   --color-concept-step-bg: var(--color-dark);
   --color-border: #e5e5e5;
   --color-border-light: #f8f8f8;
@@ -4508,8 +4508,8 @@
   .site-footer {
     --footer-light: 1;
     --footer-mix: calc(var(--footer-light) * 100%);
-    /* The footer's own light colour, a touch cooler than the page. */
-    --footer-bg: color-mix(in srgb, #e8e9e9 var(--footer-mix), #8a8989);
+    /* The footer's light colour, the same as the page. */
+    --footer-bg: color-mix(in srgb, #fffefe var(--footer-mix), #8a8989);
     --footer-ink: var(--color-dark);
     --footer-muted: color-mix(in srgb, var(--color-dark) 60%, transparent);
     --footer-label: color-mix(in srgb, var(--color-dark) 45%, transparent);
