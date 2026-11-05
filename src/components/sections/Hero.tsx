@@ -192,38 +192,108 @@ export function Hero() {
     }
   }, [])
 
-  // Video slides exist twice (the carousel's seamless copy), and the carousel
-  // swaps one copy for the other when it wraps, which a drag does often. So
-  // every copy plays from one shared clock: the swap shows the same frame.
-  // They are started from script, not with the autoplay attribute, because
-  // Chrome pauses offscreen autoplay videos and resumes them out of step.
+  // Video slides: each slide exists twice (the carousel's seamless copy) and
+  // the carousel swaps one copy for the other when it wraps, which a drag does
+  // often. One hidden <video> per source is drawn onto a canvas in every copy,
+  // so both copies always show the same frame: nothing to sync, no seeking,
+  // and a canvas keeps its last frame, so it never flashes. The poster image
+  // underneath shows until the first frame is drawn (and with reduced motion).
   useEffect(() => {
     const track = trackRef.current
-    if (!track) return
-    const videos = [...track.querySelectorAll('video')]
-    if (!videos.length) return
+    const carousel = carouselRef.current
+    if (!track || !carousel) return
+    const canvases = [...track.querySelectorAll<HTMLCanvasElement>('canvas[data-video]')]
+    if (!canvases.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
-    const start = performance.now()
-    const sync = () => {
-      const elapsed = (performance.now() - start) / 1000
-      for (const video of videos) {
-        if (!video.duration || video.readyState < 2) continue
-        const target = elapsed % video.duration
-        const drift = Math.abs(video.currentTime - target)
-        // Ignore the loop seam (0 vs duration) and small, harmless drift.
-        if (drift > 0.12 && drift < video.duration - 0.12) video.currentTime = target
-        if (video.paused) video.play().catch(() => {})
+    const players = new Map<string, { video: HTMLVideoElement; targets: HTMLCanvasElement[] }>()
+    for (const canvas of canvases) {
+      const src = canvas.dataset.video!
+      if (!players.has(src)) {
+        const video = document.createElement('video')
+        video.muted = true
+        video.loop = true
+        video.playsInline = true
+        video.preload = 'auto'
+        video.setAttribute('muted', '')
+        video.setAttribute('playsinline', '')
+        video.src = src
+        players.set(src, { video, targets: [] })
+      }
+      players.get(src)!.targets.push(canvas)
+    }
+
+    // Backing store at the canvas's rendered size (capped at 2x for retina).
+    const fit = (canvas: HTMLCanvasElement) => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const w = Math.round(canvas.clientWidth * dpr)
+      const h = Math.round(canvas.clientHeight * dpr)
+      if (w && h && (canvas.width !== w || canvas.height !== h)) {
+        canvas.width = w
+        canvas.height = h
       }
     }
-    for (const video of videos) {
-      video.addEventListener('loadeddata', sync)
-      video.play().catch(() => {})
+    const resize = new ResizeObserver((entries) => entries.forEach((e) => fit(e.target as HTMLCanvasElement)))
+    canvases.forEach((canvas) => resize.observe(canvas))
+
+    const draw = (video: HTMLVideoElement, targets: HTMLCanvasElement[]) => {
+      const vw = video.videoWidth
+      const vh = video.videoHeight
+      if (!vw || !vh) return
+      for (const canvas of targets) {
+        const ctx = canvas.getContext('2d')
+        if (!ctx || !canvas.width) continue
+        // object-fit: cover
+        const s = Math.max(canvas.width / vw, canvas.height / vh)
+        const dw = vw * s
+        const dh = vh * s
+        ctx.drawImage(video, (canvas.width - dw) / 2, (canvas.height - dh) / 2, dw, dh)
+        canvas.dataset.ready = ''
+      }
     }
-    const interval = window.setInterval(sync, 500)
+
+    let stopped = false
+    const loops: (() => void)[] = []
+    players.forEach(({ video, targets }) => {
+      if ('requestVideoFrameCallback' in video) {
+        let id = 0
+        const onFrame = () => {
+          if (stopped) return
+          draw(video, targets)
+          id = video.requestVideoFrameCallback(onFrame)
+        }
+        id = video.requestVideoFrameCallback(onFrame)
+        loops.push(() => video.cancelVideoFrameCallback(id))
+      } else {
+        let id = 0
+        const onFrame = () => {
+          if (stopped) return
+          draw(video, targets)
+          id = requestAnimationFrame(onFrame)
+        }
+        id = requestAnimationFrame(onFrame)
+        loops.push(() => cancelAnimationFrame(id))
+      }
+    })
+
+    // Only decode while the carousel is on screen.
+    const visibility = new IntersectionObserver(([entry]) => {
+      players.forEach(({ video }) => {
+        if (entry.isIntersecting) video.play().catch(() => {})
+        else video.pause()
+      })
+    })
+    visibility.observe(carousel)
 
     return () => {
-      window.clearInterval(interval)
-      for (const video of videos) video.removeEventListener('loadeddata', sync)
+      stopped = true
+      loops.forEach((cancel) => cancel())
+      visibility.disconnect()
+      resize.disconnect()
+      players.forEach(({ video }) => {
+        video.pause()
+        video.removeAttribute('src')
+        video.load()
+      })
     }
   }, [])
 
@@ -259,17 +329,15 @@ export function Hero() {
               <div key={group} className={styles.group} aria-hidden={group === 1}>
                 {heroSlides.map((slide) => (
                   <figure key={`${group}-${slide.imageSrc}`} className={styles.slide}>
-                    {slide.videoSrc ? (
-                      <video src={slide.videoSrc} poster={slide.imageSrc} muted loop playsInline preload="auto" aria-hidden="true" />
-                    ) : (
-                      <img
-                        {...responsiveImageProps(slide.imageSrc, SLIDE_SIZES)}
-                        alt={group === 0 ? slide.alt[locale] : ''}
-                        loading={group === 0 ? 'eager' : 'lazy'}
-                        decoding="async"
-                        draggable={false}
-                      />
-                    )}
+                    <img
+                      {...responsiveImageProps(slide.imageSrc, SLIDE_SIZES)}
+                      alt={group === 0 ? slide.alt[locale] : ''}
+                      loading={group === 0 ? 'eager' : 'lazy'}
+                      decoding="async"
+                      draggable={false}
+                    />
+                    {/* Video slides: frames drawn here from one shared video (see the effect above). */}
+                    {slide.videoSrc && <canvas className={styles.videoCanvas} data-video={slide.videoSrc} aria-hidden="true" />}
                   </figure>
                 ))}
               </div>
