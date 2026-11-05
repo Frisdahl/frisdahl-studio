@@ -35,22 +35,9 @@ export function CasesSection() {
 
     const mm = gsap.matchMedia()
 
-    // The section arrives grey and turns light as it rolls in: --cases-light
-    // (which every colour in .home-cases mixes from) runs 0 → 1 from the
-    // section entering at the bottom until its top is 60% down the
-    // screen, so it's light well before the first project is centred, and
-    // before it reaches the header (which therefore stays in its normal mode).
+    // The section is the light page colour throughout; it's the hero behind
+    // it that darkens as the section rolls up over it (see Hero.tsx).
     mm.add('(prefers-reduced-motion: no-preference)', (context) => {
-      gsap.fromTo(
-        section,
-        { '--cases-light': 0 },
-        {
-          '--cases-light': 1,
-          ease: 'none',
-          scrollTrigger: { trigger: section, start: 'top bottom', end: 'top 60%', scrub: true },
-        },
-      )
-
       // Text rises line by line, each line out of its own mask. It's split
       // only once the web fonts are in, so the lines are measured with the
       // real font (with the fallback they overflow and wrap mid-line). Each
@@ -68,9 +55,9 @@ export function CasesSection() {
         return split
       }
 
-      // The intro slides up once the background has turned light (the colour
-      // scrub above ends at 'top 60%'), the heading leading; "Seneste
-      // projekter" rises the same way when it scrolls into view.
+      // The intro slides up once the section's top is 60% down the screen,
+      // the heading leading; "Seneste projekter" rises the same way when it
+      // scrolls into view.
       const slideUp = (targets: Element | NodeListOf<Element>, start: string, trigger: Element) => {
         const split = splitLines(targets)
         gsap.set(split.lines, { yPercent: 100 })

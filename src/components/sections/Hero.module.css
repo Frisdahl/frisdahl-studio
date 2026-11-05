@@ -1,10 +1,29 @@
 .hero {
   position: relative;
+  /* Keeps the shade's z-index inside the hero, under the cases section. */
+  isolation: isolate;
   overflow: hidden;
   background: var(--color-home-page);
   color: var(--color-dark);
-  margin-bottom: clamp(3rem, 6vw, 6rem);
+  --hero-gap-below: clamp(3rem, 6vw, 6rem);
+  margin-bottom: var(--hero-gap-below);
   --hero-slide-gap: clamp(0.5rem, 0.6vw, 0.75rem);
+}
+
+/* The dark layer the hero fades under as the cases section rolls over it
+   (scrubbed in Hero.tsx). It reaches up behind the header and down over the
+   gap below, so the whole screen behind the cases section darkens, not just
+   the hero's box. */
+.shade {
+  position: absolute;
+  top: calc(-1 * var(--site-header-height));
+  right: 0;
+  bottom: calc(-1 * var(--hero-gap-below));
+  left: 0;
+  z-index: 2;
+  background: var(--color-dark);
+  opacity: 0;
+  pointer-events: none;
 }
 
 @media (min-width: 1024px) {
