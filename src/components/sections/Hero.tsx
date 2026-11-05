@@ -192,6 +192,41 @@ export function Hero() {
     }
   }, [])
 
+  // Video slides exist twice (the carousel's seamless copy), and the carousel
+  // swaps one copy for the other when it wraps, which a drag does often. So
+  // every copy plays from one shared clock: the swap shows the same frame.
+  // They are started from script, not with the autoplay attribute, because
+  // Chrome pauses offscreen autoplay videos and resumes them out of step.
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+    const videos = [...track.querySelectorAll('video')]
+    if (!videos.length) return
+
+    const start = performance.now()
+    const sync = () => {
+      const elapsed = (performance.now() - start) / 1000
+      for (const video of videos) {
+        if (!video.duration || video.readyState < 2) continue
+        const target = elapsed % video.duration
+        const drift = Math.abs(video.currentTime - target)
+        // Ignore the loop seam (0 vs duration) and small, harmless drift.
+        if (drift > 0.12 && drift < video.duration - 0.12) video.currentTime = target
+        if (video.paused) video.play().catch(() => {})
+      }
+    }
+    for (const video of videos) {
+      video.addEventListener('loadeddata', sync)
+      video.play().catch(() => {})
+    }
+    const interval = window.setInterval(sync, 500)
+
+    return () => {
+      window.clearInterval(interval)
+      for (const video of videos) video.removeEventListener('loadeddata', sync)
+    }
+  }, [])
+
   return (
     <section ref={heroRef} className={styles.hero} aria-labelledby="home-hero-title">
       <div ref={innerRef} className={styles.content}>
@@ -225,7 +260,7 @@ export function Hero() {
                 {heroSlides.map((slide) => (
                   <figure key={`${group}-${slide.imageSrc}`} className={styles.slide}>
                     {slide.videoSrc ? (
-                      <video src={slide.videoSrc} poster={slide.imageSrc} autoPlay muted loop playsInline aria-hidden="true" />
+                      <video src={slide.videoSrc} poster={slide.imageSrc} muted loop playsInline preload="auto" aria-hidden="true" />
                     ) : (
                       <img
                         {...responsiveImageProps(slide.imageSrc, SLIDE_SIZES)}
