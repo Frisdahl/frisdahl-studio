@@ -138,9 +138,13 @@ export function Hero() {
   // The drift is a Web Animation on the track (one group's width, -50% of the
   // track, per loop), so at rest the browser moves it on the compositor and
   // main-thread work (scroll effects, image decoding, React) can't make it
-  // stutter. JavaScript only steps in while the user interacts: a drag sets the
-  // animation's time directly, and after a release the animation's playback rate
-  // eases back to 1. Rate 1 is the drift, rate 0 stands still (reduced motion).
+  // stutter. JavaScript only steps in while the user interacts: a drag, and the
+  // second or so after a release while it eases back to the drift, move the
+  // paused animation by setting its time each frame (changing the playback rate
+  // every frame would keep the animation waiting on the compositor). The
+  // animation resumes at the drift rate once it has settled. Rate 1 drifts left, rate -1 drifts right (the
+  // direction of the last drag, see `direction`), rate 0 stands still (reduced
+  // motion).
   useEffect(() => {
     const carousel = carouselRef.current
     const track = trackRef.current
@@ -148,13 +152,16 @@ export function Hero() {
     if (!carousel || !track || !group) return
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const drift = reduceMotion ? 0 : -AUTO_SPEED
-    // Playback rate for a velocity in px/s: the drift speed is rate 1.
+    // 1 drifts left (the default), -1 drifts right; a drag sets it to the way it went.
+    let direction = 1
+    const driftFor = (dir: number) => (reduceMotion ? 0 : -dir * AUTO_SPEED)
+    let drift = driftFor(direction)
+    // Playback rate for a velocity in px/s: the leftward drift speed is rate 1.
     const rateFor = (v: number) => -v / AUTO_SPEED
     // Milliseconds of animation time per pixel of travel.
     const MS_PER_PX = 1000 / AUTO_SPEED
     // Time is kept far from 0 so a backwards fling never reaches the start.
-    const LOOPS_OF_HEADROOM = 50
+    const LOOPS_OF_HEADROOM = 10000
 
     let groupWidth = group.offsetWidth
     const animation = track.animate(
@@ -175,15 +182,18 @@ export function Hero() {
     let velocity = drift
     let scale = 1
     let dragging = false
+    // True from a release until the speed has eased back to the drift.
+    let settling = false
     let visible = true
     let dragVelocity = 0
+    let dragDistance = 0
     let lastX = 0
     let lastTime = 0
     let frame = 0
     let previous = 0
 
     const sync = () => {
-      if (visible && !dragging) animation.play()
+      if (visible && !dragging && !settling) animation.play()
       else animation.pause()
     }
 
@@ -208,7 +218,8 @@ export function Hero() {
         dragVelocity *= Math.exp(-dt * 10)
       } else {
         velocity += (drift - velocity) * (1 - Math.exp(-dt * RETURN_RATE))
-        animation.playbackRate = rateFor(velocity)
+        // Same motion as playing at rateFor(velocity), stepped by hand.
+        animation.currentTime = Number(animation.currentTime ?? 0) + rateFor(velocity) * dt * 1000
       }
 
       const speed = Math.abs(dragging ? dragVelocity : velocity - drift)
@@ -216,11 +227,14 @@ export function Hero() {
       scale += (target - scale) * (1 - Math.exp(-dt * SCALE_RATE))
       track.style.setProperty('--hero-slide-scale', scale.toFixed(4))
 
-      const settled = !dragging && Math.abs(velocity - drift) < 0.5 && Math.abs(scale - 1) < 0.0005
+      const settled = !dragging && settling && Math.abs(velocity - drift) < 0.5 && Math.abs(scale - 1) < 0.0005
       if (settled) {
         velocity = drift
         scale = 1
+        settling = false
         animation.playbackRate = rateFor(drift)
+        normalise()
+        sync()
         track.style.setProperty('--hero-slide-scale', '1')
         frame = 0
         return
@@ -236,7 +250,9 @@ export function Hero() {
     const onDown = (event: PointerEvent) => {
       if (event.button !== 0) return
       dragging = true
+      settling = false
       dragVelocity = 0
+      dragDistance = 0
       lastX = event.clientX
       lastTime = event.timeStamp
       carousel.setPointerCapture(event.pointerId)
@@ -251,6 +267,7 @@ export function Hero() {
       const elapsed = Math.max(1, event.timeStamp - lastTime)
       // Dragging right moves the track right, i.e. back in the animation.
       animation.currentTime = Number(animation.currentTime ?? 0) - dx * MS_PER_PX
+      dragDistance += dx
       dragVelocity += ((dx / elapsed) * 1000 - dragVelocity) * 0.35
       lastX = event.clientX
       lastTime = event.timeStamp
@@ -259,7 +276,14 @@ export function Hero() {
       if (!dragging) return
       dragging = false
       velocity = dragVelocity
-      animation.playbackRate = rateFor(velocity)
+      // Keep drifting the way it was last dragged: by the release speed if it
+      // was moving, otherwise by the way it was pulled.
+      const way = Math.abs(dragVelocity) > 15 ? dragVelocity : dragDistance
+      if (Math.abs(way) > 4) {
+        direction = way > 0 ? -1 : 1
+        drift = driftFor(direction)
+      }
+      settling = true
       normalise()
       sync()
       kick()
