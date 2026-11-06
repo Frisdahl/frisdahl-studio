@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { registerPageTransition } from '../../lib/pageTransition'
-import { getSmoothScroll, prefersReducedMotion } from '../../lib/smoothScroll'
+import { lockScroll, prefersReducedMotion, unlockScroll } from '../../lib/scroll'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -102,8 +102,7 @@ export function PageTransition() {
         return
       }
       runningRef.current = true
-      const lenis = getSmoothScroll()
-      lenis?.stop()
+      lockScroll()
       document.documentElement.classList.add('is-page-transitioning')
       gsap.set(loader, { autoAlpha: 1 })
 
@@ -119,7 +118,6 @@ export function PageTransition() {
       navigate(href)
       const main = await waitForPage(shell, previous)
       window.scrollTo(0, 0)
-      lenis?.scrollTo(0, { immediate: true, force: true })
       await firstScreenImages(main, window.innerHeight)
 
       // 3. The panels rise on off the top, the dark one first.
@@ -134,7 +132,7 @@ export function PageTransition() {
       gsap.set(loader, { autoAlpha: 0 })
       gsap.set(panels, { clearProps: 'transform,clipPath' })
       document.documentElement.classList.remove('is-page-transitioning')
-      lenis?.start()
+      unlockScroll()
       ScrollTrigger.refresh()
       runningRef.current = false
     }

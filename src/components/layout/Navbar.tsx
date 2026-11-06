@@ -5,7 +5,7 @@ import { getFooterContent } from '../../data/footer'
 import { navigateWithTransition } from '../../lib/pageTransition'
 import { getNavigation } from '../../data/navigation'
 import { CASES_PATH, CONTACT_PATH, toAppHref } from '../../lib/routes'
-import { getSmoothScroll, prefersReducedMotion } from '../../lib/smoothScroll'
+import { lockScroll, prefersReducedMotion, unlockScroll } from '../../lib/scroll'
 import { ContactButton, Container, LanguageSwitcher, RollLabel } from '../ui'
 import { HeaderBrand } from './HeaderBrand'
 
@@ -91,7 +91,7 @@ export function Navbar() {
       shell.style.setProperty('--shell-clip-top', `${top}px`)
       shell.style.setProperty('--shell-origin-y', `${top + window.innerHeight / 2}px`)
       root.classList.add('menu-active')
-      getSmoothScroll()?.stop()
+      lockScroll()
       // Next frame, so the clip is in place before the transform transitions.
       const frame = requestAnimationFrame(() => root.classList.add('menu-open'))
       return () => cancelAnimationFrame(frame)
@@ -102,7 +102,7 @@ export function Navbar() {
     const timer = window.setTimeout(
       () => {
         root.classList.remove('menu-active')
-        getSmoothScroll()?.start()
+        unlockScroll()
         const href = pendingHrefRef.current
         pendingHrefRef.current = null
         if (href) navigateWithTransition(href, navigate)

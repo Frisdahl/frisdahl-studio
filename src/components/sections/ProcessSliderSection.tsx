@@ -1,5 +1,5 @@
 import { type CSSProperties, useCallback, useEffect, useRef } from 'react'
-import { getScrollY, smoothScrollTo } from '../../lib/smoothScroll'
+import { getScrollY, scrollToTarget } from '../../lib/scroll'
 import {
   buildTrackMetrics,
   getScrollProgressForSlideIndex,
@@ -48,7 +48,7 @@ export function ProcessSliderSection({ content }: ProcessSliderSectionProps) {
         Math.max(0, -element.getBoundingClientRect().top),
       )
 
-      smoothScrollTo(getScrollY() + (targetScrolled - currentScrolled))
+      scrollToTarget(getScrollY() + (targetScrolled - currentScrolled))
     },
     [slideCount, steps],
   )

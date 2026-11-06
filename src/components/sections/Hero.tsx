@@ -134,6 +134,13 @@ export function Hero() {
   // mouse or touch. A drag keeps its speed when released and eases back into
   // the drift; the faster it moves, the smaller the slides get, so gaps open
   // up between them, and they grow back as it settles.
+  //
+  // The drift is a Web Animation on the track (one group's width, -50% of the
+  // track, per loop), so at rest the browser moves it on the compositor and
+  // main-thread work (scroll effects, image decoding, React) can't make it
+  // stutter. JavaScript only steps in while the user interacts: a drag sets the
+  // animation's time directly, and after a release the animation's playback rate
+  // eases back to 1. Rate 1 is the drift, rate 0 stands still (reduced motion).
   useEffect(() => {
     const carousel = carouselRef.current
     const track = trackRef.current
@@ -142,22 +149,57 @@ export function Hero() {
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const drift = reduceMotion ? 0 : -AUTO_SPEED
+    // Playback rate for a velocity in px/s: the drift speed is rate 1.
+    const rateFor = (v: number) => -v / AUTO_SPEED
+    // Milliseconds of animation time per pixel of travel.
+    const MS_PER_PX = 1000 / AUTO_SPEED
+    // Time is kept far from 0 so a backwards fling never reaches the start.
+    const LOOPS_OF_HEADROOM = 50
+
     let groupWidth = group.offsetWidth
-    let x = 0
+    const animation = track.animate(
+      [{ transform: 'translate3d(0, 0, 0)' }, { transform: 'translate3d(-50%, 0, 0)' }],
+      { duration: (groupWidth || 1) * MS_PER_PX, iterations: Infinity, easing: 'linear', fill: 'both' },
+    )
+    animation.playbackRate = rateFor(drift)
+
+    const loopMs = () => (groupWidth || 1) * MS_PER_PX
+    /** Wraps the animation time back into one loop, far from the start. */
+    const normalise = () => {
+      const loop = loopMs()
+      const time = Number(animation.currentTime ?? 0)
+      animation.currentTime = loop * LOOPS_OF_HEADROOM + (((time % loop) + loop) % loop)
+    }
+    normalise()
+
     let velocity = drift
     let scale = 1
     let dragging = false
+    let visible = true
     let dragVelocity = 0
     let lastX = 0
     let lastTime = 0
     let frame = 0
-    let previous = performance.now()
+    let previous = 0
+
+    const sync = () => {
+      if (visible && !dragging) animation.play()
+      else animation.pause()
+    }
 
     const resize = new ResizeObserver(() => {
-      groupWidth = group.offsetWidth
+      const next = group.offsetWidth
+      if (!next || next === groupWidth) return
+      // Keep the visible position: the same fraction of a loop at the new length.
+      const loop = loopMs()
+      const phase = (((Number(animation.currentTime ?? 0) % loop) + loop) % loop) / loop
+      groupWidth = next
+      animation.effect?.updateTiming({ duration: loopMs() })
+      animation.currentTime = loopMs() * LOOPS_OF_HEADROOM + phase * loopMs()
     })
     resize.observe(group)
 
+    // Runs only while a drag or its release is settling; at rest nothing runs.
     const tick = (now: number) => {
       const dt = Math.min(0.05, (now - previous) / 1000)
       previous = now
@@ -166,19 +208,30 @@ export function Hero() {
         dragVelocity *= Math.exp(-dt * 10)
       } else {
         velocity += (drift - velocity) * (1 - Math.exp(-dt * RETURN_RATE))
-        x += velocity * dt
+        animation.playbackRate = rateFor(velocity)
       }
-      if (groupWidth > 0) x = (((x % groupWidth) - groupWidth) % groupWidth)
 
       const speed = Math.abs(dragging ? dragVelocity : velocity - drift)
       const target = reduceMotion ? 1 : 1 - Math.min(speed / SHRINK_SPEED, 1) * MAX_SHRINK
       scale += (target - scale) * (1 - Math.exp(-dt * SCALE_RATE))
-
-      track.style.transform = `translate3d(${x}px, 0, 0)`
       track.style.setProperty('--hero-slide-scale', scale.toFixed(4))
+
+      const settled = !dragging && Math.abs(velocity - drift) < 0.5 && Math.abs(scale - 1) < 0.0005
+      if (settled) {
+        velocity = drift
+        scale = 1
+        animation.playbackRate = rateFor(drift)
+        track.style.setProperty('--hero-slide-scale', '1')
+        frame = 0
+        return
+      }
       frame = requestAnimationFrame(tick)
     }
-    frame = requestAnimationFrame(tick)
+    const kick = () => {
+      if (frame) return
+      previous = performance.now()
+      frame = requestAnimationFrame(tick)
+    }
 
     const onDown = (event: PointerEvent) => {
       if (event.button !== 0) return
@@ -188,12 +241,16 @@ export function Hero() {
       lastTime = event.timeStamp
       carousel.setPointerCapture(event.pointerId)
       carousel.classList.add(styles.dragging)
+      sync()
+      normalise()
+      kick()
     }
     const onMove = (event: PointerEvent) => {
       if (!dragging) return
       const dx = event.clientX - lastX
       const elapsed = Math.max(1, event.timeStamp - lastTime)
-      x += dx
+      // Dragging right moves the track right, i.e. back in the animation.
+      animation.currentTime = Number(animation.currentTime ?? 0) - dx * MS_PER_PX
       dragVelocity += ((dx / elapsed) * 1000 - dragVelocity) * 0.35
       lastX = event.clientX
       lastTime = event.timeStamp
@@ -202,9 +259,20 @@ export function Hero() {
       if (!dragging) return
       dragging = false
       velocity = dragVelocity
+      animation.playbackRate = rateFor(velocity)
+      normalise()
+      sync()
+      kick()
       if (carousel.hasPointerCapture(event.pointerId)) carousel.releasePointerCapture(event.pointerId)
       carousel.classList.remove(styles.dragging)
     }
+
+    // Nothing to animate while the carousel is off screen.
+    const visibility = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting
+      sync()
+    })
+    visibility.observe(carousel)
 
     carousel.addEventListener('pointerdown', onDown)
     carousel.addEventListener('pointermove', onMove)
@@ -213,7 +281,9 @@ export function Hero() {
 
     return () => {
       cancelAnimationFrame(frame)
+      animation.cancel()
       resize.disconnect()
+      visibility.disconnect()
       carousel.removeEventListener('pointerdown', onDown)
       carousel.removeEventListener('pointermove', onMove)
       carousel.removeEventListener('pointerup', onUp)
@@ -362,7 +432,7 @@ export function Hero() {
                     <img
                       {...responsiveImageProps(slide.imageSrc, SLIDE_SIZES)}
                       alt={group === 0 ? slide.alt[locale] : ''}
-                      loading={group === 0 ? 'eager' : 'lazy'}
+                      loading="eager"
                       decoding="async"
                       draggable={false}
                     />

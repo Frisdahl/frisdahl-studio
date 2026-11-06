@@ -5,7 +5,6 @@ import {
   getTrackOffsetFromProgress,
   getVisibleIndexFromOffset,
 } from '../lib/processSliderTrack'
-import { getSmoothScroll, onSmoothScrollFrame } from '../lib/smoothScroll'
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value))
@@ -54,7 +53,6 @@ export function useProcessSliderMotion({
 
     let frameId = 0
     let isActive = true
-    let unsubscribeFrame: (() => void) | undefined
     let resizeObserver: ResizeObserver | undefined
 
     const rebuildMetrics = () => {
@@ -158,29 +156,19 @@ export function useProcessSliderMotion({
       if (sticky) resizeObserver.observe(sticky)
     }
 
-    const lenis = getSmoothScroll()
-    if (lenis) {
-      unsubscribeFrame = onSmoothScrollFrame(() => {
-        update()
-      })
-    } else {
-      const onScroll = () => {
-        cancelAnimationFrame(frameId)
-        frameId = requestAnimationFrame(update)
-      }
-
-      window.addEventListener('scroll', onScroll, { passive: true })
-      unsubscribeFrame = () => {
-        cancelAnimationFrame(frameId)
-        window.removeEventListener('scroll', onScroll)
-      }
+    const onScroll = () => {
+      cancelAnimationFrame(frameId)
+      frameId = requestAnimationFrame(update)
     }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
 
     window.addEventListener('resize', onResize, { passive: true })
 
     return () => {
       isActive = false
-      unsubscribeFrame?.()
+      cancelAnimationFrame(frameId)
+      window.removeEventListener('scroll', onScroll)
       resizeObserver?.disconnect()
       window.removeEventListener('resize', onResize)
     }

@@ -1,5 +1,4 @@
 import { type RefObject, useEffect, useState } from 'react'
-import { getSmoothScroll } from '../lib/smoothScroll'
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(max, Math.max(min, value))
@@ -77,14 +76,11 @@ export function useStickyScrollSteps(
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onScroll, { passive: true })
 
-    const lenis = getSmoothScroll()
-    lenis?.on('scroll', onScroll)
 
     return () => {
       cancelAnimationFrame(frameId)
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
-      lenis?.off('scroll', onScroll)
     }
   }, [containerRef, endHoldRatio, stepCount])
 

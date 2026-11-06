@@ -1,4 +1,3 @@
-@import "lenis/dist/lenis.css";
 @import "tailwindcss";
 /* Type: Manrope (SIL Open Font License 1.1), self-hosted through Fontsource as
    a single variable font covering weights 200–800. It is the one typeface for
@@ -190,7 +189,7 @@
   html {
     scroll-behavior: auto;
     /* The header is fixed at every width, so hash targets (/#contact)
-       land below it instead of underneath it. Lenis reads scroll-padding too. */
+       land below it instead of underneath it. */
     scroll-padding-top: var(--site-header-height);
     overflow-x: clip;
     /* No visible scrollbar, at any time (scrolling still works). */
@@ -199,13 +198,9 @@
     background-color: var(--color-background);
   }
 
-  html.lenis,
-  html.lenis body {
-    height: auto;
-  }
-
-  .lenis.lenis-smooth {
-    scroll-behavior: auto !important;
+  /* Page scrolling frozen while the menu is open or a page transition runs. */
+  html.scroll-locked {
+    overflow: hidden;
   }
 
   @media (prefers-reduced-motion: reduce) {
