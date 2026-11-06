@@ -50,6 +50,7 @@ const heroSlides: HeroSlide[] = [
   { imageSrc: '/images/hero/rethink-furniture-macbook.webp', videoSrc: '/images/hero/rethink-furniture-macbook.mp4', alt: { da: 'Landingsside-koncept for Rethink Furniture på en MacBook, der åbner og lukker', en: 'Rethink Furniture landing page concept on a MacBook that opens and closes' } },
   { imageSrc: '/images/hero/noma-living-skaerm.webp', alt: { da: 'Landingsside-koncept for Noma Living på en skærm', en: 'Noma Living landing page concept on a display' } },
   { imageSrc: '/images/hero/auren-mobil.webp', alt: { da: 'Landingsside-koncept for Auren på en mobil op ad en lerkrukke', en: 'Auren landing page concept on a phone against a clay pot' } },
+  { imageSrc: '/images/hero/id-kort-frisdahl-studio.webp', alt: { da: 'Rødt Frisdahl Studio-id-kort i en sort nøglesnor på en stålblok', en: 'Red Frisdahl Studio ID card on a black lanyard on a steel block' } },
   { imageSrc: '/images/hero/montra-elina-skaerme.webp', alt: { da: 'Landingsside-koncepter for Montra og Elina Vestergaard på to skærme', en: 'Montra and Elina Vestergaard landing page concepts on two displays' } },
   { imageSrc: '/images/hero/poster-frisdahl-studio-3.webp', alt: { da: 'Rød Frisdahl Studio-plakat på en betonvæg i sollys', en: 'Red Frisdahl Studio poster on a concrete wall in sunlight' } },
   { imageSrc: '/images/hero/montra-mobil.webp', alt: { da: 'Landingsside-koncept for Montra på en mobil i en hånd', en: 'Montra landing page concept on a phone held in a hand' } },
