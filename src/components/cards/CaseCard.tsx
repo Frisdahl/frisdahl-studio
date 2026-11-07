@@ -22,8 +22,8 @@ const FLASH_MS = 450
 const CLOSE_MS = 1000
 
 /**
- * One home-page case row: the 16:9 image across the content width with the
- * title and the keywords underneath. The image and the title link to the case.
+ * One home-page case row: the title (left) and the keywords (far right) in a
+ * row above the 16:9 image, which spans the content width. The image and the title link to the case.
  * Hovering the image darkens it and opens the case page's first image in the
  * middle (to half the width) with the link text under it; the image then
  * flashes through the page's images in a loop (CSS: .case-card-hover in
@@ -95,6 +95,16 @@ export function CaseCard({
 
   return (
     <div className="case-card">
+      <div className="case-card-meta">
+        {/* Each title is an h3 under the section's "Latest projects" h2. */}
+        <h3 className="case-card-client">
+          <Link to={href} className="case-card-title-link">
+            {client}
+          </Link>
+        </h3>
+        <p className="case-card-keywords">{keywords}</p>
+      </div>
+
       {/* Same target as the title link, so it's left out of the tab order and
           the accessibility tree to avoid a duplicate link. */}
       <Link
@@ -146,16 +156,6 @@ export function CaseCard({
           ) : null}
         </div>
       </Link>
-
-      <div className="case-card-meta">
-        {/* Each title is an h3 under the section's "Latest projects" h2. */}
-        <h3 className="case-card-client">
-          <Link to={href} className="case-card-title-link">
-            {client}
-          </Link>
-        </h3>
-        <p className="case-card-keywords">{keywords}</p>
-      </div>
     </div>
   )
 }

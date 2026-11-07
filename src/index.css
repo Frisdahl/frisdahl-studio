@@ -3957,8 +3957,13 @@
     }
   }
 
+  /* Above the image: the title on the left, the keywords on the far right. */
   .case-card-meta {
-    padding-top: 0.75rem;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    padding-bottom: 0.75rem;
   }
 
   /* Explicit colours: the base h2 / p styles would otherwise win over the
@@ -3983,7 +3988,8 @@
   }
 
   .case-card-keywords {
-    margin: 0.625rem 0 0;
+    margin: 0;
+    text-align: right;
     color: var(--cases-muted);
     font-size: 0.8125rem;
     font-weight: 700;
