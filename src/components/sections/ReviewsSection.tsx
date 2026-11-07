@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'framer-motion'
 import { useLocale } from '../../context/LocaleContext'
 import { getReviewsContent } from '../../data/reviews'
-import { ArrowIcon, Container, MaskedLines } from '../ui'
+import { ArrowIcon, Container, MaskedLineReveal } from '../ui'
 
 /** The person (portrait, name and role) fades out and fades in, without moving. */
 const personVariants: Variants = {
@@ -155,7 +155,7 @@ export function ReviewsSection() {
                   className="reviews-quote"
                   style={quoteHeight ? { minHeight: `${quoteHeight}px` } : undefined}
                 >
-                  <MaskedLines key={index} text={review.quote} />
+                  <MaskedLineReveal key={index} as="div">{review.quote}</MaskedLineReveal>
                 </blockquote>
               </div>
 
