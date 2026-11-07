@@ -71,7 +71,7 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
       aspectRatio: '16 / 9',
     },
     horizontalBottomPair: [
-      { imageSrc: '/cases/peter-salling/mobiler-presse-priser--4-3.webp', imageAlt: 'Premierebilleder, anmeldelse og festivalpriser på to iPhones', aspectRatio: '4 / 3', transparent: true },
+      { imageSrc: '/cases/peter-salling/mobiler-strandet-saelhud--4-3.webp', imageAlt: 'Strandet og projektoversigten på to iPhones', aspectRatio: '4 / 3', transparent: true },
       { imageSrc: '/cases/peter-salling/mobiler-forside-strandet--4-3.webp', imageAlt: 'Forsiden og Strandet på to iPhones', aspectRatio: '4 / 3', transparent: true },
     ],
   },
