@@ -24,6 +24,21 @@ const SWAP_AT = 0.4
 const VEIL_OUT_AT = 0.85
 // The case page's text rising in.
 const ENTER_EASE = 'power3.out'
+// A mask clips at its line box, which cuts off descenders (g, y, comma); this
+// much room is added below (and a little above) and taken back from the margin,
+// so the layout does not change.
+const MASK_ROOM_BOTTOM = '0.2em'
+const MASK_ROOM_TOP = '0.1em'
+
+/** Gives split-text masks room for descenders without moving anything. */
+function roomInMasks(masks: Element[]) {
+  gsap.set(masks, {
+    paddingTop: MASK_ROOM_TOP,
+    marginTop: `-${MASK_ROOM_TOP}`,
+    paddingBottom: MASK_ROOM_BOTTOM,
+    marginBottom: `-${MASK_ROOM_BOTTOM}`,
+  })
+}
 
 /** True if the card has an image to carry over to the case page. */
 export function canShareCard(card: HTMLElement) {
@@ -87,8 +102,10 @@ export async function runSharedCaseTransition(
   gsap.set(ghost, { width: from.width, height: from.height, x: from.left, y: from.top })
 
   const split = SplitText.create(texts, { type: 'lines', mask: 'lines' })
+  roomInMasks(split.masks)
   let nameSplit: SplitText | null = null
-  let metaParts: Element[] = []
+  let metaValues: Element[] = []
+  let metaLabels: Element[] = []
   let metaItems: HTMLElement[] = []
 
   try {
@@ -119,12 +136,16 @@ export async function runSharedCaseTransition(
     const name = main.querySelector<HTMLElement>('.case-detail-hero-name')
     if (name) {
       nameSplit = SplitText.create(name, { type: 'lines', mask: 'lines' })
+      roomInMasks(nameSplit.masks)
       gsap.set(nameSplit.lines, { yPercent: 125 })
     }
     metaItems = [...main.querySelectorAll<HTMLElement>('.case-detail-hero-meta-item')]
-    metaParts = metaItems.flatMap((item) => [...item.children])
-    gsap.set(metaItems, { overflow: 'hidden' })
-    gsap.set(metaParts, { yPercent: 110 })
+    // The labels (Type, Rolle, ...) fade in where they stand; the values rise out of a mask.
+    metaLabels = metaItems.flatMap((item) => [...item.querySelectorAll('.case-detail-hero-meta-label')])
+    metaValues = metaItems.flatMap((item) => [...item.querySelectorAll('.case-detail-hero-meta-value')])
+    gsap.set(metaLabels, { opacity: 0 })
+    gsap.set(metaItems, { overflow: 'hidden', paddingBottom: MASK_ROOM_BOTTOM, marginBottom: `-${MASK_ROOM_BOTTOM}` })
+    gsap.set(metaValues, { yPercent: 120 })
     root.classList.remove('is-shared-transition')
 
     // 3. Grow: the same picture at the hero's size, scaled down to the card's
@@ -146,14 +167,16 @@ export async function runSharedCaseTransition(
     await new Promise<void>((resolve) => {
       const enter = gsap.timeline({ onComplete: resolve, defaults: { ease: ENTER_EASE } })
       if (nameSplit) enter.to(nameSplit.lines, { yPercent: 0, duration: 1, stagger: 0.08 }, 0)
-      if (metaParts.length) enter.to(metaParts, { yPercent: 0, duration: 0.9, stagger: 0.06 }, 0.15)
+      if (metaLabels.length) enter.to(metaLabels, { opacity: 1, duration: 0.7, ease: 'power1.out', stagger: 0.06 }, 0)
+      if (metaValues.length) enter.to(metaValues, { yPercent: 0, duration: 0.9, stagger: 0.06 }, 0.15)
     })
   } finally {
     ghost.remove()
     split.revert()
     nameSplit?.revert()
-    if (metaParts.length) gsap.set(metaParts, { clearProps: 'transform' })
-    if (metaItems.length) gsap.set(metaItems, { clearProps: 'overflow' })
+    if (metaValues.length) gsap.set(metaValues, { clearProps: 'transform' })
+    if (metaLabels.length) gsap.set(metaLabels, { clearProps: 'opacity' })
+    if (metaItems.length) gsap.set(metaItems, { clearProps: 'overflow,paddingBottom,marginBottom' })
     gsap.set(veil, { autoAlpha: 0 })
     root.classList.remove('is-shared-transition', 'is-shared-image')
   }
