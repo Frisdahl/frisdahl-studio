@@ -3910,7 +3910,7 @@
   .case-card-trio-frame {
     position: relative;
     overflow: hidden;
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 4 / 3;
   }
 
   .case-card-trio-image {
