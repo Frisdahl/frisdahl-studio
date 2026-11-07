@@ -35,7 +35,7 @@ const homeContent = {
           client: "Peter Salling",
           keywords: "Website • Design • CMS",
           href: '/cases/peter-salling',
-          imageSrc: "/cases/peter-salling/main--16-9.webp",
+          imageSrc: "/cases/peter-salling/main-light--16-9.webp",
           imageAlt: "Peter Salling case",
         },
         {
@@ -334,7 +334,7 @@ const homeContent = {
           client: "Peter Salling",
           keywords: "Website • Design • CMS",
           href: '/cases/peter-salling',
-          imageSrc: "/cases/peter-salling/main--16-9.webp",
+          imageSrc: "/cases/peter-salling/main-light--16-9.webp",
           imageAlt: "Peter Salling case",
         },
         {

@@ -70,10 +70,6 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
       imageAlt: 'Live Life in Colour på Peter Sallings projektside på en iPhone på et glasbord',
       aspectRatio: '16 / 9',
     },
-    horizontalBottomPair: [
-      { imageSrc: '/cases/peter-salling/iphone-kamma-beton--4-3.webp', imageAlt: 'Kamma på Peter Sallings projektside på en iPhone på en betonflade', aspectRatio: '4 / 3' },
-      { imageSrc: '/cases/peter-salling/iphone-live-life-betonblok--4-3.webp', imageAlt: 'Live Life in Colour på Peter Sallings projektside på en iPhone på en betonblok', aspectRatio: '4 / 3' },
-    ],
   },
   'det-kollektive-klaedeskab': {
     introPair: [
