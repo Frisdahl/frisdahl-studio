@@ -175,7 +175,6 @@ export function CasesSection() {
               imageAlt={item.imageAlt}
               href={item.href}
               previewImages={getCasePreviewImages(locale, item.id)}
-              linkLabel={cases.linkLabel}
             />
           ))}
         </div>
