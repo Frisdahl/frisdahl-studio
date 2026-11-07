@@ -61,8 +61,8 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
       { imageSrc: '/cases/peter-salling/macbook-make-football-your-game--4-3.webp', imageAlt: 'Make Football Your Game på Peter Sallings projektside på en MacBook Pro', aspectRatio: '4 / 3' },
     ],
     verticalPairTop: [
-      { imageSrc: '/cases/peter-salling/iphone-live-life-glass--4-3.webp', imageAlt: 'Live Life in Colour på Peter Sallings projektside på en iPhone på et glasbord', aspectRatio: '4 / 3' },
-      { imageSrc: '/cases/peter-salling/iphone-green-landsbyen--4-3.webp', imageAlt: 'Landsbyen på Peter Sallings projektside på en iPhone på en sort stol', aspectRatio: '4 / 3' },
+      { imageSrc: '/cases/peter-salling/iphone-sikkerheden-er-paa-spil--4-3.webp', imageAlt: 'Sikkerheden er på spil på Peter Sallings projektside på en iPhone', aspectRatio: '4 / 3' },
+      { imageSrc: '/cases/peter-salling/iphone-kamma--4-3.webp', imageAlt: 'Kamma på Peter Sallings projektside på en iPhone', aspectRatio: '4 / 3' },
     ],
     horizontalTopHidden: true,
     horizontalTop: {
