@@ -2908,6 +2908,12 @@
     @apply relative z-[1] pb-section-sm lg:pb-section;
   }
 
+  /* An image under the palette (gallery.afterPalette): the palette's own bottom
+     padding spaces it from above, this spaces it from the next section. */
+  .case-detail-after-palette {
+    @apply relative z-[1] pb-section-sm lg:pb-section;
+  }
+
   /* Grey panel behind the swatches only: same corners as the swatches, and the
      same padding as the gap between them. */
   .case-detail-palette-panel {

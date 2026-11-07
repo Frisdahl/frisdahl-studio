@@ -110,3 +110,16 @@ export function CaseDetailGallery({ gallery }: CaseDetailGalleryProps) {
     </section>
   )
 }
+
+/** The image under the colour palette, when a case has one (afterPalette). */
+export function CaseDetailAfterPalette({ gallery }: CaseDetailGalleryProps) {
+  if (!gallery.afterPalette) return null
+
+  return (
+    <section className="case-detail-after-palette" aria-label={gallery.ariaLabel}>
+      <Container>
+        <GalleryFigure image={gallery.afterPalette} variant="horizontal" background={gallery.mockupBackground} />
+      </Container>
+    </section>
+  )
+}
