@@ -3800,7 +3800,7 @@
 
   /* The section's heading, on the left over the projects. */
   .home-cases-list-title {
-    @apply mt-5xl mb-lg text-left lg:mt-[12rem] lg:mb-xl;
+    @apply mt-5xl mb-10 text-left lg:mt-[12rem] lg:mb-20;
     /* An h1: the size, line height and letter spacing are the site's h1. */
     font-weight: var(--heading-weight);
     color: var(--cases-ink);
@@ -3861,10 +3861,8 @@
     object-fit: cover;
   }
 
-  /* Hover (mouse only): the image darkens and the case page's first image
-     opens in the middle, from no width to half the width at its full height,
-     growing out to both sides from the centre; then the page's images flash
-     through in a loop (CaseCard swaps .is-on). */
+  /* Hover (mouse only): the image darkens and three of the case page's
+     images slide in along its bottom edge (see .case-card-hover below). */
   .case-card-media::after {
     content: '';
     position: absolute;
@@ -3875,38 +3873,23 @@
     transition: opacity 0.9s cubic-bezier(0.45, 0, 0.15, 1);
   }
 
-  /* The centred half-width box: the preview image inside it, the link text
-     right under it. */
+  /* The hover layer: the link text on the left above a row of three frames,
+     set in from the sides and the bottom of the image. */
   .case-card-hover {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    inset: 0;
     z-index: 1;
-    width: 50%;
-    aspect-ratio: 3 / 2;
-    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: clamp(0.75rem, 2vw, 1.5rem);
     pointer-events: none;
   }
 
-  .case-card-preview {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    background: #111;
-    /* Fully clipped from both sides: no width, full height. */
-    clip-path: inset(0 50% 0 50%);
-    transition: clip-path 1s cubic-bezier(0.65, 0, 0.35, 1);
-  }
-
   .case-card-hover-label {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    margin-top: 1.25rem;
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 0.5rem;
     color: #fff;
     font-size: 0.9375rem;
@@ -3917,19 +3900,33 @@
     transition: opacity 0.6s ease;
   }
 
-  /* All the images stay painted (so none has to be decoded at the moment it
-     shows); the one being flashed is simply on top. They switch without a
-     fade. */
-  .case-card-preview-image {
+  .case-card-trio {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(0.5rem, 1vw, 0.875rem);
+  }
+
+  /* Each image has a frame that clips it while it slides. */
+  .case-card-trio-frame {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+  }
+
+  .case-card-trio-image {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    /* The side images wait below their frame and rise into it; the middle
+       one waits above and drops in. */
+    transform: translateY(101%);
+    transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1);
   }
 
-  .case-card-preview-image.is-on {
-    z-index: 1;
+  .case-card-trio-frame:nth-child(2) .case-card-trio-image {
+    transform: translateY(-101%);
   }
 
   @media (hover: hover) {
@@ -3937,11 +3934,11 @@
       opacity: 1;
     }
 
-    .case-card-media-link:hover .case-card-preview {
-      clip-path: inset(0 0 0 0);
+    .case-card-media-link:hover .case-card-trio-image {
+      transform: translateY(0);
     }
 
-    /* The text fades in once the image is mostly open (and out again at once
+    /* The text fades in once the images are mostly in (and out again at once
        when the mouse leaves). */
     .case-card-media-link:hover .case-card-hover-label {
       opacity: 1;
@@ -3951,7 +3948,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     .case-card-media::after,
-    .case-card-preview,
+    .case-card-trio-image,
     .case-card-hover-label {
       transition: none;
     }
