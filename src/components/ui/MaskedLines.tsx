@@ -10,9 +10,9 @@ const stackVariants: Variants = {
 
 /** Each line slides inside its own overflow-hidden mask. */
 const lineVariants: Variants = {
-  hidden: { y: '-110%' },
+  hidden: { y: '-130%' },
   show: { y: '0%', transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } },
-  exit: { y: '-110%', transition: { duration: 0.4, ease: [0.6, 0, 0.9, 1] } },
+  exit: { y: '-130%', transition: { duration: 0.4, ease: [0.6, 0, 0.9, 1] } },
 }
 
 /** Groups the measure layer's word spans into lines by their vertical offset. */

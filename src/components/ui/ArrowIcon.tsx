@@ -7,8 +7,11 @@ interface ArrowIconProps {
 }
 
 /**
- * The site's single arrow glyph. Every arrow in the UI is this path, rotated
- * into the direction it needs, so the shape stays consistent everywhere.
+ * The site's single arrow glyph (the designer's arrow.svg, 32x32). Every arrow
+ * in the UI is this path, rotated into the direction it needs, so the shape
+ * stays consistent everywhere. The source file points left; the path is
+ * mirrored here so the glyph points right, which is what `rotate` is relative
+ * to.
  */
 export function ArrowIcon({
   className = '',
@@ -19,7 +22,7 @@ export function ArrowIcon({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
+      viewBox="0 0 32 32"
       width={width}
       height={height}
       fill="currentColor"
@@ -28,7 +31,10 @@ export function ArrowIcon({
       aria-hidden="true"
       focusable="false"
     >
-      <path d="M10.685 3.42h3.776l7.862 8.583-7.862 8.583h-3.776l7.083-7.193h-16.1v-2.748H17.8L10.685 3.42Z" />
+      <path
+        transform="matrix(-1 0 0 1 32 0)"
+        d="M4.2925 16.7071L13.2925 25.7071C13.4801 25.8947 13.7346 26.0001 14 26.0001C14.2654 26.0001 14.5199 25.8947 14.7075 25.7071C14.8951 25.5194 15.0006 25.2649 15.0006 24.9996C15.0006 24.7342 14.8951 24.4797 14.7075 24.2921L7.41375 16.9996H27C27.2652 16.9996 27.5196 16.8942 27.7071 16.7067C27.8946 16.5192 28 16.2648 28 15.9996C28 15.7344 27.8946 15.48 27.7071 15.2925C27.5196 15.1049 27.2652 14.9996 27 14.9996H7.41375L14.7075 7.70708C14.8951 7.51944 15.0006 7.26494 15.0006 6.99958C15.0006 6.73422 14.8951 6.47972 14.7075 6.29208C14.5199 6.10444 14.2654 5.99902 14 5.99902C13.7346 5.99902 13.4801 6.10444 13.2925 6.29208L4.2925 15.2921C4.19952 15.385 4.12576 15.4952 4.07544 15.6166C4.02512 15.738 3.99921 15.8682 3.99921 15.9996C3.99921 16.131 4.02512 16.2611 4.07544 16.3825C4.12576 16.5039 4.19952 16.6142 4.2925 16.7071Z"
+      />
     </svg>
   )
 }

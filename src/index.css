@@ -3843,15 +3843,11 @@
     color: var(--color-accent);
   }
 
-  /* The section's h2, centred over the projects: a step up from the regular
-     h2, but always smaller than the hero's h1 (64px at 1440, 48px at 1024,
-     36px on phones). */
+  /* The section's heading, on the left over the projects. */
   .home-cases-list-title {
-    @apply mt-5xl mb-lg text-center lg:mt-[12rem] lg:mb-xl;
-    font-size: clamp(2.125rem, 3.9vw, 3.5rem);
+    @apply mt-5xl mb-lg text-left lg:mt-[12rem] lg:mb-xl;
+    /* An h1: the size, line height and letter spacing are the site's h1. */
     font-weight: var(--heading-weight);
-    line-height: 1.05;
-    letter-spacing: -0.03em;
     color: var(--cases-ink);
   }
 
@@ -4047,8 +4043,17 @@
     /* Width of the number column; the open text is indented by the same. */
     --added-value-number-width: 3.75rem;
     @apply py-section-sm lg:py-section;
+    /* More room below, before the footer: 8rem (12rem from desktop), twice
+       the section's top padding. */
+    padding-bottom: 8rem;
     background-color: var(--color-home-page);
     color: var(--color-dark);
+  }
+
+  @media (min-width: 1024px) {
+    .added-value {
+      padding-bottom: 12rem;
+    }
   }
 
   .added-value-inner {
@@ -4247,9 +4252,9 @@
   }
 
   /* Reviews, on the 12-column grid (from 1024px): the arrows on the left
-     (columns 1-4), the quote on the right (columns 6-12)
-     with its 15-second progress bar, and under it, at its left edge, the
-     reviewer's portrait, name and role. Stacked on phones and tablets. */
+     (columns 2-4), the quote on the right (columns 6-12), and under it, at its
+     left edge, the reviewer's portrait, name and role. No timer: the arrows
+     change the review. Stacked on phones and tablets. */
   .reviews-section {
     background-color: var(--color-home-page);
     color: var(--color-dark);
@@ -4274,7 +4279,7 @@
     }
 
     .reviews-controls {
-      grid-column: 1 / span 4;
+      grid-column: 2 / span 3;
       grid-row: 1;
       align-self: start;
     }
@@ -4296,9 +4301,11 @@
 
   /* Each arrow sits on a soft circle; on hover it fills with the ink. */
   .reviews-arrow {
-    @apply flex h-16 w-16 shrink-0 cursor-pointer items-center justify-center rounded-full text-primary transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+    @apply flex h-16 w-16 shrink-0 cursor-pointer items-center justify-center rounded-full text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
     font-size: 1.75rem;
-    background-color: color-mix(in srgb, var(--color-dark) 8%, transparent);
+    background-color: #f6f7f7;
+    /* The hover fill is instant, no transition. */
+    transition: none;
   }
 
   .reviews-arrow:hover {
@@ -4306,14 +4313,33 @@
     color: var(--color-light);
   }
 
+  /* The quotation mark (an SVG, 63:41) in the accent red. Above the text on
+     phones and tablets; from desktop it hangs just left of the first line, a
+     little above it. */
+  .reviews-quote-mark {
+    display: block;
+    width: clamp(1.75rem, 2.8vw, 2.5rem);
+    height: auto;
+    margin-bottom: 1rem;
+    color: var(--color-accent);
+  }
+
+  @media (min-width: 1024px) {
+    .reviews-quote-mark {
+      position: absolute;
+      top: -0.875rem;
+      right: 100%;
+      margin: 0 1.25rem 0 0;
+    }
+  }
+
   /* The quote's lines animate in masks (see ReviewsSection). */
   .reviews-quote {
     position: relative;
-    @apply max-w-[46rem];
-    /* Between h3 and h2; the measure layer inherits it, so the line breaks
-       match the visible wrap. */
-    font-size: clamp(1.5rem, 2.4vw, 2rem);
-    line-height: 1.3;
+    /* 32px from desktop, scaling down to 24px on phones; the measure layer
+       inherits it, so the line breaks match the visible wrap. */
+    font-size: clamp(1.5rem, calc(14px + 1.3vw), 32px);
+    line-height: 1.2;
     letter-spacing: -0.02em;
     font-weight: 500;
     color: var(--color-primary);
@@ -4333,21 +4359,20 @@
     display: block;
   }
 
-  /* Each line clips its own text, so it can slide in and out of view. */
+  /* Each line clips its own text, so it can slide in and out of view. The
+     extra room below (taken back with the negative margin) keeps descenders
+     (g, j, p, y) from being cut off at tight line heights; the lines wait
+     130% above (see MaskedLines) so the room never shows them early. */
   .masked-lines-mask {
     display: block;
     overflow: hidden;
+    padding-bottom: 0.25em;
+    margin-bottom: -0.25em;
   }
 
   .masked-lines-line {
     display: block;
     will-change: transform;
-  }
-
-  /* The bar spans the quote's full width; the fill is the timer. */
-  .reviews-progress {
-    @apply mt-xl h-[2px] w-full max-w-[46rem] overflow-hidden;
-    background-color: color-mix(in srgb, var(--color-dark) 12%, transparent);
   }
 
   /* One hidden copy per review at the quote's width; the tallest sets the
@@ -4359,16 +4384,8 @@
   .reviews-quote-probes {
     position: absolute;
     inset-inline: 0;
-    max-width: 46rem;
     visibility: hidden;
     pointer-events: none;
-  }
-
-  .reviews-progress-fill {
-    @apply block h-full;
-    background-color: var(--color-dark);
-    transform-origin: left;
-    will-change: transform;
   }
 
   /* Under the quote, at its left edge: the portrait with the name and role
@@ -4395,6 +4412,7 @@
 
   .reviews-role {
     @apply mt-xs text-body text-secondary;
+    font-weight: 500;
   }
 
   .contact-drawer-overlay {

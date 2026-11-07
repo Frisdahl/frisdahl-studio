@@ -166,9 +166,9 @@ export function CasesSection() {
             <p className="home-cases-intro-text">{cases.intro.textMore}</p>
           </div>
         </div>
-        <h2 ref={listTitleRef} className="home-cases-list-title">
+        <h1 ref={listTitleRef} className="home-cases-list-title">
           {cases.listTitle}
-        </h2>
+        </h1>
 
         {/* Inside the content container, so the images line up with the
             page's side margins like the text above. */}

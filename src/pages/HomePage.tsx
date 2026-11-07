@@ -1,21 +1,7 @@
 import { PageMeta } from '../components/layout'
-import {
-  AddedValueSection,
-  CasesSection,
-  FaqSection,
-  Hero,
-  ReviewsSection,
-  SplitPanelSection,
-} from '../components/sections'
-import { useLocale } from '../context/LocaleContext'
-import { getWebudviklingContent } from '../data/webudvikling'
+import { AddedValueSection, CasesSection, Hero, ReviewsSection } from '../components/sections'
 
 export function HomePage() {
-  const { locale } = useLocale()
-  // The split panel and the FAQ were moved here from /webudvikling; their copy
-  // still lives in data/webudvikling.ts.
-  const { splitPanel, faq } = getWebudviklingContent(locale)
-
   return (
     <main className="page-surface bg-home-page overflow-x-clip">
       <PageMeta />
@@ -27,8 +13,6 @@ export function HomePage() {
       </div>
       <ReviewsSection />
       <AddedValueSection />
-      <SplitPanelSection content={splitPanel} />
-      <FaqSection content={faq} />
     </main>
   )
 }
