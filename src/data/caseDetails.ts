@@ -31,7 +31,7 @@ const caseDetails = {
           'En skarp digital platform med fokus på performance, branding og visuel identitet — bygget til at konvertere og skalere med brandet.',
         sliderAriaLabel: 'Automatisk gennemløb af Nordwear case-billeder',
         slides: [
-          { imageSrc: '/cases/nordwear/official--16-10.webp', imageAlt: 'Nordwear forside på en bærbar' },
+          { imageSrc: '/cases/nordwear/main-higgs--16-9.webp', imageAlt: 'Nordwear forside på en bærbar' },
           { imageSrc: '/cases/nordwear/production--16-10.jpg', imageAlt: 'Nordwear produktion' },
           { imageSrc: '/cases/nordwear/cart--16-10.jpg', imageAlt: 'Nordwear kurv' },
         ],
@@ -179,7 +179,7 @@ const caseDetails = {
           'A sharp digital platform focused on performance, branding, and visual identity — built to convert and scale with the brand.',
         sliderAriaLabel: 'Automatic showcase of Nordwear case images',
         slides: [
-          { imageSrc: '/cases/nordwear/official--16-10.webp', imageAlt: 'Nordwear homepage on a laptop' },
+          { imageSrc: '/cases/nordwear/main-higgs--16-9.webp', imageAlt: 'Nordwear homepage on a laptop' },
           { imageSrc: '/cases/nordwear/production--16-10.jpg', imageAlt: 'Nordwear production page' },
           { imageSrc: '/cases/nordwear/cart--16-10.jpg', imageAlt: 'Nordwear cart' },
         ],
