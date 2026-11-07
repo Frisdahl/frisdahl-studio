@@ -3928,22 +3928,34 @@
     height: 100%;
     object-fit: cover;
     /* The side images wait below their frame and rise into it; the middle
-       one waits above and drops in. */
+       one waits above and drops in. On leaving they carry on the same way: the
+       sides up and out of the top, the middle down and out of the bottom
+       (CaseCard sets is-in / is-out on .case-card-hover; back at rest there is
+       no transition, so they are ready for the next hover). */
     transform: translateY(101%);
-    transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1);
   }
 
   .case-card-trio-frame:nth-child(2) .case-card-trio-image {
     transform: translateY(-101%);
   }
 
+  .case-card-hover.is-in .case-card-trio-image {
+    transform: translateY(0);
+    transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .case-card-hover.is-out .case-card-trio-image {
+    transform: translateY(-101%);
+    transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .case-card-hover.is-out .case-card-trio-frame:nth-child(2) .case-card-trio-image {
+    transform: translateY(101%);
+  }
+
   @media (hover: hover) {
     .case-card-media-link:hover .case-card-media::after {
       opacity: 1;
-    }
-
-    .case-card-media-link:hover .case-card-trio-image {
-      transform: translateY(0);
     }
   }
 
@@ -3954,12 +3966,12 @@
   }
 
   .case-card.is-transition-source .case-card-trio-image {
-    transform: translateY(101%);
-    transition-duration: 0.35s;
+    transform: translateY(-101%);
+    transition: transform 0.35s cubic-bezier(0.65, 0, 0.35, 1);
   }
 
   .case-card.is-transition-source .case-card-trio-frame:nth-child(2) .case-card-trio-image {
-    transform: translateY(-101%);
+    transform: translateY(101%);
   }
 
   .case-card.is-transition-source .case-card-arrow-slider {

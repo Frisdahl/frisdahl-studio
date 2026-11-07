@@ -28,7 +28,8 @@ const ARM_MARGIN = '600px 0px'
  * along its bottom edge, the middle one from the top and the two beside it from
  * the bottom, each inside its own clipped frame (CSS: .case-card-hover in
  * index.css), and an arrow slides in from the bottom left to the right of the
- * title, leaving towards the top right when the mouse does.
+ * title. When the mouse leaves they all carry on the way they were going: the
+ * middle image on down, the two beside it on up, and the arrow to the top right.
  */
 export function CaseCard({
   client,
@@ -45,6 +46,8 @@ export function CaseCard({
   // The title's arrow: waits at the bottom left ('idle'), slides in on hover ('in'),
   // leaves at the top right when the mouse does ('out'), then waits again.
   const [arrow, setArrow] = useState<'idle' | 'in' | 'out'>('idle')
+  // The hover images, the same way: waiting out of their frames, in, then out the far side.
+  const [shown, setShown] = useState<'idle' | 'in' | 'out'>('idle')
 
   useEffect(() => {
     const card = cardRef.current
@@ -94,8 +97,16 @@ export function CaseCard({
         className="case-card-media-link"
         tabIndex={-1}
         aria-hidden="true"
-        onMouseEnter={() => setArrow('in')}
-        onMouseLeave={() => setArrow((state) => (state === 'in' ? 'out' : state))}
+        onMouseEnter={() => {
+          // Touch screens have no hover, only a tap that follows the link.
+          if (!window.matchMedia('(hover: hover)').matches) return
+          setArrow('in')
+          setShown('in')
+        }}
+        onMouseLeave={() => {
+          setArrow((state) => (state === 'in' ? 'out' : state))
+          setShown((state) => (state === 'in' ? 'out' : state))
+        }}
       >
         <div className="case-card-media">
           {imageSrc ? (
@@ -109,7 +120,13 @@ export function CaseCard({
           ) : null}
 
           {trio.length === TRIO ? (
-            <div className="case-card-hover">
+            <div
+              className={`case-card-hover${shown === 'idle' ? '' : ` is-${shown}`}`}
+              onTransitionEnd={(event) => {
+                // The three images finish together; then they wait for the next hover.
+                if (event.propertyName === 'transform') setShown((state) => (state === 'out' ? 'idle' : state))
+              }}
+            >
               <div className="case-card-trio">
                 {trio.map((image) => (
                   <div key={image.imageSrc} className="case-card-trio-frame">
