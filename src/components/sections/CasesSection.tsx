@@ -149,11 +149,11 @@ export function CasesSection() {
     // Desktop: one project at a time. The list is pinned to the screen (the
     // images and texts of all projects sit on top of each other, the text on
     // the right, vertically centred on the image) and scrolling steps through
-    // them: the next image wipes down over the current one from the top, and
+    // them: the next image slides down over the current one from the top, and
     // once it fills the full height the current text slides up and out while
-    // the next slides up in its place, a timed animation that doesn't follow
-    // the scroll. Scrolling back reverses both. Reduced motion keeps the
-    // plain list.
+    // the next slides up in its place. Scrolling only picks the project; the
+    // animation itself is timed. Scrolling back reverses it. Reduced motion
+    // keeps the plain list.
     mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', (context) => {
       const cards = Array.from(list.querySelectorAll<HTMLElement>('.case-card'))
       const cancelIntro = animateIntro(context)
@@ -161,7 +161,8 @@ export function CasesSection() {
       if (cards.length < 2) return cancelIntro
 
       const parts = cards.map((card) => ({
-        media: card.querySelector<HTMLElement>('.case-card-media-link')!,
+        // The link is the fixed frame (clipped); the media box inside it slides.
+        media: card.querySelector<HTMLElement>('.case-card-media')!,
         image: card.querySelector<HTMLElement>('.case-card-image'),
         meta: card.querySelector<HTMLElement>('.case-card-meta')!,
         items: Array.from(card.querySelectorAll<HTMLElement>('.case-card-line > *')),
@@ -170,96 +171,94 @@ export function CasesSection() {
       list.classList.add('is-stage')
 
       // Everything but the first project starts hidden.
-      parts.slice(1).forEach(({ media, meta, items }) => {
-        gsap.set(media, { clipPath: 'inset(0% 0% 100% 0%)' })
+      // The image waits above its frame, the media box and the image inside
+      // moving in opposite directions, so the picture itself stays still while
+      // the frame slides down over it (transforms only, so it runs smoothly).
+      parts.slice(1).forEach(({ media, image, meta, items }) => {
+        gsap.set(media, { yPercent: -100 })
+        if (image) gsap.set(image, { yPercent: 100 })
         gsap.set(meta, { autoAlpha: 0 })
         gsap.set(items, { yPercent: 150 })
       })
 
-      // Scrubbed timeline, in units: each step holds the current project, then
-      // wipes the next image down over it. Only the images follow the scroll
-      // (smoothed by the scrub lag); the texts are timed, see swapText below.
-      const HOLD = 0.6
-      const WIPE = 0.8
-      const STEP = HOLD + WIPE
-      const END_HOLD = 0.5
-      const total = (parts.length - 1) * STEP + END_HOLD
-      // Scroll distance per timeline unit, as a share of the screen height.
-      const SCREEN_PER_UNIT = 0.6
-
-      // Which project's text is showing. It changes when a wipe has filled the
-      // image's full height (or, scrolling back, stops filling it), and the
-      // swap then plays in full whatever the scroll does next.
-      let shown = 0
-      let textSwap: gsap.core.Timeline | null = null
-
-      const swapText = (from: number, to: number) => {
-        const direction = to > from ? 1 : -1
-        const out = parts[from]
-        const incoming = parts[to]
-        textSwap?.kill()
-        // Anything but the two involved is hidden; the incoming text waits
-        // below (or above, when scrolling back) its masks.
-        parts.forEach((part, index) => {
-          if (index !== from && index !== to) gsap.set(part.meta, { autoAlpha: 0 })
-        })
-        gsap.set(incoming.meta, { autoAlpha: 1 })
-        gsap.set(incoming.items, { yPercent: 150 * direction })
-
-        textSwap = gsap
-          .timeline()
-          .to(out.items, { yPercent: -150 * direction, duration: 0.5, stagger: 0.06, ease: 'power2.in' })
-          .set(out.meta, { autoAlpha: 0 })
-          .to(incoming.items, { yPercent: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out' }, '>-0.05')
-        shown = to
-      }
-
-      const timeline = gsap.timeline({
-        defaults: { ease: 'none' },
-        onUpdate: () => {
-          const time = timeline.time()
-          let filled = 0
-          parts.forEach((_, index) => {
-            if (index > 0 && time >= (index - 1) * STEP + HOLD + WIPE - 0.001) filled = index
-          })
-          if (filled !== shown) swapText(shown, filled)
-        },
-        scrollTrigger: {
-          trigger: list,
-          start: () => `top ${document.querySelector('.site-header')?.getBoundingClientRect().height ?? 76}px`,
-          end: () => `+=${total * window.innerHeight * SCREEN_PER_UNIT}`,
-          pin: true,
-          // A long catch-up, so the wipe glides however the wheel steps.
-          scrub: 1.2,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
-      })
+      // One timed timeline holds every switch: block i (from (i-1)*STEP to
+      // i*STEP) wipes project i's image down over the previous one, and when it
+      // fills the full height swaps the texts (the old one up and out, the new
+      // one up in its place). Scrolling doesn't scrub it: it only decides which
+      // project should be showing, and the timeline then plays there at its own
+      // pace, forwards or back, so the motion is the same however the wheel
+      // steps. It can be redirected mid-way.
+      const WIPE = 1.1
+      const TEXT_OUT = 0.45
+      const TEXT_IN = 0.6
+      const STEP = 2.5
+      const master = gsap.timeline({ paused: true, defaults: { ease: 'none' } })
 
       parts.forEach((next, index) => {
         if (index === 0) return
-        const wipeAt = (index - 1) * STEP + HOLD
-        timeline.to(next.media, { clipPath: 'inset(0% 0% 0% 0%)', duration: WIPE, ease: 'power1.inOut' }, wipeAt)
-        if (next.image) {
-          timeline.fromTo(
-            next.image,
-            { yPercent: -6, scale: 1.1 },
-            { yPercent: 0, scale: 1, duration: WIPE, ease: 'power1.inOut', immediateRender: false },
-            wipeAt,
-          )
-        }
+        const current = parts[index - 1]
+        const at = (index - 1) * STEP
+        const textAt = at + WIPE
+
+        master.to(next.media, { yPercent: 0, duration: WIPE, ease: 'power3.inOut' }, at)
+        if (next.image) master.to(next.image, { yPercent: 0, duration: WIPE, ease: 'power3.inOut' }, at)
+        master.to(current.items, { yPercent: -150, duration: TEXT_OUT, stagger: 0.05, ease: 'power2.in' }, textAt)
+        master.fromTo(
+          current.meta,
+          { autoAlpha: 1 },
+          { autoAlpha: 0, duration: 0.001, immediateRender: false },
+          textAt + TEXT_OUT + 0.05 * Math.max(0, current.items.length - 1),
+        )
+        master.fromTo(
+          next.meta,
+          { autoAlpha: 0 },
+          { autoAlpha: 1, duration: 0.001, immediateRender: false },
+          textAt + TEXT_OUT,
+        )
+        master.to(next.items, { yPercent: 0, duration: TEXT_IN, stagger: 0.07, ease: 'power3.out' }, textAt + TEXT_OUT)
       })
-      // A short hold on the last project before the pin releases.
-      timeline.to({}, { duration: END_HOLD }, total - END_HOLD)
+      // Room for the last swap to play inside its block.
+      master.to({}, { duration: 0.01 }, (parts.length - 1) * STEP)
+
+      // Scroll length: one screen-height share per project change, plus a
+      // short tail, all pinned. The first change starts with the first scroll.
+      const SEGMENT = 0.7
+      const TAIL = 0.3
+      const segmentPx = () => SEGMENT * window.innerHeight
+      const lengthPx = () => (parts.length - 1) * segmentPx() + TAIL * window.innerHeight
+      const indexAt = (progress: number) =>
+        Math.min(parts.length - 1, Math.max(0, Math.ceil((progress * lengthPx()) / segmentPx() - 1e-6)))
+
+      let target = 0
+      const goTo = (index: number) => {
+        if (index === target) return
+        target = index
+        master.tweenTo(index * STEP, { ease: 'none', overwrite: true })
+      }
+
+      ScrollTrigger.create({
+        trigger: list,
+        start: () => `top ${document.querySelector('.site-header')?.getBoundingClientRect().height ?? 76}px`,
+        end: () => `+=${lengthPx()}`,
+        pin: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => goTo(indexAt(self.progress)),
+        // Landing mid-section (a reload, a resize): show that project at once.
+        onRefresh: (self) => {
+          target = indexAt(self.progress)
+          master.time(target * STEP)
+        },
+      })
 
       // The pinned height and the fonts change the page height below.
       document.fonts.ready.then(() => ScrollTrigger.refresh())
 
       return () => {
         cancelIntro()
-        textSwap?.kill()
+        master.kill()
         gsap.set(
-          parts.flatMap(({ meta, items }) => [meta, ...items]),
+          parts.flatMap(({ media, image, meta, items }) => [media, ...(image ? [image] : []), meta, ...items]),
           { clearProps: 'all' },
         )
         list.classList.remove('is-stage')

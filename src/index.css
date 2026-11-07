@@ -3904,6 +3904,14 @@
     grid-column: 1 / span 7;
     grid-row: 1;
     align-self: center;
+    /* The fixed frame the next image slides down through. */
+    overflow: clip;
+  }
+
+  .home-cases-list.is-stage .case-card-media,
+  .home-cases-list.is-stage .case-card-image,
+  .home-cases-list.is-stage .case-card-line > * {
+    will-change: transform;
   }
 
   .home-cases-list.is-stage .case-card-meta,
