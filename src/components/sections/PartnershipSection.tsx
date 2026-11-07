@@ -22,7 +22,7 @@ export function PartnershipSection() {
           <div className="relative mx-auto w-[16rem] shrink-0 sm:w-[19rem] lg:w-[24rem]">
             <PartnershipImageDecorations />
 
-            <div className="relative overflow-hidden rounded-panel bg-peach">
+            <div className="relative overflow-hidden rounded-(--radius-image) bg-peach">
               {partnership.imageSrc ? (
                 <img
                   // Matches the frame widths above: 16rem, 19rem from sm, 24rem from lg.

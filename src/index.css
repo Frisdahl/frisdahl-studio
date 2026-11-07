@@ -168,6 +168,8 @@
   --site-grid-content-span: 12;
 
   /* Border radius */
+  /* The tiny corner every image frame shares (see the end of this file). */
+  --radius-image: 0.25rem;
   --radius-control-sm: 0.75rem;
   --radius-control: 1rem;
   --radius-panel: 1.25rem;
@@ -4937,4 +4939,42 @@
   100% {
     width: 100%;
   }
+}
+
+/* Every image frame has the same tiny corner. Unlayered, so it wins over the
+   per-section radii above. The images inherit it, so a frame without
+   overflow: hidden still rounds its picture. The home hero's slides set it in
+   Hero.module.css; circles (avatars, blobs) are not image frames. */
+:is(
+    .case-card-media,
+    .case-card-trio-frame,
+    .case-slide-card-media,
+    .case-row-media,
+    .added-value-media,
+    .cases-hero-slider-slide,
+    .meet-us-member-portrait,
+    .home-cases-intro-image-wrapper,
+    .process-slider-media-portrait,
+    .case-detail-hero-image,
+    .case-detail-gallery-item,
+    .case-detail-next
+  ) {
+  border-radius: var(--radius-image);
+}
+
+:is(
+    .case-card-media,
+    .case-card-trio-frame,
+    .case-slide-card-media,
+    .case-row-media,
+    .added-value-media,
+    .cases-hero-slider-slide,
+    .meet-us-member-portrait,
+    .home-cases-intro-image-wrapper,
+    .process-slider-media-portrait,
+    .case-detail-hero-image,
+    .case-detail-gallery-item,
+    .case-detail-next
+  ) :is(img, canvas) {
+  border-radius: inherit;
 }

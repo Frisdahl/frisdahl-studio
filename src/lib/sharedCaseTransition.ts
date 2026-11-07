@@ -99,7 +99,8 @@ export async function runSharedCaseTransition(
     willChange: 'transform',
   })
   ghost.setAttribute('aria-hidden', 'true')
-  gsap.set(ghost, { width: from.width, height: from.height, x: from.left, y: from.top })
+  const fromRadius = parseFloat(getComputedStyle(media).borderTopLeftRadius) || 0
+  gsap.set(ghost, { width: from.width, height: from.height, x: from.left, y: from.top, borderRadius: fromRadius })
 
   const split = SplitText.create(texts, { type: 'lines', mask: 'lines' })
   roomInMasks(split.masks)
@@ -151,7 +152,9 @@ export async function runSharedCaseTransition(
     // 3. Grow: the same picture at the hero's size, scaled down to the card's
     //    place, then scaled up and moved into the hero's. Both are 16:9, so the
     //    scale is uniform and the crop never changes.
-    gsap.set(ghost, { width: to.width, height: to.height, scale: from.width / to.width, x: from.left, y: from.top })
+    // Scaled down, so the corner is set in the ghost's own (larger) size to match the card's.
+    const startScale = from.width / to.width
+    gsap.set(ghost, { width: to.width, height: to.height, scale: startScale, x: from.left, y: from.top, borderRadius: fromRadius / startScale })
     await new Promise<void>((resolve) => {
       const grow = gsap.timeline({ onComplete: resolve, defaults: { ease: GROW_EASE } })
       grow.to(ghost, { x: to.left, y: to.top, scale: 1, borderRadius: radius, duration: GROW_DURATION }, 0)
