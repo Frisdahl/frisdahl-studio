@@ -170,6 +170,8 @@
   /* Border radius */
   /* The tiny corner every image frame shares (see the end of this file). */
   --radius-image: 0.25rem;
+  /* The gap between neighbouring images, and from them to the edge of what holds them: the home hero's slides and the project cards' hover images. */
+  --image-gap: clamp(0.25rem, 0.3vw, 0.375rem);
   --radius-control-sm: 0.75rem;
   --radius-control: 1rem;
   --radius-panel: 1.25rem;
@@ -3902,7 +3904,7 @@
     flex-direction: column;
     justify-content: flex-end;
     gap: 0.75rem;
-    padding: clamp(0.75rem, 2vw, 1.5rem);
+    padding: var(--image-gap);
     pointer-events: none;
   }
 
@@ -3922,7 +3924,7 @@
   .case-card-trio {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: clamp(0.5rem, 1vw, 0.875rem);
+    gap: var(--image-gap);
   }
 
   /* Each image has a frame that clips it while it slides. */
