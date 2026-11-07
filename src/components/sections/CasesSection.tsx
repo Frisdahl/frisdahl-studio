@@ -149,14 +149,28 @@ export function CasesSection() {
       <Container>
         <div ref={introRef} className="home-cases-intro">
           <h2 className="home-cases-intro-title">{cases.intro.title}</h2>
-          <p className="home-cases-intro-text">
-            {cases.intro.textBefore}
-            <Link to={MEET_US_PATH} className="home-cases-intro-link">
-              {cases.intro.name}
-            </Link>
-            {cases.intro.textAfter}
-          </p>
-          <p className="home-cases-intro-text">{cases.intro.textMore}</p>
+          <div className="home-cases-intro-image-wrapper">
+            <img
+              src="/images/higgsfield/hero-flatlay-a--21-9.png"
+              alt={
+                locale === 'da'
+                  ? 'Flatlay af Frisdahl Studios designarbejde'
+                  : 'Flatlay of Frisdahl Studio design work'
+              }
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div className="home-cases-intro-text-col">
+            <p className="home-cases-intro-text">
+              {cases.intro.textBefore}
+              <Link to={MEET_US_PATH} className="home-cases-intro-link">
+                {cases.intro.name}
+              </Link>
+              {cases.intro.textAfter}
+            </p>
+            <p className="home-cases-intro-text">{cases.intro.textMore}</p>
+          </div>
         </div>
         <h2 ref={listTitleRef} className="home-cases-list-title">
           {cases.listTitle}

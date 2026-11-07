@@ -3724,27 +3724,63 @@
     color: var(--cases-ink);
   }
 
-  /* Intro above the projects: heading left, text right (the case pages'
-     overview split), then the list's own heading. Colours follow the
-     section's black-to-white roll-in. */
-  /* Title in the left column; the text's paragraphs stack in the right one. */
+  /* Intro above the projects, on the 12-column grid (from 1024px; stacked
+     below): the heading and the image beneath it take columns 1-6, the text
+     columns 8-12. Colours follow the section's black-to-white roll-in. */
+  .home-cases {
+    @apply pt-4 pb-8;
+  }
+
   .home-cases-intro {
-    @apply grid gap-md pt-2xl lg:grid-cols-[minmax(0,1fr)_minmax(0,42rem)] lg:gap-x-16 lg:gap-y-lg lg:pt-4xl;
+    @apply grid gap-md;
   }
 
-  .home-cases-intro > .home-cases-intro-text + .home-cases-intro-text {
-    @apply lg:col-start-2;
+  @media (min-width: 1024px) {
+    .home-cases-intro {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--site-grid-gap);
+      row-gap: var(--spacing-lg);
+    }
+
+    .home-cases-intro-title,
+    .home-cases-intro-image-wrapper {
+      grid-column: 1 / span 6;
+    }
+
+    .home-cases-intro-text-col {
+      grid-column: 8 / span 5;
+      grid-row: 2;
+    }
   }
 
+  /* 48px from desktop; it scales down with the screen to about 28px on phones. */
   .home-cases-intro-title {
-    @apply text-h3;
+    font-size: clamp(1.75rem, calc(19.2px + 2.4vw), 48px);
+    line-height: 1.12;
+    letter-spacing: -0.025em;
     font-weight: var(--heading-weight);
     color: var(--cases-ink);
+  }
+
+  .home-cases-intro-image-wrapper img {
+    @apply h-auto w-full object-cover;
   }
 
   .home-cases-intro-text {
     @apply text-body-lg font-medium;
     color: var(--cases-muted);
+  }
+
+  .home-cases-intro-text + .home-cases-intro-text {
+    @apply mt-md;
+  }
+
+  /* 24px running text from desktop. */
+  @media (min-width: 1024px) {
+    .home-cases-intro-text {
+      font-size: 24px;
+      line-height: 1.4;
+    }
   }
 
   .home-cases-intro-link {

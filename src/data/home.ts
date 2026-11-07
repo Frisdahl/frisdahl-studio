@@ -19,7 +19,7 @@ const homeContent = {
       ariaLabel: "Udvalgte cases",
       // Intro above the projects; the name links to the meet-me page.
       intro: {
-        title: "Introduktion",
+        title: "Et lille studio med store ambitioner og en klar vision for godt design",
         textBefore: "Jeg hedder ",
         name: "Alexander",
         textAfter: ", og Frisdahl Studio er mit studie for webdesign og webudvikling.",
