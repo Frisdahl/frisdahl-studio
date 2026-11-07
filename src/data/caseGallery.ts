@@ -55,7 +55,7 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     },
   },
   'peter-salling': {
-    mockupBackground: '#0C0C0C',
+    mockupBackground: '#f4f5f6',
     introPair: [
       { imageSrc: '/cases/peter-salling/macbook-glass-sikkerheden-er-paa-spil--4-3.webp', imageAlt: 'Peter Sallings forside med Sikkerheden er på spil på en MacBook på et glasbord', aspectRatio: '4 / 3' },
       { imageSrc: '/cases/peter-salling/macbook-glass-live-life-in-colour--4-3.webp', imageAlt: 'Live Life in Colour på Peter Sallings Commercial-side på en MacBook på et glasbord', aspectRatio: '4 / 3' },
