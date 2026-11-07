@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { registerPageTransition } from '../../lib/pageTransition'
+import { canShareCard, runSharedCaseTransition } from '../../lib/sharedCaseTransition'
 import { lockScroll, prefersReducedMotion, unlockScroll } from '../../lib/scroll'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -77,12 +78,15 @@ function transitionHref(event: MouseEvent, currentPath: string): string | null {
  * one just after the other, the route changes under them, and they rise on
  * off the top in reverse order (dark first) to uncover the new page. Handles
  * in-app link clicks anywhere on the site; reduced motion navigates directly.
+ * Project cards on the home page use a shared-image transition instead
+ * (lib/sharedCaseTransition.ts).
  */
 export function PageTransition() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const pathnameRef = useRef(pathname)
   const loaderRef = useRef<HTMLDivElement>(null)
+  const veilRef = useRef<HTMLDivElement>(null)
   const runningRef = useRef(false)
 
   useEffect(() => {
@@ -137,11 +141,40 @@ export function PageTransition() {
       runningRef.current = false
     }
 
+    // A project card on the home page: its image grows into the case page's
+    // hero instead of the panels wiping over the page.
+    const runShared = async (href: string, card: HTMLElement) => {
+      const veil = veilRef.current
+      if (runningRef.current || !veil) return
+      runningRef.current = true
+      lockScroll()
+      document.documentElement.classList.add('is-page-transitioning')
+      // Starts loading the case page's code while the card leaves.
+      void import('../../pages/CaseDetailPage')
+      try {
+        await runSharedCaseTransition(card, veil, async () => {
+          const previous = shell.querySelector(':scope > main')
+          navigate(href)
+          const main = await waitForPage(shell, previous)
+          window.scrollTo(0, 0)
+          await firstScreenImages(main, window.innerHeight)
+          return main
+        })
+      } finally {
+        document.documentElement.classList.remove('is-page-transitioning')
+        unlockScroll()
+        ScrollTrigger.refresh()
+        runningRef.current = false
+      }
+    }
+
     const onClick = (event: MouseEvent) => {
       const href = transitionHref(event, pathnameRef.current)
       if (!href) return
       event.preventDefault()
-      void run(href)
+      const card = pathnameRef.current === '/' ? (event.target as Element).closest<HTMLElement>('.case-card') : null
+      if (card && canShareCard(card) && !prefersReducedMotion()) void runShared(href, card)
+      else void run(href)
     }
 
     // Capture phase: runs before React Router's <Link> handler, which then sees
@@ -155,9 +188,12 @@ export function PageTransition() {
   }, [navigate])
 
   return (
-    <div ref={loaderRef} className="page-transition" aria-hidden="true">
-      <div className="page-transition-panel page-transition-panel--accent" />
-      <div className="page-transition-panel page-transition-panel--dark" />
-    </div>
+    <>
+      <div ref={veilRef} className="page-transition-veil" aria-hidden="true" />
+      <div ref={loaderRef} className="page-transition" aria-hidden="true">
+        <div className="page-transition-panel page-transition-panel--accent" />
+        <div className="page-transition-panel page-transition-panel--dark" />
+      </div>
+    </>
   )
 }

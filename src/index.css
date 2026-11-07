@@ -2268,6 +2268,26 @@
     background-color: var(--color-primary);
   }
 
+  /* Shared-image transition (sharedCaseTransition.ts): a full-screen sheet in the
+     page colour under the clicked image (45) and the header (49+), over the page.
+     While it runs, the case page's hero is hidden: the image (until the moving
+     copy lands on it) and the text (until it rises in). */
+  .page-transition-veil {
+    position: fixed;
+    inset: 0;
+    z-index: 44;
+    background-color: var(--color-background);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .is-shared-image .case-detail-hero-image,
+  .is-shared-transition .case-detail-hero-name,
+  .is-shared-transition .case-detail-hero-meta {
+    visibility: hidden;
+  }
+
   /* Nothing on the page reacts to the pointer mid-transition. */
   .is-page-transitioning .page-shell {
     pointer-events: none;
@@ -3944,6 +3964,27 @@
       opacity: 1;
       transition-delay: 0.45s;
     }
+  }
+
+  /* The clicked card settles back to rest (hover off) before its image is lifted out. */
+  .case-card.is-transition-source .case-card-media::after {
+    opacity: 0;
+    transition-duration: 0.35s;
+  }
+
+  .case-card.is-transition-source .case-card-trio-image {
+    transform: translateY(101%);
+    transition-duration: 0.35s;
+  }
+
+  .case-card.is-transition-source .case-card-trio-frame:nth-child(2) .case-card-trio-image {
+    transform: translateY(-101%);
+  }
+
+  .case-card.is-transition-source .case-card-hover-label {
+    opacity: 0;
+    transition-delay: 0s;
+    transition-duration: 0.2s;
   }
 
   @media (prefers-reduced-motion: reduce) {
