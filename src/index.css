@@ -3916,10 +3916,11 @@
     font-size: 1.25rem;
     font-weight: 600;
     letter-spacing: 0.02em;
-    /* The text is underlined; the arrow (1em, so it grows with the text) is not. */
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.2em;
+    /* A line under the text and the arrow together, with room above it. It is
+       only as wide as its content (the layer stretches its children). */
+    align-self: flex-start;
+    padding-bottom: 0.4em;
+    border-bottom: 1px solid currentColor;
     /* Fades in and out only, no movement. */
     opacity: 0;
     transition: opacity 0.6s ease;
