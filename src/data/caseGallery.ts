@@ -56,7 +56,7 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
   },
   'peter-salling': {
     mockupBackground: '#f4f5f6',
-    afterPalette: { imageSrc: '/cases/peter-salling/ipad-i-kunsten-kan-livet-kendes--4-3.webp', imageAlt: 'I kunsten kan livet kendes på Peter Sallings projektside på en iPad', aspectRatio: '4 / 3' },
+    afterPalette: { imageSrc: '/cases/peter-salling/ipad-portrait-i-kunsten-kan-livet-kendes--4-3.webp', imageAlt: 'I kunsten kan livet kendes på Peter Sallings projektside på en iPad', aspectRatio: '4 / 3' },
     // Home page hover: the two phones at the sides, one of the PCs in the middle.
     hoverTrio: [
       { imageSrc: '/cases/peter-salling/iphone-sikkerheden-er-paa-spil--4-3.webp', imageAlt: 'Sikkerheden er på spil på Peter Sallings projektside på en iPhone' },
