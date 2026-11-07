@@ -2966,15 +2966,19 @@
     @apply mt-4xl pb-section-sm lg:mt-5xl lg:pb-section;
   }
 
+  /* The same gap as between the home hero's slides (--image-gap), between
+     images side by side and between rows. */
   .case-detail-gallery {
-    @apply flex flex-col gap-6 lg:gap-8;
+    @apply flex flex-col;
+    gap: var(--image-gap);
   }
 
   .case-detail-gallery-pair {
-    @apply grid grid-cols-1 gap-6 sm:grid-cols-2 lg:gap-8;
+    @apply grid grid-cols-1 sm:grid-cols-2;
+    gap: var(--image-gap);
   }
 
-  /* Square corners, like the case hero image (.case-detail-hero-image). */
+  /* Tiny corners, like the case hero image (.case-detail-hero-image); see --radius-image. */
   .case-detail-gallery-item {
     @apply m-0 overflow-hidden bg-surface shadow-soft;
   }
