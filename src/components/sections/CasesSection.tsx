@@ -21,17 +21,13 @@ const ROW_START = 'top 78%'
 export function CasesSection() {
   const { locale } = useLocale()
   const { cases } = getHomeContent(locale)
-  const sectionRef = useRef<HTMLElement>(null)
-  const introRef = useRef<HTMLDivElement>(null)
   const listTitleRef = useRef<HTMLHeadingElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
-    const section = sectionRef.current
-    const intro = introRef.current
     const listTitle = listTitleRef.current
     const list = listRef.current
-    if (!section || !intro || !listTitle || !list) return
+    if (!listTitle || !list) return
 
     const mm = gsap.matchMedia()
 
@@ -55,9 +51,8 @@ export function CasesSection() {
         return split
       }
 
-      // The intro slides up once the section's top is 60% down the screen,
-      // the heading leading; "Seneste projekter" rises the same way when it
-      // scrolls into view.
+      // "Seneste projekter" rises line by line when it scrolls into view. The
+      // intro above it (heading and text) is plain, static text.
       const slideUp = (targets: Element | NodeListOf<Element>, start: string, trigger: Element) => {
         const split = splitLines(targets)
         gsap.set(split.lines, { yPercent: 125 })
@@ -118,7 +113,6 @@ export function CasesSection() {
         // context.add runs this now and records its tweens in the matchMedia
         // context, so they are reverted with it although they start late.
         context.add(() => {
-          slideUp(intro.querySelectorAll('.home-cases-intro-title, .home-cases-intro-text'), 'top 60%', section)
           slideUp(listTitle, 'top 85%', listTitle)
           rows.forEach(revealRow)
         })
@@ -135,13 +129,12 @@ export function CasesSection() {
 
   return (
     <section
-      ref={sectionRef}
       id="portfolio"
       className="home-cases py-section-sm lg:py-section"
       aria-label={cases.ariaLabel}
     >
       <Container columns>
-        <div ref={introRef} className="home-cases-intro">
+        <div className="home-cases-intro">
           <h2 className="home-cases-intro-title">{cases.intro.title}</h2>
           <div className="home-cases-intro-image-wrapper">
             <img
