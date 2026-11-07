@@ -8,15 +8,25 @@ export interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
    * keeps a section full width even if that content area is narrowed later.
    */
   fullWidth?: boolean
+  /**
+   * Lay the content out on the 12 columns: its children can then use
+   * col-span-* / col-start-* (and lg: variants) directly. Without it the
+   * children flow as before and the content spans the whole container.
+   */
+  columns?: boolean
 }
 
 export const Container = forwardRef<HTMLDivElement, ContainerProps>(function Container(
-  { children, className = '', fullWidth = false, ...props },
+  { children, className = '', fullWidth = false, columns = false, ...props },
   ref,
 ) {
   return (
     <div ref={ref} className={`site-container site-grid ${className}`.trim()} {...props}>
-      <div className={fullWidth ? 'site-grid-full' : 'site-grid-content'}>{children}</div>
+      <div
+        className={`${fullWidth ? 'site-grid-full' : 'site-grid-content'}${columns ? ' site-grid-subgrid' : ''}`}
+      >
+        {children}
+      </div>
     </div>
   )
 })

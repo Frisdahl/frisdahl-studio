@@ -150,7 +150,7 @@
   --page-max-width: calc(var(--content-max-width) + 2 * var(--page-gutter));
   --site-grid-margin: var(--page-gutter);
   --site-max-width: var(--page-max-width);
-  --site-grid-gap: 1rem;
+  --site-grid-gap: 1rem; /* the gutter between columns; 1.25rem from 901px, below */
   --site-grid-width: min(
     calc(var(--site-max-width) - 2 * var(--site-grid-margin)),
     calc(100vw - 2 * var(--site-grid-margin))
@@ -272,6 +272,12 @@
   }
 }
 
+@media (min-width: 901px) {
+  :root {
+    --site-grid-gap: 1.25rem;
+  }
+}
+
 @media (min-width: 1024px) {
   :root {
     --content-max-width: 120rem;
@@ -292,10 +298,16 @@
     column-gap: var(--site-grid-gap);
   }
 
-  @media (min-width: 901px) {
-    .site-grid {
-      column-gap: 1.25rem;
-    }
+  /* Opt-in (Container with `columns`): the content area takes over the 12
+     columns of its container, so its children can be placed on them directly
+     with col-span-* / col-start-* (and the lg: variants). */
+  .site-grid-subgrid {
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  .site-grid-subgrid > * {
+    grid-column: 1 / -1;
   }
 
   .site-grid-content {
@@ -3774,29 +3786,32 @@
      other column. */
   .case-card {
     @apply grid grid-cols-1;
-    --case-media-width: 58%;
-    /* Space between the image and the text. */
-    --case-gap: clamp(2.5rem, 5vw, 6rem);
   }
 
   @media (min-width: 1024px) {
+    /* On the 12-column grid: the image takes 7 columns (58%), the text 4, with
+       one empty column between; even rows mirror it. */
     .case-card {
-      grid-template-columns: var(--case-media-width) minmax(0, 1fr);
-      grid-template-areas: 'media meta';
-      column-gap: var(--case-gap);
-    }
-
-    .case-card:nth-child(even) {
-      grid-template-columns: minmax(0, 1fr) var(--case-media-width);
-      grid-template-areas: 'meta media';
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--site-grid-gap);
     }
 
     .case-card-media-link {
-      grid-area: media;
+      grid-column: 1 / span 7;
+      grid-row: 1;
     }
 
     .case-card-meta {
-      grid-area: meta;
+      grid-column: 9 / span 4;
+      grid-row: 1;
+    }
+
+    .case-card:nth-child(even) .case-card-media-link {
+      grid-column: 6 / span 7;
+    }
+
+    .case-card:nth-child(even) .case-card-meta {
+      grid-column: 1 / span 4;
     }
   }
 
@@ -4579,11 +4594,12 @@
   /* Four columns (two on tablets, one on phones), each under a small label.
      mt-auto keeps them low, just above the wordmark. */
   .site-footer-columns {
-    @apply mt-auto grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-10;
+    @apply mt-auto grid gap-y-10 sm:grid-cols-2 lg:grid-cols-12;
+    column-gap: var(--site-grid-gap);
   }
 
   .site-footer-column {
-    @apply flex min-w-0 flex-col items-start gap-3;
+    @apply flex min-w-0 flex-col items-start gap-3 lg:col-span-3;
   }
 
   .site-footer-column-title {

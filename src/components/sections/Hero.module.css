@@ -61,9 +61,19 @@
 }
 
 @media (min-width: 900px) {
+  /* 12-column grid: the heading spans 8 columns, the intro and button the last 4. */
   .inner {
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--site-grid-gap);
     align-items: end;
+  }
+
+  .title {
+    grid-column: 1 / span 8;
+  }
+
+  .aside {
+    grid-column: 9 / -1;
   }
 }
 

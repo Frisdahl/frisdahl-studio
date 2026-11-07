@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { Footer, Navbar, PageTransition, ScrollToTop } from './components/layout'
 import { ContactDrawerProvider } from './context/ContactDrawerProvider'
 import { LocaleProvider } from './context/LocaleProvider'
+import { GridOverlay } from './components/ui/GridOverlay'
 import {
   CASES_PATH,
   CONTACT_PATH,
@@ -37,6 +38,7 @@ function App() {
       <ContactDrawerProvider>
         <BrowserRouter>
           <ScrollToTop />
+          {import.meta.env.DEV && <GridOverlay />}
           <Navbar />
           <PageTransition />
           {/* The page itself: Navbar scales and slides this aside to reveal the menu. */}
