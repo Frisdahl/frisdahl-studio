@@ -105,7 +105,7 @@ const caseDetails = {
           'En redaktionel og filmisk portfolio, hvor filmene er i centrum, og hvor Peter selv styrer indholdet i et indbygget admin-panel.',
         sliderAriaLabel: 'Automatisk gennemløb af Peter Salling case-billeder',
         slides: [
-          { imageSrc: '/cases/peter-salling/main-fit--16-9.webp', imageAlt: 'Peter Sallings Alt jeg forventede-side på en MacBook på et glasbord' },
+          { imageSrc: '/cases/peter-salling/main-higgs--16-9.webp', imageAlt: 'Peter Sallings Alt jeg forventede-side på en MacBook på et glasbord' },
         ],
       },
       columns: [
@@ -253,7 +253,7 @@ const caseDetails = {
           'An editorial, cinematic portfolio that puts the films first, with content Peter manages himself in a built-in admin panel.',
         sliderAriaLabel: 'Automatic slideshow of Peter Salling case images',
         slides: [
-          { imageSrc: '/cases/peter-salling/main-fit--16-9.webp', imageAlt: 'Peter Salling Alt jeg forventede page on a MacBook on a glass table' },
+          { imageSrc: '/cases/peter-salling/main-higgs--16-9.webp', imageAlt: 'Peter Salling Alt jeg forventede page on a MacBook on a glass table' },
         ],
       },
       columns: [
