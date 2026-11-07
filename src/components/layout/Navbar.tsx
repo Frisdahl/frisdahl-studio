@@ -7,6 +7,7 @@ import { getNavigation } from '../../data/navigation'
 import { CASES_PATH, CONTACT_PATH, toAppHref } from '../../lib/routes'
 import { lockScroll, prefersReducedMotion, unlockScroll } from '../../lib/scroll'
 import { ContactButton, Container, LanguageSwitcher, RollLabel } from '../ui'
+import { useHeaderInk } from '../../hooks/useHeaderInk'
 import { HeaderBrand } from './HeaderBrand'
 
 interface MenuToggleIconProps {
@@ -42,6 +43,7 @@ export function Navbar() {
   const headerRef = useRef<HTMLElement>(null)
   const { locale } = useLocale()
   const { pathname, hash } = useLocation()
+  useHeaderInk(pathname)
   const { items, menuLinks, navAriaLabel, menuOpen, menuClose } = getNavigation(locale)
   const { logoLabel } = getFooterContent(locale)
   const contactLabel =
@@ -189,7 +191,6 @@ export function Navbar() {
         </div>
       </nav>
 
-      <div className="site-header-blur" aria-hidden="true" />
       <header ref={headerRef} className="site-header">
         <Container fullWidth>
           <div className="site-header-bar">
@@ -197,7 +198,7 @@ export function Navbar() {
 
             <div className="site-header-actions">
               {/* Holds the contact button's place; the real one is in the
-                  layer below, outside the blend. */}
+                  layer below, in its own layer. */}
               <div className="header-placeholder" aria-hidden="true">
                 <ContactButton href={CONTACT_PATH}>{contactLabel}</ContactButton>
               </div>
@@ -216,8 +217,8 @@ export function Navbar() {
           </div>
         </Container>
       </header>
-      {/* The contact button keeps its own colours instead of inverting with
-          the header, so it sits in a matching fixed layer above it. */}
+      {/* The contact button keeps its own colours instead of following the
+          header's ink, so it sits in a matching fixed layer above it. */}
       <div className="site-header site-header-cta">
         <Container fullWidth>
           <div className="site-header-bar">
