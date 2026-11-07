@@ -12,7 +12,7 @@ export function ContactPage() {
   const { headingLine1, headingLine2 } = getContactPageContent(locale)
 
   return (
-    <main className="page-surface contact-page">
+    <main className="page-surface contact-page" data-header-theme="dark">
       <PageMeta title={titles.contact} />
       <Container>
         <div className="contact-page-grid">
