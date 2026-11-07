@@ -147,12 +147,13 @@ export function CasesSection() {
     })
 
     // Desktop: one project at a time. The list is pinned to the screen (the
-    // images and texts of all projects sit on top of each other, the text
-    // vertically centred on the image) and scrolling steps through them: the
-    // next image wipes down over the current one from the top, and once it has
-    // reached the bottom the current text slides up and out while the next
-    // slides up in its place. All of it is one scrubbed timeline, so it runs
-    // in reverse when scrolling back. Reduced motion keeps the plain list.
+    // images and texts of all projects sit on top of each other, the text on
+    // the right, vertically centred on the image) and scrolling steps through
+    // them: the next image wipes down over the current one from the top, and
+    // once it fills the full height the current text slides up and out while
+    // the next slides up in its place, a timed animation that doesn't follow
+    // the scroll. Scrolling back reverses both. Reduced motion keeps the
+    // plain list.
     mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', (context) => {
       const cards = Array.from(list.querySelectorAll<HTMLElement>('.case-card'))
       const cancelIntro = animateIntro(context)
@@ -175,26 +176,61 @@ export function CasesSection() {
         gsap.set(items, { yPercent: 150 })
       })
 
-      // Timeline units: each step holds the current project, wipes the next
-      // image in, then swaps the texts.
-      const STEP = 1.7
-      const HOLD = 0.5
-      const WIPE = 0.6
-      const TEXT_OUT = 0.3
-      const TEXT_STAGGER = 0.05
-      const END_HOLD = 0.4
+      // Scrubbed timeline, in units: each step holds the current project, then
+      // wipes the next image down over it. Only the images follow the scroll
+      // (smoothed by the scrub lag); the texts are timed, see swapText below.
+      const HOLD = 0.6
+      const WIPE = 0.8
+      const STEP = HOLD + WIPE
+      const END_HOLD = 0.5
       const total = (parts.length - 1) * STEP + END_HOLD
       // Scroll distance per timeline unit, as a share of the screen height.
-      const SCREEN_PER_UNIT = 0.55
+      const SCREEN_PER_UNIT = 0.6
+
+      // Which project's text is showing. It changes when a wipe has filled the
+      // image's full height (or, scrolling back, stops filling it), and the
+      // swap then plays in full whatever the scroll does next.
+      let shown = 0
+      let textSwap: gsap.core.Timeline | null = null
+
+      const swapText = (from: number, to: number) => {
+        const direction = to > from ? 1 : -1
+        const out = parts[from]
+        const incoming = parts[to]
+        textSwap?.kill()
+        // Anything but the two involved is hidden; the incoming text waits
+        // below (or above, when scrolling back) its masks.
+        parts.forEach((part, index) => {
+          if (index !== from && index !== to) gsap.set(part.meta, { autoAlpha: 0 })
+        })
+        gsap.set(incoming.meta, { autoAlpha: 1 })
+        gsap.set(incoming.items, { yPercent: 150 * direction })
+
+        textSwap = gsap
+          .timeline()
+          .to(out.items, { yPercent: -150 * direction, duration: 0.5, stagger: 0.06, ease: 'power2.in' })
+          .set(out.meta, { autoAlpha: 0 })
+          .to(incoming.items, { yPercent: 0, duration: 0.7, stagger: 0.08, ease: 'power3.out' }, '>-0.05')
+        shown = to
+      }
 
       const timeline = gsap.timeline({
         defaults: { ease: 'none' },
+        onUpdate: () => {
+          const time = timeline.time()
+          let filled = 0
+          parts.forEach((_, index) => {
+            if (index > 0 && time >= (index - 1) * STEP + HOLD + WIPE - 0.001) filled = index
+          })
+          if (filled !== shown) swapText(shown, filled)
+        },
         scrollTrigger: {
           trigger: list,
           start: () => `top ${document.querySelector('.site-header')?.getBoundingClientRect().height ?? 76}px`,
           end: () => `+=${total * window.innerHeight * SCREEN_PER_UNIT}`,
           pin: true,
-          scrub: 0.6,
+          // A long catch-up, so the wipe glides however the wheel steps.
+          scrub: 1.2,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
@@ -202,43 +238,16 @@ export function CasesSection() {
 
       parts.forEach((next, index) => {
         if (index === 0) return
-        const current = parts[index - 1]
         const wipeAt = (index - 1) * STEP + HOLD
-        const textAt = wipeAt + WIPE
-
-        timeline.to(next.media, { clipPath: 'inset(0% 0% 0% 0%)', duration: WIPE, ease: 'power2.inOut' }, wipeAt)
+        timeline.to(next.media, { clipPath: 'inset(0% 0% 0% 0%)', duration: WIPE, ease: 'power1.inOut' }, wipeAt)
         if (next.image) {
           timeline.fromTo(
             next.image,
             { yPercent: -6, scale: 1.1 },
-            { yPercent: 0, scale: 1, duration: WIPE, ease: 'power2.inOut', immediateRender: false },
+            { yPercent: 0, scale: 1, duration: WIPE, ease: 'power1.inOut', immediateRender: false },
             wipeAt,
           )
         }
-        timeline.to(
-          current.items,
-          { yPercent: -150, duration: TEXT_OUT, stagger: TEXT_STAGGER, ease: 'power2.in' },
-          textAt,
-        )
-        // The outgoing text block is hidden once its lines are out, the next
-        // one shown just before its lines come up.
-        timeline.fromTo(
-          current.meta,
-          { autoAlpha: 1 },
-          { autoAlpha: 0, duration: 0.01, immediateRender: false },
-          textAt + TEXT_OUT + TEXT_STAGGER * current.items.length,
-        )
-        timeline.fromTo(
-          next.meta,
-          { autoAlpha: 0 },
-          { autoAlpha: 1, duration: 0.01, immediateRender: false },
-          textAt + TEXT_OUT,
-        )
-        timeline.to(
-          next.items,
-          { yPercent: 0, duration: 0.4, stagger: 0.06, ease: 'power3.out' },
-          textAt + TEXT_OUT,
-        )
       })
       // A short hold on the last project before the pin releases.
       timeline.to({}, { duration: END_HOLD }, total - END_HOLD)
@@ -248,6 +257,11 @@ export function CasesSection() {
 
       return () => {
         cancelIntro()
+        textSwap?.kill()
+        gsap.set(
+          parts.flatMap(({ meta, items }) => [meta, ...items]),
+          { clearProps: 'all' },
+        )
         list.classList.remove('is-stage')
       }
     })
