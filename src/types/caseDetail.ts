@@ -89,6 +89,8 @@ export interface CaseDetailGallery {
   /** Replaces horizontalTop with a two-column pair, shown above the columns
       after introPair. horizontalTop still supplies the next-case preview image. */
   horizontalTopPair?: [CaseDetailGalleryImage, CaseDetailGalleryImage]
+  /** True when horizontalTop only supplies the next-case preview image and is not shown in the gallery. */
+  horizontalTopHidden?: boolean
   /** Optional: a case can leave the top pair out. */
   verticalPairTop?: [CaseDetailGalleryImage, CaseDetailGalleryImage]
   /** Optional, like horizontalBottom: without both, the gallery ends after horizontalTop. */

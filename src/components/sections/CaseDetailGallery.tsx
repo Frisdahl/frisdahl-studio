@@ -77,7 +77,7 @@ export function CaseDetailGallery({ gallery }: CaseDetailGalleryProps) {
           )}
 
           {/* A horizontalTopPair is shown above the columns (CaseDetailIntroPair). */}
-          {!gallery.horizontalTopPair && (
+          {!gallery.horizontalTopPair && !gallery.horizontalTopHidden && (
             <GalleryFigure image={gallery.horizontalTop} variant="horizontal" />
           )}
 

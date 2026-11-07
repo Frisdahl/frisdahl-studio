@@ -105,7 +105,7 @@ const caseDetails = {
           'En redaktionel og filmisk portfolio, hvor filmene er i centrum, og hvor Peter selv styrer indholdet i et indbygget admin-panel.',
         sliderAriaLabel: 'Automatisk gennemløb af Peter Salling case-billeder',
         slides: [
-          { imageSrc: '/cases/peter-salling/official--16-10.webp', imageAlt: 'Peter Sallings forside med Alt jeg forventede på en skærm' },
+          { imageSrc: '/cases/peter-salling/macbook-glass--16-9.webp', imageAlt: 'Peter Sallings Alt jeg forventede-side på en MacBook på et glasbord' },
         ],
       },
       columns: [
@@ -253,7 +253,7 @@ const caseDetails = {
           'An editorial, cinematic portfolio that puts the films first, with content Peter manages himself in a built-in admin panel.',
         sliderAriaLabel: 'Automatic slideshow of Peter Salling case images',
         slides: [
-          { imageSrc: '/cases/peter-salling/official--16-10.webp', imageAlt: 'Peter Salling homepage featuring Alt jeg forventede on a display' },
+          { imageSrc: '/cases/peter-salling/macbook-glass--16-9.webp', imageAlt: 'Peter Salling Alt jeg forventede page on a MacBook on a glass table' },
         ],
       },
       columns: [
@@ -682,6 +682,40 @@ function getCaseHeroMeta(locale: Locale, caseSlug: string): CaseDetailHeroMeta[]
   })
 
   return meta
+}
+
+/** One image of a case page, for the home page's hover preview. */
+export interface CasePreviewImage {
+  imageSrc: string
+  imageAlt: string
+}
+
+/**
+ * Every image on a case's page, in page order (hero first), without
+ * duplicates: what the home page flashes through when a project is hovered.
+ */
+export function getCasePreviewImages(locale: Locale, caseSlug: string): CasePreviewImage[] {
+  const detail = getCaseDetail(locale, caseSlug)
+  if (!detail) return []
+  const gallery = detail.gallery
+  const images = [
+    ...detail.hero.slides,
+    ...(gallery.introPair ?? []),
+    ...(gallery.horizontalTopHidden ? [] : (gallery.horizontalTopPair ?? [gallery.horizontalTop])),
+    ...(gallery.verticalPairTop ?? []),
+    ...(gallery.bottomWide ? [gallery.bottomWide] : []),
+    ...(gallery.verticalPairBottom ?? []),
+    ...(gallery.horizontalBottom ? [gallery.horizontalBottom] : []),
+    ...(gallery.horizontalBottomPair ?? []),
+  ]
+  const seen = new Set<string>()
+  const result: CasePreviewImage[] = []
+  for (const { imageSrc, imageAlt } of images) {
+    if (!imageSrc || seen.has(imageSrc)) continue
+    seen.add(imageSrc)
+    result.push({ imageSrc, imageAlt })
+  }
+  return result
 }
 
 /** A case's main image: the first slide of its hero, the image at the top of its page. */

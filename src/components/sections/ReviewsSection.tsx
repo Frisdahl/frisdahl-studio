@@ -2,12 +2,10 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'framer-motion'
 import { useLocale } from '../../context/LocaleContext'
 import { getReviewsContent } from '../../data/reviews'
-import { ArrowIcon, MaskedLines } from '../ui'
+import { ArrowIcon, Container, MaskedLines } from '../ui'
 
 /** Each review shows for 15 seconds before the carousel moves on. */
 const REVIEW_DURATION_MS = 15000
-
-const pad = (value: number) => String(value).padStart(2, '0')
 
 /** The person fades out sliding up, and in again sliding down from above. */
 const personVariants: Variants = {
@@ -28,11 +26,11 @@ const swapVariants: Variants = {
 }
 
 /**
- * Testimonial carousel: arrows and a 01/03 counter above the quote with a
- * 15-second progress bar under it (full width of the quote) on the left; the
- * reviewer's circular portrait with name, role and company on the right.
- * Switching reviews slides the quote's lines up and the next ones down from
- * above; the progress bar just restarts, and the person fades between.
+ * Testimonial carousel on the 12-column grid. Left: the arrows (on circles). Right: the quote with a 15-second progress bar
+ * under it, and under that, at the quote's left edge, the reviewer's circular
+ * portrait with name, role and company. Switching reviews slides the quote's
+ * lines up and the next ones down from above; the progress bar just restarts,
+ * and the person fades between.
  */
 export function ReviewsSection() {
   const { locale } = useLocale()
@@ -122,63 +120,61 @@ export function ReviewsSection() {
         loading="lazy"
         decoding="async"
       />
-      <p className="reviews-name">{review.name}</p>
-      <p className="reviews-role">
-        {review.role} · {review.company}
-      </p>
+      <div className="reviews-person-text">
+        <p className="reviews-name">{review.name}</p>
+        <p className="reviews-role">
+          {review.role} · {review.company}
+        </p>
+      </div>
     </>
   )
 
   return (
     <section className="reviews-section py-section-sm lg:py-section" aria-label={ariaLabel}>
-      {/* Same narrower width as the added-value section above (82rem). */}
-      <div className="reviews-inner">
-        <div className="reviews-controls">
-          <button
-            type="button"
-            className="reviews-arrow"
-            aria-label={previousLabel}
-            onClick={() => goTo(index - 1)}
-          >
-            <ArrowIcon rotate={180} />
-          </button>
-          <button
-            type="button"
-            className="reviews-arrow"
-            aria-label={nextLabel}
-            onClick={() => goTo(index + 1)}
-          >
-            <ArrowIcon />
-          </button>
-          <p className="reviews-counter">
-            {pad(index + 1)}/{pad(count)}
-          </p>
-        </div>
+      <Container columns>
+        <div className="reviews-grid">
+          <div className="reviews-controls">
+            <button
+              type="button"
+              className="reviews-arrow"
+              aria-label={previousLabel}
+              onClick={() => goTo(index - 1)}
+            >
+              <ArrowIcon rotate={180} />
+            </button>
+            <button
+              type="button"
+              className="reviews-arrow"
+              aria-label={nextLabel}
+              onClick={() => goTo(index + 1)}
+            >
+              <ArrowIcon />
+            </button>
+          </div>
 
-        {/* One presence for both sides: quote lines and person switch together. */}
-        <AnimatePresence mode="wait">
-          <motion.div key={index} className="reviews-swap" variants={swapVariants} initial="hidden" animate="show" exit="exit">
-            <div className="reviews-grid">
-              <div className="reviews-main">
-                <div className="reviews-body">
-                  {/* Hidden copies of every quote at the same width and type;
-                      the tallest one sets the height reserved below. */}
-                  <div ref={probesRef} className="reviews-quote-probes" aria-hidden="true">
-                    {reviews.map((item) => (
-                      <div key={item.quote} data-probe className="reviews-quote">
-                        {`“${item.quote}”`}
-                      </div>
-                    ))}
-                  </div>
-                  <blockquote
-                    className="reviews-quote"
-                    style={quoteHeight ? { minHeight: `${quoteHeight}px` } : undefined}
-                  >
-                    <MaskedLines key={index} text={`“${review.quote}”`} />
-                  </blockquote>
-                  <div className="reviews-progress" role="presentation" aria-hidden="true">
-                    <span className="reviews-progress-fill" style={{ transform: `scaleX(${fill})` }} />
-                  </div>
+          {/* One presence for both: the quote lines and the person switch
+              together. The wrapper has no box (display: contents), so the quote
+              and the person sit directly on the grid. */}
+          <AnimatePresence mode="wait">
+            <motion.div key={index} className="reviews-swap" variants={swapVariants} initial="hidden" animate="show" exit="exit">
+              <div className="reviews-body">
+                {/* Hidden copies of every quote at the same width and type;
+                    the tallest one sets the height reserved below. */}
+                <div ref={probesRef} className="reviews-quote-probes" aria-hidden="true">
+                  {reviews.map((item) => (
+                    <div key={item.quote} data-probe className="reviews-quote">
+                      {`“${item.quote}”`}
+                    </div>
+                  ))}
+                </div>
+                <blockquote
+                  className="reviews-quote"
+                  style={quoteHeight ? { minHeight: `${quoteHeight}px` } : undefined}
+                >
+                  <MaskedLines key={index} text={`“${review.quote}”`} />
+                </blockquote>
+                <div className="reviews-progress" role="presentation" aria-hidden="true">
+                  <span className="reviews-progress-fill" style={{ transform: `scaleX(${fill})` }} />
                 </div>
               </div>
 
@@ -189,10 +185,10 @@ export function ReviewsSection() {
                   {person}
                 </motion.div>
               )}
-            </div>
-          </motion.div>
-        </AnimatePresence>
-      </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </Container>
     </section>
   )
 }

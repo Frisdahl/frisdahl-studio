@@ -25,8 +25,8 @@ export function HomePage() {
         <Hero />
         <CasesSection />
       </div>
-      <AddedValueSection />
       <ReviewsSection />
+      <AddedValueSection />
       <SplitPanelSection content={splitPanel} />
       <FaqSection content={faq} />
     </main>

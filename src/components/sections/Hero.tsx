@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useLocale } from '../../context/LocaleContext'
 import { CASES_PATH } from '../../lib/routes'
 import { responsiveImageProps } from '../../lib/responsiveImage'
-import { ArrowChipButton } from '../ui'
+import { ArrowChipButton, Container } from '../ui'
 import styles from './Hero.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -45,15 +45,12 @@ interface HeroSlide {
 }
 
 const heroSlides: HeroSlide[] = [
-  { imageSrc: '/images/hero/peter-salling-display.webp', alt: { da: 'Peter Sallings forside med Alt jeg forventede på en skærm', en: 'Peter Salling homepage featuring Alt jeg forventede on a display' } },
-  // 8 s seamless loop (closed lid -> page animates in -> lid closes); the poster is its first frame.
-  { imageSrc: '/images/hero/rethink-furniture-macbook.webp', videoSrc: '/images/hero/rethink-furniture-macbook.mp4', alt: { da: 'Landingsside-koncept for Rethink Furniture på en MacBook, der åbner og lukker', en: 'Rethink Furniture landing page concept on a MacBook that opens and closes' } },
-  { imageSrc: '/images/hero/noma-living-skaerm.webp', alt: { da: 'Landingsside-koncept for Noma Living på en skærm', en: 'Noma Living landing page concept on a display' } },
-  { imageSrc: '/images/hero/auren-mobil.webp', alt: { da: 'Landingsside-koncept for Auren på en mobil op ad en lerkrukke', en: 'Auren landing page concept on a phone against a clay pot' } },
-  { imageSrc: '/images/hero/id-kort-frisdahl-studio.webp', alt: { da: 'Rødt Frisdahl Studio-id-kort i en sort nøglesnor på en stålblok', en: 'Red Frisdahl Studio ID card on a black lanyard on a steel block' } },
-  { imageSrc: '/images/hero/montra-elina-skaerme.webp', alt: { da: 'Landingsside-koncepter for Montra og Elina Vestergaard på to skærme', en: 'Montra and Elina Vestergaard landing page concepts on two displays' } },
-  { imageSrc: '/images/hero/poster-frisdahl-studio-3.webp', alt: { da: 'Rød Frisdahl Studio-plakat på en betonvæg i sollys', en: 'Red Frisdahl Studio poster on a concrete wall in sunlight' } },
-  { imageSrc: '/images/hero/montra-mobil.webp', alt: { da: 'Landingsside-koncept for Montra på en mobil i en hånd', en: 'Montra landing page concept on a phone held in a hand' } },
+  { imageSrc: '/images/hero/hero-3-rethink-furniture-macbook.webp', alt: { da: 'Landingsside-koncept for Rethink Furniture på en MacBook på en polstret stol', en: 'Rethink Furniture landing page concept on a MacBook on an upholstered chair' } },
+  { imageSrc: '/images/hero/hero-2-montra-iphone.webp', alt: { da: 'Landingsside-koncept for Montra på en iPhone op ad en riflet væg', en: 'Montra landing page concept on an iPhone leaning against a fluted wall' } },
+  { imageSrc: '/images/hero/hero-1-noma-living-macbook.webp', alt: { da: 'Landingsside-koncept for Noma Living på en MacBook på en sofa', en: 'Noma Living landing page concept on a MacBook on a sofa' } },
+  { imageSrc: '/images/hero/hero-4-auren-iphone.webp', alt: { da: 'Landingsside-koncept for Auren på en iPhone på en grå puf', en: 'Auren landing page concept on an iPhone on a grey pouf' } },
+  { imageSrc: '/images/hero/hero-5-elina-vestergaard-macbook.webp', alt: { da: 'Landingsside-koncept for Elina Vestergaard på en MacBook på en stenblok', en: 'Elina Vestergaard landing page concept on a MacBook on a stone block' } },
+  { imageSrc: '/images/hero/hero-6-noma-living-iphone.webp', alt: { da: 'Landingsside-koncept for Noma Living på en iPhone i et hjørne', en: 'Noma Living landing page concept on an iPhone in a corner' } },
 ]
 
 /** Carousel drift in px per second (right to left). */
@@ -424,7 +421,7 @@ export function Hero() {
     <section ref={heroRef} className={styles.hero} aria-labelledby="home-hero-title">
       <div ref={shadeRef} className={styles.shade} aria-hidden="true" />
       <div ref={innerRef} className={styles.content}>
-        <div className={styles.inner}>
+        <Container columns contentClassName={styles.inner}>
           <h1 id="home-hero-title" className={styles.title}>
             {content.headingLead}
             <br />
@@ -443,7 +440,7 @@ export function Hero() {
               href={CASES_PATH}
             />
           </div>
-        </div>
+        </Container>
 
         {/* Portrait slides drift from right to left and can be dragged; the
             second group is a copy so the loop is seamless (see the effect above). */}

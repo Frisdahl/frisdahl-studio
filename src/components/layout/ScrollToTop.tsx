@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
-import { resetWindowScroll, scrollToTarget } from '../../lib/scroll'
+import { getSmoothScroll, resetWindowScroll, scrollToTarget } from '../../lib/scroll'
 
 export function ScrollToTop() {
   const { pathname, hash } = useLocation()
@@ -16,6 +16,9 @@ export function ScrollToTop() {
     if (target) {
       if (changedPage) resetWindowScroll()
       const frame = requestAnimationFrame(() => {
+        // Lenis still holds the previous page's height; re-measure so the
+        // scroll is not capped short of the target.
+        getSmoothScroll()?.resize()
         scrollToTarget(target, { immediate: changedPage })
       })
       return () => cancelAnimationFrame(frame)

@@ -60,17 +60,18 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
   },
   'peter-salling': {
     introPair: [
-      { imageSrc: '/cases/peter-salling/macbook-air-sikkerheden-er-paa-spil--4-3.webp', imageAlt: 'Peter Sallings forside med Sikkerheden er på spil på en MacBook Air', aspectRatio: '4 / 3' },
-      { imageSrc: '/cases/peter-salling/macbook-pro-live-life-in-colour--4-3.webp', imageAlt: 'Live Life in Colour på Peter Sallings Commercial-side på en MacBook Pro', aspectRatio: '4 / 3' },
+      { imageSrc: '/cases/peter-salling/macbook-glass-sikkerheden-er-paa-spil--4-3.webp', imageAlt: 'Peter Sallings forside med Sikkerheden er på spil på en MacBook på et glasbord', aspectRatio: '4 / 3' },
+      { imageSrc: '/cases/peter-salling/macbook-glass-live-life-in-colour--4-3.webp', imageAlt: 'Live Life in Colour på Peter Sallings Commercial-side på en MacBook på et glasbord', aspectRatio: '4 / 3' },
     ],
     verticalPairTop: [
-      { imageSrc: '/cases/peter-salling/mobiler-presse-priser--4-3.webp', imageAlt: 'Premierebilleder, anmeldelse og festivalpriser på to iPhones', aspectRatio: '4 / 3', transparent: true },
-      { imageSrc: '/cases/peter-salling/mobiler-forside-strandet--4-3.webp', imageAlt: 'Forsiden og Strandet på to iPhones', aspectRatio: '4 / 3', transparent: true },
+      { imageSrc: '/cases/peter-salling/iphone-live-life-glass--4-3.webp', imageAlt: 'Live Life in Colour på Peter Sallings projektside på en iPhone på et glasbord', aspectRatio: '4 / 3' },
+      { imageSrc: '/cases/peter-salling/iphone-green-landsbyen--4-3.webp', imageAlt: 'Landsbyen på Peter Sallings projektside på en iPhone på en sort stol', aspectRatio: '4 / 3' },
     ],
+    horizontalTopHidden: true,
     horizontalTop: {
-      imageSrc: '/cases/peter-salling/iphone-projekt-kamma--16-10.webp',
-      imageAlt: 'Peter Sallings projektside for kortfilmen Kamma på en iPhone',
-      aspectRatio: '16 / 10',
+      imageSrc: '/cases/peter-salling/iphone-live-life-glass--16-9.webp',
+      imageAlt: 'Live Life in Colour på Peter Sallings projektside på en iPhone på et glasbord',
+      aspectRatio: '16 / 9',
     },
   },
   'det-kollektive-klaedeskab': {

@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import { Footer, Navbar, PageTransition, ScrollToTop } from './components/layout'
+import { Footer, Navbar, PageTransition, ScrollToTop, SmoothScroll } from './components/layout'
 import { ContactDrawerProvider } from './context/ContactDrawerProvider'
 import { LocaleProvider } from './context/LocaleProvider'
 import { GridOverlay } from './components/ui/GridOverlay'
@@ -37,6 +37,7 @@ function App() {
     <LocaleProvider>
       <ContactDrawerProvider>
         <BrowserRouter>
+          <SmoothScroll />
           <ScrollToTop />
           {import.meta.env.DEV && <GridOverlay />}
           <Navbar />

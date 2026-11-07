@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "lenis/dist/lenis.css";
 /* Type: Manrope (SIL Open Font License 1.1), self-hosted through Fontsource as
    a single variable font covering weights 200–800. It is the one typeface for
    the whole site; the former heading font and the (never shipped) body font
@@ -156,6 +157,10 @@
     calc(100vw - 2 * var(--site-grid-margin))
   );
   --site-grid-columns: 12;
+  /* The page's column template, declared once. Blocks that are grid items of the
+     page grid use `grid-template-columns: subgrid` (and inherit the gap); the ones
+     that can't (the pinned stage, the footer, the pricing layout) use this. */
+  --site-grid-template: repeat(var(--site-grid-columns), minmax(0, 1fr));
   /* Content column (Container without fullWidth). All sections share the full
      container width, so this spans all 12 columns; a section that needs a
      narrower column can override these two tokens locally. */
@@ -196,6 +201,15 @@
     scrollbar-width: none;
     /* The canvas behind overscroll matches the pages. */
     background-color: var(--color-background);
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
   }
 
   /* Page scrolling frozen while the menu is open or a page transition runs. */
@@ -294,7 +308,7 @@
 
   .site-grid {
     display: grid;
-    grid-template-columns: repeat(var(--site-grid-columns), minmax(0, 1fr));
+    grid-template-columns: var(--site-grid-template);
     column-gap: var(--site-grid-gap);
   }
 
@@ -306,7 +320,8 @@
     grid-template-columns: subgrid;
   }
 
-  .site-grid-subgrid > * {
+  /* :where keeps this at zero specificity, so a block's own grid-column wins. */
+  :where(.site-grid-subgrid) > * {
     grid-column: 1 / -1;
   }
 
@@ -2057,8 +2072,8 @@
 
   .pricing-hero-grid-layout {
     display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: 1rem;
+    grid-template-columns: var(--site-grid-template);
+    column-gap: var(--site-grid-gap);
   }
 
   .pricing-hero-grid-content {
@@ -2085,8 +2100,8 @@
   .pricing-cards-grid {
     grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 1rem;
+    grid-template-columns: subgrid;
+    row-gap: var(--site-grid-gap);
     @apply m-0 list-none p-0;
   }
 
@@ -2680,25 +2695,39 @@
   /* Case intro: the client name, its keyword row right under it, then the
      hero image, starting a little above the middle of the first screen. */
   .case-detail-hero-intro {
-    padding-top: calc(var(--site-header-height) + clamp(3rem, 12svh, 8rem));
+    /* Same gap under the header as the home hero. */
+    padding-top: calc(var(--site-header-height) + clamp(1.5rem, 4vh, 2.5rem));
+  }
+
+  @media (min-width: 1024px) {
+    .case-detail-hero-intro {
+      padding-top: calc(var(--site-header-height) + clamp(1.75rem, 4vh, 3.5rem));
+    }
   }
 
   .case-detail-hero-name {
     @apply text-center text-primary;
-    font-size: clamp(3rem, 9vw, 8rem);
+    /* Same size as the home hero title (Hero.module.css .title). */
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
     font-weight: var(--heading-weight);
-    line-height: 0.95;
-    letter-spacing: -0.04em;
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+  }
+
+  @media (max-width: 1023px) {
+    .case-detail-hero-name {
+      letter-spacing: -0.03em;
+    }
   }
 
   /* Keywords spread edge to edge with equal gaps between them. */
   .case-detail-hero-meta {
-    @apply mt-12 grid grid-cols-2 gap-x-6 gap-y-md lg:flex lg:items-start lg:justify-between;
+    @apply mt-4 grid grid-cols-2 gap-x-6 gap-y-md lg:flex lg:items-start lg:justify-between;
   }
 
   .case-detail-hero-image {
     @apply mt-xl w-full overflow-hidden;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 16 / 9;
     border-radius: var(--radius-control-sm);
   }
 
@@ -2900,17 +2929,24 @@
     @apply relative z-[1] pb-section-sm lg:pb-section;
   }
 
+  /* Grey panel behind the swatches only: same corners as the swatches, and the
+     same padding as the gap between them. */
+  .case-detail-palette-panel {
+    @apply self-start rounded-control-sm p-2 sm:p-3;
+    background-color: var(--color-background-soft);
+  }
+
   /* Bento on a 6 × 4 grid with the letter grid's footprint (7 × 4 squares,
      so a 7:4 box, edge to edge): the main colour (first swatch) is 4 wide
      over three rows, the next three stack beside it, and the last two split
      the bottom row. All four rows share the height equally. Phones use two
      columns: the main colour across the top, the rest in pairs. */
   .case-detail-palette-swatches {
-    @apply grid grid-cols-2 gap-3 self-start sm:aspect-[7/4] sm:grid-cols-6 sm:grid-rows-4 sm:gap-4 lg:gap-5;
+    @apply grid grid-cols-2 gap-2 self-start sm:aspect-[7/4] sm:grid-cols-6 sm:grid-rows-4 sm:gap-3;
   }
 
   .case-detail-palette-swatch {
-    @apply flex aspect-[2/1] min-h-0 flex-col items-start gap-1 rounded-panel p-4 sm:col-span-2 sm:aspect-auto;
+    @apply flex aspect-[2/1] min-h-0 flex-col items-start gap-1 rounded-control-sm p-4 sm:col-span-2 sm:aspect-auto;
     color: var(--color-dark);
   }
 
@@ -2997,18 +3033,18 @@
     padding-bottom: var(--page-gutter);
   }
 
-  /* Full width at the main images' 16:10, as tall as the screen allows with
+  /* Full width at the main images' 16:9, as tall as the screen allows with
      the same gutter above and below: the header slides away and the CTA bar
      fades out as the card arrives (CaseDetailNextSection). */
   .case-detail-next {
     @apply relative block w-full overflow-hidden no-underline;
     border-radius: var(--radius-control-sm);
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 16 / 9;
     max-height: calc(100svh - 2 * var(--page-gutter));
     background-color: var(--color-dark);
   }
 
-  /* Where the card is wider than 16:10, the image is cropped from the bottom:
+  /* Where the card is wider than 16:9, the image is cropped from the bottom:
      the main images are mockups with the screen in their upper part, and the
      whole screen should stay in view. It zooms in with the scroll
      (CaseDetailNextSection) from below the middle, so the top of the screen
@@ -3737,8 +3773,10 @@
 
   @media (min-width: 1024px) {
     .home-cases-intro {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      column-gap: var(--site-grid-gap);
+      grid-template-columns: subgrid;
+      grid-column: 1 / -1;
+      /* `normal` takes the page grid's gutter (the base gap above would set its own). */
+      column-gap: normal;
       row-gap: var(--spacing-lg);
     }
 
@@ -3768,17 +3806,27 @@
 
   .home-cases-intro-text {
     @apply text-body-lg font-medium;
+    font-size: 18px;
     color: var(--cases-muted);
+  }
+
+  /* The line masks (GSAP SplitText) clip to the line box, which cuts off
+     descenders at tight line heights (g, j, p) until the split is undone after
+     the animation. Extra room below, taken back with a negative margin, keeps
+     them whole; the lines start 125% down so their tops stay hidden. */
+  .home-cases-intro-line-mask {
+    padding-bottom: 0.2em;
+    margin-bottom: -0.2em;
   }
 
   .home-cases-intro-text + .home-cases-intro-text {
     @apply mt-md;
   }
 
-  /* 24px running text from desktop. */
+  /* 18px running text from desktop. */
   @media (min-width: 1024px) {
     .home-cases-intro-text {
-      font-size: 24px;
+      font-size: 18px;
       line-height: 1.4;
     }
   }
@@ -3799,7 +3847,7 @@
      h2, but always smaller than the hero's h1 (64px at 1440, 48px at 1024,
      36px on phones). */
   .home-cases-list-title {
-    @apply mt-5xl mb-2xl text-center lg:mt-[12rem] lg:mb-4xl;
+    @apply mt-5xl mb-lg text-center lg:mt-[12rem] lg:mb-xl;
     font-size: clamp(2.125rem, 3.9vw, 3.5rem);
     font-weight: var(--heading-weight);
     line-height: 1.05;
@@ -3807,47 +3855,38 @@
     color: var(--cases-ink);
   }
 
-  /* Desktop: room between the rows, so each image reveals on its own. */
+  /* Two projects, one per row, each a full-width 16:9 image with the title
+     and the keywords underneath. Room between the rows so each reveals on its
+     own. The list is a grid item of the page grid (see Container `columns`). */
+  .home-cases-list {
+    display: grid;
+    row-gap: 0;
+  }
+
+  /* From desktop the image and the text under it take 8 of the 12 columns,
+     starting at a different column in each row. */
   @media (min-width: 1024px) {
     .home-cases-list {
-      display: grid;
-      row-gap: clamp(4rem, 7vw, 7.5rem);
+      grid-template-columns: subgrid;
+      grid-column: 1 / -1;
     }
-  }
 
-  /* Rows sit inside the content container, so the images line up with the
-     page's side margins. Every case shows its landscape main image in the
-     same 16:9 frame. Desktop: the image column takes 58% of the content
-     width; rows alternate the image left and right, with the text in the
-     other column. */
-  .case-card {
-    @apply grid grid-cols-1;
-  }
-
-  @media (min-width: 1024px) {
-    /* On the 12-column grid: the image takes 7 columns (58%), the text 4, with
-       one empty column between; even rows mirror it. */
     .case-card {
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      column-gap: var(--site-grid-gap);
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-column: 1 / -1;
     }
 
-    .case-card-media-link {
-      grid-column: 1 / span 7;
-      grid-row: 1;
-    }
-
+    .case-card-media-link,
     .case-card-meta {
-      grid-column: 9 / span 4;
-      grid-row: 1;
+      grid-column: 1 / span 8;
     }
 
-    .case-card:nth-child(even) .case-card-media-link {
-      grid-column: 6 / span 7;
-    }
-
+    /* Staggered: the second project starts four columns in (columns 5-12),
+       so the rows don't line up. */
+    .case-card:nth-child(even) .case-card-media-link,
     .case-card:nth-child(even) .case-card-meta {
-      grid-column: 1 / span 4;
+      grid-column: 5 / span 8;
     }
   }
 
@@ -3871,79 +3910,104 @@
     object-fit: cover;
   }
 
-  /* One mask per text element (see CaseCard); only the desktop stage slides
-     the elements through it. flow-root keeps the elements' margins inside, and
-     the extra room below keeps descenders whole. */
-  .case-card-line {
-    display: flow-root;
-    overflow: clip;
-    padding-bottom: 0.2em;
-    margin-bottom: -0.2em;
+  /* Hover (mouse only): the image darkens and the case page's first image
+     opens in the middle, from no width to half the width at its full height,
+     growing out to both sides from the centre; then the page's images flash
+     through in a loop (CaseCard swaps .is-on). */
+  .case-card-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / 0.78);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.9s cubic-bezier(0.45, 0, 0.15, 1);
   }
 
-  /* Desktop stage (class set by CasesSection while the pinned animation runs):
-     one project at a time, all projects stacked in the same cells. The image
-     takes columns 1-7 and the text columns 9-12, centred vertically on the
-     image. The list is as tall as the screen under the header and pinned to it. */
-  .home-cases-list.is-stage {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    grid-template-rows: auto;
-    column-gap: var(--site-grid-gap);
-    row-gap: 0;
-    align-content: center;
-    height: calc(100svh - var(--site-header-height));
+  /* The centred half-width box: the preview image inside it, the link text
+     right under it. */
+  .case-card-hover {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    width: 50%;
+    aspect-ratio: 3 / 2;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
   }
 
-  .home-cases-list.is-stage .case-card {
-    display: contents;
+  .case-card-preview {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: #111;
+    /* Fully clipped from both sides: no width, full height. */
+    clip-path: inset(0 50% 0 50%);
+    transition: clip-path 1s cubic-bezier(0.65, 0, 0.35, 1);
   }
 
-  .home-cases-list.is-stage .case-card-media-link,
-  .home-cases-list.is-stage .case-card:nth-child(even) .case-card-media-link {
-    grid-column: 1 / span 7;
-    grid-row: 1;
-    align-self: center;
-    /* The fixed frame the next image slides down through. */
-    overflow: clip;
-  }
-
-  .home-cases-list.is-stage .case-card-media,
-  .home-cases-list.is-stage .case-card-image,
-  .home-cases-list.is-stage .case-card-line > * {
-    will-change: transform;
-  }
-
-  .home-cases-list.is-stage .case-card-meta,
-  .home-cases-list.is-stage .case-card:nth-child(even) .case-card-meta {
-    grid-column: 9 / span 4;
-    grid-row: 1;
-    align-self: center;
+  .case-card-hover-label {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 1.25rem;
+    display: flex;
+    align-items: center;
     justify-content: center;
+    gap: 0.5rem;
+    color: #fff;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    /* Fades in and out only, no movement. */
+    opacity: 0;
+    transition: opacity 0.6s ease;
   }
 
-  /* Phones: the text stacks under the image. Desktop: the column spans the
-     image's height with the text block at its bottom edge. */
-  .case-card-meta {
-    @apply flex flex-col items-start self-start;
-    padding: 1.5rem 0 3.5rem;
+  /* All the images stay painted (so none has to be decoded at the moment it
+     shows); the one being flashed is simply on top. They switch without a
+     fade. */
+  .case-card-preview-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
-  @media (min-width: 1024px) {
-    .case-card-meta {
-      align-self: stretch;
-      justify-content: flex-end;
-      padding: 0;
+  .case-card-preview-image.is-on {
+    z-index: 1;
+  }
+
+  @media (hover: hover) {
+    .case-card-media-link:hover .case-card-media::after {
+      opacity: 1;
+    }
+
+    .case-card-media-link:hover .case-card-preview {
+      clip-path: inset(0 0 0 0);
+    }
+
+    /* The text fades in once the image is mostly open (and out again at once
+       when the mouse leaves). */
+    .case-card-media-link:hover .case-card-hover-label {
+      opacity: 1;
+      transition-delay: 0.45s;
     }
   }
 
-  /* Rhythm: tight title-keywords pair, then larger steps to the description
-     and the CTA. */
-  .case-card-body {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    max-width: 32rem;
+  @media (prefers-reduced-motion: reduce) {
+    .case-card-media::after,
+    .case-card-preview,
+    .case-card-hover-label {
+      transition: none;
+    }
+  }
+
+  .case-card-meta {
+    padding-top: 0.75rem;
   }
 
   /* Explicit colours: the base h2 / p styles would otherwise win over the
@@ -3952,12 +4016,9 @@
     margin: 0;
     color: var(--cases-ink);
     font-family: var(--font-heading);
-    /* h3: large beside the tall images (52px at 1440, 37px at 1024, 32px on
-       phones), still just under the "Seneste projekter" h2 at every width. */
-    font-size: clamp(2rem, 3.6vw, 3.25rem);
+    /* The site's h3 size. */
+    @apply text-h3;
     font-weight: var(--heading-weight);
-    line-height: 1.02;
-    letter-spacing: -0.04em;
   }
 
   .case-card-title-link {
@@ -3971,33 +4032,13 @@
   }
 
   .case-card-keywords {
-    margin: 0.875rem 0 0;
+    margin: 0.625rem 0 0;
     color: var(--cases-muted);
     font-size: 0.8125rem;
     font-weight: 700;
     line-height: 1.5;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-  }
-
-  .case-card-description {
-    max-width: 32rem;
-    margin: 1.5rem 0 0;
-    color: var(--cases-muted);
-    font-size: 1rem;
-    line-height: 1.6;
-  }
-
-  /* The project page hero's text + arrow-chip button; its text follows the
-     section's grey-to-light roll-in like the rest of the card. */
-  .case-card-button {
-    margin-top: 2rem;
-  }
-
-  /* No colour transition: the global link one would lag the scrubbed fade. */
-  .home-cases .case-card-button {
-    color: var(--cases-ink);
-    transition: none;
   }
 
   /* Added value ("Hvad jeg kan tilbyde"): numbered accordion rows on the left,
@@ -4205,52 +4246,70 @@
     }
   }
 
-  /* Reviews: arrows and a 01/03 counter above the quote, a 15-second progress
-     bar under it on the left; the reviewer's circular portrait, name and role
-     on the right. */
+  /* Reviews, on the 12-column grid (from 1024px): the arrows on the left
+     (columns 1-4), the quote on the right (columns 6-12)
+     with its 15-second progress bar, and under it, at its left edge, the
+     reviewer's portrait, name and role. Stacked on phones and tablets. */
   .reviews-section {
     background-color: var(--color-home-page);
     color: var(--color-dark);
   }
 
-  /* Same narrower width as the added-value section above (82rem). */
-  .reviews-inner {
-    width: 100%;
-    max-width: calc(82rem + 2 * var(--page-gutter));
-    margin-inline: auto;
-    padding-inline: var(--page-gutter);
-  }
-
   .reviews-grid {
-    @apply grid gap-3xl lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-32;
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--spacing-xl);
   }
 
-  /* Shares the quote's width so the counter ends where the review ends. */
+  /* The swap wrapper (see ReviewsSection) has no box of its own. */
+  .reviews-swap {
+    display: contents;
+  }
+
+  @media (min-width: 1024px) {
+    .reviews-grid {
+      grid-template-columns: subgrid;
+      grid-column: 1 / -1;
+    }
+
+    .reviews-controls {
+      grid-column: 1 / span 4;
+      grid-row: 1;
+      align-self: start;
+    }
+
+    .reviews-body {
+      grid-column: 6 / span 7;
+      grid-row: 1;
+    }
+
+    .reviews-person {
+      grid-column: 6 / span 7;
+      grid-row: 2;
+    }
+  }
+
   .reviews-controls {
-    @apply flex max-w-[46rem] items-center gap-sm;
+    @apply flex items-center gap-sm;
   }
 
-  /* Bare arrow glyphs; the button keeps its tap area without a visible circle. */
+  /* Each arrow sits on a soft circle; on hover it fills with the ink. */
   .reviews-arrow {
-    @apply flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center text-primary transition-opacity duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
-    font-size: 1.25rem;
+    @apply flex h-16 w-16 shrink-0 cursor-pointer items-center justify-center rounded-full text-primary transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+    font-size: 1.75rem;
+    background-color: color-mix(in srgb, var(--color-dark) 8%, transparent);
   }
 
   .reviews-arrow:hover {
-    opacity: 0.55;
+    background-color: var(--color-dark);
+    color: var(--color-light);
   }
 
-  .reviews-counter {
-    @apply ml-auto text-caption font-semibold;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.02em;
-  }
-
-  /* The quote's lines animate in masks (see ReviewsSection); it shares the
-     controls' width so the counter and bar align with the text. */
+  /* The quote's lines animate in masks (see ReviewsSection). */
   .reviews-quote {
     position: relative;
-    @apply mt-2xl max-w-[46rem];
+    @apply max-w-[46rem];
     /* Between h3 and h2; the measure layer inherits it, so the line breaks
        match the visible wrap. */
     font-size: clamp(1.5rem, 2.4vw, 2rem);
@@ -4287,7 +4346,7 @@
 
   /* The bar spans the quote's full width; the fill is the timer. */
   .reviews-progress {
-    @apply mt-2xl h-[2px] w-full max-w-[46rem] overflow-hidden;
+    @apply mt-xl h-[2px] w-full max-w-[46rem] overflow-hidden;
     background-color: color-mix(in srgb, var(--color-dark) 12%, transparent);
   }
 
@@ -4312,13 +4371,15 @@
     will-change: transform;
   }
 
+  /* Under the quote, at its left edge: the portrait with the name and role
+     beside it. */
   .reviews-person {
-    @apply flex flex-col items-start;
+    @apply flex items-center gap-md;
   }
 
   .reviews-avatar {
-    @apply aspect-square object-cover;
-    width: 9rem;
+    @apply aspect-square shrink-0 object-cover;
+    width: 4.5rem;
     border-radius: 9999px;
     background-color: #ececec;
   }
@@ -4326,7 +4387,7 @@
   /* Explicit ink: the base p colour would otherwise make the name as grey as
      the role under it. */
   .reviews-name {
-    @apply mt-xl text-h4;
+    @apply text-h4;
     color: var(--color-primary);
     font-weight: var(--heading-weight);
     letter-spacing: -0.02em;
@@ -4681,8 +4742,14 @@
   /* Four columns (two on tablets, one on phones), each under a small label.
      mt-auto keeps them low, just above the wordmark. */
   .site-footer-columns {
-    @apply mt-auto grid gap-y-10 sm:grid-cols-2 lg:grid-cols-12;
+    @apply mt-auto grid gap-y-10 sm:grid-cols-2;
     column-gap: var(--site-grid-gap);
+  }
+
+  @media (min-width: 1024px) {
+    .site-footer-columns {
+      grid-template-columns: var(--site-grid-template);
+    }
   }
 
   .site-footer-column {

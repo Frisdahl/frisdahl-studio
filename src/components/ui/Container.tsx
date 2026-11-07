@@ -14,16 +14,18 @@ export interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
    * children flow as before and the content spans the whole container.
    */
   columns?: boolean
+  /** Extra classes for the content area (the subgrid when `columns` is set). */
+  contentClassName?: string
 }
 
 export const Container = forwardRef<HTMLDivElement, ContainerProps>(function Container(
-  { children, className = '', fullWidth = false, columns = false, ...props },
+  { children, className = '', contentClassName = '', fullWidth = false, columns = false, ...props },
   ref,
 ) {
   return (
     <div ref={ref} className={`site-container site-grid ${className}`.trim()} {...props}>
       <div
-        className={`${fullWidth ? 'site-grid-full' : 'site-grid-content'}${columns ? ' site-grid-subgrid' : ''}`}
+        className={`${fullWidth ? 'site-grid-full' : 'site-grid-content'}${columns ? ' site-grid-subgrid' : ''} ${contentClassName}`.trim()}
       >
         {children}
       </div>

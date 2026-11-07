@@ -8,11 +8,12 @@ import { Container } from '../ui'
 import { MEET_US_PATH } from '../../lib/routes'
 import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
-import { getCasesPageContent } from '../../data/cases'
+import { getCasePreviewImages } from '../../data/caseDetails'
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
-type SplitLines = (targets: Element | Element[] | NodeListOf<Element>) => SplitText
+/** How many projects the home page shows, one per row. */
+const FEATURED_COUNT = 2
 
 /** Where a row's top must be on screen for it to reveal. */
 const ROW_START = 'top 78%'
@@ -20,9 +21,6 @@ const ROW_START = 'top 78%'
 export function CasesSection() {
   const { locale } = useLocale()
   const { cases } = getHomeContent(locale)
-  const caseDescriptions = new Map<string, string>(
-    getCasesPageContent(locale).items.map((item) => [item.id, item.description]),
-  )
   const sectionRef = useRef<HTMLElement>(null)
   const introRef = useRef<HTMLDivElement>(null)
   const listTitleRef = useRef<HTMLHeadingElement>(null)
@@ -39,12 +37,11 @@ export function CasesSection() {
 
     // The section is the light page colour throughout; it's the hero behind
     // it that darkens as the section rolls up over it (see Hero.tsx).
-
-    // Text rises line by line, each line out of its own mask. It's split only
-    // once the web fonts are in, so the lines are measured with the real font
-    // (with the fallback they overflow and wrap mid-line). Each split is undone
-    // afterwards so the text reflows on resize. Shared by both layouts below.
-    const animateIntro = (context: gsap.Context, extra?: (splitLines: SplitLines) => void) => {
+    mm.add('(prefers-reduced-motion: no-preference)', (context) => {
+      // Text rises line by line, each line out of its own mask. It's split
+      // only once the web fonts are in, so the lines are measured with the
+      // real font (with the fallback they overflow and wrap mid-line). Each
+      // split is undone afterwards so the text reflows on resize.
       const splits: SplitText[] = []
       let cancelled = false
 
@@ -74,56 +71,30 @@ export function CasesSection() {
         })
       }
 
-      document.fonts.ready.then(() => {
-        if (cancelled) return
-        // context.add runs this now and records its tweens in the matchMedia
-        // context, so they are reverted with it although they start late.
-        context.add(() => {
-          slideUp(intro.querySelectorAll('.home-cases-intro-title, .home-cases-intro-text'), 'top 60%', section)
-          slideUp(listTitle, 'top 85%', listTitle)
-          extra?.(splitLines)
-        })
-      })
-
-      return () => {
-        cancelled = true
-        splits.forEach((split) => split.revert())
-      }
-    }
-
-    // Phones and tablets: project rows, each revealing once as it scrolls in.
-    // The image frame grows taller from its top edge (a clip-path wipe
-    // downwards) while the image inside settles down into place from a slight
-    // zoom; the title, keywords and description then rise line by line out of
-    // their masks, and the button fades in last. Only clip-path, transform and
-    // opacity animate, so nothing reflows while it runs. Once done, the inline
-    // styles are cleared.
-    mm.add('(max-width: 1023px) and (prefers-reduced-motion: no-preference)', (context) => {
+      // Project rows: each reveals once as it scrolls in. The image frame
+      // grows taller from its top edge (a clip-path wipe downwards) while the
+      // image inside settles down into place from a slight zoom; the title and
+      // keywords then rise line by line out of their masks. Only clip-path,
+      // transform and opacity animate, so nothing reflows while it runs. Once
+      // done, the inline styles are cleared.
       const rows = Array.from(list.querySelectorAll<HTMLElement>('.case-card')).map((row) => ({
         row,
         media: row.querySelector<HTMLElement>('.case-card-media')!,
         image: row.querySelector<HTMLElement>('.case-card-image'),
-        texts: Array.from(
-          row.querySelectorAll<HTMLElement>('.case-card-client, .case-card-keywords, .case-card-description'),
-        ),
-        button: row.querySelector<HTMLElement>('.case-card-button'),
+        texts: Array.from(row.querySelectorAll<HTMLElement>('.case-card-client, .case-card-keywords')),
       }))
 
       const clipHidden = 'inset(0% 0% 100% 0%)'
       const clipShown = 'inset(0% 0% 0% 0%)'
 
       // Hidden straight away (not after the fonts), so nothing flashes.
-      rows.forEach(({ media, image, texts, button }) => {
+      rows.forEach(({ media, image, texts }) => {
         gsap.set(media, { clipPath: clipHidden })
         if (image) gsap.set(image, { yPercent: -8, scale: 1.12, transformOrigin: '50% 0%' })
         gsap.set(texts, { autoAlpha: 0 })
-        if (button) gsap.set(button, { autoAlpha: 0 })
       })
 
-      const revealRow = (
-        splitLines: SplitLines,
-        { row, media, image, texts, button }: (typeof rows)[number],
-      ) => {
+      const revealRow = ({ row, media, image, texts }: (typeof rows)[number]) => {
         const split = splitLines(texts)
         gsap.set(texts, { autoAlpha: 1 })
         gsap.set(split.lines, { yPercent: 125 })
@@ -140,130 +111,22 @@ export function CasesSection() {
         timeline.to(media, { clipPath: clipShown, duration: 1.3, ease: 'power3.inOut' }, 0)
         if (image) timeline.to(image, { yPercent: 0, scale: 1, duration: 1.6 }, 0)
         timeline.to(split.lines, { yPercent: 0, duration: 1, stagger: 0.08 }, 0.35)
-        if (button) timeline.to(button, { autoAlpha: 1, duration: 0.8, ease: 'power2.out' }, '>-0.45')
       }
 
-      return animateIntro(context, (splitLines) => rows.forEach((row) => revealRow(splitLines, row)))
-    })
-
-    // Desktop: one project at a time. The list is pinned to the screen (the
-    // images and texts of all projects sit on top of each other, the text on
-    // the right, vertically centred on the image) and scrolling steps through
-    // them: the next image slides down over the current one from the top,
-    // following the scroll linearly (so it can stop part-way), and once it
-    // fills the full height the current text slides up and out while the next
-    // slides up in its place, a timed animation. Scrolling back reverses both.
-    // Reduced motion keeps the plain list.
-    mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', (context) => {
-      const cards = Array.from(list.querySelectorAll<HTMLElement>('.case-card'))
-      const cancelIntro = animateIntro(context)
-
-      if (cards.length < 2) return cancelIntro
-
-      const parts = cards.map((card) => ({
-        // The link is the fixed frame (clipped); the media box inside it slides.
-        media: card.querySelector<HTMLElement>('.case-card-media')!,
-        image: card.querySelector<HTMLElement>('.case-card-image'),
-        meta: card.querySelector<HTMLElement>('.case-card-meta')!,
-        items: Array.from(card.querySelectorAll<HTMLElement>('.case-card-line > *')),
-      }))
-
-      list.classList.add('is-stage')
-
-      // Everything but the first project starts hidden.
-      // The image waits above its frame, the media box and the image inside
-      // moving in opposite directions, so the picture itself stays still while
-      // the frame slides down over it (transforms only, so it runs smoothly).
-      parts.slice(1).forEach(({ media, image, meta, items }) => {
-        gsap.set(media, { yPercent: -100 })
-        if (image) gsap.set(image, { yPercent: 100 })
-        gsap.set(meta, { autoAlpha: 0 })
-        gsap.set(items, { yPercent: 150 })
-      })
-
-      // Scroll length: one share of the screen height per project change, plus
-      // a short tail, all pinned. The first change starts with the first scroll.
-      const SEGMENT = 0.7
-      const TAIL = 0.3
-      const segmentPx = () => SEGMENT * window.innerHeight
-      const lengthPx = () => (parts.length - 1) * segmentPx() + TAIL * window.innerHeight
-
-      // The image follows the scroll one to one (linear, no easing, no
-      // smoothing of its own), so it can be stopped anywhere: at 10% or 35% of
-      // the way down. Project i slides in while the scroll is within segment
-      // i - 1; the frame and the picture move in opposite directions, so the
-      // picture itself stays still.
-      const placeImages = (scrolled: number) => {
-        const position = scrolled / segmentPx()
-        parts.forEach(({ media, image }, index) => {
-          if (index === 0) return
-          const covered = Math.min(1, Math.max(0, position - (index - 1)))
-          gsap.set(media, { yPercent: -100 * (1 - covered) })
-          if (image) gsap.set(image, { yPercent: 100 * (1 - covered) })
+      document.fonts.ready.then(() => {
+        if (cancelled) return
+        // context.add runs this now and records its tweens in the matchMedia
+        // context, so they are reverted with it although they start late.
+        context.add(() => {
+          slideUp(intro.querySelectorAll('.home-cases-intro-title, .home-cases-intro-text'), 'top 60%', section)
+          slideUp(listTitle, 'top 85%', listTitle)
+          rows.forEach(revealRow)
         })
-        // The project whose image is complete; its text is the one showing.
-        return Math.min(parts.length - 1, Math.max(0, Math.floor(position + 1e-6)))
-      }
-
-      // The text doesn't follow the scroll: once a new image fills the full
-      // height the swap plays in full (the old text up and out, the new one up
-      // in its place), and when scrolling back un-covers it, it plays the other
-      // way. A swap that is interrupted is replaced by the next.
-      let shown = 0
-      let textSwap: gsap.core.Timeline | null = null
-      const swapText = (from: number, to: number) => {
-        const direction = to > from ? 1 : -1
-        const out = parts[from]
-        const incoming = parts[to]
-        textSwap?.kill()
-        parts.forEach((part, index) => {
-          if (index !== from && index !== to) gsap.set(part.meta, { autoAlpha: 0 })
-        })
-        gsap.set(incoming.meta, { autoAlpha: 1 })
-        gsap.set(incoming.items, { yPercent: 150 * direction })
-
-        textSwap = gsap
-          .timeline()
-          .to(out.items, { yPercent: -150 * direction, duration: 0.45, stagger: 0.05, ease: 'power2.in' })
-          .set(out.meta, { autoAlpha: 0 })
-          .to(incoming.items, { yPercent: 0, duration: 0.6, stagger: 0.07, ease: 'power3.out' }, '>-0.05')
-        shown = to
-      }
-
-      ScrollTrigger.create({
-        trigger: list,
-        start: () => `top ${document.querySelector('.site-header')?.getBoundingClientRect().height ?? 76}px`,
-        end: () => `+=${lengthPx()}`,
-        pin: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          const complete = placeImages(self.progress * lengthPx())
-          if (complete !== shown) swapText(shown, complete)
-        },
-        // Landing mid-section (a reload, a resize): show that state at once.
-        onRefresh: (self) => {
-          textSwap?.kill()
-          const complete = placeImages(self.progress * lengthPx())
-          parts.forEach(({ meta, items }, index) => {
-            gsap.set(meta, { autoAlpha: index === complete ? 1 : 0 })
-            gsap.set(items, { yPercent: index === complete ? 0 : 150 })
-          })
-          shown = complete
-        },
       })
-
-      // The pinned height and the fonts change the page height below.
-      document.fonts.ready.then(() => ScrollTrigger.refresh())
 
       return () => {
-        cancelIntro()
-        textSwap?.kill()
-        gsap.set(
-          parts.flatMap(({ media, image, meta, items }) => [media, ...(image ? [image] : []), meta, ...items]),
-          { clearProps: 'all' },
-        )
-        list.classList.remove('is-stage')
+        cancelled = true
+        splits.forEach((split) => split.revert())
       }
     })
 
@@ -277,16 +140,16 @@ export function CasesSection() {
       className="home-cases py-section-sm lg:py-section"
       aria-label={cases.ariaLabel}
     >
-      <Container>
+      <Container columns>
         <div ref={introRef} className="home-cases-intro">
           <h2 className="home-cases-intro-title">{cases.intro.title}</h2>
           <div className="home-cases-intro-image-wrapper">
             <img
-              src="/images/higgsfield/hero-flatlay-a--21-9.png"
+              src="/images/gallery-board--4-3.webp"
               alt={
                 locale === 'da'
-                  ? 'Flatlay af Frisdahl Studios designarbejde'
-                  : 'Flatlay of Frisdahl Studio design work'
+                  ? 'Galleritavle med udvalgt designarbejde fra Frisdahl Studio'
+                  : 'Gallery board with selected Frisdahl Studio design work'
               }
               loading="lazy"
               decoding="async"
@@ -310,17 +173,15 @@ export function CasesSection() {
         {/* Inside the content container, so the images line up with the
             page's side margins like the text above. */}
         <div ref={listRef} className="home-cases-list">
-          {cases.items.map((item) => (
+          {cases.items.slice(0, FEATURED_COUNT).map((item) => (
             <CaseCard
               key={item.id}
               client={item.client}
               keywords={item.keywords}
-              // The description comes from the shared case data, so it always
-              // matches the case pages.
-              description={caseDescriptions.get(item.id) ?? ''}
               imageSrc={item.imageSrc}
               imageAlt={item.imageAlt}
               href={item.href}
+              previewImages={getCasePreviewImages(locale, item.id)}
               linkLabel={cases.linkLabel}
             />
           ))}
