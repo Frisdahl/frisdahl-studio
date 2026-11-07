@@ -55,6 +55,7 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     },
   },
   'peter-salling': {
+    mockupBackground: '#0C0C0C',
     introPair: [
       { imageSrc: '/cases/peter-salling/macbook-glass-sikkerheden-er-paa-spil--4-3.webp', imageAlt: 'Peter Sallings forside med Sikkerheden er på spil på en MacBook på et glasbord', aspectRatio: '4 / 3' },
       { imageSrc: '/cases/peter-salling/macbook-glass-live-life-in-colour--4-3.webp', imageAlt: 'Live Life in Colour på Peter Sallings Commercial-side på en MacBook på et glasbord', aspectRatio: '4 / 3' },
@@ -69,6 +70,10 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
       imageAlt: 'Live Life in Colour på Peter Sallings projektside på en iPhone på et glasbord',
       aspectRatio: '16 / 9',
     },
+    horizontalBottomPair: [
+      { imageSrc: '/cases/peter-salling/mobiler-presse-priser--4-3.webp', imageAlt: 'Premierebilleder, anmeldelse og festivalpriser på to iPhones', aspectRatio: '4 / 3', transparent: true },
+      { imageSrc: '/cases/peter-salling/mobiler-forside-strandet--4-3.webp', imageAlt: 'Forsiden og Strandet på to iPhones', aspectRatio: '4 / 3', transparent: true },
+    ],
   },
   'det-kollektive-klaedeskab': {
     introPair: [
