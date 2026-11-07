@@ -3957,6 +3957,17 @@
     }
   }
 
+  /* The title now sits above its image, so the rows need their own space. */
+  .case-card:not(:last-child) {
+    margin-bottom: 3rem;
+  }
+
+  @media (min-width: 1024px) {
+    .case-card:not(:last-child) {
+      margin-bottom: 6rem;
+    }
+  }
+
   /* Above the image: the title on the left, the keywords on the far right. */
   .case-card-meta {
     display: flex;
