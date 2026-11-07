@@ -12,6 +12,8 @@ import { getCasesPageContent } from '../../data/cases'
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
+type SplitLines = (targets: Element | Element[] | NodeListOf<Element>) => SplitText
+
 /** Where a row's top must be on screen for it to reveal. */
 const ROW_START = 'top 78%'
 
@@ -37,11 +39,12 @@ export function CasesSection() {
 
     // The section is the light page colour throughout; it's the hero behind
     // it that darkens as the section rolls up over it (see Hero.tsx).
-    mm.add('(prefers-reduced-motion: no-preference)', (context) => {
-      // Text rises line by line, each line out of its own mask. It's split
-      // only once the web fonts are in, so the lines are measured with the
-      // real font (with the fallback they overflow and wrap mid-line). Each
-      // split is undone afterwards so the text reflows on resize.
+
+    // Text rises line by line, each line out of its own mask. It's split only
+    // once the web fonts are in, so the lines are measured with the real font
+    // (with the fallback they overflow and wrap mid-line). Each split is undone
+    // afterwards so the text reflows on resize. Shared by both layouts below.
+    const animateIntro = (context: gsap.Context, extra?: (splitLines: SplitLines) => void) => {
       const splits: SplitText[] = []
       let cancelled = false
 
@@ -60,7 +63,7 @@ export function CasesSection() {
       // scrolls into view.
       const slideUp = (targets: Element | NodeListOf<Element>, start: string, trigger: Element) => {
         const split = splitLines(targets)
-        gsap.set(split.lines, { yPercent: 100 })
+        gsap.set(split.lines, { yPercent: 125 })
         gsap.to(split.lines, {
           yPercent: 0,
           duration: 1,
@@ -71,13 +74,31 @@ export function CasesSection() {
         })
       }
 
-      // Project rows: each reveals once as it scrolls in. The image frame
-      // grows taller from its top edge (a clip-path wipe downwards) while the
-      // image inside settles down into place from a slight zoom; the title,
-      // keywords and description then rise line by line out of their masks,
-      // and the button fades in last. Only clip-path, transform and opacity
-      // animate, so nothing reflows while it runs. Once done, the inline
-      // styles are cleared.
+      document.fonts.ready.then(() => {
+        if (cancelled) return
+        // context.add runs this now and records its tweens in the matchMedia
+        // context, so they are reverted with it although they start late.
+        context.add(() => {
+          slideUp(intro.querySelectorAll('.home-cases-intro-title, .home-cases-intro-text'), 'top 60%', section)
+          slideUp(listTitle, 'top 85%', listTitle)
+          extra?.(splitLines)
+        })
+      })
+
+      return () => {
+        cancelled = true
+        splits.forEach((split) => split.revert())
+      }
+    }
+
+    // Phones and tablets: project rows, each revealing once as it scrolls in.
+    // The image frame grows taller from its top edge (a clip-path wipe
+    // downwards) while the image inside settles down into place from a slight
+    // zoom; the title, keywords and description then rise line by line out of
+    // their masks, and the button fades in last. Only clip-path, transform and
+    // opacity animate, so nothing reflows while it runs. Once done, the inline
+    // styles are cleared.
+    mm.add('(max-width: 1023px) and (prefers-reduced-motion: no-preference)', (context) => {
       const rows = Array.from(list.querySelectorAll<HTMLElement>('.case-card')).map((row) => ({
         row,
         media: row.querySelector<HTMLElement>('.case-card-media')!,
@@ -99,10 +120,13 @@ export function CasesSection() {
         if (button) gsap.set(button, { autoAlpha: 0 })
       })
 
-      const revealRow = ({ row, media, image, texts, button }: (typeof rows)[number]) => {
+      const revealRow = (
+        splitLines: SplitLines,
+        { row, media, image, texts, button }: (typeof rows)[number],
+      ) => {
         const split = splitLines(texts)
         gsap.set(texts, { autoAlpha: 1 })
-        gsap.set(split.lines, { yPercent: 100 })
+        gsap.set(split.lines, { yPercent: 125 })
 
         const timeline = gsap.timeline({
           scrollTrigger: { trigger: row, start: ROW_START, once: true },
@@ -119,20 +143,112 @@ export function CasesSection() {
         if (button) timeline.to(button, { autoAlpha: 1, duration: 0.8, ease: 'power2.out' }, '>-0.45')
       }
 
-      document.fonts.ready.then(() => {
-        if (cancelled) return
-        // context.add runs this now and records its tweens in the matchMedia
-        // context, so they are reverted with it although they start late.
-        context.add(() => {
-          slideUp(intro.querySelectorAll('.home-cases-intro-title, .home-cases-intro-text'), 'top 60%', section)
-          slideUp(listTitle, 'top 85%', listTitle)
-          rows.forEach(revealRow)
-        })
+      return animateIntro(context, (splitLines) => rows.forEach((row) => revealRow(splitLines, row)))
+    })
+
+    // Desktop: one project at a time. The list is pinned to the screen (the
+    // images and texts of all projects sit on top of each other, the text
+    // vertically centred on the image) and scrolling steps through them: the
+    // next image wipes down over the current one from the top, and once it has
+    // reached the bottom the current text slides up and out while the next
+    // slides up in its place. All of it is one scrubbed timeline, so it runs
+    // in reverse when scrolling back. Reduced motion keeps the plain list.
+    mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', (context) => {
+      const cards = Array.from(list.querySelectorAll<HTMLElement>('.case-card'))
+      const cancelIntro = animateIntro(context)
+
+      if (cards.length < 2) return cancelIntro
+
+      const parts = cards.map((card) => ({
+        media: card.querySelector<HTMLElement>('.case-card-media-link')!,
+        image: card.querySelector<HTMLElement>('.case-card-image'),
+        meta: card.querySelector<HTMLElement>('.case-card-meta')!,
+        items: Array.from(card.querySelectorAll<HTMLElement>('.case-card-line > *')),
+      }))
+
+      list.classList.add('is-stage')
+
+      // Everything but the first project starts hidden.
+      parts.slice(1).forEach(({ media, meta, items }) => {
+        gsap.set(media, { clipPath: 'inset(0% 0% 100% 0%)' })
+        gsap.set(meta, { autoAlpha: 0 })
+        gsap.set(items, { yPercent: 150 })
       })
 
+      // Timeline units: each step holds the current project, wipes the next
+      // image in, then swaps the texts.
+      const STEP = 1.7
+      const HOLD = 0.5
+      const WIPE = 0.6
+      const TEXT_OUT = 0.3
+      const TEXT_STAGGER = 0.05
+      const END_HOLD = 0.4
+      const total = (parts.length - 1) * STEP + END_HOLD
+      // Scroll distance per timeline unit, as a share of the screen height.
+      const SCREEN_PER_UNIT = 0.55
+
+      const timeline = gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: {
+          trigger: list,
+          start: () => `top ${document.querySelector('.site-header')?.getBoundingClientRect().height ?? 76}px`,
+          end: () => `+=${total * window.innerHeight * SCREEN_PER_UNIT}`,
+          pin: true,
+          scrub: 0.6,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      })
+
+      parts.forEach((next, index) => {
+        if (index === 0) return
+        const current = parts[index - 1]
+        const wipeAt = (index - 1) * STEP + HOLD
+        const textAt = wipeAt + WIPE
+
+        timeline.to(next.media, { clipPath: 'inset(0% 0% 0% 0%)', duration: WIPE, ease: 'power2.inOut' }, wipeAt)
+        if (next.image) {
+          timeline.fromTo(
+            next.image,
+            { yPercent: -6, scale: 1.1 },
+            { yPercent: 0, scale: 1, duration: WIPE, ease: 'power2.inOut', immediateRender: false },
+            wipeAt,
+          )
+        }
+        timeline.to(
+          current.items,
+          { yPercent: -150, duration: TEXT_OUT, stagger: TEXT_STAGGER, ease: 'power2.in' },
+          textAt,
+        )
+        // The outgoing text block is hidden once its lines are out, the next
+        // one shown just before its lines come up.
+        timeline.fromTo(
+          current.meta,
+          { autoAlpha: 1 },
+          { autoAlpha: 0, duration: 0.01, immediateRender: false },
+          textAt + TEXT_OUT + TEXT_STAGGER * current.items.length,
+        )
+        timeline.fromTo(
+          next.meta,
+          { autoAlpha: 0 },
+          { autoAlpha: 1, duration: 0.01, immediateRender: false },
+          textAt + TEXT_OUT,
+        )
+        timeline.to(
+          next.items,
+          { yPercent: 0, duration: 0.4, stagger: 0.06, ease: 'power3.out' },
+          textAt + TEXT_OUT,
+        )
+      })
+      // A short hold on the last project before the pin releases.
+      timeline.to({}, { duration: END_HOLD }, total - END_HOLD)
+
+      // The pinned height and the fonts change the page height below.
+      document.fonts.ready.then(() => ScrollTrigger.refresh())
+
       return () => {
-        cancelled = true
-        splits.forEach((split) => split.revert())
+        cancelIntro()
+        list.classList.remove('is-stage')
       }
     })
 

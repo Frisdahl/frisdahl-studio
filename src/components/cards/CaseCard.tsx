@@ -47,23 +47,35 @@ export function CaseCard({
 
       <div className="case-card-meta">
         <div className="case-card-body">
+          {/* Each element sits in its own mask ("case-card-line") so the desktop
+              stage can slide it up out of view (see CasesSection). */}
           {/* Each title is an h3 under the section's "Latest projects" h2. */}
-          <h3 className="case-card-client">
-            <Link to={href} className="case-card-title-link">
-              {client}
-            </Link>
-          </h3>
-          <p className="case-card-keywords">{keywords}</p>
-          {description ? <p className="case-card-description">{description}</p> : null}
+          <div className="case-card-line">
+            <h3 className="case-card-client">
+              <Link to={href} className="case-card-title-link">
+                {client}
+              </Link>
+            </h3>
+          </div>
+          <div className="case-card-line">
+            <p className="case-card-keywords">{keywords}</p>
+          </div>
+          {description ? (
+            <div className="case-card-line">
+              <p className="case-card-description">{description}</p>
+            </div>
+          ) : null}
 
           {/* Same text + arrow-chip button as the project page hero. */}
-          <ArrowChipButton
-            direction="right"
-            label={linkLabel}
-            text={linkLabel}
-            href={href}
-            className="case-card-button"
-          />
+          <div className="case-card-line">
+            <ArrowChipButton
+              direction="right"
+              label={linkLabel}
+              text={linkLabel}
+              href={href}
+              className="case-card-button"
+            />
+          </div>
         </div>
       </div>
     </div>
