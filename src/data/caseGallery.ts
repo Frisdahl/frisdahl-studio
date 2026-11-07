@@ -56,6 +56,12 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
   },
   'peter-salling': {
     mockupBackground: '#f4f5f6',
+    // Home page hover: the two phones at the sides, one of the PCs in the middle.
+    hoverTrio: [
+      { imageSrc: '/cases/peter-salling/iphone-sikkerheden-er-paa-spil--4-3.webp', imageAlt: 'Sikkerheden er på spil på Peter Sallings projektside på en iPhone' },
+      { imageSrc: '/cases/peter-salling/macbook-alt-jeg-forventede--4-3.webp', imageAlt: 'Alt jeg forventede på Peter Sallings projektside på en MacBook Pro' },
+      { imageSrc: '/cases/peter-salling/iphone-kamma--4-3.webp', imageAlt: 'Kamma på Peter Sallings projektside på en iPhone' },
+    ],
     introPair: [
       { imageSrc: '/cases/peter-salling/macbook-alt-jeg-forventede--4-3.webp', imageAlt: 'Alt jeg forventede på Peter Sallings projektside på en MacBook Pro', aspectRatio: '4 / 3' },
       { imageSrc: '/cases/peter-salling/macbook-make-football-your-game--4-3.webp', imageAlt: 'Make Football Your Game på Peter Sallings projektside på en MacBook Pro', aspectRatio: '4 / 3' },

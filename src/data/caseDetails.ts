@@ -699,6 +699,7 @@ export function getCasePreviewImages(locale: Locale, caseSlug: string): CasePrev
   if (!detail) return []
   const gallery = detail.gallery
   const images = [
+    ...(gallery.hoverTrio ?? []),
     ...detail.hero.slides,
     ...(gallery.introPair ?? []),
     ...(gallery.horizontalTopHidden ? [] : (gallery.horizontalTopPair ?? [gallery.horizontalTop])),
