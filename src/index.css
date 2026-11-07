@@ -1792,7 +1792,7 @@
     color: var(--color-dark);
   }
 
-  :root:is([data-header-ink='light'], [data-header-hero-dark]) .site-header :is(.site-header-logo, .header-menu-toggle) {
+  :root[data-header-ink='light'] .site-header :is(.site-header-logo, .header-menu-toggle) {
     color: var(--color-light);
   }
 

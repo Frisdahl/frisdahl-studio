@@ -12,9 +12,6 @@ gsap.registerPlugin(ScrollTrigger)
 /** How far the pinned hero's content drifts up while the cases section covers it. */
 const DRIFT_PX = 80
 
-/** Scroll progress through the hero's fade after which the header turns light. */
-const HEADER_INK_PROGRESS = 0.6
-
 /** How dark the hero gets once the cases section has covered it (shade opacity). */
 const SHADE_MAX = 0.92
 
@@ -82,15 +79,13 @@ export function Hero() {
     const shade = shadeRef.current
     if (!hero || !inner || !shade) return
 
-    const root = document.documentElement
     const mm = gsap.matchMedia()
 
     // The hero darkens as the cases section rolls up over it: the shade
     // (which also covers the strip behind the header) fades to the brand dark,
     // scrubbed from the first scroll until the hero is covered (on phones,
-    // until it has scrolled away). The header needs no cue: its content
-    // inverts against whatever is behind it (mix-blend-mode, index.css).
-    let inkEnd = 1
+    // until it has scrolled away). The header needs no cue: its logo and burger
+    // keep their ink on the hero (see useHeaderInk for the dark sections).
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       gsap.fromTo(
         shade,
@@ -100,26 +95,12 @@ export function Hero() {
           ease: 'none',
           scrollTrigger: {
             start: 0,
-            end: () => {
-              // The header leaves the hero once the cases section has covered
-              // the strip it sits on, a header's height before the hero's end.
-              const height = hero.offsetHeight
-              const header = parseFloat(getComputedStyle(root).getPropertyValue('--site-header-height')) || 76
-              inkEnd = 1 - header / height
-              return height
-            },
+            end: () => hero.offsetHeight,
             scrub: true,
             invalidateOnRefresh: true,
-            // The header's logo and burger go light once the hero has darkened
-            // (see data-header-hero-dark in index.css). Only flips at the threshold.
-            onUpdate: (self) => {
-              const dark = self.progress > HEADER_INK_PROGRESS && self.progress < inkEnd
-              if (dark !== root.hasAttribute('data-header-hero-dark')) root.toggleAttribute('data-header-hero-dark', dark)
-            },
           },
         },
       )
-      return () => root.removeAttribute('data-header-hero-dark')
     })
 
     // Desktop only, where the hero is pinned (see Hero.module.css): its content
