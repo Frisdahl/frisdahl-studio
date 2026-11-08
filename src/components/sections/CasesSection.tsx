@@ -66,35 +66,16 @@ export function CasesSection() {
         })
       }
 
-      // Project rows: the images are simply there, no entrance. Each one sits
-      // a little oversized inside its frame (overflow hidden) and drifts
-      // slowly against the scroll, which gives the depth. Only the title and
-      // keywords animate in: they rise line by line out of their masks as the
-      // row scrolls into view. Only transform and opacity animate.
-      const PARALLAX_SCALE = 1.12
-      // Stays inside the overhang ((scale - 1) / 2 = 6% of the image height),
-      // so the frame's edges never show.
-      const PARALLAX_TRAVEL = 5.5
-
+      // Project rows: the images are static, no entrance and no movement. Only
+      // the title and keywords animate in: they rise line by line out of their
+      // masks as the row scrolls into view.
       const rows = Array.from(list.querySelectorAll<HTMLElement>('.case-card')).map((row) => ({
         row,
-        media: row.querySelector<HTMLElement>('.case-card-media')!,
-        image: row.querySelector<HTMLElement>('.case-card-image'),
         texts: Array.from(row.querySelectorAll<HTMLElement>('.case-card-client, .case-card-keywords')),
       }))
 
       // Hidden straight away (not after the fonts), so nothing flashes.
-      rows.forEach(({ media, image, texts }) => {
-        gsap.set(texts, { autoAlpha: 0 })
-        if (image) {
-          gsap.set(image, { scale: PARALLAX_SCALE, yPercent: -PARALLAX_TRAVEL })
-          gsap.to(image, {
-            yPercent: PARALLAX_TRAVEL,
-            ease: 'none',
-            scrollTrigger: { trigger: media, start: 'top bottom', end: 'bottom top', scrub: true },
-          })
-        }
-      })
+      rows.forEach(({ texts }) => gsap.set(texts, { autoAlpha: 0 }))
 
       const revealRow = ({ row, texts }: (typeof rows)[number]) => {
         const split = splitLines(texts)
@@ -118,8 +99,6 @@ export function CasesSection() {
         context.add(() => {
           slideUp(listTitle, 'top 85%', listTitle)
           rows.forEach(revealRow)
-          // The fonts change the layout, so the scroll positions are measured again.
-          ScrollTrigger.refresh()
         })
       })
 

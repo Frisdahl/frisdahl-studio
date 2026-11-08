@@ -87,11 +87,7 @@ export async function runSharedCaseTransition(
   const ghost = document.createElement('div')
   const topImage = coverImage(null)
   topImage.style.opacity = '0'
-  // The card image is slightly oversized and shifted by the scroll parallax; the ghost's copy
-  // starts in the same pose, so the image doesn't jump when it is lifted out.
-  const fromImage = coverImage(cardImage.currentSrc)
-  fromImage.style.transform = getComputedStyle(cardImage).transform
-  ghost.append(fromImage, topImage)
+  ghost.append(coverImage(cardImage.currentSrc), topImage)
   Object.assign(ghost.style, {
     position: 'fixed',
     left: '0',
