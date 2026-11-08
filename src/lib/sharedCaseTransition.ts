@@ -26,8 +26,13 @@ const VEIL_OUT_AT = 0.85
 const ENTER_EASE = 'power3.out'
 // The heading goes first; the meta columns start this far into it (seconds),
 // then follow each other from left to right, this far apart.
-const HEADING_LEAD = 0.55
-const COLUMN_STAGGER = 0.16
+const HEADING_LEAD = 0.45
+const COLUMN_STAGGER = 0.12
+// Each column moves a little longer than the step between columns, so they
+// overlap and flow into each other; the longer ease-out tail reads as smooth.
+const COLUMN_EASE = 'power4.out'
+const COLUMN_LABEL_DURATION = 0.9
+const COLUMN_VALUE_DURATION = 1.1
 // A mask clips at its line box, which cuts off descenders (g, y, comma); this
 // much room is added below (and a little above) and taken back from the margin,
 // so the layout does not change.
@@ -181,8 +186,8 @@ export async function runSharedCaseTransition(
         const at = columnsAt + index * COLUMN_STAGGER
         const label = item.querySelector('.case-detail-hero-meta-label')
         const value = item.querySelector('.case-detail-hero-meta-value')
-        if (label) enter.to(label, { opacity: 1, duration: 0.7, ease: 'power1.out' }, at)
-        if (value) enter.to(value, { yPercent: 0, duration: 0.9 }, at + 0.08)
+        if (label) enter.to(label, { opacity: 1, duration: COLUMN_LABEL_DURATION, ease: 'sine.out' }, at)
+        if (value) enter.to(value, { yPercent: 0, duration: COLUMN_VALUE_DURATION, ease: COLUMN_EASE }, at + 0.08)
       })
     })
   } finally {
