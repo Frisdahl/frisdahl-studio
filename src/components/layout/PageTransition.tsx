@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { registerPageTransition } from '../../lib/pageTransition'
+import { registerPageTransition, registerSharedTransition } from '../../lib/pageTransition'
 import { canShareCard, runSharedCaseTransition } from '../../lib/sharedCaseTransition'
 import { lockScroll, prefersReducedMotion, unlockScroll } from '../../lib/scroll'
 
@@ -172,7 +172,8 @@ export function PageTransition() {
       const href = transitionHref(event, pathnameRef.current)
       if (!href) return
       event.preventDefault()
-      const card = pathnameRef.current === '/' ? (event.target as Element).closest<HTMLElement>('.case-card') : null
+      // The home page's project cards, or the "next project" card on a case page.
+      const card = (event.target as Element).closest<HTMLElement>('.case-card, .case-detail-next')
       if (card && canShareCard(card) && !prefersReducedMotion()) void runShared(href, card)
       else void run(href)
     }
@@ -181,9 +182,14 @@ export function PageTransition() {
     // the default prevented and leaves the navigation to the transition.
     document.addEventListener('click', onClick, true)
     registerPageTransition((href) => void run(href))
+    registerSharedTransition((href, card) => {
+      if (canShareCard(card) && !prefersReducedMotion()) void runShared(href, card)
+      else void run(href)
+    })
     return () => {
       document.removeEventListener('click', onClick, true)
       registerPageTransition(null)
+      registerSharedTransition(null)
     }
   }, [navigate])
 

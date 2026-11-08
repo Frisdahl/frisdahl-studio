@@ -10,11 +10,20 @@ gsap.registerPlugin(SplitText)
  * on the compositor) until it is exactly the case page's hero image. The case
  * page's text then slides up into place, the same line-by-line rise the home page
  * uses. PageTransition decides when to use this and does the routing (`loadPage`).
+ *
+ * It works for the home page's project cards and for the "next project" card at
+ * the end of a case page (`.case-detail-next`), whose text sits on top of the
+ * image under a dark overlay: the text leaves first, then the overlay fades as
+ * the image grows.
  */
 
 // Leaving: the card settles back to rest (its hover is switched off) before the
 // image is lifted out, then the page fades under it.
 const SETTLE = 0.4
+// The next-project card: its text sits on the image, so the ghost (which would
+// cover it) is only lifted out once the text has mostly left.
+const NEXT_SETTLE = 0.6
+const NEXT_OVERLAY_FADE = 0.8
 const EXIT_TEXT_DURATION = 0.65
 const VEIL_DURATION = 0.45
 // The image grows to the hero's place; the page appears under it as it lands.
@@ -51,7 +60,7 @@ function roomInMasks(masks: Element[]) {
 
 /** True if the card has an image to carry over to the case page. */
 export function canShareCard(card: HTMLElement) {
-  return Boolean(card.querySelector<HTMLImageElement>('.case-card-image')?.currentSrc)
+  return Boolean(card.querySelector<HTMLImageElement>('.case-card-image, .case-detail-next-image')?.currentSrc)
 }
 
 function nextFrames(count: number) {
@@ -84,9 +93,16 @@ export async function runSharedCaseTransition(
   loadPage: () => Promise<Element | null>,
 ) {
   const root = document.documentElement
-  const media = card.querySelector<HTMLElement>('.case-card-media')!
-  const cardImage = card.querySelector<HTMLImageElement>('.case-card-image')!
-  const texts = [...card.querySelectorAll<HTMLElement>('.case-card-client, .case-card-keywords')]
+  const isNext = card.classList.contains('case-detail-next')
+  const media = isNext ? card : card.querySelector<HTMLElement>('.case-card-media')!
+  const cardImage = card.querySelector<HTMLImageElement>('.case-card-image, .case-detail-next-image')!
+  const texts = [
+    ...card.querySelectorAll<HTMLElement>(
+      isNext ? '.case-detail-next-label, .case-detail-next-name' : '.case-card-client, .case-card-keywords',
+    ),
+  ]
+  const bar = isNext ? card.querySelector<HTMLElement>('.case-detail-next-bar') : null
+  const settle = isNext ? NEXT_SETTLE : SETTLE
 
   // The case page's hero is hidden from the moment it mounts (see index.css).
   root.classList.add('is-shared-transition', 'is-shared-image')
@@ -96,7 +112,22 @@ export async function runSharedCaseTransition(
   const ghost = document.createElement('div')
   const topImage = coverImage(null)
   topImage.style.opacity = '0'
-  ghost.append(coverImage(cardImage.currentSrc), topImage)
+  const fromImage = coverImage(cardImage.currentSrc)
+  let overlay: HTMLDivElement | null = null
+  if (isNext) {
+    // Start in the card's own pose: zoomed in by the scroll, under its dark overlay.
+    fromImage.style.objectPosition = '50% 5%'
+    gsap.set(fromImage, { scale: new DOMMatrix(getComputedStyle(cardImage).transform).a, transformOrigin: '50% 65%' })
+    const cardOverlay = card.querySelector<HTMLElement>('.case-detail-next-overlay')
+    overlay = document.createElement('div')
+    Object.assign(overlay.style, {
+      position: 'absolute',
+      inset: '0',
+      pointerEvents: 'none',
+      backgroundColor: cardOverlay ? getComputedStyle(cardOverlay).backgroundColor : 'transparent',
+    })
+  }
+  ghost.append(fromImage, topImage, ...(overlay ? [overlay] : []))
   Object.assign(ghost.style, {
     position: 'fixed',
     left: '0',
@@ -124,8 +155,9 @@ export async function runSharedCaseTransition(
     await new Promise<void>((resolve) => {
       const leave = gsap.timeline({ onComplete: resolve })
       leave.to(split.lines, { yPercent: -125, duration: EXIT_TEXT_DURATION, ease: 'power3.in', stagger: 0.05 }, 0)
-      leave.call(() => document.body.append(ghost), [], SETTLE)
-      leave.to(veil, { autoAlpha: 1, duration: VEIL_DURATION, ease: 'power2.inOut' }, SETTLE)
+      if (bar) leave.to(bar, { autoAlpha: 0, duration: 0.4, ease: 'power2.out' }, 0)
+      leave.call(() => document.body.append(ghost), [], settle)
+      leave.to(veil, { autoAlpha: 1, duration: VEIL_DURATION, ease: 'power2.inOut' }, settle)
     })
 
     // 2. Go to the case page (hidden under the veil) and measure where its image is.
@@ -163,10 +195,28 @@ export async function runSharedCaseTransition(
     //    scale is uniform and the crop never changes.
     // Scaled down, so the corner is set in the ghost's own (larger) size to match the card's.
     const startScale = from.width / to.width
-    gsap.set(ghost, { width: to.width, height: to.height, scale: startScale, x: from.left, y: from.top, borderRadius: fromRadius / startScale })
+    // A card that isn't 16:9 shows only the top part of the picture: the ghost
+    // is cut to that and opens up to the full picture as it grows.
+    const crop = isNext ? Math.max(0, to.height - from.height / startScale) : 0
+    const cropped = crop > 0.5
+    gsap.set(ghost, {
+      width: to.width,
+      height: to.height,
+      scale: startScale,
+      x: from.left,
+      y: from.top,
+      borderRadius: fromRadius / startScale,
+      clipPath: cropped ? `inset(0px 0px ${crop}px 0px)` : 'none',
+    })
     await new Promise<void>((resolve) => {
       const grow = gsap.timeline({ onComplete: resolve, defaults: { ease: GROW_EASE } })
       grow.to(ghost, { x: to.left, y: to.top, scale: 1, borderRadius: radius, duration: GROW_DURATION }, 0)
+      if (cropped) grow.to(ghost, { clipPath: 'inset(0px 0px 0px 0px)', duration: GROW_DURATION }, 0)
+      if (isNext) {
+        // The zoom settles and the dark overlay lifts, so the hero's picture is plain.
+        grow.to(fromImage, { scale: 1, duration: GROW_DURATION }, 0)
+        if (overlay) grow.to(overlay, { opacity: 0, duration: NEXT_OVERLAY_FADE, ease: 'power1.inOut' }, 0)
+      }
       grow.to(topImage, { opacity: 1, duration: 0.5, ease: 'power1.inOut' }, SWAP_AT)
       grow.to(veil, { autoAlpha: 0, duration: 0.5, ease: 'power2.out' }, VEIL_OUT_AT)
     })
@@ -197,6 +247,7 @@ export async function runSharedCaseTransition(
     if (metaValues.length) gsap.set(metaValues, { clearProps: 'transform' })
     if (metaLabels.length) gsap.set(metaLabels, { clearProps: 'opacity' })
     if (metaItems.length) gsap.set(metaItems, { clearProps: 'overflow,paddingBottom,marginBottom' })
+    if (bar) gsap.set(bar, { clearProps: 'opacity,visibility' })
     gsap.set(veil, { autoAlpha: 0 })
     root.classList.remove('is-shared-transition', 'is-shared-image')
   }

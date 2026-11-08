@@ -2,6 +2,7 @@ import { useReducedMotion } from 'framer-motion'
 import { useCallback, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useScrollTrackProgress } from '../../hooks/useScrollTrackProgress'
+import { navigateWithSharedTransition } from '../../lib/pageTransition'
 import type { CaseDetailNext } from '../../types/caseDetail'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 import { Container } from '../ui'
@@ -17,8 +18,8 @@ const IMAGE_ZOOM = 0.06
 /**
  * The next case at the end of the page. The card sticks while the section's
  * extra scroll room passes; the bar under the title fills with that scroll and
- * the image zooms in with it, and when it is full the page moves on to the
- * next case.
+ * the image zooms in with it, and when it is full the image grows into the
+ * next case's hero (the shared-image transition) and the page moves on.
  */
 export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) {
   const { href, name, label, image, ariaLabel } = nextCase
@@ -45,7 +46,10 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
       // changes without a click.
       if (progress < 1 || shouldReduceMotion || hasNavigatedRef.current) return
       hasNavigatedRef.current = true
-      navigate(href)
+      // The image grows into the next case's hero, like a card on the home page.
+      const card = cardRef.current
+      if (card) navigateWithSharedTransition(href, card, navigate)
+      else navigate(href)
     },
     [href, navigate, shouldReduceMotion],
   )
