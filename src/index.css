@@ -3063,12 +3063,18 @@
     @apply mt-md inline-flex max-w-full flex-col;
   }
 
-  /* Same scale as the case hero's name. */
+  /* Same size, weight and spacing as the case hero's name (.case-detail-hero-name). */
   .case-detail-next-name {
-    font-size: clamp(3rem, 9vw, 8rem);
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
     font-weight: var(--heading-weight);
-    line-height: 0.95;
-    letter-spacing: -0.04em;
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+  }
+
+  @media (max-width: 1023px) {
+    .case-detail-next-name {
+      letter-spacing: -0.03em;
+    }
   }
 
   .case-detail-next-bar {
