@@ -1,25 +1,84 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useRef, useState, type AnchorHTMLAttributes } from 'react'
 import { matchPath, useLocation } from 'react-router-dom'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useLocale } from '../../context/LocaleContext'
 import { getFooterContent } from '../../data/footer'
 import { CASES_PATH } from '../../lib/routes'
-import { Container, RollLabel } from '../ui'
-import { FOOTER_WORDMARK_PATH, FOOTER_WORDMARK_VIEWBOX } from './footerWordmarkPath'
+import { scrollToTarget } from '../../lib/scroll'
+import { ArrowIcon, Container } from '../ui'
 
-gsap.registerPlugin(ScrollTrigger)
+type UnderlinePhase = 'idle' | 'in' | 'held' | 'out'
 
 /**
- * The studio name across the full width: a path whose viewBox hugs its
- * outline, so width: 100% puts the F and the o exactly on the content edges
- * and the baseline on the bottom edge.
+ * A footer link with a sliding underline: it grows in from the left on hover
+ * and leaves to the right on hover out. Each slide always plays through, so a
+ * quick in-and-out shows the whole line sweep across instead of flashing: the
+ * phase only moves on when the running slide has ended (animationend), and
+ * the keyframes are in index.css (.site-footer-link[data-phase]).
  */
-function FooterWordmark({ label }: { label: string }) {
+function FooterLink({
+  children,
+  withArrow = false,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement> & { withArrow?: boolean }) {
+  const [phase, setPhase] = useState<UnderlinePhase>('idle')
+  const active = useRef({ pointer: false, focus: false })
+  const phaseRef = useRef<UnderlinePhase>('idle')
+
+  const go = (next: UnderlinePhase) => {
+    phaseRef.current = next
+    setPhase(next)
+  }
+  const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const isActive = () => active.current.pointer || active.current.focus
+
+  const sync = () => {
+    const current = phaseRef.current
+    if (reduced()) {
+      go(isActive() ? 'held' : 'idle')
+    } else if (isActive() && current === 'idle') {
+      go('in')
+    } else if (!isActive() && current === 'held') {
+      go('out')
+    }
+    // During a running slide nothing changes here: onAnimationEnd decides.
+  }
+
+  const handleAnimationEnd = (event: React.AnimationEvent<HTMLAnchorElement>) => {
+    if (!event.animationName.startsWith('footer-underline')) return
+    if (phaseRef.current === 'in') go(isActive() ? 'held' : 'out')
+    else if (phaseRef.current === 'out') go(isActive() ? 'in' : 'idle')
+  }
+
   return (
-    <svg className="site-footer-wordmark" viewBox={FOOTER_WORDMARK_VIEWBOX} role="img" aria-label={label}>
-      <path d={FOOTER_WORDMARK_PATH} />
-    </svg>
+    <a
+      {...props}
+      className="site-footer-link"
+      data-phase={phase}
+      onPointerEnter={() => {
+        active.current.pointer = true
+        sync()
+      }}
+      onPointerLeave={() => {
+        active.current.pointer = false
+        sync()
+      }}
+      onFocus={(event) => {
+        active.current.focus = event.currentTarget.matches(':focus-visible')
+        sync()
+      }}
+      onBlur={() => {
+        active.current.focus = false
+        sync()
+      }}
+      onAnimationEnd={handleAnimationEnd}
+    >
+      {withArrow && (
+        <span className="site-footer-link-icon" aria-hidden="true">
+          <ArrowIcon />
+        </span>
+      )}
+      {children}
+    </a>
   )
 }
 
@@ -30,85 +89,6 @@ export function Footer() {
     matchPath({ path: `${CASES_PATH}/:caseSlug`, end: true }, pathname),
   )
   const footer = getFooterContent(locale)
-  const footerRef = useRef<HTMLElement>(null)
-
-  // The footer slides up over the page, the way the home cases section rolls
-  // over the hero: the page (the <main> before it) is sticky with its top at
-  // "screen height minus its own height", so it stops moving once its bottom
-  // reaches the bottom of the screen while the footer keeps scrolling over it.
-  // The offset follows the page's height as images load or the layout changes,
-  // and the effect follows the page itself: lazy routes first render a loading
-  // placeholder, which the real <main> then replaces.
-  useLayoutEffect(() => {
-    const element = footerRef.current
-    const shell = element?.parentElement
-    if (isCaseDetailPage || !element || !shell) return
-
-    let page: HTMLElement | null = null
-    const update = () => {
-      if (page) page.style.setProperty('--page-stick-top', `${window.innerHeight - page.offsetHeight}px`)
-    }
-    const resizeObserver = new ResizeObserver(update)
-    const release = () => {
-      if (!page) return
-      resizeObserver.unobserve(page)
-      page.classList.remove('is-under-footer')
-      page.style.removeProperty('--page-stick-top')
-      page = null
-    }
-    const attach = () => {
-      const next = element.previousElementSibling
-      if (next === page) return
-      release()
-      if (!(next instanceof HTMLElement)) return
-      page = next
-      page.classList.add('is-under-footer')
-      resizeObserver.observe(page)
-      update()
-    }
-
-    attach()
-    const mutationObserver = new MutationObserver(attach)
-    mutationObserver.observe(shell, { childList: true })
-    window.addEventListener('resize', update)
-
-    return () => {
-      mutationObserver.disconnect()
-      resizeObserver.disconnect()
-      window.removeEventListener('resize', update)
-      release()
-    }
-  }, [isCaseDetailPage, pathname])
-
-  // The footer arrives grey and turns light as it rolls in: --footer-light
-  // (which every colour in .site-footer mixes from) runs 0 → 1 from the footer
-  // entering at the bottom of the screen until it reaches the bottom of the
-  // page, so the colours are settled exactly when the page ends. Without the
-  // animation (reduced motion) it rests at 1, its light state. The footer is
-  // not rendered on case pages, so the effect re-runs when it comes back.
-  useLayoutEffect(() => {
-    const element = footerRef.current
-    if (isCaseDetailPage || !element) return
-
-    const mm = gsap.matchMedia()
-    mm.add('(prefers-reduced-motion: no-preference)', () => {
-      gsap.fromTo(
-        element,
-        { '--footer-light': 0 },
-        {
-          '--footer-light': 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: element,
-            start: 'top bottom',
-            end: 'bottom bottom',
-            scrub: true,
-          },
-        },
-      )
-    })
-    return () => mm.revert()
-  }, [isCaseDetailPage])
 
   if (isCaseDetailPage) {
     return null
@@ -117,68 +97,80 @@ export function Footer() {
   const { columnTitles } = footer
 
   return (
-    <footer ref={footerRef} className="site-footer">
+    <footer className="site-footer">
       {/* Full container so the footer frames the page on the same edges as the header. */}
       <Container fullWidth className="site-footer-inner">
-        <div className="site-footer-columns">
-          <div className="site-footer-column">
-            <h2 className="site-footer-column-title">{columnTitles.contact}</h2>
-            <ul className="site-footer-links">
+        <div className="site-footer-top">
+          <div className="site-footer-brand">
+            <h2 className="site-footer-logo">{footer.ctaTitle}</h2>
+
+            <ul className="site-footer-links site-footer-cta-links">
               <li>
-                <a href={footer.emailHref} className="site-footer-link">
-                  <RollLabel>{footer.email}</RollLabel>
-                </a>
+                <FooterLink href={footer.emailHref} withArrow>
+                  {footer.email}
+                </FooterLink>
               </li>
-              {footer.socialLinks.map((social) => (
-                <li key={social.href}>
-                  <a
-                    href={social.href}
-                    className="site-footer-link"
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    <RollLabel>{social.label}</RollLabel>
-                  </a>
+              {footer.phone && (
+                <li>
+                  <FooterLink href={footer.phoneHref}>
+                    {footer.phone}
+                  </FooterLink>
                 </li>
-              ))}
+              )}
             </ul>
+
+            <div className="site-footer-link-columns">
+              <nav className="site-footer-column" aria-label={footer.navAriaLabel}>
+                <h2 className="site-footer-column-title">{columnTitles.nav}</h2>
+                <ul className="site-footer-links site-footer-links-nav">
+                  {footer.links.map((link) => (
+                    <li key={link.href}>
+                      <FooterLink href={link.href}>
+                        {link.label}
+                      </FooterLink>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+
+              {footer.socialLinks.length > 0 && (
+                <div className="site-footer-column">
+                  <h2 className="site-footer-column-title">{columnTitles.contact}</h2>
+                  <ul className="site-footer-links">
+                    {footer.socialLinks.map((social) => (
+                      <li key={social.href}>
+                        <FooterLink href={social.href} target="_blank" rel="noreferrer noopener">
+                          {social.label}
+                        </FooterLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
 
-          <nav className="site-footer-column" aria-label={footer.navAriaLabel}>
-            <h2 className="site-footer-column-title">{columnTitles.nav}</h2>
-            <ul className="site-footer-links site-footer-links-nav">
-              {footer.links.map((link) => (
-                <li key={link.href}>
-                  <a href={link.href} className="site-footer-link">
-                    <RollLabel>{link.label}</RollLabel>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          <div className="site-footer-column">
-            <h2 className="site-footer-column-title">{columnTitles.studio}</h2>
-            <p className="site-footer-strong">{footer.locationTitle}</p>
-            <p className="site-footer-text">{footer.coordinates}</p>
-          </div>
-
-          <div className="site-footer-column">
-            <h2 className="site-footer-column-title">{columnTitles.legal}</h2>
-            <ul className="site-footer-links">
-              {footer.legalLinks.map((link) => (
-                <li key={link.href}>
-                  <a href={link.href} className="site-footer-link">
-                    <RollLabel>{link.label}</RollLabel>
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <p className="site-footer-copyright">{footer.copyright}</p>
+          <div className="site-footer-cta">
+            <img
+              className="site-footer-image"
+              src={footer.image.src}
+              alt={footer.image.alt}
+              width={1496}
+              height={1122}
+              loading="lazy"
+              decoding="async"
+            />
           </div>
         </div>
 
-        <FooterWordmark label={footer.wordmark} />
+        <div className="site-footer-bottom">
+          <div className="site-footer-bottom-start">
+            <p className="site-footer-copyright">{footer.copyright}</p>
+          </div>
+          <button type="button" className="site-footer-top-button" onClick={() => scrollToTarget(0)}>
+            {footer.backToTop}
+          </button>
+        </div>
       </Container>
     </footer>
   )
