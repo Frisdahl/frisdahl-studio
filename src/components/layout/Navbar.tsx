@@ -145,7 +145,11 @@ export function Navbar() {
       return
     }
 
-    document.body.style.overflow = 'hidden'
+    // `clip`, not `hidden`: hidden would make the body a scroll container, and any
+    // position: sticky element on the page (the Mød mig portrait) would then jump
+    // by the scroll distance the moment the menu opens. The html element's own
+    // overflow lock (html.scroll-locked) is what stops the page from scrolling.
+    document.body.style.overflow = 'clip'
 
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setIsOpen(false)
