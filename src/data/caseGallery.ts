@@ -14,8 +14,8 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
       { imageSrc: '/cases/nordwear/macbook-produktside--3-2.webp', imageAlt: 'Nordwear produktside på en MacBook Pro', aspectRatio: '3 / 2' },
     ],
     bottomWide: {
-      imageSrc: '/cases/nordwear/ipad-alle-produkter--3-2.webp',
-      imageAlt: 'Nordwear produktoversigt på en iPad',
+      imageSrc: '/cases/nordwear/ipad-forside--3-2.webp',
+      imageAlt: 'Nordwear forside på en iPad',
       aspectRatio: '3 / 2',
     },
     verticalPairBottom: [
