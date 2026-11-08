@@ -3045,7 +3045,7 @@
 
   .case-detail-next-overlay {
     @apply absolute inset-0;
-    background-color: color-mix(in srgb, var(--color-dark) 45%, transparent);
+    background-color: color-mix(in srgb, var(--color-dark) 62%, transparent);
   }
 
   .case-detail-next-content {
