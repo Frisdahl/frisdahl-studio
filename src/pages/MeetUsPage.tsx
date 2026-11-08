@@ -1,3 +1,4 @@
+import { PageEntrance } from '../components/layout/PageEntrance'
 import { PageMeta } from '../components/layout'
 import { MeetUsPageSection } from '../components/sections'
 import { useLocale } from '../context/LocaleContext'
@@ -9,6 +10,7 @@ export function MeetUsPage() {
 
   return (
     <main className="page-surface bg-background">
+      <PageEntrance />
       <PageMeta title={titles.meetUs} />
       <MeetUsPageSection />
     </main>

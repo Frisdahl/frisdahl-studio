@@ -4,6 +4,9 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { registerPageTransition, registerSharedTransition } from '../../lib/pageTransition'
 import { canShareCard, runSharedCaseTransition } from '../../lib/sharedCaseTransition'
+import { firstScreenImages, waitForPage } from '../../lib/pageSwap'
+import { coverPage, revealPage } from '../../lib/pageReveal'
+import { playPageExit } from '../../lib/pageExit'
 import { lockScroll, prefersReducedMotion, unlockScroll } from '../../lib/scroll'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -13,55 +16,6 @@ gsap.registerPlugin(ScrollTrigger)
 const DURATION = 1
 const STAGGER = 0.075
 const EASE = 'expo.inOut'
-// The longest the new page waits for its first screen's images before it shows.
-const IMAGE_WAIT = 1000
-
-/** Resolves with the new route's <main> once it has replaced `previous` (lazy pages load first). */
-function waitForPage(shell: HTMLElement, previous: Element | null) {
-  // Case to case keeps the same <main> (one route component), so a changed case name counts too.
-  const caseName = () => shell.querySelector('.case-detail-hero-name')?.textContent ?? null
-  const previousName = caseName()
-  return new Promise<Element | null>((resolve) => {
-    const started = performance.now()
-    const check = () => {
-      const main = shell.querySelector(':scope > .global-layout > main')
-      const swapped = (main && main !== previous) || (previousName !== null && caseName() !== previousName)
-      if (swapped || performance.now() - started > 4000) {
-        resolve(main)
-        return
-      }
-      // A timer, not requestAnimationFrame: while the page is covered a frame callback can
-      // wait a full second before it runs, which stood as dead time in every transition.
-      setTimeout(check, 16)
-    }
-    check()
-  })
-}
-
-/** An element's distance from the top of the page, ignoring transforms. */
-function pageTop(element: HTMLElement) {
-  let top = 0
-  for (let node: HTMLElement | null = element; node; node = node.offsetParent as HTMLElement | null) {
-    top += node.offsetTop
-  }
-  return top
-}
-
-/**
- * Loads and decodes the images on the new page's first screen (at most
- * IMAGE_WAIT), so none pop in as the panels uncover it. Lazy images would not
- * start on their own: the page is covered until then.
- */
-async function firstScreenImages(main: Element | null, height: number) {
-  if (!main) return
-  const images = [...main.querySelectorAll('img')].filter((image) => pageTop(image) < height)
-  for (const image of images) image.loading = 'eager'
-  await Promise.race([
-    Promise.all(images.map((image) => image.decode().catch(() => {}))),
-    new Promise((resolve) => setTimeout(resolve, IMAGE_WAIT)),
-  ])
-}
-
 /** An in-app link this transition should handle, or null to leave it alone. */
 function transitionHref(event: MouseEvent, currentPath: string): string | null {
   if (event.defaultPrevented || event.button !== 0) return null
@@ -113,6 +67,7 @@ export function PageTransition() {
       }
       runningRef.current = true
       lockScroll()
+      coverPage()
       document.documentElement.classList.add('is-page-transitioning')
       gsap.set(loader, { autoAlpha: 1 })
 
@@ -130,7 +85,9 @@ export function PageTransition() {
       window.scrollTo(0, 0)
       await firstScreenImages(main, window.innerHeight)
 
-      // 3. The panels rise on off the top, the dark one first.
+      // 3. The panels rise on off the top, the dark one first. The new page's entrance
+      // starts as they begin to uncover it.
+      gsap.delayedCall(0.3, revealPage)
       await gsap.to(panels, {
         yPercent: -25,
         clipPath: 'inset(0% 0% 75% 0%)',
@@ -141,6 +98,58 @@ export function PageTransition() {
 
       gsap.set(loader, { autoAlpha: 0 })
       gsap.set(panels, { clearProps: 'transform,clipPath' })
+      document.documentElement.classList.remove('is-page-transitioning')
+      unlockScroll()
+      ScrollTrigger.refresh()
+      runningRef.current = false
+    }
+
+    // The logo: no wipe panels. The page's content leaves (text slides up out of its masks,
+    // images close to their centre, the rest fades; lib/pageExit.ts), the route changes while
+    // the page is empty, and the new page comes in (the home page with its own entrance, any
+    // other with a rise). Same sequence as a link in the menu.
+    const runContent = async (href: string) => {
+      if (runningRef.current) return
+      if (prefersReducedMotion()) {
+        navigate(href)
+        return
+      }
+      runningRef.current = true
+      lockScroll()
+      coverPage()
+      document.documentElement.classList.add('is-page-transitioning')
+      const layout = shell.querySelector(':scope > .global-layout')
+
+      // 1. Out: the text slides away, the images close, the rest fades.
+      const restore = layout ? await playPageExit(layout) : () => {}
+      // Whatever page is mounted next stays hidden until it is brought in below. The old
+      // one's DOM is put back first (its text was split into lines), hidden by that class.
+      document.documentElement.classList.add('is-content-swapping')
+      restore()
+
+      // 2. Change the page while nothing is showing, and wait for its first screen.
+      const previous = shell.querySelector(':scope > .global-layout > main')
+      navigate(href)
+      const main = await waitForPage(shell, previous)
+      window.scrollTo(0, 0)
+      await firstScreenImages(main, window.innerHeight)
+
+      // 3. In: the page with its own entrance (the home page's hero) plays that; any other
+      // page's content rises in. The footer fades in with it.
+      const footer = shell.querySelector<HTMLElement>(':scope > .global-layout > .site-footer')
+      const ownEntrance = Boolean(main?.matches('[data-page-entrance]') || main?.querySelector('[data-page-entrance]'))
+      if (main && !ownEntrance) gsap.set(main, { autoAlpha: 0, y: 48 })
+      if (footer) gsap.set(footer, { autoAlpha: 0 })
+      document.documentElement.classList.remove('is-content-swapping')
+      revealPage()
+      if (main && !ownEntrance) {
+        gsap.to(main, { autoAlpha: 1, y: 0, duration: 0.9, ease: 'power3.out', clearProps: 'transform,opacity,visibility' })
+      }
+      if (footer) {
+        gsap.to(footer, { autoAlpha: 1, duration: 0.9, delay: 0.3, ease: 'power2.out', clearProps: 'opacity,visibility' })
+      }
+      await new Promise((resolve) => setTimeout(resolve, 900))
+
       document.documentElement.classList.remove('is-page-transitioning')
       unlockScroll()
       ScrollTrigger.refresh()
@@ -178,9 +187,12 @@ export function PageTransition() {
       const href = transitionHref(event, pathnameRef.current)
       if (!href) return
       event.preventDefault()
+      // The menu is already taking the page somewhere (Navbar): ignore other links meanwhile.
+      if (document.documentElement.classList.contains('menu-leaving')) return
       // The home page's project cards, or the "next project" card on a case page.
       const card = (event.target as Element).closest<HTMLElement>('.case-card, .case-detail-next')
       if (card && canShareCard(card) && !prefersReducedMotion()) void runShared(href, card)
+      else if ((event.target as Element).closest('.site-header-logo')) void runContent(href)
       else void run(href)
     }
 

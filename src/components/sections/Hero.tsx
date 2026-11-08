@@ -1,8 +1,10 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import { gsap } from 'gsap'
 import { useLocale } from '../../context/LocaleContext'
+import { whenPageRevealed } from '../../lib/pageReveal'
 import { CASES_PATH } from '../../lib/routes'
 import { responsiveImageProps } from '../../lib/responsiveImage'
-import { ArrowChipButton, Container } from '../ui'
+import { ArrowChipButton, Container, MaskedLineReveal } from '../ui'
 import styles from './Hero.module.css'
 
 const heroContent = {
@@ -52,6 +54,59 @@ export function Hero() {
   const content = heroContent[locale]
   const carouselRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
+  const ctaRef = useRef<HTMLDivElement>(null)
+  // Resolves when the page is uncovered (right away unless a transition is running), so the
+  // entrance below plays where it can be seen, not behind the menu panel or the wipe.
+  const revealed = useMemo(() => whenPageRevealed(), [])
+
+  // Entrance: the heading and paragraph rise out of their line masks (MaskedLineReveal,
+  // below), the button fades in, and the slides open from nothing at their vertical centre
+  // to their full height, the left one first. Reduced motion shows everything at once.
+  useLayoutEffect(() => {
+    const track = trackRef.current
+    const cta = ctaRef.current
+    const slides = track?.firstElementChild ? Array.from(track.firstElementChild.children) : []
+    if (!track || slides.length === 0) return
+
+    const mm = gsap.matchMedia()
+    let cancelled = false
+    mm.add('(prefers-reduced-motion: no-preference)', (context) => {
+      gsap.set(slides, { clipPath: 'inset(50% 0% 50% 0%)' })
+      if (cta) gsap.set(cta, { autoAlpha: 0 })
+      void revealed.then(() => {
+        if (cancelled) return
+        context.add?.(() => {
+          // fromTo, with both clips written out in full: the browser reports the hidden clip
+          // as 'inset(50% 0%)', and a `to` from that shorthand would only move the top edge.
+          gsap.fromTo(
+            slides,
+            { clipPath: 'inset(50% 0% 50% 0%)' },
+            {
+              clipPath: 'inset(0% 0% 0% 0%)',
+              duration: 1.2,
+              delay: 0.15,
+              ease: 'expo.out',
+              stagger: 0.1,
+              clearProps: 'clipPath',
+            },
+          )
+          if (cta) {
+            gsap.to(cta, {
+              autoAlpha: 1,
+              duration: 0.9,
+              delay: 0.75,
+              ease: 'power2.out',
+              clearProps: 'opacity,visibility',
+            })
+          }
+        })
+      })
+    })
+    return () => {
+      cancelled = true
+      mm.revert()
+    }
+  }, [revealed])
 
   // Carousel: drifts slowly right to left on its own and can be dragged with
   // mouse or touch. A drag keeps its speed when released and eases back into
@@ -344,27 +399,33 @@ export function Hero() {
   }, [])
 
   return (
-    <section className={styles.hero} aria-labelledby="home-hero-title">
+    <section className={styles.hero} aria-labelledby="home-hero-title" data-page-entrance="own">
       <div className={styles.content}>
         <Container columns contentClassName={styles.inner}>
           <h1 id="home-hero-title" className={styles.title}>
-            {content.headingLead}
-            <br />
-            {content.headingBefore}
-            <span className={styles.titleAccent}>{content.headingAccent}</span>
-            {content.headingAfter}
-            <span className={styles.titleDot} aria-hidden="true" />
+            <MaskedLineReveal as="span" className={styles.titleLines} trigger="mount" startAfter={revealed}>
+              {content.headingLead}
+              <br />
+              {content.headingBefore}
+              <span className={styles.titleAccent}>{content.headingAccent}</span>
+              {content.headingAfter}
+              <span className={styles.titleDot} aria-hidden="true" />
+            </MaskedLineReveal>
           </h1>
 
           <div className={styles.aside}>
-            <p className={styles.intro}>{content.intro}</p>
-            <ArrowChipButton
-              direction="right"
-              variant="diagonal"
-              label={content.cta}
-              text={content.cta}
-              href={CASES_PATH}
-            />
+            <MaskedLineReveal as="p" className={styles.intro} trigger="mount" delay={0.3} startAfter={revealed}>
+              {content.intro}
+            </MaskedLineReveal>
+            <div ref={ctaRef}>
+              <ArrowChipButton
+                direction="right"
+                variant="diagonal"
+                label={content.cta}
+                text={content.cta}
+                href={CASES_PATH}
+              />
+            </div>
           </div>
         </Container>
 

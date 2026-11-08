@@ -2181,7 +2181,9 @@
      scroll locked, page inert) and then .menu-open (slid down). The page itself
      doesn't move. */
   :root {
-    --menu-bg: #f6f7f7;
+    /* The page colour, so a link chosen in the menu can change the page behind the panel
+       without anything showing (see .menu-leaving). */
+    --menu-bg: var(--color-background);
     /* Opening is a large movement (the site's expo in-out); closing is quicker
        and starts a beat late, once the links have left. Navbar waits
        --menu-close-delay + --menu-close-duration before it unlocks the page
@@ -2246,6 +2248,43 @@
   .is-shared-image .case-detail-hero-image,
   .is-shared-transition .case-detail-hero-name,
   .is-shared-transition .case-detail-hero-meta {
+    visibility: hidden;
+  }
+
+  /* The exit's line masks (lib/pageExit.ts): a little room below, taken back with a negative
+     margin, so the tails of g and j are not cut while the line slides out. */
+  .page-exit-line-mask,
+  .page-enter-line-mask {
+    padding-bottom: 0.2em;
+    margin-bottom: -0.2em;
+  }
+
+  /* Text split into lines for an entrance or exit (SplitText wraps each line in a block of
+     its own): a paragraph's first-line indent (text-indent) is inherited by every one of
+     those blocks, which pushes each line out of its box and makes it wrap again, so the text
+     gets narrower while it moves. Only the first line keeps the indent. */
+  .page-enter-line,
+  .page-exit-line,
+  .masked-line-reveal-line {
+    text-indent: 0;
+  }
+
+  /* The words SplitText measures with are inline blocks too, and each would get the whole
+     indent again, so the text would measure (and wrap) much narrower than it really is. */
+  .page-enter-word,
+  .page-exit-word {
+    text-indent: 0;
+  }
+
+  .page-enter-line-mask:first-child > .page-enter-line,
+  .page-exit-line-mask:first-child > .page-exit-line,
+  .masked-line-reveal-line-mask:first-child > .masked-line-reveal-line {
+    text-indent: inherit;
+  }
+
+  /* The logo's page change (PageTransition, runContent): while the next page is mounting,
+     its content and the footer are hidden, so it never shows before it is brought in. */
+  .is-content-swapping .page-shell > .global-layout > * {
     visibility: hidden;
   }
 
@@ -2523,6 +2562,36 @@
   .menu-open .menu-panel-media {
     clip-path: inset(0);
     transition: clip-path 1.15s var(--menu-slide-ease) 0.4s;
+  }
+
+  /* A link chosen in the menu (Navbar, leaveMenuTo): the panel stays where it is and the
+     content leaves, the links first, top to bottom, back down out of their masks, then the
+     info and the picture. The panel then fades (.menu-fade) over the new page. */
+  .menu-open.menu-leaving .menu-link {
+    transform: translateY(110%);
+    transition:
+      transform 0.45s cubic-bezier(0.7, 0, 0.84, 0),
+      opacity 0.35s ease;
+  }
+
+  .menu-open.menu-leaving .menu-links li:nth-child(1) .menu-link { transition-delay: 0s, 0s; }
+  .menu-open.menu-leaving .menu-links li:nth-child(2) .menu-link { transition-delay: 0.05s, 0s; }
+  .menu-open.menu-leaving .menu-links li:nth-child(3) .menu-link { transition-delay: 0.1s, 0s; }
+  .menu-open.menu-leaving .menu-links li:nth-child(4) .menu-link { transition-delay: 0.15s, 0s; }
+
+  .menu-open.menu-leaving .menu-info {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .menu-open.menu-leaving .menu-panel-media {
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 0.5s var(--menu-ease-in-out);
+  }
+
+  .menu-open.menu-fade .menu-panel {
+    opacity: 0;
+    transition: opacity 0.55s var(--menu-ease-in-out);
   }
 
   .menu-panel-media img {

@@ -1,3 +1,4 @@
+import { PageEntrance } from '../components/layout/PageEntrance'
 import { PageMeta } from '../components/layout'
 import { CasesPageSection } from '../components/sections'
 import { useLocale } from '../context/LocaleContext'
@@ -9,6 +10,7 @@ export function CasesPage() {
 
   return (
     <main className="page-surface bg-background">
+      <PageEntrance />
       <PageMeta title={titles.cases} />
       <CasesPageSection />
     </main>

@@ -1,3 +1,4 @@
+import { PageEntrance } from '../components/layout/PageEntrance'
 import { Navigate, useParams } from 'react-router-dom'
 import { PageMeta } from '../components/layout'
 import { useLocale } from '../context/LocaleContext'
@@ -38,6 +39,7 @@ function CaseDetail({ caseSlug }: { caseSlug: string | undefined }) {
 
   return (
     <main className="page-surface case-detail-page bg-background">
+      <PageEntrance />
       <PageMeta title={detail.hero.title} description={detail.hero.description} />
       <CaseDetailHero hero={detail.hero} />
       <CaseDetailOverview overview={detail.overview} />

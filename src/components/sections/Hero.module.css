@@ -48,6 +48,12 @@
   letter-spacing: -0.035em;
 }
 
+/* The heading's lines slide up out of masks (MaskedLineReveal); the wrapper is a block so
+   it has lines of its own. */
+.titleLines {
+  display: block;
+}
+
 /* The accent word, in the site's red. */
 .titleAccent {
   color: var(--color-accent);
