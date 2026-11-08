@@ -4353,7 +4353,8 @@
     position: relative;
     order: -1;
     overflow: hidden;
-    aspect-ratio: 4 / 3;
+    /* The pictures are portrait (4:5), like the desktop frame. */
+    aspect-ratio: 4 / 5;
     border-radius: clamp(0.375rem, 0.7vw, 0.625rem);
     background-color: #ececec;
   }

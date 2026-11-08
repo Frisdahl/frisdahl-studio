@@ -67,37 +67,31 @@ const homeContent = {
     addedValue: {
       ariaLabel: "Hvad jeg kan tilbyde",
       eyebrow: "Hvad jeg kan tilbyde jeres virksomhed",
-      // The images are placeholders from existing case material.
+      // Portrait (4:5) mockups made for the studio: warm stone light, off-white objects, dark type, red dot.
       items: [
-        {
-          title: "Brand strategi",
-          text: "Jeg hjælper jer med at definere, hvem I er, hvem I taler til, og hvad der adskiller jer fra konkurrenterne. Strategien bliver kompasset for alle de valg, der følger.",
-          imageSrc: "/images/pricing/digital-strategy.webp",
-          imageAlt: "Strategiarbejde på skærm",
-        },
         {
           title: "Brand identitet",
           text: "Logo, farver, typografi og et visuelt sprog, der føles som jer – samlet i et system, der fungerer lige godt på skærm, i tryk og på sociale medier.",
-          imageSrc: "/cases/visuel-atelier/hero.webp",
-          imageAlt: "Visuel identitet for Visuel Atelier",
+          imageSrc: "/images/offer/brand-identitet--4-5.webp",
+          imageAlt: "Notesbog med Frisdahl Studios FS-logo på en hylde",
         },
         {
           title: "Brand præsentation",
           text: "Jeg sørger for, at jeres brand fremstår skarpt overalt – fra præsentationer og salgsmaterialer til de første indtryk, kunderne møder.",
-          imageSrc: "/cases/nordwear/production.webp",
-          imageAlt: "Nordwear præsenteret på en bærbar computer",
+          imageSrc: "/images/offer/brand-praesentation--4-5.webp",
+          imageAlt: "To visitkort med teksten Frisdahl Studio Design på armlænet af en lænestol",
         },
         {
           title: "Hjemmeside design",
           text: "Gennemarbejdet design med fokus på brugeroplevelse og konvertering, hvor hver side guider den besøgende videre mod næste skridt.",
-          imageSrc: "/cases/nordwear/category.webp",
-          imageAlt: "Nordwear kategoriside",
+          imageSrc: "/images/offer/hjemmeside-design--4-5.webp",
+          imageAlt: "En hånd rækker en telefon med FS-logoet frem mod en anden hånd",
         },
         {
           title: "Hjemmeside udvikling",
           text: "Hurtige, tilgængelige og skalerbare hjemmesider, bygget med moderne teknologi og nemme at vedligeholde, i takt med at jeres virksomhed vokser.",
-          imageSrc: "/images/webudvikling/webudvikling-split.webp",
-          imageAlt: "Hjemmeside under udvikling",
+          imageSrc: "/images/offer/hjemmeside-udvikling--4-5.webp",
+          imageAlt: "Bærbar computer med en rød skærm og teksten frisdahl studio",
         },
       ],
     },
