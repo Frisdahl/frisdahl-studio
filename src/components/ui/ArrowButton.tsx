@@ -4,7 +4,10 @@ import { ArrowIcon } from './ArrowIcon'
 
 interface ArrowButtonProps {
   children: string
-  href: string
+  /** A link to this address; without one the button is a real <button> (see `type`). */
+  href?: string
+  /** For the <button> version: 'submit' sends the form it is in. */
+  type?: 'button' | 'submit'
   /** Another site: opens in a new tab. */
   external?: boolean
   /**
@@ -38,11 +41,12 @@ const HOVER_OUT = 0.4
 export function ArrowButton({
   children,
   href,
+  type = 'button',
   external = false,
   variant = 'solid',
   className = '',
 }: ArrowButtonProps) {
-  const rootRef = useRef<HTMLAnchorElement>(null)
+  const rootRef = useRef<HTMLAnchorElement & HTMLButtonElement>(null)
   const timeline = useRef<gsap.core.Timeline | null>(null)
 
   useLayoutEffect(() => {
@@ -101,22 +105,39 @@ export function ArrowButton({
     if (event.currentTarget.matches(':focus-visible')) go(1)
   }
 
-  return (
-    <a
-      ref={rootRef}
-      href={href}
-      className={`arrow-btn${variant === 'text' ? ' arrow-btn-text' : ''} ${className}`.trim()}
-      {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
-      onPointerEnter={handlePointerEnter}
-      onPointerLeave={handlePointerLeave}
-      onFocus={handleFocus}
-      onBlur={() => go(0)}
-    >
+  const shared = {
+    className: `arrow-btn${variant === 'text' ? ' arrow-btn-text' : ''} ${className}`.trim(),
+    onPointerEnter: handlePointerEnter,
+    onPointerLeave: handlePointerLeave,
+    onFocus: handleFocus,
+    onBlur: () => go(0),
+  }
+  const content = (
+    <>
       <span>{children}</span>
       <span className="arrow-btn-icon" aria-hidden="true">
         <ArrowIcon className="arrow-btn-arrow arrow-btn-arrow-out" rotate={-45} />
         <ArrowIcon className="arrow-btn-arrow arrow-btn-arrow-in" rotate={-45} />
       </span>
+    </>
+  )
+
+  if (href === undefined) {
+    return (
+      <button ref={rootRef} type={type} {...shared}>
+        {content}
+      </button>
+    )
+  }
+
+  return (
+    <a
+      ref={rootRef}
+      href={href}
+      {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
+      {...shared}
+    >
+      {content}
     </a>
   )
 }

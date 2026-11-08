@@ -1,6 +1,6 @@
 import { ContactForm } from '../components/contact/ContactForm'
 import { PageMeta } from '../components/layout'
-import { Container, WithHeadingDot } from '../components/ui'
+import { Container, WavePhrases } from '../components/ui'
 import { useLocale } from '../context/LocaleContext'
 import { getContactPageContent } from '../data/contact'
 import { getPageMetaContent } from '../data/pageMeta'
@@ -9,7 +9,7 @@ import { getPageMetaContent } from '../data/pageMeta'
 export function ContactPage() {
   const { locale } = useLocale()
   const { titles } = getPageMetaContent(locale)
-  const { headingLine1, headingLine2 } = getContactPageContent(locale)
+  const { headingLine1, headingPhrases } = getContactPageContent(locale)
 
   return (
     <main className="page-surface contact-page">
@@ -21,7 +21,7 @@ export function ContactPage() {
             <h1 className="contact-page-heading">
               <span className="block">{headingLine1}</span>{' '}
               <span className="contact-page-heading-muted block">
-                <WithHeadingDot>{headingLine2}</WithHeadingDot>
+                <WavePhrases phrases={headingPhrases} />
               </span>
             </h1>
           </div>

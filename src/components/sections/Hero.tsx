@@ -7,10 +7,10 @@ import styles from './Hero.module.css'
 
 const heroContent = {
   da: {
-    // Two lines in the dark ink; "design" in the accent red, a red dot to end on.
+    // Two lines in the dark ink; "webudvikling" in the accent red, a red dot to end on.
     headingLead: 'Digitale løsninger',
     headingBefore: 'med ',
-    headingAccent: 'design',
+    headingAccent: 'webudvikling',
     headingAfter: ' i fokus',
     intro: 'Webudvikling, design og digitale oplevelser, der kombinerer æstetik, funktion og performance.',
     cta: 'Udforsk projekter',

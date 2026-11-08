@@ -91,7 +91,9 @@ export function Footer() {
   )
   const footer = getFooterContent(locale)
 
-  if (isCaseDetailPage) {
+  // The case pages end on their next-project card, and the contact page is the call to action
+  // itself, so neither needs the footer.
+  if (isCaseDetailPage || pathname === CONTACT_PATH) {
     return null
   }
 

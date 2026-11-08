@@ -4686,6 +4686,45 @@
     color: var(--contact-ink);
   }
 
+  /* The heading's swapping second line (WavePhrases): every phrase in one grid cell, so the
+     line is as wide as the widest. Each character is clipped by the line, with room below for
+     the tails of g (none above, so an exiting letter never shows over the line above), and
+     rises out of / into it. */
+  .wave-phrases {
+    position: relative;
+    display: inline-grid;
+    overflow: hidden;
+    padding-block: 0 0.22em;
+    margin-block: 0 -0.22em;
+    /* Room for the last letter's overhang, taken back so the line keeps its width. */
+    padding-inline-end: 0.08em;
+    margin-inline-end: -0.08em;
+  }
+
+  .wave-phrase {
+    grid-area: 1 / 1;
+    white-space: nowrap;
+  }
+
+  /* Only the first shows at rest; WavePhrases reveals the others as they take their turn. */
+  .wave-phrase:not([data-active]) {
+    visibility: hidden;
+  }
+
+  .wave-char {
+    display: inline-block;
+  }
+
+  /* The text spoken for the line: the first phrase, off screen. */
+  .wave-phrases-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
   .contact-page-form {
     @apply min-w-0;
   }
@@ -4777,15 +4816,6 @@
   .contact-form-status {
     @apply m-0 -mt-4 text-body-sm empty:hidden;
     color: var(--contact-muted);
-  }
-
-  /* The submit button's arrow has no chip behind it: the arrow alone, light on the dark button. */
-  .contact-page .header-contact .hero-cta-btn-icon {
-    background-color: transparent;
-  }
-
-  .contact-page .header-contact .hero-cta-btn-arrow {
-    color: var(--color-light);
   }
 
   .contact-drawer-panel .btn-secondary {

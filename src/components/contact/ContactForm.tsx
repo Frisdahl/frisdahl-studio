@@ -3,7 +3,7 @@ import { useLocale } from '../../context/LocaleContext'
 import { getContactPageContent } from '../../data/contact'
 import { getFooterContent } from '../../data/footer'
 import { getHomeContent } from '../../data/home'
-import { ContactButton } from '../ui'
+import { ArrowButton } from '../ui'
 
 /** Copy with every "*" in the accent red (the required-field marker). */
 function WithRequiredMark({ text }: { text: string }) {
@@ -149,7 +149,7 @@ export function ContactForm() {
         <p className="contact-form-note">
           <WithRequiredMark text={copy.requiredNote} />
         </p>
-        <ContactButton type="submit">{copy.submit}</ContactButton>
+        <ArrowButton type="submit">{copy.submit}</ArrowButton>
       </div>
 
       <p className="contact-form-status" role="status">

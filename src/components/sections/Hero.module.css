@@ -48,9 +48,9 @@
   letter-spacing: -0.035em;
 }
 
-/* Same red as the header contact button's hover fill. */
+/* The accent word, in the site's red. */
 .titleAccent {
-  color: #ff4f56;
+  color: var(--color-accent);
 }
 
 /* A round dot in place of the full stop, sitting on the baseline. */
