@@ -4170,7 +4170,7 @@
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 9999px;
-    background-color: #eb4b3d;
+    background-color: var(--color-accent);
     animation: added-value-blink 1.6s ease-in-out infinite;
   }
 
@@ -4217,7 +4217,7 @@
   .added-value-number {
     flex-shrink: 0;
     width: var(--added-value-number-width);
-    color: color-mix(in srgb, var(--color-dark) 40%, transparent);
+    color: #b2b2b2;
     font-family: var(--font-sans);
     font-size: 0.875rem;
     font-weight: 500;
@@ -4227,7 +4227,7 @@
   .added-value-title {
     color: #b2b2b2;
     font-family: var(--font-heading);
-    font-size: clamp(2rem, 3.1vw, 3rem);
+    font-size: clamp(2rem, 3.35vw, 3rem);
     font-weight: var(--heading-weight);
     line-height: 1.05;
     letter-spacing: -0.03em;
@@ -4352,7 +4352,10 @@
     }
 
     .reviews-controls {
-      grid-column: 2 / span 3;
+      /* Starts on the left edge of the added-value content beneath (its
+         82rem column, centred), not on a grid column line. */
+      grid-column: 1 / span 4;
+      margin-left: max(0px, calc((100vw - 82rem) / 2 - var(--page-gutter)));
       grid-row: 1;
       align-self: start;
     }
