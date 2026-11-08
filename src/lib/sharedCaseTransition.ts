@@ -26,6 +26,9 @@ const NEXT_SETTLE = 0.3
 const NEXT_EXIT_TEXT_DURATION = 0.4
 const NEXT_VEIL_DURATION = 0.25
 const NEXT_OVERLAY_FADE = 0.8
+// The card's zoom is gone by NEXT_ZOOM_SETTLE; only then is the real hero picture faded in.
+const NEXT_ZOOM_SETTLE = 0.75
+const NEXT_SWAP_AT = 0.9
 // The longest the transition waits for the case page's hero picture (ms).
 const HERO_WAIT = 800
 const EXIT_TEXT_DURATION = 0.65
@@ -228,10 +231,11 @@ export async function runSharedCaseTransition(
       if (cropped) grow.to(ghost, { clipPath: 'inset(0px 0px 0px 0px)', duration: GROW_DURATION }, 0)
       if (isNext) {
         // The zoom settles and the dark overlay lifts, so the hero's picture is plain.
-        grow.to(fromImage, { scale: 1, duration: GROW_DURATION }, 0)
+        // Fully settled before the swap below, so the two pictures line up exactly.
+        grow.to(fromImage, { scale: 1, duration: NEXT_ZOOM_SETTLE, ease: 'power2.out' }, 0)
         if (overlay) grow.to(overlay, { opacity: 0, duration: NEXT_OVERLAY_FADE, ease: 'power1.inOut' }, 0)
       }
-      grow.to(topImage, { opacity: 1, duration: 0.5, ease: 'power1.inOut' }, SWAP_AT)
+      grow.to(topImage, { opacity: 1, duration: isNext ? 0.15 : 0.5, ease: 'power1.inOut' }, isNext ? NEXT_SWAP_AT : SWAP_AT)
       grow.to(veil, { autoAlpha: 0, duration: 0.5, ease: 'power2.out' }, VEIL_OUT_AT)
     })
 
