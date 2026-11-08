@@ -8,6 +8,7 @@ import { ScrollPresetSwitcher } from './components/ui/ScrollPresetSwitcher'
 import {
   CASES_PATH,
   CONTACT_PATH,
+  MEET_US_LEGACY_PATH,
   MEET_US_PATH,
   PRICING_PATH,
   PRIVACY_POLICY_PATH,
@@ -56,6 +57,7 @@ function App() {
                   <Route path={CASES_PATH} element={<CasesPage />} />
                   <Route path={`${CASES_PATH}/:caseSlug`} element={<CaseDetailPage />} />
                   <Route path={MEET_US_PATH} element={<MeetUsPage />} />
+                  <Route path={MEET_US_LEGACY_PATH} element={<Navigate to={MEET_US_PATH} replace />} />
                   <Route path={CONTACT_PATH} element={<ContactPage />} />
                   <Route path={PROCESS_PATH} element={<ProcessPage />} />
                   <Route path={PRIVACY_POLICY_PATH} element={<PrivacyPolicyPage />} />
