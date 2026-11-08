@@ -31,9 +31,7 @@ const caseDetails = {
           'En skarp digital platform med fokus på performance, branding og visuel identitet — bygget til at konvertere og skalere med brandet.',
         sliderAriaLabel: 'Automatisk gennemløb af Nordwear case-billeder',
         slides: [
-          { imageSrc: '/cases/nordwear/official--16-10.webp', imageAlt: 'Nordwear forside på en bærbar' },
-          { imageSrc: '/cases/nordwear/production--16-10.jpg', imageAlt: 'Nordwear produktion' },
-          { imageSrc: '/cases/nordwear/cart--16-10.jpg', imageAlt: 'Nordwear kurv' },
+          { imageSrc: '/cases/nordwear/main-higgs--16-9.webp', imageAlt: 'Nordwear forside på en bærbar' },
         ],
       },
       columns: [
@@ -105,7 +103,7 @@ const caseDetails = {
           'En redaktionel og filmisk portfolio, hvor filmene er i centrum, og hvor Peter selv styrer indholdet i et indbygget admin-panel.',
         sliderAriaLabel: 'Automatisk gennemløb af Peter Salling case-billeder',
         slides: [
-          { imageSrc: '/cases/peter-salling/macbook-glass--16-9.webp', imageAlt: 'Peter Sallings Alt jeg forventede-side på en MacBook på et glasbord' },
+          { imageSrc: '/cases/peter-salling/main-higgs--16-9.webp', imageAlt: 'Peter Sallings Alt jeg forventede-side på en MacBook på et glasbord' },
         ],
       },
       columns: [
@@ -179,9 +177,7 @@ const caseDetails = {
           'A sharp digital platform focused on performance, branding, and visual identity — built to convert and scale with the brand.',
         sliderAriaLabel: 'Automatic showcase of Nordwear case images',
         slides: [
-          { imageSrc: '/cases/nordwear/official--16-10.webp', imageAlt: 'Nordwear homepage on a laptop' },
-          { imageSrc: '/cases/nordwear/production--16-10.jpg', imageAlt: 'Nordwear production page' },
-          { imageSrc: '/cases/nordwear/cart--16-10.jpg', imageAlt: 'Nordwear cart' },
+          { imageSrc: '/cases/nordwear/main-higgs--16-9.webp', imageAlt: 'Nordwear homepage on a laptop' },
         ],
       },
       columns: [
@@ -253,7 +249,7 @@ const caseDetails = {
           'An editorial, cinematic portfolio that puts the films first, with content Peter manages himself in a built-in admin panel.',
         sliderAriaLabel: 'Automatic slideshow of Peter Salling case images',
         slides: [
-          { imageSrc: '/cases/peter-salling/macbook-glass--16-9.webp', imageAlt: 'Peter Salling Alt jeg forventede page on a MacBook on a glass table' },
+          { imageSrc: '/cases/peter-salling/main-higgs--16-9.webp', imageAlt: 'Peter Salling Alt jeg forventede page on a MacBook on a glass table' },
         ],
       },
       columns: [
@@ -699,6 +695,7 @@ export function getCasePreviewImages(locale: Locale, caseSlug: string): CasePrev
   if (!detail) return []
   const gallery = detail.gallery
   const images = [
+    ...(gallery.hoverTrio ?? []),
     ...detail.hero.slides,
     ...(gallery.introPair ?? []),
     ...(gallery.horizontalTopHidden ? [] : (gallery.horizontalTopPair ?? [gallery.horizontalTop])),

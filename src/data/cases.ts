@@ -42,7 +42,7 @@ const casesPageContent = {
         industry: 'Film',
         category: 'website',
         href: '/cases/peter-salling',
-        imageSrc: '/cases/peter-salling/official--6-7.webp',
+        imageSrc: '/cases/peter-salling/main-higgs--16-9.webp',
         imageAlt: 'Peter Salling case',
         keywords: ['Website', 'Design', 'Udvikling', 'CMS'],
         description:
@@ -54,7 +54,7 @@ const casesPageContent = {
         industry: 'Mode',
         category: 'website',
         href: '/cases/nordwear',
-        imageSrc: '/cases/nordwear/mobile--6-7.jpg',
+        imageSrc: '/cases/nordwear/main-higgs--16-9.webp',
         imageAlt: 'Nordwear case',
         panelHoverColor: '#f0e0e4',
         keywords: ['Website', 'UX-design', 'Branding', 'Udvikling'],
@@ -109,7 +109,7 @@ const casesPageContent = {
         industry: 'Film',
         category: 'website',
         href: '/cases/peter-salling',
-        imageSrc: '/cases/peter-salling/official--6-7.webp',
+        imageSrc: '/cases/peter-salling/main-higgs--16-9.webp',
         imageAlt: 'Peter Salling case',
         keywords: ['Website', 'Design', 'Development', 'CMS'],
         description:
@@ -121,7 +121,7 @@ const casesPageContent = {
         industry: 'Fashion',
         category: 'website',
         href: '/cases/nordwear',
-        imageSrc: '/cases/nordwear/mobile--6-7.jpg',
+        imageSrc: '/cases/nordwear/main-higgs--16-9.webp',
         imageAlt: 'Nordwear case',
         panelHoverColor: '#f0e0e4',
         keywords: ['Website', 'UX-design', 'Branding', 'Development'],
@@ -164,8 +164,15 @@ export function getCasesResultsCountLabel(locale: Locale, count: number): string
   return count === 1 ? '1 case shown' : `${count} cases shown`
 }
 
+/**
+ * Cases kept in the data but left out of every list, next-project link and page route
+ * for now. Remove an id here to bring the case back.
+ */
+export const hiddenCaseIds: readonly string[] = ['fresh-cut', 'det-kollektive-klaedeskab']
+
 export function getCasesPageContent(locale: Locale = defaultLocale): CasesPageContent {
-  return casesPageContent[locale]
+  const content = casesPageContent[locale]
+  return { ...content, items: content.items.filter((item) => !hiddenCaseIds.includes(item.id)) }
 }
 
 export function getCaseCategoryLabel(

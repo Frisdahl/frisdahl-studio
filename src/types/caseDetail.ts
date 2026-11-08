@@ -83,8 +83,14 @@ export interface CaseDetailGalleryImage {
 
 export interface CaseDetailGallery {
   ariaLabel: string
+  /** The solid colour behind images with a transparent background (the project's primary colour), e.g. '#0C0C0C'. */
+  mockupBackground?: string
   /** A pair shown on its own right under the overview, before the columns. */
   introPair?: [CaseDetailGalleryImage, CaseDetailGalleryImage]
+  /** One full-width image shown under the colour palette, at the end of the page. */
+  afterPalette?: CaseDetailGalleryImage
+  /** Left, middle and right image of the home page hover (otherwise the first three images of the page). */
+  hoverTrio?: [CaseDetailGalleryImage, CaseDetailGalleryImage, CaseDetailGalleryImage]
   horizontalTop: CaseDetailGalleryImage
   /** Replaces horizontalTop with a two-column pair, shown above the columns
       after introPair. horizontalTop still supplies the next-case preview image. */

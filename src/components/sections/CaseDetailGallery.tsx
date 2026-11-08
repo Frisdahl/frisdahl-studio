@@ -9,13 +9,18 @@ interface CaseDetailGalleryProps {
 interface GalleryFigureProps {
   image: CaseDetailGalleryImage
   variant: 'horizontal' | 'vertical'
+  /** Solid colour behind an image with a transparent background. */
+  background?: string
 }
 
-function GalleryFigure({ image, variant }: GalleryFigureProps) {
+function GalleryFigure({ image, variant, background }: GalleryFigureProps) {
   return (
     <figure
       className={`case-detail-gallery-item case-detail-gallery-item-${variant}${image.transparent ? ' case-detail-gallery-item-transparent' : ''}`}
-      style={image.aspectRatio ? { aspectRatio: image.aspectRatio } : undefined}
+      style={{
+        aspectRatio: image.aspectRatio,
+        backgroundColor: image.transparent ? background : undefined,
+      }}
     >
       {image.imageSrc ? (
         <img
@@ -54,8 +59,8 @@ export function CaseDetailIntroPair({ gallery }: CaseDetailGalleryProps) {
         <div className="case-detail-gallery">
           {pairs.map((pair) => (
             <div key={pair[0].imageAlt} className="case-detail-gallery-pair">
-              <GalleryFigure image={pair[0]} variant="vertical" />
-              <GalleryFigure image={pair[1]} variant="vertical" />
+              <GalleryFigure image={pair[0]} variant="vertical" background={gallery.mockupBackground} />
+              <GalleryFigure image={pair[1]} variant="vertical" background={gallery.mockupBackground} />
             </div>
           ))}
         </div>
@@ -71,36 +76,49 @@ export function CaseDetailGallery({ gallery }: CaseDetailGalleryProps) {
         <div className="case-detail-gallery">
           {gallery.verticalPairTop && (
             <div className="case-detail-gallery-pair">
-              <GalleryFigure image={gallery.verticalPairTop[0]} variant="vertical" />
-              <GalleryFigure image={gallery.verticalPairTop[1]} variant="vertical" />
+              <GalleryFigure image={gallery.verticalPairTop[0]} variant="vertical" background={gallery.mockupBackground} />
+              <GalleryFigure image={gallery.verticalPairTop[1]} variant="vertical" background={gallery.mockupBackground} />
             </div>
           )}
 
           {/* A horizontalTopPair is shown above the columns (CaseDetailIntroPair). */}
           {!gallery.horizontalTopPair && !gallery.horizontalTopHidden && (
-            <GalleryFigure image={gallery.horizontalTop} variant="horizontal" />
+            <GalleryFigure image={gallery.horizontalTop} variant="horizontal" background={gallery.mockupBackground} />
           )}
 
           {gallery.horizontalBottomPair ? (
             <div className="case-detail-gallery-pair">
-              <GalleryFigure image={gallery.horizontalBottomPair[0]} variant="vertical" />
-              <GalleryFigure image={gallery.horizontalBottomPair[1]} variant="vertical" />
+              <GalleryFigure image={gallery.horizontalBottomPair[0]} variant="vertical" background={gallery.mockupBackground} />
+              <GalleryFigure image={gallery.horizontalBottomPair[1]} variant="vertical" background={gallery.mockupBackground} />
             </div>
           ) : (
-            gallery.horizontalBottom && <GalleryFigure image={gallery.horizontalBottom} variant="horizontal" />
+            gallery.horizontalBottom && <GalleryFigure image={gallery.horizontalBottom} variant="horizontal" background={gallery.mockupBackground} />
           )}
 
           {gallery.bottomWide ? (
-            <GalleryFigure image={gallery.bottomWide} variant="horizontal" />
+            <GalleryFigure image={gallery.bottomWide} variant="horizontal" background={gallery.mockupBackground} />
           ) : (
             gallery.verticalPairBottom && (
               <div className="case-detail-gallery-pair">
-                <GalleryFigure image={gallery.verticalPairBottom[0]} variant="vertical" />
-                <GalleryFigure image={gallery.verticalPairBottom[1]} variant="vertical" />
+                <GalleryFigure image={gallery.verticalPairBottom[0]} variant="vertical" background={gallery.mockupBackground} />
+                <GalleryFigure image={gallery.verticalPairBottom[1]} variant="vertical" background={gallery.mockupBackground} />
               </div>
             )
           )}
         </div>
+      </Container>
+    </section>
+  )
+}
+
+/** The image under the colour palette, when a case has one (afterPalette). */
+export function CaseDetailAfterPalette({ gallery }: CaseDetailGalleryProps) {
+  if (!gallery.afterPalette) return null
+
+  return (
+    <section className="case-detail-after-palette" aria-label={gallery.ariaLabel}>
+      <Container>
+        <GalleryFigure image={gallery.afterPalette} variant="horizontal" background={gallery.mockupBackground} />
       </Container>
     </section>
   )

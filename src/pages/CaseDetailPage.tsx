@@ -5,6 +5,7 @@ import { getCaseDetail, getCaseLiveUrl } from '../data/caseDetails'
 import { getAdjacentCaseHrefs } from '../data/caseNavigation'
 import { CASES_PATH } from '../lib/routes'
 import {
+  CaseDetailAfterPalette,
   CaseDetailCtaBar,
   CaseDetailGallery,
   CaseDetailHero,
@@ -35,6 +36,7 @@ export function CaseDetailPage() {
       {detail.typography ? <CaseDetailTypography typography={detail.typography} /> : null}
       <CaseDetailGallery gallery={detail.gallery} />
       {detail.palette ? <CaseDetailPalette palette={detail.palette} /> : null}
+      <CaseDetailAfterPalette gallery={detail.gallery} />
       <CaseDetailNextSection nextCase={detail.nextCase} />
       {adjacent ? (
         <CaseDetailCtaBar

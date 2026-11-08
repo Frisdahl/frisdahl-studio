@@ -13,3 +13,20 @@ export function navigateWithTransition(href: string, fallback: TransitionNavigat
   if (runner) runner(href)
   else fallback(href)
 }
+
+// The shared-image version (a project card's image grows into the case page's
+// hero), also registered by <PageTransition>. Used by the home page's project
+// cards and by the "next project" card at the end of a case page.
+type SharedTransitionNavigate = (href: string, card: HTMLElement) => void
+
+let sharedRunner: SharedTransitionNavigate | null = null
+
+export function registerSharedTransition(navigate: SharedTransitionNavigate | null) {
+  sharedRunner = navigate
+}
+
+/** Go to a case through the shared-image transition, or directly without one. */
+export function navigateWithSharedTransition(href: string, card: HTMLElement, fallback: TransitionNavigate) {
+  if (sharedRunner) sharedRunner(href, card)
+  else fallback(href)
+}

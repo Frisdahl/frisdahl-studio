@@ -1,7 +1,7 @@
 import type { CaseDetailGalleryImage } from '../types/caseDetail'
 import type { Locale } from './navigation'
 import { getCaseGallery } from './caseGallery'
-import { getCaseItemSummary } from './cases'
+import { getCaseItemSummary, hiddenCaseIds } from './cases'
 
 export interface CaseDetailNext {
   href: string
@@ -19,6 +19,9 @@ export const caseOrder = [
   'fresh-cut',
   'det-kollektive-klaedeskab',
 ] as const
+
+/** The cases that are shown: the order the next-project links follow. */
+const visibleCaseOrder = caseOrder.filter((slug) => !hiddenCaseIds.includes(slug))
 
 export type CaseSlug = (typeof caseOrder)[number]
 
@@ -57,11 +60,11 @@ const nextCaseAriaLabels: Record<Locale, Record<(typeof caseOrder)[number], stri
 export function getAdjacentCaseHrefs(
   currentSlug: string,
 ): { previous: string; next: string } | null {
-  const currentIndex = caseOrder.indexOf(currentSlug as CaseSlug)
+  const currentIndex = visibleCaseOrder.indexOf(currentSlug as CaseSlug)
   if (currentIndex === -1) return null
 
   const at = (offset: number) =>
-    `/cases/${caseOrder[(currentIndex + offset + caseOrder.length) % caseOrder.length]}`
+    `/cases/${visibleCaseOrder[(currentIndex + offset + visibleCaseOrder.length) % visibleCaseOrder.length]}`
   return { previous: at(-1), next: at(1) }
 }
 
@@ -75,10 +78,10 @@ export function getNextCasePreview(
   currentSlug: string,
   mainImage?: (caseSlug: string) => CaseDetailGalleryImage | null,
 ): CaseDetailNext | null {
-  const currentIndex = caseOrder.indexOf(currentSlug as (typeof caseOrder)[number])
+  const currentIndex = visibleCaseOrder.indexOf(currentSlug as (typeof visibleCaseOrder)[number])
   if (currentIndex === -1) return null
 
-  const nextSlug = caseOrder[(currentIndex + 1) % caseOrder.length]
+  const nextSlug = visibleCaseOrder[(currentIndex + 1) % visibleCaseOrder.length]
   const gallery = getCaseGallery(locale, nextSlug)
   if (!gallery) return null
 

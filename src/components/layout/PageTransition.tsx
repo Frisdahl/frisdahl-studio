@@ -2,7 +2,8 @@ import { useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { registerPageTransition } from '../../lib/pageTransition'
+import { registerPageTransition, registerSharedTransition } from '../../lib/pageTransition'
+import { canShareCard, runSharedCaseTransition } from '../../lib/sharedCaseTransition'
 import { lockScroll, prefersReducedMotion, unlockScroll } from '../../lib/scroll'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -17,11 +18,15 @@ const IMAGE_WAIT = 1000
 
 /** Resolves with the new route's <main> once it has replaced `previous` (lazy pages load first). */
 function waitForPage(shell: HTMLElement, previous: Element | null) {
+  // Case to case keeps the same <main> (one route component), so a changed case name counts too.
+  const caseName = () => shell.querySelector('.case-detail-hero-name')?.textContent ?? null
+  const previousName = caseName()
   return new Promise<Element | null>((resolve) => {
     const started = performance.now()
     const check = () => {
       const main = shell.querySelector(':scope > main')
-      if ((main && main !== previous) || performance.now() - started > 4000) {
+      const swapped = (main && main !== previous) || (previousName !== null && caseName() !== previousName)
+      if (swapped || performance.now() - started > 4000) {
         resolve(main)
         return
       }
@@ -77,12 +82,15 @@ function transitionHref(event: MouseEvent, currentPath: string): string | null {
  * one just after the other, the route changes under them, and they rise on
  * off the top in reverse order (dark first) to uncover the new page. Handles
  * in-app link clicks anywhere on the site; reduced motion navigates directly.
+ * Project cards on the home page use a shared-image transition instead
+ * (lib/sharedCaseTransition.ts).
  */
 export function PageTransition() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const pathnameRef = useRef(pathname)
   const loaderRef = useRef<HTMLDivElement>(null)
+  const veilRef = useRef<HTMLDivElement>(null)
   const runningRef = useRef(false)
 
   useEffect(() => {
@@ -137,27 +145,65 @@ export function PageTransition() {
       runningRef.current = false
     }
 
+    // A project card on the home page: its image grows into the case page's
+    // hero instead of the panels wiping over the page.
+    const runShared = async (href: string, card: HTMLElement) => {
+      const veil = veilRef.current
+      if (runningRef.current || !veil) return
+      runningRef.current = true
+      lockScroll()
+      document.documentElement.classList.add('is-page-transitioning')
+      // Starts loading the case page's code while the card leaves.
+      void import('../../pages/CaseDetailPage')
+      try {
+        await runSharedCaseTransition(card, veil, async () => {
+          const previous = shell.querySelector(':scope > main')
+          navigate(href)
+          const main = await waitForPage(shell, previous)
+          window.scrollTo(0, 0)
+          await firstScreenImages(main, window.innerHeight)
+          return main
+        })
+      } finally {
+        document.documentElement.classList.remove('is-page-transitioning')
+        unlockScroll()
+        ScrollTrigger.refresh()
+        runningRef.current = false
+      }
+    }
+
     const onClick = (event: MouseEvent) => {
       const href = transitionHref(event, pathnameRef.current)
       if (!href) return
       event.preventDefault()
-      void run(href)
+      // The home page's project cards, or the "next project" card on a case page.
+      const card = (event.target as Element).closest<HTMLElement>('.case-card, .case-detail-next')
+      if (card && canShareCard(card) && !prefersReducedMotion()) void runShared(href, card)
+      else void run(href)
     }
 
     // Capture phase: runs before React Router's <Link> handler, which then sees
     // the default prevented and leaves the navigation to the transition.
     document.addEventListener('click', onClick, true)
     registerPageTransition((href) => void run(href))
+    registerSharedTransition((href, card) => {
+      if (canShareCard(card) && !prefersReducedMotion()) void runShared(href, card)
+      else void run(href)
+    })
     return () => {
       document.removeEventListener('click', onClick, true)
       registerPageTransition(null)
+      registerSharedTransition(null)
     }
   }, [navigate])
 
   return (
-    <div ref={loaderRef} className="page-transition" aria-hidden="true">
-      <div className="page-transition-panel page-transition-panel--accent" />
-      <div className="page-transition-panel page-transition-panel--dark" />
-    </div>
+    <>
+      <div ref={veilRef} className="page-transition-veil" aria-hidden="true" />
+      <div ref={loaderRef} className="page-transition" aria-hidden="true">
+        <div className="page-transition-panel page-transition-panel--accent" />
+        <div className="page-transition-panel page-transition-panel--dark" />
+      </div>
+    </>
   )
 }

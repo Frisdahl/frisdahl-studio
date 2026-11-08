@@ -5,34 +5,25 @@ type CaseGalleryAssets = Omit<CaseDetailGallery, 'ariaLabel'>
 
 const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
   nordwear: {
+    // Home page hover: the two phones at the sides, one of the PCs in the middle.
+    hoverTrio: [
+      { imageSrc: '/cases/nordwear/iphone-forside--4-3.webp', imageAlt: 'Nordwear forside på en iPhone' },
+      { imageSrc: '/cases/nordwear/macbook-alle-produkter--3-2.webp', imageAlt: 'Nordwear produktoversigt på en MacBook Pro' },
+      { imageSrc: '/cases/nordwear/iphone-produktside--4-3.webp', imageAlt: 'Nordwear produktside på en iPhone' },
+    ],
+    // Only supplies the next-project preview; the pair below is what the gallery shows.
     horizontalTop: {
-      imageSrc: '/cases/nordwear/category--16-9.jpg',
-      imageAlt: 'Nordwear kategori',
+      imageSrc: '/cases/nordwear/main-higgs--16-9.webp',
+      imageAlt: 'Nordwear forside på en MacBook Pro',
     },
     horizontalTopPair: [
-      { imageSrc: '/cases/nordwear/nordwear-mockup-alle-produkter--3-2.webp', imageAlt: 'Nordwear produktoversigt på en MacBook', aspectRatio: '3 / 2' },
-      { imageSrc: '/cases/nordwear/nordwear-mockup-produktside--3-2.webp', imageAlt: 'Nordwear produktside på en MacBook', aspectRatio: '3 / 2' },
+      { imageSrc: '/cases/nordwear/macbook-alle-produkter--3-2.webp', imageAlt: 'Nordwear produktoversigt på en MacBook Pro', aspectRatio: '3 / 2' },
+      { imageSrc: '/cases/nordwear/macbook-produktside--3-2.webp', imageAlt: 'Nordwear produktside på en MacBook Pro', aspectRatio: '3 / 2' },
     ],
-    introPair: [
-      { imageSrc: '/cases/nordwear/nordwear-macbook-right--5-4.webp', imageAlt: 'Nordwear hjemmeside på en bærbar (højre)', aspectRatio: '5 / 4', transparent: true },
-      { imageSrc: '/cases/nordwear/nordwear-macbook-left--5-4.webp', imageAlt: 'Nordwear hjemmeside på en bærbar (venstre)', aspectRatio: '5 / 4', transparent: true },
-    ],
-    bottomWide: {
-      imageSrc: '/cases/nordwear/nordwear-ipad-produktside--3-2.webp',
-      imageAlt: 'Nordwear produktside på en iPad',
-      aspectRatio: '3 / 2',
-    },
-    verticalPairBottom: [
-      { imageSrc: '/cases/nordwear/mobile--5-6.jpg', imageAlt: 'Nordwear forside' },
-      { imageSrc: '/cases/nordwear/mobile2--5-6.jpg', imageAlt: 'Nordwear mobilvisning' },
-    ],
-    horizontalBottom: {
-      imageSrc: '/cases/nordwear/production--16-9.jpg',
-      imageAlt: 'Nordwear oversigt',
-    },
+    afterPalette: { imageSrc: '/cases/nordwear/ipad-glas--3-2.webp', imageAlt: 'Nordwear forside på en iPad Pro', aspectRatio: '3 / 2' },
     horizontalBottomPair: [
-      { imageSrc: '/cases/nordwear/nordwear-iphones-forside--4-3.webp', imageAlt: 'Nordwear forside og produktside på to iPhones', aspectRatio: '4 / 3', transparent: true },
-      { imageSrc: '/cases/nordwear/nordwear-iphones-produkter--4-3.webp', imageAlt: 'Nordwear produktoversigt og produktinfo på to iPhones', aspectRatio: '4 / 3', transparent: true },
+      { imageSrc: '/cases/nordwear/iphone-forside--4-3.webp', imageAlt: 'Nordwear forside på en iPhone', aspectRatio: '4 / 3' },
+      { imageSrc: '/cases/nordwear/iphone-produktside--4-3.webp', imageAlt: 'Nordwear produktside på en iPhone', aspectRatio: '4 / 3' },
     ],
   },
   'fresh-cut': {
@@ -59,13 +50,21 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     },
   },
   'peter-salling': {
+    mockupBackground: '#f4f5f6',
+    afterPalette: { imageSrc: '/cases/peter-salling/ipad-portrait-i-kunsten-kan-livet-kendes--16-9.webp', imageAlt: 'I kunsten kan livet kendes på Peter Sallings projektside på en iPad', aspectRatio: '16 / 9' },
+    // Home page hover: the two phones at the sides, one of the PCs in the middle.
+    hoverTrio: [
+      { imageSrc: '/cases/peter-salling/iphone-sikkerheden-er-paa-spil--4-3.webp', imageAlt: 'Sikkerheden er på spil på Peter Sallings projektside på en iPhone' },
+      { imageSrc: '/cases/peter-salling/macbook-alt-jeg-forventede--4-3.webp', imageAlt: 'Alt jeg forventede på Peter Sallings projektside på en MacBook Pro' },
+      { imageSrc: '/cases/peter-salling/iphone-kamma--4-3.webp', imageAlt: 'Kamma på Peter Sallings projektside på en iPhone' },
+    ],
     introPair: [
-      { imageSrc: '/cases/peter-salling/macbook-glass-sikkerheden-er-paa-spil--4-3.webp', imageAlt: 'Peter Sallings forside med Sikkerheden er på spil på en MacBook på et glasbord', aspectRatio: '4 / 3' },
-      { imageSrc: '/cases/peter-salling/macbook-glass-live-life-in-colour--4-3.webp', imageAlt: 'Live Life in Colour på Peter Sallings Commercial-side på en MacBook på et glasbord', aspectRatio: '4 / 3' },
+      { imageSrc: '/cases/peter-salling/macbook-alt-jeg-forventede--4-3.webp', imageAlt: 'Alt jeg forventede på Peter Sallings projektside på en MacBook Pro', aspectRatio: '4 / 3' },
+      { imageSrc: '/cases/peter-salling/macbook-make-football-your-game--4-3.webp', imageAlt: 'Make Football Your Game på Peter Sallings projektside på en MacBook Pro', aspectRatio: '4 / 3' },
     ],
     verticalPairTop: [
-      { imageSrc: '/cases/peter-salling/iphone-live-life-glass--4-3.webp', imageAlt: 'Live Life in Colour på Peter Sallings projektside på en iPhone på et glasbord', aspectRatio: '4 / 3' },
-      { imageSrc: '/cases/peter-salling/iphone-green-landsbyen--4-3.webp', imageAlt: 'Landsbyen på Peter Sallings projektside på en iPhone på en sort stol', aspectRatio: '4 / 3' },
+      { imageSrc: '/cases/peter-salling/iphone-sikkerheden-er-paa-spil--4-3.webp', imageAlt: 'Sikkerheden er på spil på Peter Sallings projektside på en iPhone', aspectRatio: '4 / 3' },
+      { imageSrc: '/cases/peter-salling/iphone-kamma--4-3.webp', imageAlt: 'Kamma på Peter Sallings projektside på en iPhone', aspectRatio: '4 / 3' },
     ],
     horizontalTopHidden: true,
     horizontalTop: {

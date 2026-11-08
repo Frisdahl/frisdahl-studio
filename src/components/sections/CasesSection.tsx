@@ -66,46 +66,30 @@ export function CasesSection() {
         })
       }
 
-      // Project rows: each reveals once as it scrolls in. The image frame
-      // grows taller from its top edge (a clip-path wipe downwards) while the
-      // image inside settles down into place from a slight zoom; the title and
-      // keywords then rise line by line out of their masks. Only clip-path,
-      // transform and opacity animate, so nothing reflows while it runs. Once
-      // done, the inline styles are cleared.
+      // Project rows: the images are static, no entrance and no movement. Only
+      // the title and keywords animate in: they rise line by line out of their
+      // masks as the row scrolls into view.
       const rows = Array.from(list.querySelectorAll<HTMLElement>('.case-card')).map((row) => ({
         row,
-        media: row.querySelector<HTMLElement>('.case-card-media')!,
-        image: row.querySelector<HTMLElement>('.case-card-image'),
         texts: Array.from(row.querySelectorAll<HTMLElement>('.case-card-client, .case-card-keywords')),
       }))
 
-      const clipHidden = 'inset(0% 0% 100% 0%)'
-      const clipShown = 'inset(0% 0% 0% 0%)'
-
       // Hidden straight away (not after the fonts), so nothing flashes.
-      rows.forEach(({ media, image, texts }) => {
-        gsap.set(media, { clipPath: clipHidden })
-        if (image) gsap.set(image, { yPercent: -8, scale: 1.12, transformOrigin: '50% 0%' })
-        gsap.set(texts, { autoAlpha: 0 })
-      })
+      rows.forEach(({ texts }) => gsap.set(texts, { autoAlpha: 0 }))
 
-      const revealRow = ({ row, media, image, texts }: (typeof rows)[number]) => {
+      const revealRow = ({ row, texts }: (typeof rows)[number]) => {
         const split = splitLines(texts)
         gsap.set(texts, { autoAlpha: 1 })
         gsap.set(split.lines, { yPercent: 125 })
 
-        const timeline = gsap.timeline({
+        gsap.to(split.lines, {
+          yPercent: 0,
+          duration: 1,
+          ease: 'power3.out',
+          stagger: 0.08,
           scrollTrigger: { trigger: row, start: ROW_START, once: true },
-          defaults: { ease: 'power3.out' },
-          onComplete: () => {
-            split.revert()
-            gsap.set(media, { clearProps: 'clipPath' })
-            if (image) gsap.set(image, { clearProps: 'transform,transformOrigin' })
-          },
+          onComplete: () => split.revert(),
         })
-        timeline.to(media, { clipPath: clipShown, duration: 1.3, ease: 'power3.inOut' }, 0)
-        if (image) timeline.to(image, { yPercent: 0, scale: 1, duration: 1.6 }, 0)
-        timeline.to(split.lines, { yPercent: 0, duration: 1, stagger: 0.08 }, 0.35)
       }
 
       document.fonts.ready.then(() => {
@@ -175,7 +159,6 @@ export function CasesSection() {
               imageAlt={item.imageAlt}
               href={item.href}
               previewImages={getCasePreviewImages(locale, item.id)}
-              linkLabel={cases.linkLabel}
             />
           ))}
         </div>

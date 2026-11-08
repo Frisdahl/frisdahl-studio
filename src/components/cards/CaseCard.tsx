@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 import type { CasePreviewImage } from '../../data/caseDetails'
@@ -10,24 +10,26 @@ export interface CaseCardProps {
   imageSrc: string | null
   imageAlt: string
   href: string
-  /** The images of the case's page, flashed through in the hover preview. */
+  /** The images of the case's page; three of them slide in when the project is hovered. */
   previewImages?: CasePreviewImage[]
-  /** The text shown under the hover preview, e.g. "Se projekt". */
-  linkLabel?: string
 }
 
-/** How long each preview image shows while the project is hovered. */
-const FLASH_MS = 450
-/** How long the preview takes to close (the clip-path transition in index.css). */
-const CLOSE_MS = 1000
+/** How many of the case page's images the hover shows. */
+const TRIO = 3
+
+/** Start loading the hover images once the card is this close to the screen. */
+const ARM_MARGIN = '600px 0px'
 
 /**
- * One home-page case row: the 16:9 image across the content width with the
- * title and the keywords underneath. The image and the title link to the case.
- * Hovering the image darkens it and opens the case page's first image in the
- * middle (to half the width) with the link text under it; the image then
- * flashes through the page's images in a loop (CSS: .case-card-hover in
- * index.css).
+ * One home-page case row: the title (left) and the keywords (far right) in a
+ * row above the 16:9 image, which spans the content width. The image and the
+ * title link to the case.
+ * Hovering the image darkens it and three of the case page's images slide in
+ * along its bottom edge, the middle one from the top and the two beside it from
+ * the bottom, each inside its own clipped frame (CSS: .case-card-hover in
+ * index.css), and an arrow slides in from the bottom left to the right of the
+ * title. When the mouse leaves they all carry on the way they were going: the
+ * middle image on down, the two beside it on up, and the arrow to the top right.
  */
 export function CaseCard({
   client,
@@ -36,65 +38,58 @@ export function CaseCard({
   imageAlt,
   href,
   previewImages = [],
-  linkLabel,
 }: CaseCardProps) {
-  const [hovered, setHovered] = useState(false)
-  // The images after the first (which the card already shows) are only added
-  // on the first hover, so the page doesn't load them up front.
+  const cardRef = useRef<HTMLDivElement>(null)
+  // The hover images are only added once the card is near the screen, so the
+  // page doesn't load them up front, but they are ready by the first hover.
   const [armed, setArmed] = useState(false)
-  const [flash, setFlash] = useState(0)
-  // Which preview images have finished loading: the loop only shows those, so
-  // a picture that is still arriving never shows up as an empty frame.
-  const [loaded, setLoaded] = useState<Set<number>>(() => new Set())
-  const resetTimer = useRef<number | null>(null)
-  const count = previewImages.length
-
-  const markLoaded = useCallback((index: number) => {
-    setLoaded((current) => (current.has(index) ? current : new Set(current).add(index)))
-  }, [])
+  // The title's arrow: waits at the bottom left ('idle'), slides in on hover ('in'),
+  // leaves at the top right when the mouse does ('out'), then waits again.
+  const [arrow, setArrow] = useState<'idle' | 'in' | 'out'>('idle')
+  // The hover images, the same way: waiting out of their frames, in, then out the far side.
+  const [shown, setShown] = useState<'idle' | 'in' | 'out'>('idle')
 
   useEffect(() => {
-    if (!hovered || count < 2) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const id = window.setInterval(() => {
-      setFlash((current) => {
-        for (let step = 1; step <= count; step += 1) {
-          const candidate = (current + step) % count
-          if (loaded.has(candidate)) return candidate
-        }
-        return current
-      })
-    }, FLASH_MS)
-    return () => window.clearInterval(id)
-  }, [hovered, count, loaded])
+    const card = cardRef.current
+    if (!card || armed) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setArmed(true)
+      },
+      { rootMargin: ARM_MARGIN },
+    )
+    observer.observe(card)
+    return () => observer.disconnect()
+  }, [armed])
 
-  useEffect(() => () => {
-    if (resetTimer.current !== null) window.clearTimeout(resetTimer.current)
-  }, [])
-
-  const handleEnter = () => {
-    // Coming back while the preview is still closing: carry on with the same
-    // picture instead of jumping back to the first one.
-    if (resetTimer.current !== null) {
-      window.clearTimeout(resetTimer.current)
-      resetTimer.current = null
-    }
-    setHovered(true)
-    setArmed(true)
-  }
-
-  const handleLeave = () => {
-    setHovered(false)
-    // The picture stays as it is while the preview closes, and only goes back
-    // to the first one once it is fully closed, ready for the next hover.
-    resetTimer.current = window.setTimeout(() => {
-      resetTimer.current = null
-      setFlash(0)
-    }, CLOSE_MS + 100)
-  }
+  // Not the image the card already shows.
+  const trio = previewImages.filter((image) => image.imageSrc !== imageSrc).slice(0, TRIO)
 
   return (
-    <div className="case-card">
+    <div ref={cardRef} className="case-card">
+      <div className="case-card-meta">
+        {/* Each title is an h3 under the section's "Latest projects" h2. */}
+        <div className="case-card-title-row">
+          <h3 className="case-card-client">
+            <Link to={href} className="case-card-title-link">
+              {client}
+            </Link>
+          </h3>
+          <span className="case-card-arrow" aria-hidden="true">
+            <span
+              className={`case-card-arrow-slider${arrow === 'idle' ? '' : ` is-${arrow}`}`}
+              onTransitionEnd={(event) => {
+                if (event.target === event.currentTarget) setArrow((state) => (state === 'out' ? 'idle' : state))
+              }}
+            >
+              {/* The site's arrow, turned to point up to the right corner. */}
+              <ArrowIcon rotate={-45} width="100%" height="100%" />
+            </span>
+          </span>
+        </div>
+        <p className="case-card-keywords">{keywords}</p>
+      </div>
+
       {/* Same target as the title link, so it's left out of the tab order and
           the accessibility tree to avoid a duplicate link. */}
       <Link
@@ -102,8 +97,16 @@ export function CaseCard({
         className="case-card-media-link"
         tabIndex={-1}
         aria-hidden="true"
-        onMouseEnter={handleEnter}
-        onMouseLeave={handleLeave}
+        onMouseEnter={() => {
+          // Touch screens have no hover, only a tap that follows the link.
+          if (!window.matchMedia('(hover: hover)').matches) return
+          setArrow('in')
+          setShown('in')
+        }}
+        onMouseLeave={() => {
+          setArrow((state) => (state === 'in' ? 'out' : state))
+          setShown((state) => (state === 'in' ? 'out' : state))
+        }}
       >
         <div className="case-card-media">
           {imageSrc ? (
@@ -116,46 +119,32 @@ export function CaseCard({
             />
           ) : null}
 
-          {count > 0 ? (
-            <div className="case-card-hover">
-              <div className="case-card-preview">
-                {previewImages.map((image, index) =>
-                  index === 0 || armed ? (
-                    <img
-                      key={image.imageSrc}
-                      ref={(element) => {
-                        if (element?.complete && element.naturalWidth > 0) markLoaded(index)
-                      }}
-                      {...responsiveImageProps(image.imageSrc, '(min-width: 64rem) 40vw, 60vw')}
-                      alt=""
-                      className={`case-card-preview-image${index === flash ? ' is-on' : ''}`}
-                      onLoad={() => markLoaded(index)}
-                      decoding="sync"
-                    />
-                  ) : null,
-                )}
+          {trio.length === TRIO ? (
+            <div
+              className={`case-card-hover${shown === 'idle' ? '' : ` is-${shown}`}`}
+              onTransitionEnd={(event) => {
+                // The three images finish together; then they wait for the next hover.
+                if (event.propertyName === 'transform') setShown((state) => (state === 'out' ? 'idle' : state))
+              }}
+            >
+              <div className="case-card-trio">
+                {trio.map((image) => (
+                  <div key={image.imageSrc} className="case-card-trio-frame">
+                    {armed ? (
+                      <img
+                        {...responsiveImageProps(image.imageSrc, '(min-width: 64rem) 20vw, 30vw')}
+                        alt=""
+                        className="case-card-trio-image"
+                        decoding="async"
+                      />
+                    ) : null}
+                  </div>
+                ))}
               </div>
-              {linkLabel ? (
-                <span className="case-card-hover-label">
-                  {linkLabel}
-                  {/* The site's arrow, turned to point up to the right corner. */}
-                  <ArrowIcon rotate={-45} />
-                </span>
-              ) : null}
             </div>
           ) : null}
         </div>
       </Link>
-
-      <div className="case-card-meta">
-        {/* Each title is an h3 under the section's "Latest projects" h2. */}
-        <h3 className="case-card-client">
-          <Link to={href} className="case-card-title-link">
-            {client}
-          </Link>
-        </h3>
-        <p className="case-card-keywords">{keywords}</p>
-      </div>
     </div>
   )
 }
