@@ -26,6 +26,8 @@ const NEXT_SETTLE = 0.3
 const NEXT_EXIT_TEXT_DURATION = 0.4
 const NEXT_VEIL_DURATION = 0.25
 const NEXT_OVERLAY_FADE = 0.8
+// The case page's text starts this long before the picture has fully landed (s).
+const ENTER_OVERLAP = 0.25
 // The card's zoom is gone by NEXT_ZOOM_SETTLE; only then is the real hero picture faded in.
 const NEXT_ZOOM_SETTLE = 0.75
 const NEXT_SWAP_AT = 0.9
@@ -37,7 +39,7 @@ const VEIL_DURATION = 0.45
 const GROW_DURATION = 1.1
 const GROW_EASE = 'power3.inOut'
 const SWAP_AT = 0.4
-const VEIL_OUT_AT = 0.85
+const VEIL_OUT_AT = 0.65
 // The case page's text rising in.
 const ENTER_EASE = 'power3.out'
 // The heading goes first; the meta columns start this far into it (seconds),
@@ -225,6 +227,22 @@ export async function runSharedCaseTransition(
       borderRadius: fromRadius / startScale,
       clipPath: cropped ? `inset(0px 0px ${crop}px 0px)` : 'none',
     })
+    // The text starts a moment before the picture lands, so it doesn't wait for the hand-over.
+    let enter: gsap.core.Timeline | null = null
+    const entered = new Promise<void>((resolve) => {
+      enter = gsap.timeline({ paused: true, onComplete: resolve, defaults: { ease: ENTER_EASE } })
+      // The heading rises first; once it is mostly in, the meta row follows one
+      // column at a time from left to right (label fades in, value rises).
+      if (nameSplit) enter!.to(nameSplit.lines, { yPercent: 0, duration: 1, stagger: 0.08 }, 0)
+      const columnsAt = nameSplit ? HEADING_LEAD : 0
+      metaItems.forEach((item, index) => {
+        const at = columnsAt + index * COLUMN_STAGGER
+        const label = item.querySelector('.case-detail-hero-meta-label')
+        const value = item.querySelector('.case-detail-hero-meta-value')
+        if (label) enter!.to(label, { opacity: 1, duration: COLUMN_LABEL_DURATION, ease: 'sine.out' }, at)
+        if (value) enter!.to(value, { yPercent: 0, duration: COLUMN_VALUE_DURATION, ease: COLUMN_EASE }, at + 0.08)
+      })
+    })
     await new Promise<void>((resolve) => {
       const grow = gsap.timeline({ onComplete: resolve, defaults: { ease: GROW_EASE } })
       grow.to(ghost, { x: to.left, y: to.top, scale: 1, borderRadius: radius, duration: GROW_DURATION }, 0)
@@ -236,7 +254,8 @@ export async function runSharedCaseTransition(
         if (overlay) grow.to(overlay, { opacity: 0, duration: NEXT_OVERLAY_FADE, ease: 'power1.inOut' }, 0)
       }
       grow.to(topImage, { opacity: 1, duration: isNext ? 0.15 : 0.5, ease: 'power1.inOut' }, isNext ? NEXT_SWAP_AT : SWAP_AT)
-      grow.to(veil, { autoAlpha: 0, duration: 0.5, ease: 'power2.out' }, VEIL_OUT_AT)
+      grow.to(veil, { autoAlpha: 0, duration: 0.4, ease: 'power2.out' }, VEIL_OUT_AT)
+      grow.call(() => void enter?.play(), [], GROW_DURATION - ENTER_OVERLAP)
     })
 
     // 4. Hand over: the real image takes the ghost's place, then the text rises.
@@ -244,20 +263,7 @@ export async function runSharedCaseTransition(
     await nextFrames(2)
     ghost.remove()
 
-    await new Promise<void>((resolve) => {
-      const enter = gsap.timeline({ onComplete: resolve, defaults: { ease: ENTER_EASE } })
-      // The heading rises first; once it is mostly in, the meta row follows one
-      // column at a time from left to right (label fades in, value rises).
-      if (nameSplit) enter.to(nameSplit.lines, { yPercent: 0, duration: 1, stagger: 0.08 }, 0)
-      const columnsAt = nameSplit ? HEADING_LEAD : 0
-      metaItems.forEach((item, index) => {
-        const at = columnsAt + index * COLUMN_STAGGER
-        const label = item.querySelector('.case-detail-hero-meta-label')
-        const value = item.querySelector('.case-detail-hero-meta-value')
-        if (label) enter.to(label, { opacity: 1, duration: COLUMN_LABEL_DURATION, ease: 'sine.out' }, at)
-        if (value) enter.to(value, { yPercent: 0, duration: COLUMN_VALUE_DURATION, ease: COLUMN_EASE }, at + 0.08)
-      })
-    })
+    await entered
   } finally {
     ghost.remove()
     split.revert()
