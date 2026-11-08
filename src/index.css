@@ -2347,7 +2347,7 @@
     justify-content: center;
     /* Room for what hangs out of the links' masks (0.1em above and below, see
        .menu-link-item), so the column never shows a scrollbar for it. */
-    padding-block: 0.5rem;
+    padding-block: 1rem;
     overflow-x: hidden;
     overflow-y: auto;
   }
@@ -2355,7 +2355,7 @@
   .menu-links {
     display: flex;
     flex-direction: column;
-    gap: clamp(0.75rem, 2.6vh, 1.75rem);
+    gap: clamp(1rem, 3.2vh, 2.25rem);
   }
 
   /* Each link rises out of its own mask (the li), the line reveal the rest of
@@ -2365,17 +2365,18 @@
     overflow: hidden;
     /* A little room below (and above), cancelled by the negative margin, so the
        mask doesn't cut the tails of g and j. */
-    margin-block: -0.1em;
-    padding-block: 0.1em;
-    /* The same type as the hero's headline (Hero.module.css, .title). */
-    font-size: clamp(2.25rem, 4.4vw, 4rem);
+    margin-block: -0.2em;
+    padding-block: 0.2em;
+    /* Larger than the hero's headline (which tops out at 4rem): up to 5rem, and held to
+       9vh so four links and the info under them still fit a short screen. */
+    font-size: clamp(2.5rem, min(5.2vw, 9vh), 5rem);
   }
 
   .menu-link {
     display: block;
     width: fit-content;
     font-size: inherit;
-    font-weight: var(--heading-weight);
+    font-weight: 500;
     line-height: 1.04;
     letter-spacing: -0.03em;
     text-align: left;
@@ -2399,6 +2400,24 @@
   .menu-link:focus-visible {
     outline: 2px solid var(--color-dark);
     outline-offset: 2px;
+  }
+
+  /* The links are the footer's own links (FooterLink), so the underline is the footer's
+     animation: it slides in from the left on hover and carries on out to the right when
+     the pointer leaves. Here it is in our red, and a little thicker to suit the type
+     (still inside the mask's 0.1em of room, so it isn't clipped). The two classes win
+     over the footer link's own size, weight, line height and colour. */
+  .menu-link.site-footer-link {
+    font-size: inherit;
+    font-weight: 500;
+    line-height: 1.04;
+    color: var(--color-dark);
+  }
+
+  .menu-link.site-footer-link::after {
+    height: 1px;
+    bottom: -0.17em;
+    background-color: var(--color-accent);
   }
 
   .menu-open .menu-link {
@@ -2448,12 +2467,15 @@
     transition: opacity 0.6s ease 0.75s;
   }
 
+  /* The city is the quiet line: a little smaller than the links under it, and grey. */
   .menu-info-location {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin: 0;
-    color: inherit;
+    /* A little more room under it than between the links below (the column's own gap is 0.5rem). */
+    margin: 0 0 0.5rem;
+    font-size: var(--text-body-sm);
+    color: var(--color-secondary);
   }
 
   /* The flag sits right of "Danmark". */
@@ -2470,17 +2492,16 @@
     gap: 0 1.25rem;
   }
 
-  /* The same rolling label as the footer's links (RollLabel, rolls on hover and focus);
-     the line height gives its mask the same one-line height the footer's has. */
-  .menu-info-link {
-    display: block;
-    width: fit-content;
-    line-height: 1.3;
+  /* The email and the socials are the footer's own links (FooterLink): a 1px underline
+     slides in on hover and leaves on hover out, and the email gets its arrow. Here they
+     take the menu's weight and colour (--footer-ink only exists inside the footer). */
+  .menu-info .site-footer-link {
+    font-weight: 500;
     color: inherit;
     text-decoration: none;
   }
 
-  .menu-info-link:focus-visible {
+  .menu-info .site-footer-link:focus-visible {
     outline: 2px solid var(--color-dark);
     outline-offset: 2px;
   }
@@ -2492,12 +2513,11 @@
     position: relative;
     grid-row: 1;
     align-self: center;
-    /* 6:5 (shorter than the pictures themselves, which crop to it), centred; on a
-       short screen it narrows towards the right so its edge keeps the same inset as
-       the links have on the left. */
+    /* Portrait 4:5 (the pictures crop to it), centred; on a short screen it narrows
+       towards the right so its edge keeps the same inset as the links have on the left. */
     justify-self: end;
-    width: min(100%, calc(var(--menu-content-max) * 1.2));
-    aspect-ratio: 6 / 5;
+    width: min(100%, calc(var(--menu-content-max) * 0.8));
+    aspect-ratio: 4 / 5;
     max-height: var(--menu-content-max);
     min-height: 0;
     overflow: hidden;
@@ -2512,19 +2532,12 @@
     transition: clip-path 1.15s var(--menu-slide-ease) 0.4s;
   }
 
-  /* One picture per link, stacked (MenuImageStack): only the ones that have been shown
-     are visible, the newest on top; it slides down over the rest. */
-  .menu-media-layer {
+  .menu-panel-media img {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    visibility: hidden;
-  }
-
-  .menu-media-layer.is-shown {
-    visibility: visible;
   }
 
   @media (min-width: 48rem) {
@@ -2543,6 +2556,11 @@
     .menu-panel-main,
     .menu-info {
       grid-column: 2 / span 5;
+    }
+
+    /* Three columns wide, so a portrait picture is still shorter than the first one was. */
+    .menu-panel-media {
+      grid-column: 9 / span 3;
     }
   }
 

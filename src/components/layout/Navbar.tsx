@@ -1,25 +1,20 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useLocale } from '../../context/LocaleContext'
 import { getFooterContent } from '../../data/footer'
 import { navigateWithTransition } from '../../lib/pageTransition'
 import { getNavigation } from '../../data/navigation'
-import { CASES_PATH, CONTACT_PATH, MEET_US_PATH, toAppHref } from '../../lib/routes'
+import { CASES_PATH, toAppHref } from '../../lib/routes'
+import { responsiveImageProps } from '../../lib/responsiveImage'
 import { lockScroll, prefersReducedMotion, unlockScroll } from '../../lib/scroll'
 import { Container, DanishFlagIcon } from '../ui'
 import { useHeaderInk } from '../../hooks/useHeaderInk'
+import { FooterLink } from './Footer'
 import { HeaderBrand } from './HeaderBrand'
-import { MenuImageStack } from './MenuImageStack'
 
-/** The picture shown for each menu link, to the right of the links (decorative; hidden on phones). */
-const MENU_IMAGES: Record<string, string> = {
-  '/': '/images/hero/hero-2-montra-iphone.webp',
-  [CASES_PATH]: '/cases/peter-salling/main-higgs--16-9.webp',
-  [MEET_US_PATH]: '/images/team/alexander-portrait.webp',
-  [CONTACT_PATH]: '/images/hero/id-kort-frisdahl-studio.webp',
-}
-// The pictures crop to the frame (a 16:9 one is about 1.5 times as wide as the frame), so the hint is larger than the frame.
-const MENU_IMAGE_SIZES = '(min-width: 64rem) 46vw, 52vw'
+/** The picture to the right of the links (decorative; hidden on phones). */
+const MENU_IMAGE = '/images/hero/hero-2-montra-iphone.webp'
+const MENU_IMAGE_SIZES = '(min-width: 64rem) 25vw, 36vw'
 
 /** How long the overlay takes to leave: --menu-close-delay + --menu-close-duration in index.css. */
 const MENU_CLOSE_MS = 800
@@ -53,14 +48,11 @@ export function Navbar() {
   // The page the menu highlights: taken when the menu opens, so the active
   // link never changes while the menu is on screen.
   const [menuPath, setMenuPath] = useState('/')
-  // The link whose picture is shown (the hovered or focused one), and a counter that
-  // starts the picture stack over each time the menu opens.
-  const [activeImage, setActiveImage] = useState(0)
-  const [menuOpenCount, setMenuOpenCount] = useState(0)
   // A link chosen in the menu: followed once the page has slid back.
   const pendingHrefRef = useRef<string | null>(null)
   const navigate = useNavigate()
   const headerRef = useRef<HTMLElement>(null)
+  const menuImageRef = useRef<HTMLImageElement>(null)
   const { locale } = useLocale()
   const { pathname, hash } = useLocation()
   useHeaderInk(pathname)
@@ -97,6 +89,24 @@ export function Navbar() {
   useEffect(() => {
     setIsOpen(false)
   }, [pathname, hash])
+
+  // The menu's picture is decoded while the browser is idle, so the first time the
+  // overlay slides in it doesn't have to be decoded then (a hitch on slow devices).
+  // Only where it is shown: phones hide it and never download it.
+  useEffect(() => {
+    const image = menuImageRef.current
+    if (!image || !window.matchMedia('(min-width: 48rem)').matches) return
+    const warm = () => {
+      image.loading = 'eager'
+      image.decode().catch(() => {})
+    }
+    if (typeof window.requestIdleCallback === 'function') {
+      const id = window.requestIdleCallback(warm, { timeout: 4000 })
+      return () => window.cancelIdleCallback(id)
+    }
+    const timer = window.setTimeout(warm, 2000)
+    return () => window.clearTimeout(timer)
+  }, [])
 
   // Opening: the grey overlay slides down over the page (CSS: .menu-active shows
   // it and locks the scroll, .menu-open slides it). The page behind is inert, so
@@ -156,11 +166,7 @@ export function Navbar() {
   }
 
   const toggleMenu = () => {
-    if (!isOpen) {
-      setMenuPath(pathname)
-      setActiveImage(0)
-      setMenuOpenCount((count) => count + 1)
-    }
+    if (!isOpen) setMenuPath(pathname)
     setIsOpen((open) => !open)
   }
 
@@ -178,16 +184,12 @@ export function Navbar() {
         <Container columns className="menu-panel-container" contentClassName="menu-panel-grid">
           <div className="menu-panel-main">
             <ul className="menu-links">
-              {menuLinks.map(({ label, href }, index) => (
+              {menuLinks.map(({ label, href }) => (
                 <li key={href} className="menu-link-item">
-                  <Link
-                    to={toAppHref(href)}
+                  <FooterLink
+                    href={toAppHref(href)}
                     className="menu-link"
                     aria-current={isActiveLink(href) ? 'page' : undefined}
-                    onPointerEnter={(event) => {
-                      if (event.pointerType === 'mouse') setActiveImage(index)
-                    }}
-                    onFocus={() => setActiveImage(index)}
                     onClick={(event) => {
                       // Plain clicks wait for the menu to close; new-tab clicks behave as usual.
                       if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return
@@ -196,7 +198,7 @@ export function Navbar() {
                     }}
                   >
                     {label}
-                  </Link>
+                  </FooterLink>
                 </li>
               ))}
             </ul>
@@ -210,26 +212,28 @@ export function Navbar() {
               </span>
               <DanishFlagIcon />
             </p>
-            <a href={footer.emailHref} className="menu-info-link">
+            <FooterLink href={footer.emailHref} withArrow>
               {footer.email}
-            </a>
+            </FooterLink>
             <ul className="menu-info-socials">
               {footer.socialLinks.map((social) => (
                 <li key={social.href}>
-                  <a href={social.href} className="menu-info-link" target="_blank" rel="noreferrer noopener">
+                  <FooterLink href={social.href} target="_blank" rel="noreferrer noopener">
                     {social.label}
-                  </a>
+                  </FooterLink>
                 </li>
               ))}
             </ul>
           </div>
 
           <div className="menu-panel-media" aria-hidden="true">
-            <MenuImageStack
-              sources={menuLinks.map(({ href }) => MENU_IMAGES[href])}
-              activeIndex={activeImage}
-              resetKey={menuOpenCount}
-              sizes={MENU_IMAGE_SIZES}
+            <img
+              ref={menuImageRef}
+              {...responsiveImageProps(MENU_IMAGE, MENU_IMAGE_SIZES)}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              draggable={false}
             />
           </div>
         </Container>

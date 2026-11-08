@@ -15,9 +15,10 @@ type UnderlinePhase = 'idle' | 'in' | 'held' | 'out'
  * phase only moves on when the running slide has ended (animationend), and
  * the keyframes are in index.css (.site-footer-link[data-phase]).
  */
-function FooterLink({
+export function FooterLink({
   children,
   withArrow = false,
+  className,
   ...props
 }: AnchorHTMLAttributes<HTMLAnchorElement> & { withArrow?: boolean }) {
   const [phase, setPhase] = useState<UnderlinePhase>('idle')
@@ -52,7 +53,7 @@ function FooterLink({
   return (
     <a
       {...props}
-      className="site-footer-link"
+      className={className ? `site-footer-link ${className}` : 'site-footer-link'}
       data-phase={phase}
       onPointerEnter={() => {
         active.current.pointer = true
