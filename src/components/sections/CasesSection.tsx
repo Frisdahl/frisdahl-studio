@@ -121,7 +121,7 @@ export function CasesSection() {
           </h2>
           <div className="home-cases-intro-image-wrapper">
             <img
-              src="/images/gallery-board--4-3.webp"
+              src="/images/gallery-board--16-9.webp"
               alt="Galleritavle med udvalgt designarbejde fra Frisdahl Studio"
               loading="lazy"
               decoding="async"
