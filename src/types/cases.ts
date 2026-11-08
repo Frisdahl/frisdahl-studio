@@ -13,9 +13,18 @@ export interface CaseItem {
   panelHoverColor?: string
 }
 
-export interface CaseFilter {
-  id: CaseCategory
+/** "Efter ydelse": a case matches when it has one of these keywords. */
+export interface CaseServiceFilter {
+  id: string
   label: string
+  keywords: string[]
+}
+
+/** "Efter branche": a case matches when its industry is this one. */
+export interface CaseIndustryFilter {
+  id: string
+  label: string
+  industry: string
 }
 
 export interface CasesHeroSlide {
@@ -25,13 +34,15 @@ export interface CasesHeroSlide {
 }
 
 export interface CasesPageContent {
-  eyebrow: string
   title: string
-  filtersAriaLabel: string
-  sliderAriaLabel: string
-  sliderPrev: string
-  sliderNext: string
-  sliderStatus: string
+  description: string
+  filters: {
+    allCases: string
+    byService: string
+    byIndustry: string
+    all: string
+    services: CaseServiceFilter[]
+    industries: CaseIndustryFilter[]
+  }
   items: CaseItem[]
-  filters: CaseFilter[]
 }

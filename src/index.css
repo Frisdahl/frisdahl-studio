@@ -1970,29 +1970,13 @@
     transform: scale(1.035);
   }
 
-  .cases-page-slider {
-    @apply relative z-[1];
-  }
-
-  .cases-slider {
-    --slide-gap: 1.25rem;
-  }
-
-  .cases-slider .horizontal-drag-slider-viewport {
-    width: 100%;
-    container-type: inline-size;
-  }
-
-  .cases-slider .horizontal-drag-slider-track {
-    gap: var(--slide-gap);
-  }
-
-  .cases-slider .horizontal-drag-slider-slide {
-    @apply overflow-visible rounded-none bg-transparent shadow-none;
-    flex: 0 0 calc(50cqw - var(--slide-gap) / 2);
-    width: calc(50cqw - var(--slide-gap) / 2);
-    aspect-ratio: auto;
-    height: auto;
+  /* The /cases projects: a plain two-column grid (one column on phones). */
+  .cases-page-grid {
+    /* The home cases' resting (light) colours, which CaseCard reads. */
+    --cases-ink: var(--color-dark);
+    --cases-muted: color-mix(in srgb, var(--color-dark) 55%, transparent);
+    --cases-placeholder: #ececec;
+    @apply relative z-[1] m-0 grid list-none grid-cols-1 gap-5 p-0 pt-2xl md:grid-cols-2 md:gap-y-12 lg:pt-3xl;
   }
 
   .pricing-hero {
@@ -3378,6 +3362,27 @@
     @apply w-full font-normal;
   }
 
+  /* The heading on the left, a short paragraph on the far right, level with
+     the heading's last line. Stacked on phones. */
+  .cases-page .cases-page-intro {
+    @apply grid grid-cols-1 gap-6 lg:grid-cols-3 lg:items-end lg:gap-5;
+  }
+
+  .cases-page .cases-page-title {
+    @apply w-auto lg:col-span-2;
+  }
+
+  .cases-page-description {
+    margin: 0;
+    /* Sits in the third column, on the same left edge as "Efter branche"
+       below. Two lines of the same length. */
+    max-width: 30rem;
+    text-wrap: balance;
+    color: color-mix(in srgb, var(--color-dark) 55%, transparent);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
   .cases-page-title {
     @apply w-full max-w-none text-h1 text-primary;
     font-weight: var(--heading-weight);
@@ -3409,88 +3414,62 @@
     }
   }
 
-  .cases-page-filters-row {
-    @apply mt-xl flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 lg:mt-2xl;
+  /* "Alle cases" / "Efter ydelse" / "Efter branche": three columns under the
+     divider; the last two hold square filter buttons. */
+  .cases-page-filter-grid {
+    @apply grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-5;
   }
 
-  .cases-page-filters {
-    @apply flex flex-wrap gap-2;
-  }
-
-  .cases-page-results-count {
-    @apply relative sm:ml-auto sm:shrink-0;
-  }
-
-  .cases-page-results-count-track {
-    @apply relative overflow-hidden;
-    height: 1.65em;
-    min-width: 9.75rem;
-  }
-
-  .cases-page-results-count-slide {
-    @apply absolute inset-0 flex items-center justify-end;
-    will-change: transform;
-  }
-
-  .cases-page-results-count-text {
-    @apply whitespace-nowrap text-body font-medium leading-[1.65] text-secondary;
-  }
-
-  .cases-filter-btn {
+  .cases-page-filter-title {
+    margin: 0;
+    color: color-mix(in srgb, var(--color-dark) 50%, transparent);
     font-family: var(--font-nav);
-    @apply inline-flex items-center rounded-pill border border-[#ccc] py-2.5 pl-5 pr-5 text-button font-medium normal-case;
-    gap: 0;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .cases-page-filter-options {
+    @apply mt-4 flex flex-wrap gap-2;
+  }
+
+  .cases-filter-chip {
+    font-family: var(--font-nav);
+    @apply cursor-pointer border px-4 py-2.5 normal-case;
+    border-color: var(--color-border);
+    border-radius: var(--radius-image);
+    font-size: 0.8125rem;
+    font-weight: 400;
+    background-color: transparent;
     color: var(--color-dark);
     transition:
       background-color 0.25s var(--ease-smooth),
       border-color 0.25s var(--ease-smooth),
-      color 0.25s var(--ease-smooth),
-      gap 0.35s var(--ease-smooth),
-      padding 0.35s var(--ease-smooth);
+      color 0.25s var(--ease-smooth);
   }
 
-  .cases-filter-btn:hover,
-  .cases-filter-btn:focus-visible {
-    background-color: transparent;
+  .cases-filter-chip:hover,
+  .cases-filter-chip:focus-visible {
     border-color: var(--color-dark);
-    color: var(--color-dark);
   }
 
-  .cases-filter-btn-active,
-  .cases-filter-btn-active:hover,
-  .cases-filter-btn-active:focus-visible {
-    @apply gap-2 border-transparent pr-4 text-light;
+  .cases-filter-chip:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .cases-filter-chip-active,
+  .cases-filter-chip-active:hover,
+  .cases-filter-chip-active:focus-visible {
+    border-color: var(--color-dark);
     background-color: var(--color-dark);
+    color: var(--color-light);
   }
 
-  .cases-filter-btn-label {
-    @apply shrink-0;
-  }
-
-  .cases-filter-btn-icon-wrap {
-    @apply inline-flex shrink-0 items-center justify-center overflow-hidden;
-    width: 0;
-    opacity: 0;
-    transition:
-      width 0.35s var(--ease-smooth),
-      opacity 0.25s var(--ease-smooth);
-  }
-
-  .cases-filter-btn-active .cases-filter-btn-icon-wrap {
-    width: 1rem;
-    opacity: 1;
-  }
-
-  .cases-filter-btn-icon {
-    @apply h-4 w-4 shrink-0;
-  }
-
+  /* Right under the heading. */
   .cases-page-divider {
-    @apply mt-xl mb-xl h-px w-full bg-border lg:mb-2xl;
-  }
-
-  .cases-page-grid {
-    @apply pt-md;
+    @apply mt-lg mb-xl h-px w-full bg-border lg:mt-xl lg:mb-2xl;
   }
 
   .cases-page-list {
@@ -3954,27 +3933,46 @@
       grid-column: 1 / -1;
     }
 
-    .case-card {
+    .home-cases-list .case-card {
       display: grid;
       grid-template-columns: subgrid;
       grid-column: 1 / -1;
     }
 
-    .case-card-media-link,
-    .case-card-meta {
+    .home-cases-list .case-card-media-link,
+    .home-cases-list .case-card-meta {
       grid-column: 1 / span 8;
     }
 
     /* Staggered: the second project starts four columns in (columns 5-12),
        so the rows don't line up. */
-    .case-card:nth-child(even) .case-card-media-link,
-    .case-card:nth-child(even) .case-card-meta {
+    .home-cases-list .case-card:nth-child(even) .case-card-media-link,
+    .home-cases-list .case-card:nth-child(even) .case-card-meta {
       grid-column: 5 / span 8;
     }
   }
 
   .case-card-media-link {
     display: block;
+  }
+
+  /* Title and keywords under the image (the /cases grid). */
+  .case-card-meta-below {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .case-card-meta-below .case-card-meta {
+    order: 2;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0;
+  }
+
+  .case-card-meta-below .case-card-keywords {
+    text-align: left;
   }
 
   /* One 16:9 frame for every case, with square corners. */
@@ -3997,10 +3995,10 @@
     height: 100%;
     object-fit: cover;
     transition:
-      left 0.9s cubic-bezier(0.25, 0.1, 0.25, 1),
-      top 0.9s cubic-bezier(0.25, 0.1, 0.25, 1),
-      width 0.9s cubic-bezier(0.25, 0.1, 0.25, 1),
-      height 0.9s cubic-bezier(0.25, 0.1, 0.25, 1);
+      left 0.5s cubic-bezier(0.25, 0.1, 0.25, 1),
+      top 0.5s cubic-bezier(0.25, 0.1, 0.25, 1),
+      width 0.5s cubic-bezier(0.25, 0.1, 0.25, 1),
+      height 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 
   /* Hover (mouse only): a slight zoom inside the frame, which clips it. It is done by

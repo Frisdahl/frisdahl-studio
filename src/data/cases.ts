@@ -14,20 +14,29 @@ const categoryLabels: Record<Locale, Record<CaseCategory, string>> = {
 
 const casesPageContent = {
   da: {
-    eyebrow: 'Udvalgte projekter',
-    title: 'Digitale oplevelser, skabt fra bunden.',
-    filtersAriaLabel: 'Filtrer cases efter kategori',
-    sliderAriaLabel: 'Cases',
-    sliderPrev: 'Forrige',
-    sliderNext: 'Næste',
-    sliderStatus: 'Case {current} af {total}',
-    filters: [
-      { id: 'website', label: 'Website' },
-      { id: 'webshop', label: 'Webshop' },
-      { id: 'grafisk', label: 'Grafisk' },
-      { id: 'content', label: 'Content' },
-      { id: 'ecommerce', label: 'E-commerce' },
-    ],
+    // A newline in the title is a line break in the heading.
+    title: 'Gode idéer.\nDigitale oplevelser.',
+    description:
+      'Produkter, platforme og brands, jeg har designet og bygget. Filtrer efter ydelse eller branche.',
+    filters: {
+      allCases: 'Alle cases',
+      byService: 'Efter ydelse',
+      byIndustry: 'Efter branche',
+      all: 'Alle',
+      // A case matches a service when it carries one of these keywords.
+      services: [
+        { id: 'web-design', label: 'Web Design', keywords: ['Design', 'Redesign'] },
+        { id: 'ui-design', label: 'UI Design', keywords: ['Design', 'Redesign'] },
+        { id: 'ux-research', label: 'UX Research', keywords: ['UX-design'] },
+        { id: 'webudvikling', label: 'Webudvikling', keywords: ['Udvikling'] },
+        { id: 'branding', label: 'Branding', keywords: ['Branding'] },
+      ],
+      // A case matches an industry by its own industry label.
+      industries: [
+        { id: 'mode', label: 'Mode', industry: 'Mode' },
+        { id: 'movie-industry', label: 'Movie Industry', industry: 'Film' },
+      ],
+    },
     items: [
       {
         id: 'peter-salling',
@@ -81,10 +90,6 @@ const casesPageContent = {
     ],
   },
 } as const satisfies Record<Locale, CasesPageContent>
-
-export function getCasesResultsCountLabel(count: number): string {
-  return count === 1 ? '1 case vist' : `${count} cases vist`
-}
 
 /**
  * Cases kept in the data but left out of every list, next-project link and page route
