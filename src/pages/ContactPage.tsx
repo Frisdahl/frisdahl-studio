@@ -1,3 +1,4 @@
+import { PageEntrance } from '../components/layout/PageEntrance'
 import { ContactForm } from '../components/contact/ContactForm'
 import { PageMeta } from '../components/layout'
 import { Container, WithHeadingDot } from '../components/ui'
@@ -13,6 +14,7 @@ export function ContactPage() {
 
   return (
     <main className="page-surface contact-page">
+      <PageEntrance />
       <PageMeta title={titles.contact} />
       <Container>
         <div className="contact-page-grid">

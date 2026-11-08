@@ -48,6 +48,12 @@
   letter-spacing: -0.035em;
 }
 
+/* The heading's lines slide up out of masks (MaskedLineReveal); the wrapper is a block so
+   it has lines of its own. */
+.titleLines {
+  display: block;
+}
+
 /* Same red as the header contact button's hover fill. */
 .titleAccent {
   color: #ff4f56;

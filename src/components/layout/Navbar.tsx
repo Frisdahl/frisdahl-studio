@@ -1,8 +1,12 @@
 import { useLocation, useNavigate } from 'react-router-dom'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useLocale } from '../../context/LocaleContext'
 import { getFooterContent } from '../../data/footer'
 import { navigateWithTransition } from '../../lib/pageTransition'
+import { firstScreenImages, waitForPage } from '../../lib/pageSwap'
+import { coverPage, revealPage } from '../../lib/pageReveal'
 import { getNavigation } from '../../data/navigation'
 import { CASES_PATH, toAppHref } from '../../lib/routes'
 import { responsiveImageProps } from '../../lib/responsiveImage'
@@ -20,6 +24,15 @@ const MENU_IMAGE_SIZES = '(min-width: 64rem) 25vw, 36vw'
 const MENU_CLOSE_MS = 800
 /** Reduced motion: the overlay only fades (0.2s). */
 const MENU_CLOSE_REDUCED_MS = 200
+/**
+ * A link chosen in the menu: the links, info and picture leave while the panel stays
+ * (.menu-leaving in index.css, about this long), the page changes under the panel, then
+ * the panel fades away (MENU_FADE_MS, .menu-fade) as the new page rises in.
+ */
+const MENU_LEAVE_MS = 650
+const MENU_FADE_MS = 550
+
+const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms))
 
 interface MenuToggleIconProps {
   isOpen: boolean
@@ -50,6 +63,8 @@ export function Navbar() {
   const [menuPath, setMenuPath] = useState('/')
   // A link chosen in the menu: followed once the page has slid back.
   const pendingHrefRef = useRef<string | null>(null)
+  // The menu is leaving for a page (see leaveMenuTo): the panel stays up until the new page is in.
+  const leavingRef = useRef(false)
   const navigate = useNavigate()
   const headerRef = useRef<HTMLElement>(null)
   const menuImageRef = useRef<HTMLImageElement>(null)
@@ -125,6 +140,8 @@ export function Navbar() {
       return () => cancelAnimationFrame(frame)
     }
 
+    // Leaving for a page: leaveMenuTo takes the panel away once the new page is in.
+    if (leavingRef.current) return
     if (!root.classList.contains('menu-active')) return
     root.classList.remove('menu-open')
     const closeMs = prefersReducedMotion() ? MENU_CLOSE_REDUCED_MS : MENU_CLOSE_MS
@@ -163,10 +180,60 @@ export function Navbar() {
     }
   }, [isOpen])
 
-  // Close first, then go: the overlay slides back up, and only then does the page change.
+  // The menu's own page change: its content animates out, the page changes behind the
+  // panel (which is the page colour, so nothing shows), then the panel fades away while the
+  // new page's content rises in. No wipe panels.
+  const leaveMenuTo = async (href: string) => {
+    const root = document.documentElement
+    const shell = document.querySelector<HTMLElement>('.page-shell')
+    root.classList.add('menu-leaving')
+    coverPage()
+    await wait(MENU_LEAVE_MS)
+
+    const previous = shell?.querySelector(':scope > .global-layout > main') ?? null
+    navigate(href)
+    const main = shell ? await waitForPage(shell, previous) : null
+    window.scrollTo(0, 0)
+    await firstScreenImages(main, window.innerHeight)
+
+    // A page with its own entrance (the home page's hero) plays that instead of the rise.
+    if (main && !main.matches('[data-page-entrance]') && !main.querySelector('[data-page-entrance]')) {
+      gsap.fromTo(
+        main,
+        { autoAlpha: 0, y: 48 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.9,
+          ease: 'power3.out',
+          clearProps: 'transform,opacity,visibility',
+        },
+      )
+    }
+    root.classList.add('menu-fade')
+    revealPage()
+    await wait(MENU_FADE_MS)
+
+    root.classList.remove('menu-active', 'menu-open', 'menu-leaving', 'menu-fade')
+    if (shell) shell.inert = false
+    unlockScroll()
+    ScrollTrigger.refresh()
+    leavingRef.current = false
+  }
+
+  // A link chosen in the menu. To another page: the content leaves and the page changes
+  // under the panel (leaveMenuTo). The same page (or a section on it), or reduced motion:
+  // the overlay slides back up and then the link is followed.
   const closeMenuAndGo = (href: string) => {
-    pendingHrefRef.current = href
+    const samePage = new URL(href, window.location.href).pathname === pathname
+    if (samePage || prefersReducedMotion() || leavingRef.current) {
+      pendingHrefRef.current = href
+      setIsOpen(false)
+      return
+    }
+    leavingRef.current = true
     setIsOpen(false)
+    void leaveMenuTo(href)
   }
 
   const toggleMenu = () => {

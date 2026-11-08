@@ -21,6 +21,10 @@ interface MaskedLineRevealProps {
   trigger?: 'view' | 'mount'
   /** ScrollTrigger start, for trigger 'view'. */
   start?: string
+  /** Seconds to wait before the first line starts. */
+  delay?: number
+  /** Hold the reveal until this has resolved (the page cover going, see lib/pageReveal.ts). */
+  startAfter?: Promise<void>
   as?: ElementType
   className?: string
 }
@@ -38,6 +42,8 @@ export function MaskedLineReveal({
   stagger = 0.1,
   trigger = 'view',
   start = 'top 85%',
+  delay = 0,
+  startAfter,
   as: Tag = 'p',
   className,
 }: MaskedLineRevealProps) {
@@ -50,6 +56,15 @@ export function MaskedLineReveal({
     if (!root) return
 
     const mm = gsap.matchMedia()
+    // With startAfter the reveal is built paused and played once that has resolved; a
+    // re-split (resize, fonts) before then builds the next one paused too.
+    let started = !startAfter
+    let reveal: gsap.core.Tween | null = null
+    let cancelled = false
+    startAfter?.then(() => {
+      started = true
+      if (!cancelled) reveal?.play()
+    })
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       SplitText.create(root, {
@@ -62,13 +77,16 @@ export function MaskedLineReveal({
         onSplit: (self) => {
           linesRef.current = self.lines
           gsap.set(root, { visibility: 'visible' })
-          return gsap.from(self.lines, {
+          reveal = gsap.from(self.lines, {
             yPercent: 125,
             duration,
             stagger,
+            delay,
             ease: 'expo.out',
+            paused: !started,
             scrollTrigger: trigger === 'view' ? { trigger: root, start, once: true } : undefined,
           })
+          return reveal
         },
       })
     })
@@ -78,10 +96,11 @@ export function MaskedLineReveal({
     })
 
     return () => {
+      cancelled = true
       linesRef.current = []
       mm.revert()
     }
-  }, [duration, stagger, trigger, start])
+  }, [duration, stagger, trigger, start, delay, startAfter])
 
   // Exit: the lines keep travelling upward, out of their masks.
   useLayoutEffect(() => {
