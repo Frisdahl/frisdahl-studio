@@ -1,6 +1,7 @@
 export type {
   CaseCategory,
-  CaseFilter,
+  CaseIndustryFilter,
+  CaseServiceFilter,
   CaseItem,
   CasesHeroSlide,
   CasesPageContent,

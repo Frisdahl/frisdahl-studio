@@ -9,6 +9,10 @@ export interface CaseCardProps {
   imageSrc: string | null
   imageAlt: string
   href: string
+  /** Put the title and keywords under the image instead of above it. */
+  metaBelow?: boolean
+  /** The arrow that slides in next to the title on hover (default on). */
+  showArrow?: boolean
 }
 
 /**
@@ -20,7 +24,7 @@ export interface CaseCardProps {
  * its full slide in: if the mouse leaves before it has arrived, it finishes arriving
  * and then carries on to the top right.
  */
-export function CaseCard({ client, keywords, imageSrc, imageAlt, href }: CaseCardProps) {
+export function CaseCard({ client, keywords, imageSrc, imageAlt, href, metaBelow = false, showArrow = true }: CaseCardProps) {
   // The title's arrow: waits at the bottom left ('idle'), slides in on hover ('in'),
   // leaves at the top right when the mouse does ('out'), then waits again.
   const [arrow, setArrow] = useState<'idle' | 'in' | 'out'>('idle')
@@ -29,7 +33,7 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, href }: CaseCar
   const leaveWhenArrived = useRef(false)
 
   return (
-    <div className="case-card">
+    <div className={`case-card${metaBelow ? ' case-card-meta-below' : ''}`}>
       <div className="case-card-meta">
         {/* Each title is an h3 under the section's "Latest projects" h2. */}
         <div className="case-card-title-row">
@@ -38,26 +42,28 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, href }: CaseCar
               {client}
             </Link>
           </h3>
-          <span className="case-card-arrow" aria-hidden="true">
-            <span
-              className={`case-card-arrow-slider${arrow === 'idle' ? '' : ` is-${arrow}`}`}
-              onTransitionEnd={(event) => {
-                if (event.target !== event.currentTarget || event.propertyName !== 'transform') return
-                if (arrow === 'in') {
-                  arrived.current = true
-                  if (leaveWhenArrived.current) {
-                    leaveWhenArrived.current = false
-                    setArrow('out')
+          {showArrow && (
+            <span className="case-card-arrow" aria-hidden="true">
+              <span
+                className={`case-card-arrow-slider${arrow === 'idle' ? '' : ` is-${arrow}`}`}
+                onTransitionEnd={(event) => {
+                  if (event.target !== event.currentTarget || event.propertyName !== 'transform') return
+                  if (arrow === 'in') {
+                    arrived.current = true
+                    if (leaveWhenArrived.current) {
+                      leaveWhenArrived.current = false
+                      setArrow('out')
+                    }
+                  } else if (arrow === 'out') {
+                    setArrow('idle')
                   }
-                } else if (arrow === 'out') {
-                  setArrow('idle')
-                }
-              }}
-            >
-              {/* The site's arrow, turned to point up to the right corner. */}
-              <ArrowIcon rotate={-45} width="100%" height="100%" />
+                }}
+              >
+                {/* The site's arrow, turned to point up to the right corner. */}
+                <ArrowIcon rotate={-45} width="100%" height="100%" />
+              </span>
             </span>
-          </span>
+          )}
         </div>
         <p className="case-card-keywords">{keywords}</p>
       </div>
