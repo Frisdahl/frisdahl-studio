@@ -164,8 +164,15 @@ export function getCasesResultsCountLabel(locale: Locale, count: number): string
   return count === 1 ? '1 case shown' : `${count} cases shown`
 }
 
+/**
+ * Cases kept in the data but left out of every list, next-project link and page route
+ * for now. Remove an id here to bring the case back.
+ */
+export const hiddenCaseIds: readonly string[] = ['fresh-cut', 'det-kollektive-klaedeskab']
+
 export function getCasesPageContent(locale: Locale = defaultLocale): CasesPageContent {
-  return casesPageContent[locale]
+  const content = casesPageContent[locale]
+  return { ...content, items: content.items.filter((item) => !hiddenCaseIds.includes(item.id)) }
 }
 
 export function getCaseCategoryLabel(
