@@ -18,11 +18,15 @@ const IMAGE_WAIT = 1000
 
 /** Resolves with the new route's <main> once it has replaced `previous` (lazy pages load first). */
 function waitForPage(shell: HTMLElement, previous: Element | null) {
+  // Case to case keeps the same <main> (one route component), so a changed case name counts too.
+  const caseName = () => shell.querySelector('.case-detail-hero-name')?.textContent ?? null
+  const previousName = caseName()
   return new Promise<Element | null>((resolve) => {
     const started = performance.now()
     const check = () => {
       const main = shell.querySelector(':scope > main')
-      if ((main && main !== previous) || performance.now() - started > 4000) {
+      const swapped = (main && main !== previous) || (previousName !== null && caseName() !== previousName)
+      if (swapped || performance.now() - started > 4000) {
         resolve(main)
         return
       }

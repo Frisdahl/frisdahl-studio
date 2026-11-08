@@ -26,6 +26,8 @@ const NEXT_SETTLE = 0.3
 const NEXT_EXIT_TEXT_DURATION = 0.4
 const NEXT_VEIL_DURATION = 0.25
 const NEXT_OVERLAY_FADE = 0.8
+// The longest the transition waits for the case page's hero picture (ms).
+const HERO_WAIT = 800
 const EXIT_TEXT_DURATION = 0.65
 const VEIL_DURATION = 0.45
 // The image grows to the hero's place; the page appears under it as it lands.
@@ -171,7 +173,10 @@ export async function runSharedCaseTransition(
       return
     }
     await document.fonts.ready
-    await heroImage.decode().catch(() => {})
+    // The page is covered, so a lazy hero would never start loading: load it now, but
+    // never hold the transition for long.
+    heroImage.loading = 'eager'
+    await Promise.race([heroImage.decode().catch(() => {}), new Promise((resolve) => setTimeout(resolve, HERO_WAIT))])
     const to = hero.getBoundingClientRect()
     const radius = parseFloat(getComputedStyle(hero).borderTopLeftRadius) || 0
     topImage.src = heroImage.currentSrc || heroImage.src
