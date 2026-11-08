@@ -1,6 +1,6 @@
 import type { CaseDetailHero as CaseDetailHeroContent } from '../../types/caseDetail'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
-import { ArrowChipButton, ArrowIcon, Container } from '../ui'
+import { ArrowChipButton, ArrowIcon, Container, TextEffect } from '../ui'
 
 interface CaseDetailHeroProps {
   hero: CaseDetailHeroContent
@@ -14,7 +14,11 @@ export function CaseDetailHero({ hero }: CaseDetailHeroProps) {
     <section className="case-detail relative isolate" aria-label={title}>
       <Container className="relative z-[1]">
         <div className="case-detail-hero-intro">
-          <h1 className="case-detail-hero-name">{name}</h1>
+          <h1 className="case-detail-hero-name">
+            <TextEffect key={name} delay={0.2} waitForTransition>
+              {name}
+            </TextEffect>
+          </h1>
 
           {meta.length > 0 && (
             <dl className="case-detail-hero-meta">
