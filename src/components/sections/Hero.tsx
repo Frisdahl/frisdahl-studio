@@ -360,6 +360,7 @@ export function Hero() {
             <p className={styles.intro}>{content.intro}</p>
             <ArrowChipButton
               direction="right"
+              variant="diagonal"
               label={content.cta}
               text={content.cta}
               href={CASES_PATH}

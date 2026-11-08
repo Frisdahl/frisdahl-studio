@@ -50,7 +50,7 @@
 
 /* Same red as the header contact button's hover fill. */
 .titleAccent {
-  color: #eb4b3d;
+  color: #ff4f56;
 }
 
 /* A round dot in place of the full stop, sitting on the baseline. */
@@ -60,7 +60,7 @@
   height: 0.17em;
   margin-left: 0.06em;
   border-radius: 50%;
-  background: #eb4b3d;
+  background: #ff4f56;
   vertical-align: baseline;
 }
 

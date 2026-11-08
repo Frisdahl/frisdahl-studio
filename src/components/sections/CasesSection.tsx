@@ -4,11 +4,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 import { Link } from 'react-router-dom'
 import { CaseCard } from '../cards/CaseCard'
-import { Container } from '../ui'
+import { Container, WithHeadingDot } from '../ui'
 import { MEET_US_PATH } from '../../lib/routes'
 import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
-import { getCasePreviewImages } from '../../data/caseDetails'
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
@@ -17,11 +16,6 @@ const FEATURED_COUNT = 2
 
 /** Where a row's top must be on screen for it to reveal. */
 const ROW_START = 'top 78%'
-
-/** The project images are enlarged this much, so they can drift without showing gaps. */
-const PARALLAX_SCALE = 1.14
-/** How far an image drifts up and down (percent of its frame height); under (SCALE - 1) / 2. */
-const PARALLAX_SHIFT = 6
 
 export function CasesSection() {
   const { locale } = useLocale()
@@ -70,38 +64,18 @@ export function CasesSection() {
         })
       }
 
-      // Project rows. The image sits in its frame slightly enlarged and drifts
-      // up and down inside it as the page scrolls (a parallax, scrubbed to the
-      // scroll position, so it also follows when scrolling back). The title and
-      // keywords rise line by line out of their masks once, as the row scrolls
-      // in. Only transform and opacity animate, so nothing reflows.
+      // Project rows. The image stays still in its frame; the title and keywords
+      // rise line by line out of their masks once, as the row scrolls in. Only
+      // transform and opacity animate, so nothing reflows.
       const rows = Array.from(list.querySelectorAll<HTMLElement>('.case-card')).map((row) => ({
         row,
-        media: row.querySelector<HTMLElement>('.case-card-media')!,
-        image: row.querySelector<HTMLElement>('.case-card-image'),
         texts: Array.from(row.querySelectorAll<HTMLElement>('.case-card-client, .case-card-keywords')),
       }))
 
       // Hidden straight away (not after the fonts), so nothing flashes.
       rows.forEach(({ texts }) => gsap.set(texts, { autoAlpha: 0 }))
 
-      const revealRow = ({ row, media, image, texts }: (typeof rows)[number]) => {
-        if (image) {
-          // The enlargement (PARALLAX_SCALE) leaves room for the drift
-          // (PARALLAX_SHIFT, as a percentage of the frame height) without
-          // ever showing the frame's background.
-          gsap.fromTo(
-            image,
-            { yPercent: -PARALLAX_SHIFT, scale: PARALLAX_SCALE },
-            {
-              yPercent: PARALLAX_SHIFT,
-              scale: PARALLAX_SCALE,
-              ease: 'none',
-              scrollTrigger: { trigger: media, start: 'top bottom', end: 'bottom top', scrub: true },
-            },
-          )
-        }
-
+      const revealRow = ({ row, texts }: (typeof rows)[number]) => {
         const split = splitLines(texts)
         gsap.set(texts, { autoAlpha: 1 })
         gsap.set(split.lines, { yPercent: 125 })
@@ -142,7 +116,9 @@ export function CasesSection() {
     >
       <Container columns>
         <div className="home-cases-intro">
-          <h2 className="home-cases-intro-title">{cases.intro.title}</h2>
+          <h2 className="home-cases-intro-title">
+            <WithHeadingDot>{cases.intro.title}</WithHeadingDot>
+          </h2>
           <div className="home-cases-intro-image-wrapper">
             <img
               src="/images/gallery-board--4-3.webp"
@@ -163,7 +139,7 @@ export function CasesSection() {
           </div>
         </div>
         <h1 ref={listTitleRef} className="home-cases-list-title">
-          {cases.listTitle}
+          <WithHeadingDot>{cases.listTitle}</WithHeadingDot>
         </h1>
 
         {/* Inside the content container, so the images line up with the
@@ -177,7 +153,6 @@ export function CasesSection() {
               imageSrc={item.imageSrc}
               imageAlt={item.imageAlt}
               href={item.href}
-              previewImages={getCasePreviewImages(locale, item.id)}
             />
           ))}
         </div>

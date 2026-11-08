@@ -2,7 +2,7 @@ import { useLocale } from '../../context/LocaleContext'
 import { getMeetUsPageContent } from '../../data/meetUs'
 import type { TeamMember } from '../../types/meetUs'
 import { responsiveImageProps } from '../../lib/responsiveImage'
-import { Container } from '../ui'
+import { Container, WithHeadingDot } from '../ui'
 
 // One column on phones, two on tablets, three from desktop.
 const MEMBER_IMAGE_SIZES = '(min-width: 64rem) 30vw, (min-width: 48rem) 50vw, 100vw'
@@ -50,7 +50,9 @@ export function MeetUsPageSection() {
       <Container className="relative z-[1]">
         <div className="cases-page-intro">
           <p className="eyebrow eyebrow-accent">{eyebrow}</p>
-          <h1 className="cases-page-title mt-md">{title}</h1>
+          <h1 className="cases-page-title mt-md">
+            <WithHeadingDot>{title}</WithHeadingDot>
+          </h1>
         </div>
 
         <div className="cases-page-divider" role="separator" aria-hidden="true" />

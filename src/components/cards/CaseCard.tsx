@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
-import type { CasePreviewImage } from '../../data/caseDetails'
 import { ArrowIcon } from '../ui/ArrowIcon'
 
 export interface CaseCardProps {
@@ -10,63 +9,27 @@ export interface CaseCardProps {
   imageSrc: string | null
   imageAlt: string
   href: string
-  /** The images of the case's page; three of them slide in when the project is hovered. */
-  previewImages?: CasePreviewImage[]
 }
-
-/** How many of the case page's images the hover shows. */
-const TRIO = 3
-
-/** Start loading the hover images once the card is this close to the screen. */
-const ARM_MARGIN = '600px 0px'
 
 /**
  * One home-page case row: the title (left) and the keywords (far right) in a
  * row above the 16:9 image, which spans the content width. The image and the
  * title link to the case.
- * Hovering the image darkens it and three of the case page's images slide in
- * along its bottom edge, the middle one from the top and the two beside it from
- * the bottom, each inside its own clipped frame (CSS: .case-card-hover in
- * index.css), and an arrow slides in from the bottom left to the right of the
- * title. When the mouse leaves they all carry on the way they were going: the
- * middle image on down, the two beside it on up, and the arrow to the top right.
+ * Hovering the image zooms it slightly (CSS: .case-card-image in index.css) and slides
+ * an arrow in from the bottom left to the right of the title. The arrow always plays
+ * its full slide in: if the mouse leaves before it has arrived, it finishes arriving
+ * and then carries on to the top right.
  */
-export function CaseCard({
-  client,
-  keywords,
-  imageSrc,
-  imageAlt,
-  href,
-  previewImages = [],
-}: CaseCardProps) {
-  const cardRef = useRef<HTMLDivElement>(null)
-  // The hover images are only added once the card is near the screen, so the
-  // page doesn't load them up front, but they are ready by the first hover.
-  const [armed, setArmed] = useState(false)
+export function CaseCard({ client, keywords, imageSrc, imageAlt, href }: CaseCardProps) {
   // The title's arrow: waits at the bottom left ('idle'), slides in on hover ('in'),
   // leaves at the top right when the mouse does ('out'), then waits again.
   const [arrow, setArrow] = useState<'idle' | 'in' | 'out'>('idle')
-  // The hover images, the same way: waiting out of their frames, in, then out the far side.
-  const [shown, setShown] = useState<'idle' | 'in' | 'out'>('idle')
-
-  useEffect(() => {
-    const card = cardRef.current
-    if (!card || armed) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setArmed(true)
-      },
-      { rootMargin: ARM_MARGIN },
-    )
-    observer.observe(card)
-    return () => observer.disconnect()
-  }, [armed])
-
-  // Not the image the card already shows.
-  const trio = previewImages.filter((image) => image.imageSrc !== imageSrc).slice(0, TRIO)
+  // The arrow has arrived (its slide in is done); until then a leaving mouse has to wait.
+  const arrived = useRef(false)
+  const leaveWhenArrived = useRef(false)
 
   return (
-    <div ref={cardRef} className="case-card">
+    <div className="case-card">
       <div className="case-card-meta">
         {/* Each title is an h3 under the section's "Latest projects" h2. */}
         <div className="case-card-title-row">
@@ -79,7 +42,16 @@ export function CaseCard({
             <span
               className={`case-card-arrow-slider${arrow === 'idle' ? '' : ` is-${arrow}`}`}
               onTransitionEnd={(event) => {
-                if (event.target === event.currentTarget) setArrow((state) => (state === 'out' ? 'idle' : state))
+                if (event.target !== event.currentTarget || event.propertyName !== 'transform') return
+                if (arrow === 'in') {
+                  arrived.current = true
+                  if (leaveWhenArrived.current) {
+                    leaveWhenArrived.current = false
+                    setArrow('out')
+                  }
+                } else if (arrow === 'out') {
+                  setArrow('idle')
+                }
               }}
             >
               {/* The site's arrow, turned to point up to the right corner. */}
@@ -100,12 +72,17 @@ export function CaseCard({
         onMouseEnter={() => {
           // Touch screens have no hover, only a tap that follows the link.
           if (!window.matchMedia('(hover: hover)').matches) return
+          leaveWhenArrived.current = false
+          // Coming back while it is still leaving: it slides in again from where it is.
+          if (arrow !== 'in') arrived.current = false
           setArrow('in')
-          setShown('in')
         }}
         onMouseLeave={() => {
-          setArrow((state) => (state === 'in' ? 'out' : state))
-          setShown((state) => (state === 'in' ? 'out' : state))
+          if (arrow !== 'in') return
+          // Still sliding in: let it arrive first, then it leaves (see onTransitionEnd).
+          // (With reduced motion nothing slides, so there is nothing to wait for.)
+          if (arrived.current || window.matchMedia('(prefers-reduced-motion: reduce)').matches) setArrow('out')
+          else leaveWhenArrived.current = true
         }}
       >
         <div className="case-card-media">
@@ -117,31 +94,6 @@ export function CaseCard({
               loading="lazy"
               decoding="async"
             />
-          ) : null}
-
-          {trio.length === TRIO ? (
-            <div
-              className={`case-card-hover${shown === 'idle' ? '' : ` is-${shown}`}`}
-              onTransitionEnd={(event) => {
-                // The three images finish together; then they wait for the next hover.
-                if (event.propertyName === 'transform') setShown((state) => (state === 'out' ? 'idle' : state))
-              }}
-            >
-              <div className="case-card-trio">
-                {trio.map((image) => (
-                  <div key={image.imageSrc} className="case-card-trio-frame">
-                    {armed ? (
-                      <img
-                        {...responsiveImageProps(image.imageSrc, '(min-width: 64rem) 20vw, 30vw')}
-                        alt=""
-                        className="case-card-trio-image"
-                        decoding="async"
-                      />
-                    ) : null}
-                  </div>
-                ))}
-              </div>
-            </div>
           ) : null}
         </div>
       </Link>

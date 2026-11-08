@@ -107,7 +107,7 @@
   --color-text-body: #696869;
   --color-muted: #555555;
   --color-disabled: #bababa;
-  --color-accent: #eb4b3d;
+  --color-accent: #ff4f56;
   --color-accent-hover: color-mix(in srgb, var(--color-accent) 88%, white);
   --color-accent-yellow: #fec627;
   --color-peach: color-mix(in srgb, var(--color-accent) 32%, white);
@@ -1733,7 +1733,7 @@
     position: absolute;
     inset: 0;
     z-index: -1;
-    background-color: #eb4b3d;
+    background-color: #ff4f56;
     /* Starts below the button (GSAP then owns it), so a freshly rendered
        button never shows the fill before its hover timeline exists. */
     transform: translateY(101%);
@@ -2733,8 +2733,8 @@
 
   .case-detail-hero-name {
     @apply text-center text-primary;
-    /* Same size as the home hero title (Hero.module.css .title). */
-    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    /* A little larger than the home hero title (Hero.module.css .title). */
+    font-size: clamp(2.75rem, 5.6vw, 5rem);
     font-weight: var(--heading-weight);
     line-height: 1.04;
     letter-spacing: -0.035em;
@@ -2945,8 +2945,8 @@
 
   .case-detail-typography-letter[aria-pressed='true'] {
     z-index: 1;
-    border-color: #eb4b3d;
-    background-color: #eb4b3d;
+    border-color: #ff4f56;
+    background-color: #ff4f56;
     color: var(--color-light);
   }
 
@@ -3199,7 +3199,7 @@
   }
 
   .arrow-chip-btn:is(:hover, :focus-visible) .arrow-chip-btn-chip {
-    background-color: #eb4b3d;
+    background-color: #ff4f56;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -3263,6 +3263,40 @@
 
   .arrow-chip-btn-right .arrow-chip-btn-arrow-next {
     left: -200%;
+  }
+
+  /* Diagonal variant: no chip fill; the arrow takes the text's colour, points up and
+     right, and the two arrows share one spot (GSAP moves them along the diagonal). */
+  .arrow-chip-btn-diagonal .arrow-chip-btn-chip,
+  .arrow-chip-btn-diagonal:is(:hover, :focus-visible) .arrow-chip-btn-chip {
+    position: relative;
+    background-color: transparent;
+  }
+
+  .arrow-chip-btn-diagonal {
+    position: relative;
+    /* The footer links' size (the arrow follows it in em). */
+    font-size: var(--text-body);
+  }
+
+  .arrow-chip-btn-diagonal .arrow-chip-btn-arrows {
+    position: absolute;
+    inset: 0;
+  }
+
+  .arrow-chip-btn-diagonal .arrow-chip-btn-arrows .arrow-chip-btn-arrow {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    left: 0;
+    width: 1em;
+    height: 1em;
+    color: var(--color-accent);
+    /* A touch heavier than the glyph's own 2-unit line: a thin stroke in the same colour
+       (in the 32-unit viewBox, so 0.7 widens the line by about a third). */
+    stroke: currentColor;
+    stroke-width: 0.7;
+    stroke-linejoin: round;
   }
 
   .arrow-chip-btn-left .arrow-chip-btn-arrow-next {
@@ -3843,9 +3877,23 @@
     @apply h-auto w-full object-cover;
   }
 
+  /* The same type as the hero's intro paragraph (Hero.module.css, .intro). */
+  /* The red dot ending a heading: the hero's dot (Hero.module.css, .titleDot). */
+  .heading-dot {
+    display: inline-block;
+    width: 0.17em;
+    height: 0.17em;
+    margin-left: 0.06em;
+    border-radius: 50%;
+    background-color: var(--color-accent);
+    vertical-align: baseline;
+  }
+
   .home-cases-intro-text {
-    @apply text-body-lg font-medium;
-    font-size: 18px;
+    font-size: clamp(1rem, 1.2vw, 1.1875rem);
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
     color: var(--cases-muted);
   }
 
@@ -3860,14 +3908,6 @@
 
   .home-cases-intro-text + .home-cases-intro-text {
     @apply mt-md;
-  }
-
-  /* 24px running text from desktop. */
-  @media (min-width: 1024px) {
-    .home-cases-intro-text {
-      font-size: 24px;
-      line-height: 1.3;
-    }
   }
 
   .home-cases-intro-link {
@@ -3939,119 +3979,55 @@
 
   /* Fills the 16:9 frame; the case images are 16:9, so nothing is cropped. */
   .case-card-image {
+    position: absolute;
+    left: 0;
+    top: 0;
     display: block;
     width: 100%;
+    /* The base styles cap images at the width of their box, which would stop the zoom. */
+    max-width: none;
     height: 100%;
     object-fit: cover;
+    transition:
+      left 0.9s cubic-bezier(0.25, 0.1, 0.25, 1),
+      top 0.9s cubic-bezier(0.25, 0.1, 0.25, 1),
+      width 0.9s cubic-bezier(0.25, 0.1, 0.25, 1),
+      height 0.9s cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 
-  /* Hover (mouse only): the image darkens and three of the case page's
-     images slide in along its bottom edge (see .case-card-hover below). */
-  .case-card-media::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgb(0 0 0 / 0.78);
-    opacity: 0;
-    pointer-events: none;
-    /* Leaving: in step with the images going out. */
-    transition: opacity 0.7s cubic-bezier(0.45, 0, 0.55, 1);
-  }
-
-  /* The hover layer: the link text on the left above a row of three frames,
-     set in from the sides and the bottom of the image. */
-  .case-card-hover {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    gap: 0.75rem;
-    padding: var(--image-gap);
-    pointer-events: none;
-  }
-
-  .case-card-trio {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--image-gap);
-  }
-
-  /* Each image has a frame that clips it while it slides. */
-  .case-card-trio-frame {
-    position: relative;
-    overflow: hidden;
-    aspect-ratio: 16 / 10;
-  }
-
-  .case-card-trio-image {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    /* The side images wait below their frame and rise into it; the middle
-       one waits above and drops in. On leaving they carry on the same way: the
-       sides up and out of the top, the middle down and out of the bottom
-       (CaseCard sets is-in / is-out on .case-card-hover; back at rest there is
-       no transition, so they are ready for the next hover). */
-    transform: translateY(101%);
-  }
-
-  .case-card-trio-frame:nth-child(2) .case-card-trio-image {
-    transform: translateY(-101%);
-  }
-
-  /* In: a soft start and a long, gentle settle. Out: an ease-in-out, so they pick up gently and leave
-     without a jolt. */
-  .case-card-hover.is-in .case-card-trio-image {
-    transform: translateY(0);
-    transition: transform 1.1s cubic-bezier(0.5, 0, 0.15, 1);
-    will-change: transform;
-  }
-
-  .case-card-hover.is-out .case-card-trio-image {
-    transform: translateY(-101%);
-    transition: transform 0.75s cubic-bezier(0.45, 0, 0.55, 1);
-    will-change: transform;
-  }
-
-  .case-card-hover.is-out .case-card-trio-frame:nth-child(2) .case-card-trio-image {
-    transform: translateY(101%);
-  }
-
+  /* Hover (mouse only): a slight zoom inside the frame, which clips it. It is done by
+     growing the picture's box (2% out on every side, 104% in all) rather than with
+     transform: scale, which the browser draws at the old size and stretches, so the
+     picture went soft and then blinked sharp when it was drawn again at the end. A
+     resized box is drawn sharp on every frame. */
   @media (hover: hover) {
-    .case-card-media-link:hover .case-card-media::after {
-      opacity: 1;
-      /* Arriving: eases in gently, then settles. */
-      transition: opacity 0.9s cubic-bezier(0.5, 0, 0.15, 1);
+    .case-card-media-link:hover .case-card-image {
+      left: -2%;
+      top: -2%;
+      width: 104%;
+      height: 104%;
     }
   }
 
-  /* The clicked card settles back to rest (hover off) before its image is lifted out. */
-  .case-card.is-transition-source .case-card-media::after {
-    opacity: 0;
+  /* The clicked card zooms back out first, in step with the settle that
+     sharedCaseTransition waits for before it lifts the picture out. */
+  .case-card.is-transition-source .case-card-image {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
     transition-duration: 0.35s;
+    transition-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
   }
 
-  .case-card.is-transition-source .case-card-trio-image {
-    transform: translateY(-101%);
-    transition: transform 0.35s cubic-bezier(0.65, 0, 0.35, 1);
-  }
-
-  .case-card.is-transition-source .case-card-trio-frame:nth-child(2) .case-card-trio-image {
-    transform: translateY(101%);
-  }
-
+  /* The clicked card's arrow settles out before its image is lifted. */
   .case-card.is-transition-source .case-card-arrow-slider {
     transform: translate(100%, -100%);
     transition: transform 0.35s cubic-bezier(0.55, 0.055, 0.675, 0.19);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .case-card-media::after,
-    .case-card-trio-image,
+    .case-card-image,
     .case-card-arrow-slider {
       transition: none;
     }
@@ -4094,7 +4070,14 @@
     width: 0.9em;
     height: 0.9em;
     overflow: hidden;
-    color: var(--cases-ink);
+    color: var(--color-accent);
+  }
+
+  /* The same slightly heavier line as the other arrows (0.7 in the 32-unit viewBox). */
+  .case-card-arrow svg {
+    stroke: currentColor;
+    stroke-width: 0.7;
+    stroke-linejoin: round;
   }
 
   .case-card-arrow-slider {
@@ -4206,7 +4189,7 @@
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 9999px;
-    background-color: #eb4b3d;
+    background-color: #ff4f56;
     animation: added-value-blink 1.6s ease-in-out infinite;
   }
 
@@ -4947,10 +4930,9 @@
     @apply mt-10 flex flex-wrap items-center gap-x-8 gap-y-4;
   }
 
-  /* Dark button, light label, arrow to the top right (ArrowButton). On hover
-     the fill goes transparent and the label and arrow turn dark; the border
-     is the dark colour all along, so it holds the shape once the fill is
-     gone. The arrow sits in a clipped box, so the one leaving and the one
+  /* Dark button, light label, white arrow to the top right (ArrowButton). On hover
+     the fill goes transparent and the label and arrows turn dark; the border is the
+     dark colour all along, so it holds the shape once the fill is gone. The arrow sits in a clipped box, so the one leaving and the one
      arriving are cut at its edge. */
   .arrow-btn {
     @apply inline-flex shrink-0 cursor-pointer items-center gap-3 border py-[10px] pl-6 pr-5 text-button font-semibold no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
@@ -4990,7 +4972,14 @@
 
   .arrow-btn-arrow {
     @apply absolute inset-0 block h-full w-full;
+    /* A touch heavier than the glyph's own line (0.7 in the 32-unit viewBox), the same
+       as the hero button's arrow. Both follow the label's colour (white, dark on hover,
+       flipped at the halfway point). */
+    stroke: currentColor;
+    stroke-width: 0.7;
+    stroke-linejoin: round;
   }
+
 
   /* The email's arrow: scales up on the left of the text as the link is
      hovered, and the text eases over to make room. */
@@ -5012,6 +5001,11 @@
 
   .site-footer-link-icon svg {
     @apply shrink-0;
+    /* A touch heavier than the glyph's own line (0.7 in the 32-unit viewBox), the same as
+       the hero button's arrow; the colour is the link's own (dark). */
+    stroke: currentColor;
+    stroke-width: 0.7;
+    stroke-linejoin: round;
     width: 0.85em;
     height: 0.85em;
   }
@@ -5189,7 +5183,6 @@
    Hero.module.css; circles (avatars, blobs) are not image frames. */
 :is(
     .case-card-media,
-    .case-card-trio-frame,
     .case-slide-card-media,
     .case-row-media,
     .added-value-media,
@@ -5206,7 +5199,6 @@
 
 :is(
     .case-card-media,
-    .case-card-trio-frame,
     .case-slide-card-media,
     .case-row-media,
     .added-value-media,

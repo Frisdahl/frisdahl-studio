@@ -1,6 +1,6 @@
 import { ContactForm } from '../components/contact/ContactForm'
 import { PageMeta } from '../components/layout'
-import { Container } from '../components/ui'
+import { Container, WithHeadingDot } from '../components/ui'
 import { useLocale } from '../context/LocaleContext'
 import { getContactPageContent } from '../data/contact'
 import { getPageMetaContent } from '../data/pageMeta'
@@ -20,7 +20,9 @@ export function ContactPage() {
           <div className="contact-page-intro">
             <h1 className="contact-page-heading">
               <span className="block">{headingLine1}</span>{' '}
-              <span className="contact-page-heading-muted block">{headingLine2}</span>
+              <span className="contact-page-heading-muted block">
+                <WithHeadingDot>{headingLine2}</WithHeadingDot>
+              </span>
             </h1>
           </div>
 

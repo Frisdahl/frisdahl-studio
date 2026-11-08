@@ -1,6 +1,6 @@
 import { useLocale } from '../../context/LocaleContext'
 import { getProcessPageContent } from '../../data/process'
-import { Container } from '../ui'
+import { Container, WithHeadingDot } from '../ui'
 import { ProcessSection } from './ProcessSection'
 
 export function ProcessPageSection() {
@@ -12,7 +12,9 @@ export function ProcessPageSection() {
       <Container className="relative z-[1]">
         <div className="cases-page-intro">
           <p className="eyebrow">{eyebrow}</p>
-          <h1 className="cases-page-title mt-md">{title}</h1>
+          <h1 className="cases-page-title mt-md">
+            <WithHeadingDot>{title}</WithHeadingDot>
+          </h1>
           <p className="process-page-description">{description}</p>
         </div>
 

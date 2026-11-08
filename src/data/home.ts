@@ -22,10 +22,10 @@ const homeContent = {
         title: "Et lille studio med store ambitioner og en klar vision for godt design",
         textBefore: "Jeg hedder ",
         name: "Alexander",
-        textAfter: ", og Frisdahl Studio er mit studie for webdesign og webudvikling.",
+        textAfter: ", og jeg står bag Frisdahl Studio – et selvstændigt studio med fokus på webdesign og webudvikling.",
         // A new paragraph: who I am above, what I do below.
         textMore:
-          "Jeg designer og bygger hjemmesider og webshops fra bunden – fra første idé og strategi over design og kode til lancering – med fokus på performance, brugeroplevelse og et udtryk, der styrker din virksomhed. Du arbejder direkte med mig hele vejen.",
+          "Jeg hjælper virksomheder med at omsætte idéer til gennemtænkte digitale løsninger. Fra den første idé og visuelle retning til design, udvikling og lancering skaber jeg hjemmesider og webshops, hvor æstetik, funktionalitet og performance går hånd i hånd. Du arbejder direkte med mig gennem hele processen – fra start til slut.",
       },
       listTitle: "Seneste projekter",
       linkLabel: "Se projekt",

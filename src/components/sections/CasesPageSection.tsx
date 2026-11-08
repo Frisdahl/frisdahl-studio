@@ -8,7 +8,7 @@ import {
   getCasesResultsCountLabel,
 } from '../../data/cases'
 import type { CaseCategory } from '../../types/cases'
-import { Container, HorizontalDragSlider } from '../ui'
+import { Container, HorizontalDragSlider, WithHeadingDot } from '../ui'
 
 const placeholderTones = ['bg-peach', 'bg-peach-hover'] as const
 const countEnterEase = [0.16, 1, 0.3, 1] as const
@@ -80,7 +80,9 @@ export function CasesPageSection() {
       <Container className="relative z-[1]">
         <div className="cases-page-intro">
           <p className="eyebrow eyebrow-accent">{eyebrow}</p>
-          <h1 className="cases-page-title mt-md">{title}</h1>
+          <h1 className="cases-page-title mt-md">
+            <WithHeadingDot>{title}</WithHeadingDot>
+          </h1>
 
           <div className="cases-page-filters-row">
             <div
