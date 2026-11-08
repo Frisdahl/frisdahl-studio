@@ -86,6 +86,10 @@ function coverImage(src: string | null) {
     height: '100%',
     objectFit: 'cover',
     display: 'block',
+    // Each picture gets its own layer, so the ghost's rounded, clipped frame is only a mask
+    // over finished textures and nothing is repainted while it grows.
+    willChange: 'transform, opacity',
+    transform: 'translateZ(0)',
   })
   return image
 }
@@ -128,6 +132,7 @@ export async function runSharedCaseTransition(
       position: 'absolute',
       inset: '0',
       pointerEvents: 'none',
+      willChange: 'opacity',
       backgroundColor: cardOverlay ? getComputedStyle(cardOverlay).backgroundColor : 'transparent',
     })
   }
@@ -180,6 +185,8 @@ export async function runSharedCaseTransition(
     const to = hero.getBoundingClientRect()
     const radius = parseFloat(getComputedStyle(hero).borderTopLeftRadius) || 0
     topImage.src = heroImage.currentSrc || heroImage.src
+    // Decoded before it fades in, so the swap never waits on the picture.
+    await Promise.race([topImage.decode().catch(() => {}), new Promise((resolve) => setTimeout(resolve, HERO_WAIT))])
 
     // The case page's text waits in its masks, ready to rise.
     const name = main.querySelector<HTMLElement>('.case-detail-hero-name')
