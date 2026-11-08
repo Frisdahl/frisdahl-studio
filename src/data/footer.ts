@@ -23,7 +23,8 @@ const footerContent = {
     navAriaLabel: 'Footer navigation',
     // The four columns' small headings, left to right.
     columnTitles: { contact: 'Kontakt', nav: 'Navigation', studio: 'Studio', legal: 'Privatliv' },
-    ctaTitle: 'Klar til at starte dit projekt?',
+    ctaTitle: 'Skal vi skabe noget sammen?',
+    ctaButton: 'Kontakt',
     backToTop: 'Tilbage til toppen',
     phone: PHONE,
     phoneHref: PHONE_HREF,
@@ -60,6 +61,7 @@ const footerContent = {
     navAriaLabel: 'Footer navigation',
     columnTitles: { contact: 'Contact', nav: 'Navigation', studio: 'Studio', legal: 'Privacy' },
     ctaTitle: 'Ready to start your project?',
+    ctaButton: 'Contact',
     backToTop: 'Back to top',
     phone: PHONE,
     phoneHref: PHONE_HREF,
