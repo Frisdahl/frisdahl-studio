@@ -14,6 +14,8 @@ interface CaseDetailNextSectionProps {
 // How far the image zooms in while the card is pinned (0 = no zoom). Kept
 // small enough that the mockup's screen stays in view.
 const IMAGE_ZOOM = 0.06
+// Smooth scrolling eases into the last pixels for seconds, so waiting for exactly 1 feels stuck.
+const TRIGGER_PROGRESS = 0.985
 
 /**
  * The next case at the end of the page. The card sticks while the section's
@@ -44,7 +46,7 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
 
       // Reduced motion: the bar still shows progress, but the page never
       // changes without a click.
-      if (progress < 1 || shouldReduceMotion || hasNavigatedRef.current) return
+      if (progress < TRIGGER_PROGRESS || shouldReduceMotion || hasNavigatedRef.current) return
       hasNavigatedRef.current = true
       // The image grows into the next case's hero, like a card on the home page.
       const card = cardRef.current
