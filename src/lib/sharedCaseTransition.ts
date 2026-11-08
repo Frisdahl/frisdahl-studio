@@ -1,6 +1,5 @@
 import { gsap } from 'gsap'
 import { SplitText } from 'gsap/SplitText'
-import { TEXT_EFFECT_START_EVENT } from '../components/ui/TextEffect'
 
 gsap.registerPlugin(SplitText)
 
@@ -159,6 +158,7 @@ export async function runSharedCaseTransition(
 
   const split = SplitText.create(texts, { type: 'lines', mask: 'lines' })
   roomInMasks(split.masks)
+  let nameSplit: SplitText | null = null
   let metaValues: Element[] = []
   let metaLabels: Element[] = []
   let metaItems: HTMLElement[] = []
@@ -193,7 +193,13 @@ export async function runSharedCaseTransition(
     // Decoded before it fades in, so the swap never waits on the picture.
     await Promise.race([topImage.decode().catch(() => {}), new Promise((resolve) => setTimeout(resolve, HERO_WAIT))])
 
-    // The heading (per-character TextEffect) waits for our start event; the meta row waits in its masks.
+    // The case page's text waits in its masks, ready to rise.
+    const name = main.querySelector<HTMLElement>('.case-detail-hero-name')
+    if (name) {
+      nameSplit = SplitText.create(name, { type: 'lines', mask: 'lines' })
+      roomInMasks(nameSplit.masks)
+      gsap.set(nameSplit.lines, { yPercent: 125 })
+    }
     metaItems = [...main.querySelectorAll<HTMLElement>('.case-detail-hero-meta-item')]
     // The labels (Type, Rolle, ...) fade in where they stand; the values rise out of a mask.
     metaLabels = metaItems.flatMap((item) => [...item.querySelectorAll('.case-detail-hero-meta-label')])
@@ -224,18 +230,17 @@ export async function runSharedCaseTransition(
     // The text starts a moment before the picture lands, so it doesn't wait for the hand-over.
     let enter: gsap.core.Timeline | null = null
     const entered = new Promise<void>((resolve) => {
-      const tl = gsap.timeline({ paused: true, onComplete: resolve, defaults: { ease: ENTER_EASE } })
-      enter = tl
+      enter = gsap.timeline({ paused: true, onComplete: resolve, defaults: { ease: ENTER_EASE } })
       // The heading rises first; once it is mostly in, the meta row follows one
       // column at a time from left to right (label fades in, value rises).
-      tl.call(() => window.dispatchEvent(new Event(TEXT_EFFECT_START_EVENT)), [], 0)
-      const columnsAt = HEADING_LEAD
+      if (nameSplit) enter!.to(nameSplit.lines, { yPercent: 0, duration: 1, stagger: 0.08 }, 0)
+      const columnsAt = nameSplit ? HEADING_LEAD : 0
       metaItems.forEach((item, index) => {
         const at = columnsAt + index * COLUMN_STAGGER
         const label = item.querySelector('.case-detail-hero-meta-label')
         const value = item.querySelector('.case-detail-hero-meta-value')
-        if (label) tl.to(label, { opacity: 1, duration: COLUMN_LABEL_DURATION, ease: 'sine.out' }, at)
-        if (value) tl.to(value, { yPercent: 0, duration: COLUMN_VALUE_DURATION, ease: COLUMN_EASE }, at + 0.08)
+        if (label) enter!.to(label, { opacity: 1, duration: COLUMN_LABEL_DURATION, ease: 'sine.out' }, at)
+        if (value) enter!.to(value, { yPercent: 0, duration: COLUMN_VALUE_DURATION, ease: COLUMN_EASE }, at + 0.08)
       })
     })
     await new Promise<void>((resolve) => {
@@ -262,6 +267,7 @@ export async function runSharedCaseTransition(
   } finally {
     ghost.remove()
     split.revert()
+    nameSplit?.revert()
     if (metaValues.length) gsap.set(metaValues, { clearProps: 'transform' })
     if (metaLabels.length) gsap.set(metaLabels, { clearProps: 'opacity' })
     if (metaItems.length) gsap.set(metaItems, { clearProps: 'overflow,paddingBottom,marginBottom' })
