@@ -4620,19 +4620,20 @@
     @apply shrink-0 rounded-panel px-9 py-4 text-button font-medium whitespace-nowrap;
   }
 
-  /* Contact page (/kontakt): the site's dark ink as the page colour (the
-     header inverts to light over it on its own). The heading on the left,
+  /* Contact page (/kontakt): the light grey of the footer and menu, with the
+     site's dark ink for the text. The heading on the left,
      a narrow form on the right, the pair centred in a capped column and in
      the screen's height on desktop; phones stack them. */
   .contact-page {
-    --contact-ink: var(--color-light);
-    --contact-muted: #8a8989;
-    --contact-rule: color-mix(in srgb, var(--color-light) 60%, transparent);
+    --contact-bg: #f6f7f7;
+    --contact-ink: var(--color-dark);
+    --contact-muted: color-mix(in srgb, var(--color-dark) 50%, transparent);
+    --contact-rule: color-mix(in srgb, var(--color-dark) 30%, transparent);
 
     position: relative;
-    background-color: var(--color-dark);
+    background-color: var(--contact-bg);
     color: var(--contact-ink);
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   .contact-page-grid {
@@ -4724,7 +4725,7 @@
   }
 
   .contact-form-input:hover {
-    border-bottom-color: color-mix(in srgb, var(--color-light) 80%, transparent);
+    border-bottom-color: color-mix(in srgb, var(--color-dark) 60%, transparent);
   }
 
   .contact-form-input:focus {
@@ -4732,13 +4733,13 @@
   }
 
   .contact-form-input::placeholder {
-    color: color-mix(in srgb, var(--color-light) 32%, transparent);
+    color: color-mix(in srgb, var(--color-dark) 35%, transparent);
   }
 
   /* Keep autofilled fields on the page colour instead of the browser's fill. */
   .contact-form-input:-webkit-autofill {
     -webkit-text-fill-color: var(--contact-ink);
-    box-shadow: 0 0 0 100px var(--color-dark) inset;
+    box-shadow: 0 0 0 100px var(--contact-bg) inset;
     caret-color: var(--contact-ink);
   }
 
@@ -4768,26 +4769,6 @@
   .contact-form-status {
     @apply m-0 -mt-4 text-body-sm empty:hidden;
     color: var(--contact-muted);
-  }
-
-  /* The submit button: the header contact button with a white fill (its
-     version over dark sections), the label turning light on the red hover. */
-  .contact-page .header-contact {
-    background-color: var(--color-light);
-    border-color: var(--color-light);
-    color: var(--color-dark);
-  }
-
-  .contact-page .header-contact:is(:hover, :focus-visible) {
-    color: var(--color-light);
-  }
-
-  .contact-page .header-contact .hero-cta-btn-icon {
-    background-color: var(--color-dark);
-  }
-
-  .contact-page .header-contact .hero-cta-btn-arrow {
-    color: var(--color-light);
   }
 
   .contact-drawer-panel .btn-secondary {

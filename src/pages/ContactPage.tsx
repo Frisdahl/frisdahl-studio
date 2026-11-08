@@ -5,14 +5,14 @@ import { useLocale } from '../context/LocaleContext'
 import { getContactPageContent } from '../data/contact'
 import { getPageMetaContent } from '../data/pageMeta'
 
-/** Dark page with the light header: the heading on the left, the form on the right. */
+/** Light grey page, dark text: the heading on the left, the form on the right. */
 export function ContactPage() {
   const { locale } = useLocale()
   const { titles } = getPageMetaContent(locale)
   const { headingLine1, headingLine2 } = getContactPageContent(locale)
 
   return (
-    <main className="page-surface contact-page" data-header-theme="dark">
+    <main className="page-surface contact-page">
       <PageMeta title={titles.contact} />
       <Container>
         <div className="contact-page-grid">
