@@ -22,7 +22,9 @@ gsap.registerPlugin(SplitText)
 const SETTLE = 0.4
 // The next-project card: its text sits on the image, so the ghost (which would
 // cover it) is only lifted out once the text has mostly left.
-const NEXT_SETTLE = 0.6
+const NEXT_SETTLE = 0.3
+const NEXT_EXIT_TEXT_DURATION = 0.4
+const NEXT_VEIL_DURATION = 0.25
 const NEXT_OVERLAY_FADE = 0.8
 const EXIT_TEXT_DURATION = 0.65
 const VEIL_DURATION = 0.45
@@ -154,10 +156,10 @@ export async function runSharedCaseTransition(
     //    then the image is lifted out into the ghost and the page fades under it.
     await new Promise<void>((resolve) => {
       const leave = gsap.timeline({ onComplete: resolve })
-      leave.to(split.lines, { yPercent: -125, duration: EXIT_TEXT_DURATION, ease: 'power3.in', stagger: 0.05 }, 0)
+      leave.to(split.lines, { yPercent: -125, duration: isNext ? NEXT_EXIT_TEXT_DURATION : EXIT_TEXT_DURATION, ease: isNext ? 'power2.in' : 'power3.in', stagger: isNext ? 0.03 : 0.05 }, 0)
       if (bar) leave.to(bar, { autoAlpha: 0, duration: 0.4, ease: 'power2.out' }, 0)
       leave.call(() => document.body.append(ghost), [], settle)
-      leave.to(veil, { autoAlpha: 1, duration: VEIL_DURATION, ease: 'power2.inOut' }, settle)
+      leave.to(veil, { autoAlpha: 1, duration: isNext ? NEXT_VEIL_DURATION : VEIL_DURATION, ease: 'power2.inOut' }, settle)
     })
 
     // 2. Go to the case page (hidden under the veil) and measure where its image is.
