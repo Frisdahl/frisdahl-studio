@@ -5,19 +5,22 @@ type CaseGalleryAssets = Omit<CaseDetailGallery, 'ariaLabel'>
 
 const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
   nordwear: {
+    // Home page hover: the two phones at the sides, one of the PCs in the middle.
+    hoverTrio: [
+      { imageSrc: '/cases/nordwear/iphone-forside--4-3.webp', imageAlt: 'Nordwear forside på en iPhone' },
+      { imageSrc: '/cases/nordwear/macbook-alle-produkter--3-2.webp', imageAlt: 'Nordwear produktoversigt på en MacBook Pro' },
+      { imageSrc: '/cases/nordwear/iphone-produktside--4-3.webp', imageAlt: 'Nordwear produktside på en iPhone' },
+    ],
+    // Only supplies the next-project preview; the pair below is what the gallery shows.
     horizontalTop: {
-      imageSrc: '/cases/nordwear/category--16-9.jpg',
-      imageAlt: 'Nordwear kategori',
+      imageSrc: '/cases/nordwear/main-higgs--16-9.webp',
+      imageAlt: 'Nordwear forside på en MacBook Pro',
     },
     horizontalTopPair: [
       { imageSrc: '/cases/nordwear/macbook-alle-produkter--3-2.webp', imageAlt: 'Nordwear produktoversigt på en MacBook Pro', aspectRatio: '3 / 2' },
       { imageSrc: '/cases/nordwear/macbook-produktside--3-2.webp', imageAlt: 'Nordwear produktside på en MacBook Pro', aspectRatio: '3 / 2' },
     ],
     afterPalette: { imageSrc: '/cases/nordwear/ipad-glas--3-2.webp', imageAlt: 'Nordwear forside på en iPad Pro', aspectRatio: '3 / 2' },
-    horizontalBottom: {
-      imageSrc: '/cases/nordwear/production--16-9.jpg',
-      imageAlt: 'Nordwear oversigt',
-    },
     horizontalBottomPair: [
       { imageSrc: '/cases/nordwear/iphone-forside--4-3.webp', imageAlt: 'Nordwear forside på en iPhone', aspectRatio: '4 / 3' },
       { imageSrc: '/cases/nordwear/iphone-produktside--4-3.webp', imageAlt: 'Nordwear produktside på en iPhone', aspectRatio: '4 / 3' },
