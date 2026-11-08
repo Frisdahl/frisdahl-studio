@@ -2,7 +2,7 @@ import { useRef, useState, type AnchorHTMLAttributes } from 'react'
 import { matchPath, useLocation } from 'react-router-dom'
 import { useLocale } from '../../context/LocaleContext'
 import { getFooterContent } from '../../data/footer'
-import { CASES_PATH, CONTACT_PATH } from '../../lib/routes'
+import { CASES_PATH, CONTACT_PATH, MEET_US_PATH } from '../../lib/routes'
 import { scrollToTarget } from '../../lib/scroll'
 import { ArrowIcon, Container, ArrowButton } from '../ui'
 
@@ -91,7 +91,9 @@ export function Footer() {
   )
   const footer = getFooterContent(locale)
 
-  if (isCaseDetailPage) {
+  // No footer on the case pages (they have their own next-project block) or on
+  // the Mød mig page, which fills the screen on its own.
+  if (isCaseDetailPage || pathname === MEET_US_PATH) {
     return null
   }
 

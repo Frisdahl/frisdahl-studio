@@ -3536,8 +3536,25 @@
     }
   }
 
+  /* The portrait and the text sit in the middle of the first screen. */
   .meet-us-page {
     overflow-x: clip;
+    padding-block: var(--spacing-section-sm);
+  }
+
+  @media (min-width: 1024px) {
+    .meet-us-page {
+      /* The portrait is 4/5, so its height is 5/4 of its width. */
+      --meet-us-portrait-width: min(20rem, 24vw);
+      --meet-us-portrait-top: calc(50svh - var(--meet-us-portrait-width) * 5 / 8);
+      /* No footer on this page. The section starts behind the header (undoing
+         the page's top padding) and its content starts where the portrait, which
+         is centred on the screen, starts; so the top of the text lines up with
+         the top of the portrait. The same space is left below the text. */
+      margin-top: calc(-1 * var(--site-header-height));
+      min-height: 100svh;
+      padding-block: var(--meet-us-portrait-top);
+    }
   }
 
   .meet-us-page-blob {
@@ -3561,8 +3578,127 @@
     }
   }
 
+  /* The portrait and the text beside it, inset on the 12 columns like the
+     homepage's reviews: the portrait takes columns 2-4, the text 6-11, so the group has the same space
+     on the left (the portrait) as on the right (the text). Stacked
+     below 1024px. */
   .meet-us-team {
-    @apply grid grid-cols-1 gap-lg sm:grid-cols-2 lg:grid-cols-3 lg:gap-xl;
+    @apply grid grid-cols-1 gap-lg;
+  }
+
+  @media (min-width: 1024px) {
+    .meet-us-team {
+      grid-template-columns: subgrid;
+      grid-column: 1 / -1;
+      column-gap: normal;
+      align-items: start;
+    }
+
+    /* The portrait is sticky: it stays vertically centred on the screen while
+       the text beside it scrolls past. */
+    .meet-us-team .meet-us-member {
+      grid-column: 2 / span 3;
+      width: var(--meet-us-portrait-width);
+      position: sticky;
+      top: var(--meet-us-portrait-top);
+    }
+
+    .meet-us-text {
+      grid-column: 6 / span 6;
+    }
+  }
+
+  /* The text is set as a heading, so it runs long; the portrait stays put beside it. */
+  .meet-us-intro p {
+    margin: 0;
+    /* The first line of each paragraph starts further in. */
+    text-indent: 3em;
+    /* Set like the homepage's "Et lille studio med store ambitioner" heading
+       (.home-cases-intro-title): the same font, tracking and ink colour, in a
+       slightly lighter weight (500 instead of 600) and a smaller size (34px at
+       most, instead of 48px). The line height is looser than the heading's 1.12
+       (about 1.4) because this is running text of several lines. */
+    font-family: var(--font-heading);
+    font-size: clamp(1.375rem, calc(12px + 1.55vw), 34px);
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: -0.025em;
+    color: var(--color-dark);
+  }
+
+  .meet-us-intro p + p {
+    @apply mt-2xl;
+  }
+
+  /* A topic under the paragraphs: the heading, then two columns, the number on
+     the left and the text on the right. */
+  .meet-us-topic {
+    margin-top: clamp(4rem, 8vw, 7rem);
+  }
+
+  .meet-us-topic-title {
+    margin: 0;
+    font-family: var(--font-heading);
+    /* The size of the homepage's "Brand identitet" (.added-value-title). */
+    font-size: clamp(2rem, 3.35vw, 3rem);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    color: var(--color-dark);
+  }
+
+  .meet-us-topic-body {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    column-gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+  }
+
+  .meet-us-topic-number {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    color: #b2b2b2;
+  }
+
+  /* A topic without a number: its content starts at the heading's left edge. */
+  .meet-us-topic-body-plain {
+    display: block;
+  }
+
+  /* The links here are the footer's own (FooterLink, styled by .site-footer-link);
+     --footer-ink is only defined inside the footer, so it is set here too. */
+  .meet-us-topic-body {
+    --footer-ink: var(--color-dark);
+  }
+
+  /* The email, with the contact button under it. */
+  .meet-us-topic-contact {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-lg);
+  }
+
+  /* The place line (as in the menu): town, country and the flag, in one row. */
+  .meet-us-topic-text.meet-us-topic-location {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-indent: 0;
+  }
+
+  .meet-us-topic-text {
+    margin: 0;
+    max-width: 33rem;
+    /* The first line starts further in, as in the paragraphs above. */
+    text-indent: 3em;
+    font-size: clamp(1rem, 1.2vw, 1.1875rem);
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+    color: color-mix(in srgb, var(--color-dark) 60%, transparent);
   }
 
   .meet-us-member {
@@ -3580,94 +3716,6 @@
 
   .meet-us-member-placeholder {
     @apply h-full w-full bg-peach;
-  }
-
-  /* Experience note over the portrait: dark panel, revealed on hover (and on
-     keyboard focus anywhere in the card). It is a sibling of the portrait, so
-     it covers exactly the 4/5 portrait box and can move below the member meta
-     on touch devices, where there is no hover. */
-  .meet-us-member-overlay {
-    @apply rounded-panel-lg;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    gap: var(--spacing-sm);
-    padding: clamp(1.25rem, 2vw, 1.75rem);
-    background-color: color-mix(in srgb, var(--color-primary) 90%, transparent);
-    color: var(--color-light);
-    opacity: 0;
-    transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .meet-us-member:hover .meet-us-member-overlay,
-  .meet-us-member:focus-within .meet-us-member-overlay {
-    opacity: 1;
-  }
-
-  .meet-us-member-overlay-label {
-    @apply text-caption font-semibold tracking-[0.12em] uppercase;
-    color: var(--color-accent);
-  }
-
-  .meet-us-member-overlay-text {
-    @apply text-body-sm;
-    color: color-mix(in srgb, var(--color-light) 92%, transparent);
-  }
-
-  /* No reliable hover on touch devices, and no room for a hover panel on a
-     phone: show the same note as a caption under the member meta there. */
-  @media (hover: none), (max-width: 640px) {
-    .meet-us-member {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .meet-us-member-portrait {
-      order: 1;
-    }
-
-    .meet-us-member-meta {
-      order: 2;
-    }
-
-    .meet-us-member-overlay {
-      order: 3;
-      position: static;
-      aspect-ratio: auto;
-      opacity: 1;
-      padding: 0;
-      margin-top: var(--spacing-md);
-      background-color: transparent;
-      color: var(--color-secondary);
-      transition: none;
-    }
-
-    .meet-us-member-overlay-text {
-      color: var(--color-secondary);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .meet-us-member-overlay {
-      transition: none;
-    }
-  }
-
-  .meet-us-member-meta {
-    @apply mt-md flex items-start gap-2.5;
-  }
-
-  .meet-us-member-name {
-    @apply text-h4 font-medium text-primary;
-  }
-
-  .meet-us-member-title {
-    @apply shrink-0 pt-1 text-body-sm text-secondary;
   }
 
   .case-row {
