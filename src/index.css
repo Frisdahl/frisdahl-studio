@@ -2714,12 +2714,14 @@
     @apply min-w-0;
   }
 
+  /* Same styling as the overview's details below (Branche / Mode). */
   .case-detail-hero-meta-label {
-    @apply text-caption font-bold uppercase tracking-[0.12em] text-muted;
+    @apply text-caption font-bold uppercase tracking-[0.12em];
+    color: color-mix(in srgb, var(--color-dark) 50%, transparent);
   }
 
   .case-detail-hero-meta-value {
-    @apply mt-1 min-w-0 text-body-sm font-bold text-primary;
+    @apply mt-1 min-w-0 text-body font-bold text-primary;
   }
 
   .case-detail-hero-meta-link {
