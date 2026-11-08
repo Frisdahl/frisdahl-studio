@@ -13,6 +13,15 @@
 @import "@fontsource-variable/raleway/wght.css";
 @import "@fontsource/dm-serif-display/400.css";
 
+/* ArrowButton hover progress, 0 (dark fill) to 1 (transparent fill). Registered
+   so it can be transitioned; the fill and the label colour are both derived
+   from it, which keeps them in step however often the hover reverses. */
+@property --arrow-btn-p {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
 @theme {
   /* Typography. One family for the whole site: Manrope (variable, 200–800). */
   --font-sans: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
@@ -4933,8 +4942,54 @@
     }
   }
 
-  .site-footer-cta-links {
-    @apply mt-10;
+  /* The contact button on the left, the email beside it. */
+  .site-footer-cta-row {
+    @apply mt-10 flex flex-wrap items-center gap-x-8 gap-y-4;
+  }
+
+  /* Dark button, light label, arrow to the top right (ArrowButton). On hover
+     the fill goes transparent and the label and arrow turn dark; the border
+     is the dark colour all along, so it holds the shape once the fill is
+     gone. The arrow sits in a clipped box, so the one leaving and the one
+     arriving are cut at its edge. */
+  .arrow-btn {
+    @apply inline-flex shrink-0 cursor-pointer items-center gap-3 border py-[10px] pl-6 pr-5 text-button font-semibold no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+    --arrow-btn-p: 0;
+    border-radius: var(--radius-image);
+    border-color: var(--color-dark);
+    /* The fill fades with the progress; the label does not fade but flips at
+       the halfway point (round() gives 0 or 1). A crossfade of both passes
+       through a grey the same shade as the fill, so the label vanished for a
+       moment (a flash on a quick in and out); flipped at the midpoint it stays
+       readable, and because both come from one value they never get out of
+       step when the hover reverses. */
+    background-color: color-mix(in srgb, var(--color-dark) calc((1 - var(--arrow-btn-p)) * 100%), transparent);
+    color: color-mix(in srgb, var(--color-dark) calc(round(var(--arrow-btn-p), 1) * 100%), var(--color-light));
+    transition: --arrow-btn-p 0.3s var(--ease-smooth);
+  }
+
+  .arrow-btn:focus-visible {
+    --arrow-btn-p: 1;
+  }
+
+  @media (hover: hover) {
+    .arrow-btn:hover {
+      --arrow-btn-p: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .arrow-btn {
+      transition: none;
+    }
+  }
+
+  .arrow-btn-icon {
+    @apply relative inline-flex h-4 w-4 shrink-0 items-center justify-center overflow-hidden;
+  }
+
+  .arrow-btn-arrow {
+    @apply absolute inset-0 block h-full w-full;
   }
 
   /* The email's arrow: scales up on the left of the text as the link is
@@ -5006,10 +5061,10 @@
     @apply cursor-pointer border-0 bg-transparent p-0 text-left sm:text-right;
   }
 
-  /* The call to action, set exactly like the home hero's h1 (Hero.module.css). */
+  /* The call to action: the home hero's h1 (Hero.module.css) one step larger. */
   .site-footer-logo {
     color: var(--footer-ink);
-    font-size: clamp(2.25rem, 4.4vw, 4rem);
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
     font-weight: var(--heading-weight);
     line-height: 1.04;
     letter-spacing: -0.035em;

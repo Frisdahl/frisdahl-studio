@@ -23,7 +23,8 @@ const footerContent = {
     navAriaLabel: 'Footernavigation',
     // The four columns' small headings, left to right.
     columnTitles: { contact: 'Kontakt', nav: 'Navigation', studio: 'Studio', legal: 'Privatliv' },
-    ctaTitle: 'Klar til at starte dit projekt?',
+    ctaTitle: 'Skal vi skabe noget sammen?',
+    ctaButton: 'Kontakt',
     backToTop: 'Tilbage til toppen',
     phone: PHONE,
     phoneHref: PHONE_HREF,

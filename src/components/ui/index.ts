@@ -1,5 +1,6 @@
 export { CtaPillButton } from './CtaPillButton'
 export { ContactButton } from './ContactButton'
+export { ArrowButton } from './ArrowButton'
 export { ArrowChipButton } from './ArrowChipButton'
 export { ArrowIcon } from './ArrowIcon'
 export { RollLabel } from './RollLabel'

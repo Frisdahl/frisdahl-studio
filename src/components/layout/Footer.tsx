@@ -2,9 +2,9 @@ import { useRef, useState, type AnchorHTMLAttributes } from 'react'
 import { matchPath, useLocation } from 'react-router-dom'
 import { useLocale } from '../../context/LocaleContext'
 import { getFooterContent } from '../../data/footer'
-import { CASES_PATH } from '../../lib/routes'
+import { CASES_PATH, CONTACT_PATH } from '../../lib/routes'
 import { scrollToTarget } from '../../lib/scroll'
-import { ArrowIcon, Container } from '../ui'
+import { ArrowIcon, Container, ArrowButton } from '../ui'
 
 type UnderlinePhase = 'idle' | 'in' | 'held' | 'out'
 
@@ -105,20 +105,23 @@ export function Footer() {
           <div className="site-footer-brand">
             <h2 className="site-footer-logo">{footer.ctaTitle}</h2>
 
-            <ul className="site-footer-links site-footer-cta-links">
-              <li>
-                <FooterLink href={footer.emailHref} withArrow>
-                  {footer.email}
-                </FooterLink>
-              </li>
-              {footer.phone && (
+            <div className="site-footer-cta-row">
+              <ArrowButton href={CONTACT_PATH}>{footer.ctaButton}</ArrowButton>
+              <ul className="site-footer-links site-footer-cta-links">
                 <li>
-                  <FooterLink href={footer.phoneHref}>
-                    {footer.phone}
+                  <FooterLink href={footer.emailHref} withArrow>
+                    {footer.email}
                   </FooterLink>
                 </li>
-              )}
-            </ul>
+                {footer.phone && (
+                  <li>
+                    <FooterLink href={footer.phoneHref}>
+                      {footer.phone}
+                    </FooterLink>
+                  </li>
+                )}
+              </ul>
+            </div>
 
             <div className="site-footer-link-columns">
               <nav className="site-footer-column" aria-label={footer.navAriaLabel}>
