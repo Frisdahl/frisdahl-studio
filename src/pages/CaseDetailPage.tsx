@@ -16,8 +16,17 @@ import {
   CaseDetailNextSection,
 } from '../components/sections'
 
+/**
+ * One route serves every case, so React would keep the same page elements when going from one
+ * case to the next and only rewrite their text. Keyed by the case, each one is a fresh page:
+ * nothing from the previous case (split text, scroll triggers, refs) can carry over.
+ */
 export function CaseDetailPage() {
   const { caseSlug } = useParams<{ caseSlug: string }>()
+  return <CaseDetail key={caseSlug} caseSlug={caseSlug} />
+}
+
+function CaseDetail({ caseSlug }: { caseSlug: string | undefined }) {
   const { locale } = useLocale()
   const detail = caseSlug ? getCaseDetail(locale, caseSlug) : null
   const adjacent = caseSlug ? getAdjacentCaseHrefs(caseSlug) : null

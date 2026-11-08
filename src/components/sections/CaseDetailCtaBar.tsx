@@ -1,5 +1,5 @@
 import { CONTACT_PATH } from '../../lib/routes'
-import { ArrowChipButton, ContactButton } from '../ui'
+import { ArrowButton, ArrowChipButton } from '../ui'
 
 interface CaseDetailCtaBarProps {
   previousHref: string
@@ -16,12 +16,9 @@ export function CaseDetailCtaBar({ previousHref, nextHref, liveUrl }: CaseDetail
         label="Forrige case"
         href={previousHref}
       />
-      <ContactButton
-        href={liveUrl ?? CONTACT_PATH}
-        external={Boolean(liveUrl)}
-      >
+      <ArrowButton href={liveUrl ?? CONTACT_PATH} external={Boolean(liveUrl)}>
         Se live
-      </ContactButton>
+      </ArrowButton>
       <ArrowChipButton
         direction="right"
         label="Næste case"

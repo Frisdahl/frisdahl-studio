@@ -2748,7 +2748,7 @@
 
   /* Keywords spread edge to edge with equal gaps between them. */
   .case-detail-hero-meta {
-    @apply mt-4 grid grid-cols-2 gap-x-6 gap-y-md lg:flex lg:items-start lg:justify-between;
+    @apply mt-8 grid grid-cols-2 gap-x-6 gap-y-md lg:mt-10 lg:flex lg:items-start lg:justify-between;
   }
 
   .case-detail-hero-image {
@@ -3157,6 +3157,14 @@
     transition:
       opacity 300ms ease,
       visibility 0s linear 0s;
+  }
+
+  /* The bar floats over the page's pictures, so its button keeps its dark fill on hover (the
+     arrow swap is the hover feedback) instead of going transparent. */
+  .case-detail-cta-bar .arrow-btn,
+  .case-detail-cta-bar .arrow-btn:hover,
+  .case-detail-cta-bar .arrow-btn:focus-visible {
+    --arrow-btn-p: 0;
   }
 
   /* Fades out once the next-case card is on the screen (CaseDetailNextSection). */
@@ -4675,9 +4683,9 @@
     text-box: trim-both cap alphabetic;
   }
 
-  /* Line 2 in the site's grey, like the home hero's second line. */
+  /* Line 2 in the same dark ink as line 1 (the dot after it stays red). */
   .contact-page-heading-muted {
-    color: var(--contact-muted);
+    color: var(--contact-ink);
   }
 
   .contact-page-form {
@@ -4703,6 +4711,8 @@
     @apply text-caption font-bold uppercase tracking-[0.12em];
     color: var(--contact-ink);
     text-box: trim-start cap alphabetic;
+    /* Room between the label and its line. */
+    margin-bottom: 0.75rem;
   }
 
   /* The required-field marker, in the accent red. */
@@ -4769,6 +4779,15 @@
   .contact-form-status {
     @apply m-0 -mt-4 text-body-sm empty:hidden;
     color: var(--contact-muted);
+  }
+
+  /* The submit button's arrow has no chip behind it: the arrow alone, light on the dark button. */
+  .contact-page .header-contact .hero-cta-btn-icon {
+    background-color: transparent;
+  }
+
+  .contact-page .header-contact .hero-cta-btn-arrow {
+    color: var(--color-light);
   }
 
   .contact-drawer-panel .btn-secondary {
@@ -4936,6 +4955,23 @@
 
   .arrow-btn:focus-visible {
     --arrow-btn-p: 1;
+  }
+
+  /* Text variant (ArrowButton variant="text"): no fill, border or padding, dark label and
+     arrow, held the same on hover; the arrow swap is the hover feedback. */
+  .arrow-btn.arrow-btn-text,
+  .arrow-btn.arrow-btn-text:hover,
+  .arrow-btn.arrow-btn-text:focus-visible {
+    padding: 0;
+    border-color: transparent;
+    border-width: 0;
+    border-radius: 0;
+    background-color: transparent;
+    color: var(--color-dark);
+    /* The type of the text beside it (the project page's other details). */
+    font-size: var(--text-body);
+    font-weight: 700;
+    line-height: inherit;
   }
 
   @media (hover: hover) {

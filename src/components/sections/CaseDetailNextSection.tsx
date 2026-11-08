@@ -1,6 +1,8 @@
 import { useReducedMotion } from 'framer-motion'
 import { useCallback, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useLocale } from '../../context/LocaleContext'
+import { getCaseDetail } from '../../data/caseDetails'
 import { useScrollTrackProgress } from '../../hooks/useScrollTrackProgress'
 import { navigateWithSharedTransition } from '../../lib/pageTransition'
 import type { CaseDetailNext } from '../../types/caseDetail'
@@ -31,11 +33,26 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
   const imageRef = useRef<HTMLImageElement & HTMLDivElement>(null)
   const hasNavigatedRef = useRef(false)
   const navigate = useNavigate()
+  const { locale } = useLocale()
   const shouldReduceMotion = useReducedMotion()
 
   useEffect(() => {
     hasNavigatedRef.current = false
   }, [href])
+
+  // The next case's hero picture is fetched and decoded now, while the card is on its way up,
+  // so the transition doesn't stand still waiting for it once the page changes.
+  useEffect(() => {
+    const slug = href.split('/').pop()
+    const src = slug ? getCaseDetail(locale, slug)?.hero.slides[0]?.imageSrc : null
+    if (!src) return
+    const props = responsiveImageProps(src, IMAGE_SIZES.container)
+    const warm = new Image()
+    if (props.srcSet) warm.srcset = props.srcSet
+    if (props.sizes) warm.sizes = props.sizes
+    warm.src = props.src
+    warm.decode().catch(() => {})
+  }, [href, locale])
 
   const onProgress = useCallback(
     (progress: number) => {
@@ -48,6 +65,10 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
       // changes without a click.
       if (progress < TRIGGER_PROGRESS || shouldReduceMotion || hasNavigatedRef.current) return
       hasNavigatedRef.current = true
+      // The trigger fires a hair before the end of the scroll: finish the bar (and the zoom
+      // that goes with it) so it reads as full when the transition starts.
+      if (barRef.current) barRef.current.style.transform = 'scaleX(1)'
+      if (imageRef.current) imageRef.current.style.transform = `scale(${1 + IMAGE_ZOOM})`
       // The image grows into the next case's hero, like a card on the home page.
       const card = cardRef.current
       if (card) navigateWithSharedTransition(href, card, navigate)

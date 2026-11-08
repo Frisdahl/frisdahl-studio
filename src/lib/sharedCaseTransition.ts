@@ -22,7 +22,7 @@ gsap.registerPlugin(SplitText)
 const SETTLE = 0.4
 // The next-project card: its text sits on the image, so the ghost (which would
 // cover it) is only lifted out once the text has mostly left.
-const NEXT_SETTLE = 0.3
+const NEXT_SETTLE = 0.5
 const NEXT_EXIT_TEXT_DURATION = 0.4
 const NEXT_VEIL_DURATION = 0.25
 const NEXT_OVERLAY_FADE = 0.8
@@ -46,12 +46,11 @@ const SWAP_AT = 0.4
 const VEIL_OUT_AT = 0.65
 // The case page's text rising in.
 const ENTER_EASE = 'power3.out'
-// The heading goes first; the meta columns start this far into it (seconds),
-// then follow each other from left to right, this far apart.
+// The heading goes first; the meta columns (Type, Rolle, ...) start this far into it
+// (seconds), all at the same time (a stagger of 0 would be one after another from left to right).
 const HEADING_LEAD = 0.45
-const COLUMN_STAGGER = 0.12
-// Each column moves a little longer than the step between columns, so they
-// overlap and flow into each other; the longer ease-out tail reads as smooth.
+const COLUMN_STAGGER = 0
+// The longer ease-out tail on the values reads as smooth.
 const COLUMN_EASE = 'power4.out'
 const COLUMN_LABEL_DURATION = 0.9
 const COLUMN_VALUE_DURATION = 1.1
@@ -198,6 +197,12 @@ export async function runSharedCaseTransition(
       leave.to(veil, { autoAlpha: 1, duration: isNext ? NEXT_VEIL_DURATION : VEIL_DURATION, ease: 'power2.inOut' }, settle)
     })
 
+    // The next-project card is the same DOM on the next case's page (one route component), so
+    // React rewrites its name when the route changes. Its text must be put back to normal
+    // first: reverting the split afterwards would write the old project's name back over it.
+    // The page is under the veil, so nothing shows.
+    if (isNext) split.revert()
+
     // 2. Go to the case page (hidden under the veil) and measure where its image is.
     const main = await loadPage()
     const hero = main?.querySelector<HTMLElement>('.case-detail-hero-image') ?? null
@@ -255,8 +260,8 @@ export async function runSharedCaseTransition(
     let enter: gsap.core.Timeline | null = null
     const entered = new Promise<void>((resolve) => {
       enter = gsap.timeline({ paused: true, onComplete: resolve, defaults: { ease: ENTER_EASE } })
-      // The heading rises first; once it is mostly in, the meta row follows one
-      // column at a time from left to right (label fades in, value rises).
+      // The heading rises first; once it is mostly in, the meta row follows, all
+      // columns together (each label fades in, each value rises).
       if (nameSplit) enter!.to(nameSplit.lines, { yPercent: 0, duration: 1, stagger: 0.08 }, 0)
       const columnsAt = nameSplit ? HEADING_LEAD : 0
       metaItems.forEach((item, index) => {

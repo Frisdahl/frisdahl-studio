@@ -5,6 +5,13 @@ import { ArrowIcon } from './ArrowIcon'
 interface ArrowButtonProps {
   children: string
   href: string
+  /** Another site: opens in a new tab. */
+  external?: boolean
+  /**
+   * 'solid' (default): the dark button with a light label.
+   * 'text': no fill, border or padding; the label and arrow are dark. Same arrow swap on hover.
+   */
+  variant?: 'solid' | 'text'
   className?: string
 }
 
@@ -16,7 +23,8 @@ const HOVER_IN = 0.45
 const HOVER_OUT = 0.4
 
 /**
- * A dark button with a light label and an arrow pointing to the top right.
+ * The site's call-to-action button (the footer's contact button, the project pages' "Se live"):
+ * a dark button with a light label and an arrow pointing to the top right.
  * Hover: the fill goes transparent and the label and arrow turn dark (CSS,
  * .arrow-btn in index.css), while the arrow leaves through the top right
  * corner and a second arrow arrives from the bottom left. Hover out plays the
@@ -27,7 +35,13 @@ const HOVER_OUT = 0.4
  * instead of jumping, and the ease inside the timeline stays in charge of the
  * feel in both directions.
  */
-export function ArrowButton({ children, href, className = '' }: ArrowButtonProps) {
+export function ArrowButton({
+  children,
+  href,
+  external = false,
+  variant = 'solid',
+  className = '',
+}: ArrowButtonProps) {
   const rootRef = useRef<HTMLAnchorElement>(null)
   const timeline = useRef<gsap.core.Timeline | null>(null)
 
@@ -91,7 +105,8 @@ export function ArrowButton({ children, href, className = '' }: ArrowButtonProps
     <a
       ref={rootRef}
       href={href}
-      className={`arrow-btn ${className}`.trim()}
+      className={`arrow-btn${variant === 'text' ? ' arrow-btn-text' : ''} ${className}`.trim()}
+      {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
       onFocus={handleFocus}

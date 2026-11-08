@@ -30,7 +30,9 @@ function waitForPage(shell: HTMLElement, previous: Element | null) {
         resolve(main)
         return
       }
-      requestAnimationFrame(check)
+      // A timer, not requestAnimationFrame: while the page is covered a frame callback can
+      // wait a full second before it runs, which stood as dead time in every transition.
+      setTimeout(check, 16)
     }
     check()
   })
