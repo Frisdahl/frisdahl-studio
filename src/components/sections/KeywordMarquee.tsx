@@ -46,6 +46,7 @@ export function KeywordMarquee({ rows, label, className = '' }: KeywordMarqueePr
   return (
     <div
       className={`why-choose-marquees ${className}`.trim()}
+      data-layout="full-bleed"
       role={label ? 'region' : undefined}
       aria-label={label}
     >

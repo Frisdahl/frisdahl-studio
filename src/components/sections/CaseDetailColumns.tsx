@@ -7,7 +7,7 @@ interface CaseDetailColumnsProps {
 
 export function CaseDetailColumns({ columns }: CaseDetailColumnsProps) {
   return (
-    <section className="case-detail-columns-section mt-4xl lg:mt-5xl" aria-label="Case details">
+    <section className="case-detail-columns-section mt-4xl lg:mt-5xl" aria-label="Case-detaljer">
       <Container>
         <div className="case-detail-columns">
           {columns.map((column) => (

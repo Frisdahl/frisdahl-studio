@@ -24,7 +24,7 @@ function waitForPage(shell: HTMLElement, previous: Element | null) {
   return new Promise<Element | null>((resolve) => {
     const started = performance.now()
     const check = () => {
-      const main = shell.querySelector(':scope > main')
+      const main = shell.querySelector(':scope > .global-layout > main')
       const swapped = (main && main !== previous) || (previousName !== null && caseName() !== previousName)
       if (swapped || performance.now() - started > 4000) {
         resolve(main)
@@ -122,7 +122,7 @@ export function PageTransition() {
       )
 
       // 2. Change the page under them, and wait for its first screen.
-      const previous = shell.querySelector(':scope > main')
+      const previous = shell.querySelector(':scope > .global-layout > main')
       navigate(href)
       const main = await waitForPage(shell, previous)
       window.scrollTo(0, 0)
@@ -157,7 +157,7 @@ export function PageTransition() {
       void import('../../pages/CaseDetailPage')
       try {
         await runSharedCaseTransition(card, veil, async () => {
-          const previous = shell.querySelector(':scope > main')
+          const previous = shell.querySelector(':scope > .global-layout > main')
           navigate(href)
           const main = await waitForPage(shell, previous)
           window.scrollTo(0, 0)

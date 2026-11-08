@@ -1,4 +1,5 @@
 export { Footer } from './Footer'
+export { GlobalLayout } from './GlobalLayout'
 export { Navbar } from './Navbar'
 export { PageMeta } from './PageMeta'
 export { ScrollToTop } from './ScrollToTop'

@@ -1,19 +1,9 @@
-import { useEffect, useLayoutEffect, useRef } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useEffect, useRef } from 'react'
 import { useLocale } from '../../context/LocaleContext'
 import { CASES_PATH } from '../../lib/routes'
 import { responsiveImageProps } from '../../lib/responsiveImage'
 import { ArrowChipButton, Container } from '../ui'
 import styles from './Hero.module.css'
-
-gsap.registerPlugin(ScrollTrigger)
-
-/** How far the pinned hero's content drifts up while the cases section covers it. */
-const DRIFT_PX = 80
-
-/** How dark the hero gets once the cases section has covered it (shade opacity). */
-const SHADE_MAX = 0.92
 
 const heroContent = {
   da: {
@@ -26,31 +16,22 @@ const heroContent = {
     cta: 'Udforsk projekter',
     carouselLabel: 'Udvalgte projekter',
   },
-  en: {
-    headingLead: 'Digital solutions',
-    headingBefore: 'with ',
-    headingAccent: 'design',
-    headingAfter: ' in focus',
-    intro: 'Web development, design and digital experiences that combine aesthetics, function and performance.',
-    cta: 'Explore projects',
-    carouselLabel: 'Selected projects',
-  },
 } as const
 
 interface HeroSlide {
   /** Portrait (4:5) image; a slide can instead be a muted looping video. */
   imageSrc: string
   videoSrc?: string
-  alt: { da: string; en: string }
+  alt: { da: string }
 }
 
 const heroSlides: HeroSlide[] = [
-  { imageSrc: '/images/hero/hero-3-rethink-furniture-macbook.webp', alt: { da: 'Landingsside-koncept for Rethink Furniture på en MacBook på en polstret stol', en: 'Rethink Furniture landing page concept on a MacBook on an upholstered chair' } },
-  { imageSrc: '/images/hero/hero-2-montra-iphone.webp', alt: { da: 'Landingsside-koncept for Montra på en iPhone op ad en riflet væg', en: 'Montra landing page concept on an iPhone leaning against a fluted wall' } },
-  { imageSrc: '/images/hero/hero-1-noma-living-macbook.webp', alt: { da: 'Landingsside-koncept for Noma Living på en MacBook på en sofa', en: 'Noma Living landing page concept on a MacBook on a sofa' } },
-  { imageSrc: '/images/hero/hero-4-auren-iphone.webp', alt: { da: 'Landingsside-koncept for Auren på en iPhone på en grå puf', en: 'Auren landing page concept on an iPhone on a grey pouf' } },
-  { imageSrc: '/images/hero/hero-5-elina-vestergaard-macbook.webp', alt: { da: 'Landingsside-koncept for Elina Vestergaard på en MacBook på en stenblok', en: 'Elina Vestergaard landing page concept on a MacBook on a stone block' } },
-  { imageSrc: '/images/hero/hero-6-noma-living-iphone.webp', alt: { da: 'Landingsside-koncept for Noma Living på en iPhone i et hjørne', en: 'Noma Living landing page concept on an iPhone in a corner' } },
+  { imageSrc: '/images/hero/hero-3-rethink-furniture-macbook.webp', alt: { da: 'Landingsside-koncept for Rethink Furniture på en MacBook på en polstret stol',  } },
+  { imageSrc: '/images/hero/hero-2-montra-iphone.webp', alt: { da: 'Landingsside-koncept for Montra på en iPhone op ad en riflet væg',  } },
+  { imageSrc: '/images/hero/hero-1-noma-living-macbook.webp', alt: { da: 'Landingsside-koncept for Noma Living på en MacBook på en sofa',  } },
+  { imageSrc: '/images/hero/hero-4-auren-iphone.webp', alt: { da: 'Landingsside-koncept for Auren på en iPhone på en grå puf',  } },
+  { imageSrc: '/images/hero/hero-5-elina-vestergaard-macbook.webp', alt: { da: 'Landingsside-koncept for Elina Vestergaard på en MacBook på en stenblok',  } },
+  { imageSrc: '/images/hero/hero-6-noma-living-iphone.webp', alt: { da: 'Landingsside-koncept for Noma Living på en iPhone i et hjørne',  } },
 ]
 
 /** Carousel drift in px per second (right to left). */
@@ -69,61 +50,6 @@ const SLIDE_SIZES = '(min-width: 1024px) 29vw, (min-width: 640px) 44vw, 72vw'
 export function Hero() {
   const { locale } = useLocale()
   const content = heroContent[locale]
-  const heroRef = useRef<HTMLElement>(null)
-  const innerRef = useRef<HTMLDivElement>(null)
-  const shadeRef = useRef<HTMLDivElement>(null)
-
-  useLayoutEffect(() => {
-    const hero = heroRef.current
-    const inner = innerRef.current
-    const shade = shadeRef.current
-    if (!hero || !inner || !shade) return
-
-    const mm = gsap.matchMedia()
-
-    // The hero darkens as the cases section rolls up over it: the shade
-    // (which also covers the strip behind the header) fades to the brand dark,
-    // scrubbed from the first scroll until the hero is covered (on phones,
-    // until it has scrolled away). The header needs no cue: its logo and burger
-    // keep their ink on the hero (see useHeaderInk for the dark sections).
-    mm.add('(prefers-reduced-motion: no-preference)', () => {
-      gsap.fromTo(
-        shade,
-        { opacity: 0 },
-        {
-          opacity: SHADE_MAX,
-          ease: 'none',
-          scrollTrigger: {
-            start: 0,
-            end: () => hero.offsetHeight,
-            scrub: true,
-            invalidateOnRefresh: true,
-          },
-        },
-      )
-    })
-
-    // Desktop only, where the hero is pinned (see Hero.module.css): its content
-    // drifts up a little, scrubbed over the scroll it takes the cases section
-    // to cover it, so it seems to move with the section rolling over it.
-    mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
-      gsap.to(inner, {
-        y: -DRIFT_PX,
-        ease: 'none',
-        // The hero sits at the top of the page, so this runs from the first
-        // scroll until the cases section has covered it.
-        scrollTrigger: {
-          start: 0,
-          end: () => hero.offsetHeight,
-          scrub: true,
-          invalidateOnRefresh: true,
-        },
-      })
-    })
-
-    return () => mm.revert()
-  }, [])
-
   const carouselRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
 
@@ -418,9 +344,8 @@ export function Hero() {
   }, [])
 
   return (
-    <section ref={heroRef} className={styles.hero} aria-labelledby="home-hero-title">
-      <div ref={shadeRef} className={styles.shade} aria-hidden="true" />
-      <div ref={innerRef} className={styles.content}>
+    <section className={styles.hero} aria-labelledby="home-hero-title">
+      <div className={styles.content}>
         <Container columns contentClassName={styles.inner}>
           <h1 id="home-hero-title" className={styles.title}>
             {content.headingLead}

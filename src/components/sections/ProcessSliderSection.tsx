@@ -65,7 +65,12 @@ export function ProcessSliderSection({ content }: ProcessSliderSectionProps) {
   }, [steps])
 
   return (
-    <section className="process-slider-section" data-header-theme="dark" aria-label={sliderAriaLabel}>
+    <section
+      className="process-slider-section"
+      data-header-theme="dark"
+      data-layout="full-bleed"
+      aria-label={sliderAriaLabel}
+    >
       <div
         ref={scrollRef}
         className="process-slider-scroll"

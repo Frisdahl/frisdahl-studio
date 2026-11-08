@@ -3,7 +3,6 @@ import type { Locale } from '../data/navigation'
 
 export interface LocaleContextValue {
   locale: Locale
-  setLocale: (locale: Locale) => void
 }
 
 // The provider lives in LocaleProvider.tsx so this module exports no components

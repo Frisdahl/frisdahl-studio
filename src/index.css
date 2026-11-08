@@ -141,21 +141,19 @@
      container (.site-container, the hero, header, footer and the sliders that
      measure themselves from 100vw) derives from these two values, so section
      edges always line up.
-     --page-max-width is the outer frame (content + one gutter on each side)
-     and is what the older frame maths expects; it is kept only for that. */
+     (The older --page-max-width / --site-max-width / --site-grid-margin aliases
+     are gone; --site-grid-width below is the only derived width.) */
   --site-header-height: 4.75rem;
+  /* The room around the header bar: it floats a little in from the top and sides. */
+  --header-gap: clamp(0.5rem, 0.8vw, 1rem);
   --content-max-width: 96rem; /* 1536px */
   /* Weight for all page and section headings (Manrope is variable, 200–800). */
   --heading-weight: 600;
-  --page-gutter: clamp(1rem, 2.5vw, 2.5rem);
-  --page-max-width: calc(var(--content-max-width) + 2 * var(--page-gutter));
-  --site-grid-margin: var(--page-gutter);
-  --site-max-width: var(--page-max-width);
+  --page-gutter: clamp(1rem, 2.5vw, 2.5rem); /* the grid's outer margin */
   --site-grid-gap: 1rem; /* the gutter between columns; 1.25rem from 901px, below */
-  --site-grid-width: min(
-    calc(var(--site-max-width) - 2 * var(--site-grid-margin)),
-    calc(100vw - 2 * var(--site-grid-margin))
-  );
+  /* The grid's width in px terms, for the few blocks that size themselves from
+     the viewport (sliders, hero rows) instead of sitting in a .site-container. */
+  --site-grid-width: min(var(--content-max-width), calc(100vw - 2 * var(--page-gutter)));
   --site-grid-columns: 12;
   /* The page's column template, declared once. Blocks that are grid items of the
      page grid use `grid-template-columns: subgrid` (and inherit the gap); the ones
@@ -306,7 +304,7 @@
   .site-container {
     box-sizing: border-box;
     width: calc(100% - 2 * var(--page-gutter));
-    max-width: calc(var(--page-max-width) - 2 * var(--page-gutter));
+    max-width: var(--content-max-width);
     margin-inline: auto;
   }
 
@@ -1034,7 +1032,7 @@
     gap: 0.75rem;
     grid-column: 1;
     margin-top: var(--spacing-lg);
-    padding-inline: max(var(--site-grid-margin), calc((100vw - var(--site-grid-width)) / 2)) var(--spacing-xl);
+    padding-inline: max(var(--page-gutter), calc((100vw - var(--site-grid-width)) / 2)) var(--spacing-xl);
     font-family: var(--font-nav);
     font-size: 0.875rem;
     font-weight: 500;
@@ -1055,7 +1053,7 @@
 
   @media (min-width: 640px) {
     .process-slider-label {
-      padding-inline: max(var(--site-grid-margin), calc((100vw - var(--site-grid-width)) / 2)) var(--spacing-2xl);
+      padding-inline: max(var(--page-gutter), calc((100vw - var(--site-grid-width)) / 2)) var(--spacing-2xl);
     }
   }
 
@@ -1178,18 +1176,18 @@
     flex-direction: column;
     justify-content: center;
     padding-top: calc(2px + var(--spacing-lg) + 1.25rem);
-    padding-inline: max(var(--site-grid-margin), calc((100vw - var(--site-grid-width)) / 2)) var(--spacing-xl);
+    padding-inline: max(var(--page-gutter), calc((100vw - var(--site-grid-width)) / 2)) var(--spacing-xl);
   }
 
   @media (min-width: 640px) {
     .process-slider-copy {
-      padding-inline: max(var(--site-grid-margin), calc((100vw - var(--site-grid-width)) / 2)) var(--spacing-2xl);
+      padding-inline: max(var(--page-gutter), calc((100vw - var(--site-grid-width)) / 2)) var(--spacing-2xl);
     }
   }
 
   @media (min-width: 64rem) {
     .process-slider-copy {
-      padding-left: max(var(--site-grid-margin), calc((100vw - var(--site-grid-width)) / 2));
+      padding-left: max(var(--page-gutter), calc((100vw - var(--site-grid-width)) / 2));
       padding-right: var(--spacing-4xl);
     }
 
@@ -1583,10 +1581,23 @@
      useHeaderInk and the header colours further down). */
   .site-header {
     @apply fixed top-0 right-0 left-0 z-50 px-4 sm:px-5 lg:px-6;
+    top: var(--header-gap);
     padding-inline: var(--page-gutter);
     transition:
       opacity 300ms ease,
       visibility 0s linear 0s;
+  }
+
+  /* The bar: the page colour with the images' rounded corners, a little in from the
+     top and sides. Its padding is the page gutter less that gap, so the logo and the
+     X stay on the grid. Over the dark contact page it stays light, so everything on
+     it keeps its dark ink. */
+  .site-header {
+    right: var(--header-gap);
+    left: var(--header-gap);
+    padding-inline: calc(var(--page-gutter) - var(--header-gap));
+    background-color: var(--color-background);
+    border-radius: var(--radius-image);
   }
 
   /* Fades out while the next-case card fills the screen (CaseDetailNextSection). */
@@ -1600,7 +1611,7 @@
 
   .site-header > .site-container {
     width: 100%;
-    max-width: calc(var(--page-max-width) - 2 * var(--page-gutter));
+    max-width: var(--content-max-width);
   }
 
   .site-header-bar {
@@ -1777,11 +1788,9 @@
     border: 0;
   }
 
-  /* Header colours. The logo and burger use the dark ink, and the light ink
-     while a section marked data-header-theme="dark" is under the header
-     (useHeaderInk sets data-header-ink on the root). No blend mode: blending
-     forced the GPU to re-composite everything behind the header every frame.
-     The contact button keeps its own colours (.site-header-cta, below). */
+  /* Header colours. The bar is light on every page, so the logo and burger always use
+     the dark ink. (useHeaderInk still sets data-header-ink on dark pages; nothing
+     reads it now.) */
   .site-header-logo,
   .header-menu-toggle,
   .header-contact,
@@ -1796,53 +1805,8 @@
     color: var(--color-dark);
   }
 
-  :root[data-header-ink='light'] .site-header :is(.site-header-logo, .header-menu-toggle) {
-    color: var(--color-light);
-  }
-
   .site-header .site-header-logo:is(:hover, :focus-visible) {
     color: var(--color-accent);
-  }
-
-  /* The contact button's layer: the header's twin, laid out the same (a
-     hidden burger holds its place) but not blended, so the button keeps its
-     own dark colours and red hover. Only the button takes clicks. */
-  .site-header-cta {
-    z-index: 51;
-    pointer-events: none;
-  }
-
-  .site-header-cta .header-contact {
-    pointer-events: auto;
-  }
-
-  /* On the dark contact page the button is its light version: white with a
-     dark chip, the label turning light on the red hover. */
-  :root:has(.contact-page) .site-header-cta .header-contact,
-  :root:has(.contact-page) .site-header-cta .header-contact:is(:hover, :focus-visible) {
-    background-color: var(--color-light);
-  }
-
-  :root:has(.contact-page) .site-header-cta .header-contact {
-    color: var(--color-dark);
-  }
-
-  :root:has(.contact-page) .site-header-cta .header-contact:is(:hover, :focus-visible) {
-    color: var(--color-light);
-  }
-
-  :root:has(.contact-page) .site-header-cta .header-contact .hero-cta-btn-icon {
-    background-color: var(--color-dark);
-  }
-
-  :root:has(.contact-page) .site-header-cta .header-contact .hero-cta-btn-arrow {
-    color: var(--color-light);
-  }
-
-  /* Placeholders that hold a place in one header layer for an item that
-     lives in the other. */
-  .header-placeholder {
-    visibility: hidden;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -2218,22 +2182,22 @@
     @apply fixed inset-0 bg-black/55;
   }
 
-  /* Menu: the page (.page-shell) shrinks a little and slides left; the menu
-     shows in the space it left, on the page colour. The header stays put (the
-     X keeps the burger's spot); only Kontakt fades out. Navbar sets the clip and origin
-     variables from the scroll position and toggles .menu-active (clip, menu
-     visible) and .menu-open (moved). */
+  /* Menu: a grey overlay slides down from above and fills the screen. The header
+     (logo, Kontakt, the X) stays on top of it; the links sit on the left and an
+     image on the right, on the page grid. Navbar toggles .menu-active (shown,
+     scroll locked, page inert) and then .menu-open (slid down). The page itself
+     doesn't move. */
   :root {
-    --menu-panel-width: min(24rem, 62vw);
-    --menu-scale: 0.97;
-    /* Scaling pulls the right edge in by (1 - scale) / 2 of the width; the
-       shift moves it the rest of the way, a small gap short of the menu. */
-    --menu-shift: calc((1 - var(--menu-scale)) / 2 * 100vw - var(--menu-panel-width) - 1.5rem);
-    /* Opening and closing share the same glide: fast at first, then settling
-       (ease-out). */
-    --menu-open-duration: 0.9s;
-    --menu-close-duration: 1s;
-    --menu-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --menu-bg: #f6f7f7;
+    /* Opening is a large movement (the site's expo in-out); closing is quicker
+       and starts a beat late, once the links have left. Navbar waits
+       --menu-close-delay + --menu-close-duration before it unlocks the page
+       (MENU_CLOSE_MS). */
+    --menu-open-duration: 0.95s;
+    --menu-close-duration: 0.7s;
+    --menu-close-delay: 0.1s;
+    --menu-slide-ease: cubic-bezier(0.87, 0, 0.13, 1);
+    --menu-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
     --menu-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
     /* Kept for the burger icon. */
     --menu-ease: var(--menu-ease-in-out);
@@ -2297,84 +2261,43 @@
     pointer-events: none;
   }
 
-  .menu-active .page-shell {
-    clip-path: inset(var(--shell-clip-top) 0 calc(100% - var(--shell-clip-top) - 100vh) 0 round 0);
-    transform-origin: 50% var(--shell-origin-y);
-    will-change: transform;
-    transition:
-      transform var(--menu-close-duration) var(--menu-ease-out),
-      clip-path var(--menu-close-duration) var(--menu-ease-out);
-  }
-
-  .menu-open .page-shell {
-    clip-path: inset(var(--shell-clip-top) 0 calc(100% - var(--shell-clip-top) - 100vh) 0 round var(--radius-panel));
-    transform: translateX(var(--menu-shift)) scale(var(--menu-scale));
-    transition:
-      transform var(--menu-open-duration) var(--menu-ease-out),
-      clip-path var(--menu-open-duration) var(--menu-ease-out);
-  }
-
-  /* Kontakt fades out as the menu opens, and back in only once the page has
-     slid back (the delay is about the length of the closing move). */
-  .site-header .header-contact {
-    transition:
-      opacity 0.4s ease 0.65s,
-      visibility 0.4s 0.65s;
-  }
-
-  .menu-open .site-header .header-contact {
-    opacity: 0;
-    visibility: hidden;
-    transition-delay: 0s;
-  }
-
-  /* A dark layer over the page card while the menu is open, so the menu reads
-     as the foreground. It covers the visible part of the page (the clip) and
-     moves with it. */
-  .page-shell::after {
-    content: '';
-    position: absolute;
-    inset-inline: 0;
-    top: var(--shell-clip-top, 0);
-    z-index: 100;
-    height: 100vh;
-    background-color: color-mix(in srgb, var(--color-dark) 40%, transparent);
-    opacity: 0;
-    pointer-events: none;
-    visibility: hidden;
-    transition:
-      opacity var(--menu-close-duration) var(--menu-ease-out),
-      visibility var(--menu-close-duration);
-  }
-
-  .menu-active .page-shell::after {
-    visibility: visible;
-  }
-
-  .menu-open .page-shell::after {
-    opacity: 1;
-    transition:
-      opacity var(--menu-open-duration) var(--menu-ease-out),
-      visibility var(--menu-open-duration);
-  }
-
+  /* The overlay: fixed and full screen, above the page and its footer and under
+     the header bar (50, 51). It waits above the screen. */
   .menu-panel {
-    @apply fixed inset-0 flex justify-end;
-    z-index: 0;
-    background-color: var(--color-background);
+    position: fixed;
+    inset: 0;
+    z-index: 48;
+    background-color: var(--menu-bg);
     visibility: hidden;
+    transform: translateY(-100%);
+    transition: transform var(--menu-close-duration) var(--menu-slide-ease) var(--menu-close-delay);
   }
 
   .menu-active .menu-panel {
     visibility: visible;
+    will-change: transform;
   }
 
-  /* Starts just under the header; its right edge lines up with the X. */
-  .menu-panel-content {
-    @apply flex h-full flex-col gap-10 overflow-y-auto pb-12;
-    width: var(--menu-panel-width);
-    padding-top: calc(var(--site-header-height) + 4.5rem);
-    padding-right: var(--page-gutter);
+  .menu-open .menu-panel {
+    transform: none;
+    transition: transform var(--menu-open-duration) var(--menu-slide-ease);
+  }
+
+  /* On the page grid, so the links line up with the logo and the image with the X. */
+  .menu-panel-container {
+    height: 100%;
+  }
+
+  /* The content sits in the middle of the screen, one column in from each edge (the
+     header keeps the edges) and centred in the space under the header. */
+  .menu-panel-grid {
+    --menu-room: calc(var(--site-header-height) + var(--header-gap) + clamp(0.5rem, 2.5vh, 2.5rem));
+    --menu-content-max: calc(100dvh - 2 * var(--menu-room));
+    grid-template-rows: minmax(0, 1fr);
+    align-items: center;
+    /* The same room above and below (the header's height plus a little), so the
+       block is centred on the screen itself, not on the space under the header. */
+    padding-block: var(--menu-room);
   }
 
   /* RollLabel: the label rolls up out of its mask and an identical copy rises
@@ -2413,170 +2336,266 @@
     }
   }
 
+  .menu-panel-main {
+    display: flex;
+    grid-column: 2 / -2;
+    grid-row: 1;
+    align-self: center;
+    max-height: var(--menu-content-max);
+    min-height: 0;
+    flex-direction: column;
+    justify-content: center;
+    /* Room for what hangs out of the links' masks (0.1em above and below, see
+       .menu-link-item), so the column never shows a scrollbar for it. */
+    padding-block: 0.5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
   .menu-links {
-    @apply flex flex-col gap-4;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.75rem, 2.6vh, 1.75rem);
   }
 
-  /* Links slide in from the right (no fade) as the page starts to move, top to
-     bottom; on closing they slide back out and fade, and slide back out to the right the same way when the menu
-     closes. The active page sits on a red rectangle. */
+  /* Each link rises out of its own mask (the li), the line reveal the rest of
+     the site uses. The links are plain: no hover effect, and the page being
+     viewed isn't marked (it is for screen readers, with aria-current). */
+  .menu-link-item {
+    overflow: hidden;
+    /* A little room below (and above), cancelled by the negative margin, so the
+       mask doesn't cut the tails of g and j. */
+    margin-block: -0.1em;
+    padding-block: 0.1em;
+    /* The same type as the hero's headline (Hero.module.css, .title). */
+    font-size: clamp(2.25rem, 4.4vw, 4rem);
+  }
+
   .menu-link {
-    @apply block w-full px-3 py-1 text-left no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark;
-    font-size: clamp(2rem, 3vw, 2.75rem);
-    font-weight: 500;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
+    display: block;
+    width: fit-content;
+    font-size: inherit;
+    font-weight: var(--heading-weight);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    text-align: left;
+    text-decoration: none;
     color: var(--color-dark);
-    opacity: 0;
-    transform: translateX(3rem);
+    /* Leaving: back down out of the mask, quickly and all together, before
+       the overlay lifts. */
+    transform: translateY(110%);
     transition:
-      transform 0.7s var(--menu-ease-out),
-      opacity 0.55s ease;
+      transform 0.4s cubic-bezier(0.7, 0, 0.84, 0),
+      opacity 0.35s ease;
   }
 
-  .menu-link.is-active {
-    background-color: #eb4b3d;
-    color: var(--color-dark);
+  /* The hero's headline tightens its tracking from 1024px up. */
+  @media (min-width: 1024px) {
+    .menu-link {
+      letter-spacing: -0.035em;
+    }
+  }
+
+  .menu-link:focus-visible {
+    outline: 2px solid var(--color-dark);
+    outline-offset: 2px;
   }
 
   .menu-open .menu-link {
-    opacity: 1;
     transform: none;
-    /* Opening: slide only, the text is there at once (the delays below hold
-       back the slide, not the opacity). */
     transition:
-      transform 0.8s var(--menu-ease-out),
-      opacity 0s;
+      transform 0.95s var(--menu-ease-out),
+      opacity 0.35s ease;
   }
 
-  /* Closing (no .menu-open): out in the same order after a short pause. */
-  .menu-links li:nth-child(1) .menu-link { transition-delay: 0.1s; }
-  .menu-links li:nth-child(2) .menu-link { transition-delay: 0.14s; }
-  .menu-links li:nth-child(3) .menu-link { transition-delay: 0.18s; }
-  .menu-links li:nth-child(4) .menu-link { transition-delay: 0.22s; }
+  /* In: top to bottom, once the overlay is about halfway down (the opacity doesn't wait). */
+  .menu-open .menu-links li:nth-child(1) .menu-link { transition-delay: 0.36s, 0s; }
+  .menu-open .menu-links li:nth-child(2) .menu-link { transition-delay: 0.43s, 0s; }
+  .menu-open .menu-links li:nth-child(3) .menu-link { transition-delay: 0.5s, 0s; }
+  .menu-open .menu-links li:nth-child(4) .menu-link { transition-delay: 0.57s, 0s; }
 
-  .menu-open .menu-links li:nth-child(1) .menu-link { transition-delay: 0.08s, 0s; }
-  .menu-open .menu-links li:nth-child(2) .menu-link { transition-delay: 0.14s, 0s; }
-  .menu-open .menu-links li:nth-child(3) .menu-link { transition-delay: 0.2s, 0s; }
-  .menu-open .menu-links li:nth-child(4) .menu-link { transition-delay: 0.26s, 0s; }
+  /* While a link is hovered (or keyboard-focused), the others step back and only it
+     keeps its full opacity; its picture slides down in the stack beside them. Only
+     where there is a pointer to hover with. */
+  @media (hover: hover) {
+    .menu-open .menu-links:has(.menu-link:is(:hover, :focus-visible)) .menu-link:not(:hover, :focus-visible) {
+      opacity: 0.3;
+    }
+  }
 
-  .menu-language {
-    @apply mt-2;
+  /* Along the bottom of the overlay, under the links: the city, the email and the
+     socials. They fade in last. */
+  .menu-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    grid-column: 2 / -2;
+    grid-row: 1;
+    align-self: end;
+    /* The grid's padding (the room under the header, mirrored at the bottom) is taken
+       back, so this sits near the bottom edge of the overlay. */
+    margin-bottom: calc(clamp(1.5rem, 4vh, 3rem) - var(--menu-room));
+    font-size: var(--text-body);
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--color-dark);
     opacity: 0;
-    transition: opacity 0.55s ease 0.26s;
+    transition: opacity 0.3s ease;
   }
 
-  .menu-open .menu-language {
+  .menu-open .menu-info {
     opacity: 1;
-    transition: none;
+    transition: opacity 0.6s ease 0.75s;
   }
 
-  /* In the menu the language list opens straight down from its button, and
-     the button's hover shape uses the same corners as that list. */
-  .menu-language .language-switcher-menu {
-    left: 0;
-    right: auto;
+  .menu-info-location {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    color: inherit;
   }
 
-  .menu-language .language-switcher-trigger {
-    @apply rounded-control;
+  /* The flag sits right of "Danmark". */
+  .danish-flag-icon {
+    flex: none;
+    width: 1.125rem;
+    height: auto;
+    border-radius: 1px;
   }
 
-  /* Transparent cover over the page card: clicking the page closes the menu. */
-  .menu-page-close {
-    @apply fixed inset-y-0 left-0 cursor-pointer;
-    z-index: 40;
-    right: calc(var(--menu-panel-width) + 1.5rem);
-    background: transparent;
-    border: 0;
+  .menu-info-socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.25rem;
+  }
+
+  /* The same rolling label as the footer's links (RollLabel, rolls on hover and focus);
+     the line height gives its mask the same one-line height the footer's has. */
+  .menu-info-link {
+    display: block;
+    width: fit-content;
+    line-height: 1.3;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .menu-info-link:focus-visible {
+    outline: 2px solid var(--color-dark);
+    outline-offset: 2px;
+  }
+
+  /* The picture wipes down from the top once the overlay is in; it hides again
+     before the overlay lifts. Phones have no room for it. */
+  .menu-panel-media {
+    display: none;
+    position: relative;
+    grid-row: 1;
+    align-self: center;
+    /* 6:5 (shorter than the pictures themselves, which crop to it), centred; on a
+       short screen it narrows towards the right so its edge keeps the same inset as
+       the links have on the left. */
+    justify-self: end;
+    width: min(100%, calc(var(--menu-content-max) * 1.2));
+    aspect-ratio: 6 / 5;
+    max-height: var(--menu-content-max);
+    min-height: 0;
+    overflow: hidden;
+    border-radius: var(--radius-image);
+    background-color: color-mix(in srgb, var(--color-dark) 8%, transparent);
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 0.4s var(--menu-ease-in-out);
+  }
+
+  .menu-open .menu-panel-media {
+    clip-path: inset(0);
+    transition: clip-path 1.15s var(--menu-slide-ease) 0.4s;
+  }
+
+  /* One picture per link, stacked (MenuImageStack): only the ones that have been shown
+     are visible, the newest on top; it slides down over the rest. */
+  .menu-media-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    visibility: hidden;
+  }
+
+  .menu-media-layer.is-shown {
+    visibility: visible;
+  }
+
+  @media (min-width: 48rem) {
+    .menu-panel-main,
+    .menu-info {
+      grid-column: 2 / span 6;
+    }
+
+    .menu-panel-media {
+      display: block;
+      grid-column: 8 / span 4;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .menu-panel-main,
+    .menu-info {
+      grid-column: 2 / span 5;
+    }
   }
 
   /* Burger to X: each line moves to the middle and turns 45°. */
   .menu-toggle-line {
     transform-box: view-box;
-    transform-origin: 12px 12px;
+    transform-origin: 15px 12px;
     transition: transform 0.5s var(--menu-ease);
   }
 
   /* rotate() is written first so it applies last: each line moves to the
      centre, then turns about it, giving an X centred on (12, 12). */
   .menu-toggle-icon.is-open .menu-toggle-line-top {
-    transform: rotate(45deg) translateY(4px);
+    transform: rotate(45deg) translateY(4px) scaleX(0.77);
   }
 
   .menu-toggle-icon.is-open .menu-toggle-line-bottom {
-    transform: rotate(-45deg) translateY(-4px);
+    transform: rotate(-45deg) translateY(-4px) scaleX(0.77);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .menu-active .page-shell,
-    .page-shell::after,
-    .site-header .header-contact,
+    .menu-panel,
+    .menu-open .menu-panel {
+      transform: none;
+      opacity: 0;
+      transition: opacity 0.2s linear;
+    }
+
+    .menu-open .menu-panel {
+      opacity: 1;
+    }
+
     .menu-link,
-    .menu-language,
+    .menu-open .menu-link {
+      transform: none;
+      transition: none;
+    }
+
+    .menu-info,
+    .menu-open .menu-info {
+      opacity: 1;
+      transition: none;
+    }
+
+    .menu-panel-media,
+    .menu-open .menu-panel-media {
+      clip-path: none;
+      transition: none;
+    }
+
     .menu-toggle-line {
       transition: none;
     }
-  }
-
-  .language-switcher-trigger {
-    font-family: var(--font-nav);
-    /* px-6 on small screens pushed the header past the right edge at 390px;
-       the pill grows back with the rest of the header on tablet and up. */
-    @apply inline-flex items-center gap-2 rounded-pill px-3 py-3 text-button font-medium normal-case focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:px-4 lg:px-6;
-    transition: background-color var(--duration-base) var(--ease-smooth);
-  }
-
-  .language-switcher-trigger:hover,
-  .language-switcher-trigger:focus-visible,
-  .language-switcher-trigger[aria-expanded='true'] {
-    background-color: var(--color-surface);
-    color: var(--color-dark);
-  }
-
-  .language-switcher-flag {
-    @apply inline-flex h-[1.125rem] w-[1.125rem] shrink-0 overflow-hidden rounded-sm;
-  }
-
-  .language-switcher-code {
-    @apply leading-none;
-    color: var(--color-dark);
-  }
-
-  .language-switcher-chevron {
-    @apply h-[1.125rem] w-[1.125rem] text-secondary transition-transform duration-200;
-  }
-
-  .language-switcher-trigger:hover .language-switcher-chevron,
-  .language-switcher-trigger:focus-visible .language-switcher-chevron,
-  .language-switcher-trigger[aria-expanded='true'] .language-switcher-chevron {
-    color: #555555;
-  }
-
-  .language-switcher-chevron-open {
-    @apply rotate-180;
-  }
-
-  .language-switcher-menu {
-    @apply absolute right-0 top-[calc(100%+0.5rem)] z-50 min-w-[9.5rem] overflow-hidden rounded-control border border-border-light bg-surface p-1 shadow-medium;
-    --color-primary: var(--color-dark);
-    --color-secondary: #555555;
-  }
-
-  .language-switcher-option {
-    @apply flex w-full items-center gap-2.5 rounded-control-sm px-3 py-2.5 text-left text-button font-medium transition-[background-color,color];
-    color: var(--color-dark);
-  }
-
-  .language-switcher-option:hover,
-  .language-switcher-option:focus-visible {
-    background-color: var(--color-background-soft);
-    color: var(--color-dark);
-  }
-
-  .language-switcher-option-active {
-    background-color: var(--color-background-soft);
-    color: var(--color-dark);
   }
 
   .btn {
@@ -3747,7 +3766,6 @@
     --cases-button: color-mix(in srgb, var(--color-dark) var(--cases-mix), var(--color-light));
     --cases-button-ink: color-mix(in srgb, var(--color-light) var(--cases-mix), var(--color-dark));
 
-    /* Above the pinned hero, which it rolls up over. */
     position: relative;
     z-index: 1;
     background-color: var(--cases-bg);
@@ -4783,7 +4801,7 @@
      its own height" (--page-stick-top, set by Footer), so it holds still once
      its bottom reaches the bottom of the screen and the footer slides up over
      it, like the home cases section over the hero. */
-  .page-shell > .is-under-footer {
+  .global-layout > .is-under-footer {
     position: sticky;
     top: var(--page-stick-top, auto);
     z-index: 0;

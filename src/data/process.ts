@@ -38,41 +38,6 @@ const processSteps = {
       keywords: ['QA', 'SEO', 'Go-live', 'Tracking', 'Browser-test', 'Performance-test'],
     },
   ],
-  en: [
-    {
-      title: 'Discovery and strategy',
-      description:
-        'I start by understanding your business, audience and ambitions. Together we define scope, priorities and a clear direction for the project.',
-      keywords: ['Brief', 'Audience', 'Scope', 'Roadmap', 'Competitor review', 'Goals'],
-    },
-    {
-      title: 'Design and prototype',
-      description:
-        'I translate the strategy into a strong visual direction with wireframes, UI design and a clickable prototype, so you can see the solution before it is built.',
-      keywords: ['Wireframes', 'UI design', 'Prototype', 'Branding', 'Design system', 'UX'],
-    },
-    {
-      title: 'Development',
-      description:
-        'I build the solution from scratch with modern technology, a focus on performance and a structure that is easy to maintain and extend.',
-      keywords: [
-        'Frontend',
-        'React',
-        'TypeScript',
-        'Performance',
-        'Responsive',
-        'CMS',
-        'API',
-        'Accessibility',
-      ],
-    },
-    {
-      title: 'Testing and launch',
-      description:
-        'Before go-live I review everything across devices and browsers. Then I launch and make sure the transition to the new solution is stable.',
-      keywords: ['QA', 'SEO', 'Go-live', 'Tracking', 'Browser testing', 'Performance testing'],
-    },
-  ],
 } as const satisfies Record<Locale, ProcessStep[]>
 
 const processPageContent = {
@@ -82,13 +47,6 @@ const processPageContent = {
     description:
       'Jeg arbejder tæt sammen med dig gennem hele forløbet, så du altid ved, hvor projektet står, og hvad der sker næste skridt. Hvert trin er tydeligt defineret med fokus på fremdrift, feedback og kvalitet.',
     steps: processSteps.da,
-  },
-  en: {
-    eyebrow: 'My process',
-    title: 'Structured collaboration — from idea to launch',
-    description:
-      'I work closely with you throughout the journey, so you always know where the project stands and what happens next. Each step is clearly defined with a focus on momentum, feedback and quality.',
-    steps: processSteps.en,
   },
 } as const satisfies Record<Locale, ProcessPageContent>
 

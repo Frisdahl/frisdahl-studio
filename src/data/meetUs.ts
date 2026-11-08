@@ -17,20 +17,6 @@ const meetUsPageContent = {
       },
     ],
   },
-  en: {
-    eyebrow: 'Meet me',
-    title: 'I build your next digital solution',
-    members: [
-      {
-        name: 'Alexander Frisdahl',
-        title: 'Founder & Developer',
-        imageSrc: '/images/team/alexander-portrait.webp',
-        imageAlt: 'Portrait of Alexander Frisdahl',
-        bioLabel: 'Experience',
-        bio: "I have designed and built websites and digital products for several years – from first idea and strategy through design and code to launch. You work directly with me the whole way.",
-      },
-    ],
-  },
 } as const satisfies Record<Locale, MeetUsPageContent>
 
 export function getMeetUsPageContent(locale: Locale = defaultLocale): MeetUsPageContent {

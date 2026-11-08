@@ -1,5 +1,5 @@
-import { useState, type ReactNode } from 'react'
-import { defaultLocale, type Locale } from '../data/navigation'
+import type { ReactNode } from 'react'
+import { defaultLocale } from '../data/navigation'
 import { LocaleContext } from './LocaleContext'
 
 interface LocaleProviderProps {
@@ -7,10 +7,8 @@ interface LocaleProviderProps {
 }
 
 export function LocaleProvider({ children }: LocaleProviderProps) {
-  const [locale, setLocale] = useState<Locale>(defaultLocale)
-
   return (
-    <LocaleContext.Provider value={{ locale, setLocale }}>
+    <LocaleContext.Provider value={{ locale: defaultLocale }}>
       {children}
     </LocaleContext.Provider>
   )

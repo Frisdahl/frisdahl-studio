@@ -1,4 +1,3 @@
-import { useLocale } from '../../context/LocaleContext'
 import { CONTACT_PATH } from '../../lib/routes'
 import { ArrowChipButton, ContactButton } from '../ui'
 
@@ -10,25 +9,22 @@ interface CaseDetailCtaBarProps {
 }
 
 export function CaseDetailCtaBar({ previousHref, nextHref, liveUrl }: CaseDetailCtaBarProps) {
-  const { locale } = useLocale()
-  const isDa = locale === 'da'
-
   return (
-    <nav className="case-detail-cta-bar" aria-label={isDa ? 'Case-navigation' : 'Case navigation'}>
+    <nav className="case-detail-cta-bar" aria-label="Case-navigation">
       <ArrowChipButton
         direction="left"
-        label={isDa ? 'Forrige case' : 'Previous case'}
+        label="Forrige case"
         href={previousHref}
       />
       <ContactButton
         href={liveUrl ?? CONTACT_PATH}
         external={Boolean(liveUrl)}
       >
-        {isDa ? 'Se live' : 'View live'}
+        Se live
       </ContactButton>
       <ArrowChipButton
         direction="right"
-        label={isDa ? 'Næste case' : 'Next case'}
+        label="Næste case"
         href={nextHref}
       />
     </nav>

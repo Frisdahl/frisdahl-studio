@@ -33,7 +33,7 @@ export function SplitPanelSection({ content }: SplitPanelSectionProps) {
   }, [images.length])
 
   return (
-    <section className="split-panel-section" aria-labelledby="split-panel-heading">
+    <section className="split-panel-section" data-layout="full-bleed" aria-labelledby="split-panel-heading">
       <div className="split-panel">
         <div className="split-panel-content">
           <div className="split-panel-content-inner">
@@ -99,7 +99,7 @@ function Slider({
         )
       })}
 
-      <div className="slider-dots" role="group" aria-label="Slide navigation">
+      <div className="slider-dots" role="group" aria-label="Slidenavigation">
         {images.map((_, i) => (
           <div
             key={i}

@@ -38,7 +38,6 @@ export function getCaseYear(caseSlug: string): string | null {
 
 const nextCaseLabels: Record<Locale, string> = {
   da: 'Se næste projekt',
-  en: 'View next project',
 }
 
 const nextCaseAriaLabels: Record<Locale, Record<(typeof caseOrder)[number], string>> = {
@@ -47,12 +46,6 @@ const nextCaseAriaLabels: Record<Locale, Record<(typeof caseOrder)[number], stri
     'fresh-cut': 'Se næste case: Fresh Cut',
     'peter-salling': 'Se næste case: Peter Salling',
     'det-kollektive-klaedeskab': 'Se næste case: Det Kollektive Klædeskab',
-  },
-  en: {
-    nordwear: 'View next case: Nordwear',
-    'fresh-cut': 'View next case: Fresh Cut',
-    'peter-salling': 'View next case: Peter Salling',
-    'det-kollektive-klaedeskab': 'View next case: Det Kollektive Klædeskab',
   },
 }
 

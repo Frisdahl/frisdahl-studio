@@ -31,6 +31,10 @@ const ENTER_OVERLAP = 0.25
 // The card's zoom is gone by NEXT_ZOOM_SETTLE; only then is the real hero picture faded in.
 const NEXT_ZOOM_SETTLE = 0.75
 const NEXT_SWAP_AT = 0.9
+// A project card's parallax (enlarged, drifted picture) is gone by PARALLAX_SETTLE; only then
+// is the real hero picture faded in, so the two line up exactly.
+const PARALLAX_SETTLE = 0.75
+const PARALLAX_SWAP_AT = 0.8
 // The longest the transition waits for the case page's hero picture (ms).
 const HERO_WAIT = 800
 const EXIT_TEXT_DURATION = 0.65
@@ -127,6 +131,26 @@ export async function runSharedCaseTransition(
   topImage.style.opacity = '0'
   const fromImage = coverImage(cardImage.currentSrc)
   let overlay: HTMLDivElement | null = null
+  // A home project card's picture sits enlarged and drifts inside its frame (the
+  // parallax in CasesSection). The ghost starts in that exact pose, so lifting it
+  // out changes nothing on screen, and it settles to the plain picture as it grows.
+  // Offsets are percentages of the picture's own box (the frame), so they stay
+  // right when the ghost is resized to the hero below; the frame and the hero are
+  // both 16:9.
+  let parallaxPose = false
+  if (!isNext) {
+    const pose = new DOMMatrix(getComputedStyle(cardImage).transform)
+    const [originX, originY] = getComputedStyle(cardImage).transformOrigin.split(' ').map(parseFloat)
+    parallaxPose = Math.abs(pose.a - 1) > 0.001 || Math.abs(pose.e) > 0.01 || Math.abs(pose.f) > 0.01
+    if (parallaxPose) {
+      gsap.set(fromImage, {
+        scale: pose.a,
+        xPercent: (pose.e / from.width) * 100,
+        yPercent: (pose.f / from.height) * 100,
+        transformOrigin: `${(originX / from.width) * 100}% ${(originY / from.height) * 100}%`,
+      })
+    }
+  }
   if (isNext) {
     // Start in the card's own pose: zoomed in by the scroll, under its dark overlay.
     fromImage.style.objectPosition = '50% 5%'
@@ -253,7 +277,13 @@ export async function runSharedCaseTransition(
         grow.to(fromImage, { scale: 1, duration: NEXT_ZOOM_SETTLE, ease: 'power2.out' }, 0)
         if (overlay) grow.to(overlay, { opacity: 0, duration: NEXT_OVERLAY_FADE, ease: 'power1.inOut' }, 0)
       }
-      grow.to(topImage, { opacity: 1, duration: isNext ? 0.15 : 0.5, ease: 'power1.inOut' }, isNext ? NEXT_SWAP_AT : SWAP_AT)
+      if (parallaxPose) {
+        // The card's enlargement and drift settle, so the plain picture is what the
+        // hero's picture replaces.
+        grow.to(fromImage, { scale: 1, xPercent: 0, yPercent: 0, duration: PARALLAX_SETTLE, ease: 'power2.out' }, 0)
+      }
+      const swapAt = isNext ? NEXT_SWAP_AT : parallaxPose ? PARALLAX_SWAP_AT : SWAP_AT
+      grow.to(topImage, { opacity: 1, duration: isNext ? 0.15 : parallaxPose ? 0.3 : 0.5, ease: 'power1.inOut' }, swapAt)
       grow.to(veil, { autoAlpha: 0, duration: 0.4, ease: 'power2.out' }, VEIL_OUT_AT)
       grow.call(() => void enter?.play(), [], GROW_DURATION - ENTER_OVERLAP)
     })

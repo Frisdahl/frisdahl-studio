@@ -15,15 +15,15 @@ export function BookMeetingPanel({ onClose }: BookMeetingPanelProps) {
   const { contact } = getHomeContent(locale)
   const { drawer } = contact
 
-  const months = useMemo(() => getNextMonths(locale), [locale])
+  const months = useMemo(() => getNextMonths(), [])
   const timeSlots = useMemo(() => getTimeSlots(), [])
 
   const [selectedMonthIndex, setSelectedMonthIndex] = useState(0)
   const selectedMonth = months[selectedMonthIndex]
 
   const dates = useMemo(
-    () => getAvailableDates(selectedMonth.year, selectedMonth.month, locale),
-    [locale, selectedMonth.month, selectedMonth.year],
+    () => getAvailableDates(selectedMonth.year, selectedMonth.month),
+    [selectedMonth.month, selectedMonth.year],
   )
 
   const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null)

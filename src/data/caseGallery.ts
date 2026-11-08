@@ -105,12 +105,6 @@ const caseGalleryAriaLabels: Record<Locale, Record<string, string>> = {
     'peter-salling': 'Projektbilleder fra Peter Salling',
     'det-kollektive-klaedeskab': 'Projektbilleder fra Det Kollektive Klædeskab',
   },
-  en: {
-    nordwear: 'Project images from Nordwear',
-    'fresh-cut': 'Project images from Fresh Cut',
-    'peter-salling': 'Project images from Peter Salling',
-    'det-kollektive-klaedeskab': 'Project images from Det Kollektive Klædeskab',
-  },
 }
 
 export function getCaseGallery(locale: Locale, caseId: string): CaseDetailGallery | null {

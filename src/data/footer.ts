@@ -15,7 +15,7 @@ export interface FooterSocialLink {
 const footerContent = {
   da: {
     logoLabel: 'Frisdahl Studio',
-    navAriaLabel: 'Footer navigation',
+    navAriaLabel: 'Footernavigation',
     // The four columns' small headings, left to right.
     columnTitles: { contact: 'Kontakt', nav: 'Navigation', studio: 'Studio', legal: 'Privatliv' },
     // Tagensvej 55, 2200 Nørrebro (OpenStreetMap).
@@ -29,6 +29,7 @@ const footerContent = {
       { label: 'Kontakt', href: CONTACT_PATH },
     ],
     locationTitle: 'København',
+    country: 'Danmark',
     email: 'hello@frisdahlstudio.dk',
     emailHref: 'mailto:hello@frisdahlstudio.dk',
     copyright: '© Frisdahl Studio. Alle rettigheder forbeholdes.',
@@ -36,43 +37,6 @@ const footerContent = {
       { label: 'Datapolitik', href: PRIVACY_POLICY_PATH },
       { label: 'Databehandleraftale', href: '#databehandleraftale' },
       { label: 'Salgs- og leveringsaftaler', href: '#salgs-og-leveringsaftaler' },
-    ],
-    // PLACEHOLDER profile URLs — replace with the verified profiles before launch.
-    socialLinks: [
-      {
-        label: 'Facebook',
-        href: 'https://www.facebook.com/frisdahlstudio',
-      },
-      {
-        label: 'Instagram',
-        href: 'https://www.instagram.com/frisdahlstudio',
-      },
-      {
-        label: 'GitHub',
-        href: 'https://github.com/frisdahlstudio',
-      },
-    ] as FooterSocialLink[],
-  },
-  en: {
-    logoLabel: 'Frisdahl Studio',
-    navAriaLabel: 'Footer navigation',
-    columnTitles: { contact: 'Contact', nav: 'Navigation', studio: 'Studio', legal: 'Privacy' },
-    coordinates: '55.7003° N, 12.5523° E',
-    wordmark: 'Frisdahl Studio',
-    links: [
-      { label: 'Cases', href: CASES_PATH },
-      { label: 'Process', href: PROCESS_PATH },
-      { label: 'Meet me', href: MEET_US_PATH },
-      { label: 'Contact', href: CONTACT_PATH },
-    ],
-    locationTitle: 'Copenhagen',
-    email: 'hello@frisdahlstudio.dk',
-    emailHref: 'mailto:hello@frisdahlstudio.dk',
-    copyright: '© Frisdahl Studio. All rights reserved.',
-    legalLinks: [
-      { label: 'Privacy policy', href: PRIVACY_POLICY_PATH },
-      { label: 'Data processing agreement', href: '#data-processing-agreement' },
-      { label: 'Sales and delivery terms', href: '#sales-and-delivery-terms' },
     ],
     // PLACEHOLDER profile URLs — replace with the verified profiles before launch.
     socialLinks: [

@@ -17,18 +17,6 @@ const contactPageContent = {
     sent: 'Tak! Din mail-app åbner med beskeden klar til at sende.',
     mailSubject: 'Ny henvendelse fra',
   },
-  en: {
-    headingLine1: "Let's create",
-    headingLine2: 'something beautiful.',
-    sourceLabel: 'How did you find my website?',
-    sourcePlaceholder: 'Which little bird told you',
-    sourceMailLabel: 'Found the site via',
-    messageLabel: 'Message*',
-    requiredNote: 'All fields marked with * are required',
-    submit: 'Send message',
-    sent: 'Thank you! Your mail app opens with the message ready to send.',
-    mailSubject: 'New enquiry from',
-  },
 } as const
 
 export type ContactPageContent = (typeof contactPageContent)[Locale]

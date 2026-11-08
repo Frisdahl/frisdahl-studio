@@ -2,7 +2,7 @@
 
 ## Goal
 
-Build a modern, premium web agency website for Frisdahl Studio. The website should be standard danish, but with option for english.
+Build a modern, premium web agency website for Frisdahl Studio. The website is in Danish only (the English version was removed on 2026-11-08; it stays in the git history before that date).
 
 The purpose of the website is to generate leads and showcase web development services, graphic design work, and previous projects.
 

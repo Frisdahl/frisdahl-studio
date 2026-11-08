@@ -10,13 +10,6 @@ const categoryLabels: Record<Locale, Record<CaseCategory, string>> = {
     content: 'Content',
     ecommerce: 'E-commerce',
   },
-  en: {
-    website: 'Website',
-    webshop: 'Webshop',
-    grafisk: 'Graphic',
-    content: 'Content',
-    ecommerce: 'E-commerce',
-  },
 }
 
 const casesPageContent = {
@@ -87,81 +80,10 @@ const casesPageContent = {
       },
     ],
   },
-  en: {
-    eyebrow: 'Selected work',
-    title: "Websites and webshops I've designed and built from scratch",
-    filtersAriaLabel: 'Filter cases by category',
-    sliderAriaLabel: 'Cases',
-    sliderPrev: 'Previous',
-    sliderNext: 'Next',
-    sliderStatus: 'Case {current} of {total}',
-    filters: [
-      { id: 'website', label: 'Website' },
-      { id: 'webshop', label: 'Webshop' },
-      { id: 'grafisk', label: 'Graphic' },
-      { id: 'content', label: 'Content' },
-      { id: 'ecommerce', label: 'E-commerce' },
-    ],
-    items: [
-      {
-        id: 'peter-salling',
-        client: 'Peter Salling',
-        industry: 'Film',
-        category: 'website',
-        href: '/cases/peter-salling',
-        imageSrc: '/cases/peter-salling/main-higgs--16-9.webp',
-        imageAlt: 'Peter Salling case',
-        keywords: ['Website', 'Design', 'Development', 'CMS'],
-        description:
-          'A cinematic portfolio for film producer Peter Salling that puts the films first, with content managed in a built-in admin panel.',
-      },
-      {
-        id: 'nordwear',
-        client: 'Nordwear',
-        industry: 'Fashion',
-        category: 'website',
-        href: '/cases/nordwear',
-        imageSrc: '/cases/nordwear/main-higgs--16-9.webp',
-        imageAlt: 'Nordwear case',
-        panelHoverColor: '#f0e0e4',
-        keywords: ['Website', 'UX-design', 'Branding', 'Development'],
-        description:
-          'A sharp digital platform for a modern apparel brand focused on performance and a strong visual identity.',
-      },
-      {
-        id: 'fresh-cut',
-        client: 'Fresh Cut',
-        industry: 'Beauty',
-        category: 'website',
-        href: '/cases/fresh-cut',
-        imageSrc: '/cases/fresh-cut/official--6-7.webp',
-        imageAlt: 'Fresh Cut case',
-        keywords: ['Website', 'Design', 'Content', 'SEO'],
-        description:
-          'A vibrant website for a local salon with a clear booking flow and an expression that matches the brand.',
-      },
-      {
-        id: 'det-kollektive-klaedeskab',
-        client: 'Det Kollektive Klædeskab',
-        industry: 'Circular fashion',
-        category: 'website',
-        href: '/cases/det-kollektive-klaedeskab',
-        imageSrc: '/cases/det-kollektive-klaedeskab/official--6-7.webp',
-        imageAlt: 'Det Kollektive Klædeskab case',
-        keywords: ['Website', 'Redesign', 'UX design', 'Development'],
-        description:
-          'A redesign concept for a shared wardrobe in Copenhagen, where members borrow, swap and share clothes using points.',
-      },
-    ],
-  },
 } as const satisfies Record<Locale, CasesPageContent>
 
-export function getCasesResultsCountLabel(locale: Locale, count: number): string {
-  if (locale === 'da') {
-    return count === 1 ? '1 case vist' : `${count} cases vist`
-  }
-
-  return count === 1 ? '1 case shown' : `${count} cases shown`
+export function getCasesResultsCountLabel(count: number): string {
+  return count === 1 ? '1 case vist' : `${count} cases vist`
 }
 
 /**

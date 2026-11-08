@@ -15,7 +15,7 @@ export function AddedValueSection() {
   const baseId = useId()
 
   return (
-    <section className="added-value" aria-label={addedValue.ariaLabel}>
+    <section className="added-value" data-layout="full-bleed" aria-label={addedValue.ariaLabel}>
       <div className="added-value-inner">
         <div className="added-value-list-col">
           <h2 className="added-value-eyebrow">

@@ -63,7 +63,7 @@ export function CasesPageSection() {
     ? items.filter((item) => item.category === activeFilter)
     : items
 
-  const resultsCountLabel = getCasesResultsCountLabel(locale, filteredItems.length)
+  const resultsCountLabel = getCasesResultsCountLabel(filteredItems.length)
   const resultsCountKey = `${activeFilter ?? 'all'}-${filteredItems.length}`
   const sliderResetKey = `${activeFilter ?? 'all'}-${filteredItems.map((item) => item.id).join('-')}`
 

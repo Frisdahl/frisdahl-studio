@@ -22,23 +22,6 @@ const pageMetaContent = {
       cta: 'Gå til forsiden',
     },
   },
-  en: {
-    siteDescription:
-      'I create digital experiences that strengthen your brand and deliver measurable results. Strategy, design and technology – all in one place.',
-    titles: {
-      cases: 'Cases',
-      pricing: 'Pricing',
-      meetUs: 'Meet me',
-      contact: 'Contact',
-      process: 'Process',
-      privacyPolicy: 'Privacy policy',
-      notFound: 'Page not found',
-    },
-    notFound: {
-      text: 'The page you are looking for does not exist or has been moved.',
-      cta: 'Go to the front page',
-    },
-  },
 } as const
 
 export type PageMetaContent = (typeof pageMetaContent)[Locale]

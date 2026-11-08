@@ -1,4 +1,5 @@
-import type { Locale } from '../data/navigation'
+/** Dates and months are always written in Danish. */
+const DATE_LOCALE = 'da-DK'
 
 export interface BookingMonth {
   year: number
@@ -17,8 +18,8 @@ function capitalize(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1)
 }
 
-export function getNextMonths(locale: Locale, count = 4): BookingMonth[] {
-  const formatter = new Intl.DateTimeFormat(locale === 'da' ? 'da-DK' : 'en-GB', {
+export function getNextMonths(count = 4): BookingMonth[] {
+  const formatter = new Intl.DateTimeFormat(DATE_LOCALE, {
     month: 'long',
   })
   const now = new Date()
@@ -37,15 +38,14 @@ export function getNextMonths(locale: Locale, count = 4): BookingMonth[] {
 export function getAvailableDates(
   year: number,
   month: number,
-  locale: Locale,
 ): BookingDateOption[] {
   const now = new Date()
   now.setHours(0, 0, 0, 0)
 
-  const dayFormatter = new Intl.DateTimeFormat(locale === 'da' ? 'da-DK' : 'en-GB', {
+  const dayFormatter = new Intl.DateTimeFormat(DATE_LOCALE, {
     weekday: 'long',
   })
-  const monthFormatter = new Intl.DateTimeFormat(locale === 'da' ? 'da-DK' : 'en-GB', {
+  const monthFormatter = new Intl.DateTimeFormat(DATE_LOCALE, {
     month: 'long',
   })
   const lastDay = new Date(year, month + 1, 0).getDate()

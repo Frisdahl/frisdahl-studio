@@ -55,40 +55,6 @@ const reviewsContent: Record<Locale, ReviewsContent> = {
       },
     ],
   },
-  en: {
-    ariaLabel: 'Reviews',
-    previousLabel: 'Previous review',
-    nextLabel: 'Next review',
-    reviews: [
-      {
-        quote:
-          'Alexander understood our brand immediately and delivered a website that is both lightning fast and beautiful to look at. The whole process was quick, clear and stress-free.',
-        name: 'Sofie Bendtsen',
-        role: 'Owner',
-        company: 'Studio Nord',
-        imageSrc: '/cases/fresh-cut/card--4-3.webp',
-        imageAlt: 'Sofie Bendtsen from Studio Nord',
-      },
-      {
-        quote:
-          'We wanted a webshop that stood out from the crowd, and the result hit the mark exactly. The collaboration was honest and efficient – we were kept updated the whole way.',
-        name: 'Michael Holm',
-        role: 'E-commerce Manager',
-        company: 'Nordvest Interiør',
-        imageSrc: '/cases/nordwear/main-higgs--16-9.webp',
-        imageAlt: 'Michael Holm from Nordvest Interiør',
-      },
-      {
-        quote:
-          'Professional from start to finish. Our new site loads fast, looks fantastic and has already brought in more enquiries from customers.',
-        name: 'Laura Kiær',
-        role: 'Marketing Lead',
-        company: 'Havn & Co',
-        imageSrc: '/cases/peter-salling/main-higgs--16-9.webp',
-        imageAlt: 'Laura Kiær from Havn & Co',
-      },
-    ],
-  },
 }
 
 export function getReviewsContent(locale: Locale = defaultLocale): ReviewsContent {

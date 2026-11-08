@@ -15,6 +15,7 @@ export function CasesImageMarquee({
   return (
     <div
       className={`cases-hero-slider ${className}`.trim()}
+      data-layout="full-bleed"
       role="region"
       aria-label={ariaLabel}
     >

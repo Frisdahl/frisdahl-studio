@@ -1,6 +1,6 @@
 import { CASES_PATH, CONTACT_PATH, MEET_US_PATH, PROCESS_PATH } from '../lib/routes'
 
-export type Locale = 'da' | 'en'
+export type Locale = 'da'
 
 export const defaultLocale: Locale = 'da'
 
@@ -53,41 +53,15 @@ const aboutUsDropdownColumns = {
       icon: 'blog',
     },
   ],
-  en: [
-    {
-      title: 'Meet me',
-      description: 'Get to know the person behind Frisdahl Studio and how I work with clients.',
-      href: MEET_US_PATH,
-      icon: 'meet',
-    },
-    {
-      title: 'Process',
-      description: 'How I work — from first idea to launch and beyond.',
-      href: PROCESS_PATH,
-      icon: 'process',
-    },
-    {
-      title: 'Culture',
-      description: 'Values, mindset and what drives me every day.',
-      href: '#kultur',
-      icon: 'culture',
-    },
-    {
-      title: 'Blog',
-      description: 'Insights, learnings and thoughts from life in the studio.',
-      href: '#blog',
-      icon: 'blog',
-    },
-  ],
 } as const satisfies Record<Locale, NavDropdownColumn[]>
 
 // No nav item opens a dropdown any more; "Om mig" links straight to the Mød mig page.
 export const navDropdownHrefs = new Set<string>()
 
 export const navItems: NavItem[] = [
-  { href: CASES_PATH, labels: { da: 'Cases', en: 'Cases' } },
-  { href: MEET_US_PATH, labels: { da: 'Om mig', en: 'About me' } },
-  { href: CONTACT_PATH, labels: { da: 'Kontakt', en: 'Contact' } },
+  { href: CASES_PATH, labels: { da: 'Cases',  } },
+  { href: MEET_US_PATH, labels: { da: 'Om mig',  } },
+  { href: CONTACT_PATH, labels: { da: 'Kontakt',  } },
 ]
 
 /** The burger menu's links, in order. '/' is the front page, labelled by homeLabel. */
@@ -100,23 +74,6 @@ const navigationCopy = {
     navAriaLabel: 'Hovednavigation',
     menuOpen: '\u00c5bn navigationsmenu',
     menuClose: 'Luk navigationsmenu',
-    languageLabel: 'V\u00e6lg sprog',
-    languages: {
-      da: 'Dansk',
-      en: 'Engelsk',
-    },
-  },
-  en: {
-    cta: 'Start a project',
-    homeLabel: 'Home',
-    navAriaLabel: 'Main navigation',
-    menuOpen: 'Open navigation menu',
-    menuClose: 'Close navigation menu',
-    languageLabel: 'Select language',
-    languages: {
-      da: 'Danish',
-      en: 'English',
-    },
   },
 } as const
 
@@ -128,8 +85,6 @@ export interface NavigationContent {
   navAriaLabel: string
   menuOpen: string
   menuClose: string
-  languageLabel: string
-  languages: { da: string; en: string }
 }
 
 export function getNavDropdownColumns(
