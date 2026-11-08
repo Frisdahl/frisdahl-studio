@@ -55,13 +55,15 @@ export function MaskedLineReveal({
       SplitText.create(root, {
         type: 'lines',
         mask: 'lines',
+        // Gives each line's mask a class (.masked-line-reveal-line-mask in index.css).
+        linesClass: 'masked-line-reveal-line',
         autoSplit: true,
         // Returned, so a re-split (resize, font load) keeps the progress.
         onSplit: (self) => {
           linesRef.current = self.lines
           gsap.set(root, { visibility: 'visible' })
           return gsap.from(self.lines, {
-            yPercent: 110,
+            yPercent: 125,
             duration,
             stagger,
             ease: 'expo.out',

@@ -4362,7 +4362,8 @@
     position: relative;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    row-gap: var(--spacing-xl);
+    /* Room between the quote and the portrait row below it. */
+    row-gap: var(--spacing-2xl);
   }
 
   /* The swap wrapper (see ReviewsSection) has no box of its own. */
@@ -4476,6 +4477,15 @@
     will-change: transform;
   }
 
+  /* The line masks (GSAP SplitText) clip to the line box, which cut off the
+     descenders (g, j, p, y) at the bottom of the review text. Extra room below,
+     taken back with a negative margin, keeps them whole; the lines start 125%
+     down so their tops stay hidden. */
+  .masked-line-reveal-line-mask {
+    padding-bottom: 0.25em;
+    margin-bottom: -0.25em;
+  }
+
   /* One hidden copy per review at the quote's width; the tallest sets the
      height the block reserves (see ReviewsSection). */
   .reviews-body {
@@ -4505,14 +4515,17 @@
   /* Explicit ink: the base p colour would otherwise make the name as grey as
      the role under it. */
   .reviews-name {
-    @apply text-h4;
+    font-size: 1.25rem;
+    line-height: 1.3;
     color: var(--color-primary);
     font-weight: var(--heading-weight);
     letter-spacing: -0.02em;
   }
 
   .reviews-role {
-    @apply mt-xs text-body text-secondary;
+    @apply mt-xs text-secondary;
+    font-size: 0.875rem;
+    line-height: 1.4;
     font-weight: 500;
   }
 
