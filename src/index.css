@@ -4779,67 +4779,61 @@
     pointer-events: auto;
   }
 
-  /* The page under the footer: sticky with its top at "screen height minus
-     its own height" (--page-stick-top, set by Footer), so it holds still once
-     its bottom reaches the bottom of the screen and the footer slides up over
-     it, like the home cases section over the hero. */
-  .page-shell > .is-under-footer {
-    position: sticky;
-    top: var(--page-stick-top, auto);
-    z-index: 0;
-  }
-
-  /* The footer's background arrives grey and turns light as it rolls in:
-     --footer-light runs 0 → 1 with the scroll, the way .home-cases does, and
-     rests at 1 without the animation (reduced motion). The text stays dark
-     throughout, so it never flips from light to dark mid-scroll.
-     One screen tall: the four columns, then the wordmark along the bottom. */
+  /* The footer: the wordmark with the navigation under it on the left, the
+     call to action with the contact lines and a picture on the right, then a
+     divider and the small print. It sits in normal flow under the page. */
   .site-footer {
-    --footer-light: 1;
-    --footer-mix: calc(var(--footer-light) * 100%);
-    /* The footer's light colour, the same as the page. */
-    --footer-bg: color-mix(in srgb, #fffefe var(--footer-mix), #8a8989);
     --footer-ink: var(--color-dark);
-    --footer-muted: color-mix(in srgb, var(--color-dark) 60%, transparent);
-    --footer-label: color-mix(in srgb, var(--color-dark) 45%, transparent);
+    --footer-muted: color-mix(in srgb, var(--color-dark) 50%, transparent);
+    --footer-label: color-mix(in srgb, var(--color-dark) 50%, transparent);
+    --footer-divider: color-mix(in srgb, var(--color-dark) 9%, transparent);
 
-    @apply relative flex flex-col pt-section-sm pb-6 lg:pt-section lg:pb-8;
+    @apply relative pt-section-sm pb-5 lg:pt-section lg:pb-6;
     z-index: 1;
-    min-height: 100vh;
-    min-height: 100svh;
-    background-color: var(--footer-bg);
+    background-color: #f6f7f7;
     color: var(--footer-ink);
   }
 
-  .site-footer > .site-footer-inner {
-    @apply flex flex-col;
-    flex: 1;
-  }
-
-  .site-footer > .site-footer-inner > .site-grid-full {
-    @apply flex flex-col;
-    flex: 1;
-  }
-
-  /* Four columns (two on tablets, one on phones), each under a small label.
-     mt-auto keeps them low, just above the wordmark. */
-  .site-footer-columns {
-    @apply mt-auto grid gap-y-10 sm:grid-cols-2;
-    column-gap: var(--site-grid-gap);
+  /* On the page's 12 columns from 1024: brand on 1-5, call to action on 8-12. */
+  .site-footer-top {
+    @apply grid gap-y-16;
   }
 
   @media (min-width: 1024px) {
-    .site-footer-columns {
+    .site-footer-top {
       grid-template-columns: var(--site-grid-template);
+      column-gap: var(--site-grid-gap);
+    }
+
+    .site-footer-brand {
+      grid-column: 1 / span 5;
+    }
+
+    .site-footer-cta {
+      grid-column: 8 / span 5;
     }
   }
 
+  .site-footer-brand,
+  .site-footer-cta {
+    @apply flex min-w-0 flex-col items-start;
+  }
+
+  /* The picture sits level with the bottom of the link columns. */
+  .site-footer-cta {
+    @apply justify-end;
+  }
+
+  .site-footer-link-columns {
+    @apply mt-3xl grid w-full grid-cols-2 gap-x-6 lg:mt-auto lg:pt-3xl;
+  }
+
   .site-footer-column {
-    @apply flex min-w-0 flex-col items-start gap-3 lg:col-span-3;
+    @apply flex min-w-0 flex-col items-start gap-3;
   }
 
   .site-footer-column-title {
-    @apply mb-2 text-caption font-bold uppercase tracking-[0.12em];
+    @apply text-caption font-bold uppercase tracking-[0.12em];
     color: var(--footer-label);
   }
 
@@ -4847,46 +4841,148 @@
     @apply flex flex-col items-start gap-1.5;
   }
 
-  .site-footer-link,
-  .site-footer-strong {
-    @apply text-body font-bold;
+  /* Hover: a 1px underline slides in from the left; on hover out it carries on
+     to the right and leaves (the origin flips, same pattern as .text-link-nav). */
+  .site-footer-link {
+    @apply relative block w-fit text-body font-bold;
+    color: var(--footer-ink);
+    line-height: 1.3;
+  }
+
+  .site-footer-link::after {
+    content: "";
+    @apply absolute left-0 w-full;
+    bottom: -0.1em;
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+  }
+
+  /* Driven by FooterLink's data-phase, so every slide plays through. */
+  .site-footer-link[data-phase="in"]::after {
+    transform-origin: left;
+    animation: footer-underline-in 0.45s var(--ease-smooth) forwards;
+  }
+
+  .site-footer-link[data-phase="held"]::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .site-footer-link[data-phase="out"]::after {
+    transform: scaleX(1);
+    transform-origin: right;
+    animation: footer-underline-out 0.45s var(--ease-smooth) forwards;
+  }
+
+  @keyframes footer-underline-in {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  @keyframes footer-underline-out {
+    from { transform: scaleX(1); }
+    to { transform: scaleX(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-footer-link[data-phase]::after {
+      animation: none;
+    }
+
+    .site-footer-link[data-phase="in"]::after,
+    .site-footer-link[data-phase="held"]::after {
+      transform: scaleX(1);
+    }
+  }
+
+  .site-footer-cta-links {
+    @apply mt-10;
+  }
+
+  /* The email's arrow: scales up on the left of the text as the link is
+     hovered, and the text eases over to make room. */
+  .site-footer-link:has(.site-footer-link-icon) {
+    @apply flex items-center;
+  }
+
+  .site-footer-link-icon {
+    @apply inline-flex shrink-0 items-center overflow-visible;
+    width: 0;
+    opacity: 0;
+    transform: scale(0.3);
+    transform-origin: left center;
+    transition:
+      width 0.45s var(--ease-smooth),
+      opacity 0.3s var(--ease-smooth),
+      transform 0.45s var(--ease-smooth);
+  }
+
+  .site-footer-link-icon svg {
+    @apply shrink-0;
+    width: 0.85em;
+    height: 0.85em;
+  }
+
+  .site-footer-link:is(:hover, :focus-visible) .site-footer-link-icon {
+    width: 1.3em;
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-footer-link-icon {
+      transition: none;
+    }
+  }
+
+  .site-footer-image {
+    @apply block aspect-[4/3] w-full object-cover;
+    border-radius: var(--radius-image);
+  }
+
+  .site-footer-bottom {
+    @apply mt-xl flex flex-col gap-3 border-t pt-5 sm:flex-row sm:items-baseline sm:justify-between lg:mt-2xl;
+    border-color: var(--footer-divider);
+  }
+
+  .site-footer-bottom-start {
+    @apply flex flex-col gap-x-6 gap-y-1 sm:flex-row sm:flex-wrap sm:items-baseline;
+  }
+
+  .site-footer-copyright,
+  .site-footer-top-button {
+    @apply text-body-sm;
+    color: var(--footer-muted);
+  }
+
+  .site-footer-top-button {
+    transition: color 0.2s ease;
+  }
+
+  .site-footer-top-button:hover {
     color: var(--footer-ink);
   }
 
-  /* Same line height as the rolling labels, so "København" lines up with the
-     first link in the other columns. */
-  .site-footer-strong {
-    line-height: 1.3;
+  /* Plain text, but still a button: keyboard-focusable and it does not navigate. */
+  .site-footer-top-button {
+    @apply cursor-pointer border-0 bg-transparent p-0 text-left sm:text-right;
   }
 
-  .site-footer-links-nav .site-footer-link {
-    @apply uppercase tracking-[0.04em];
+  /* The call to action, set exactly like the home hero's h1 (Hero.module.css). */
+  .site-footer-logo {
+    color: var(--footer-ink);
+    font-size: clamp(2.25rem, 4.4vw, 4rem);
+    font-weight: var(--heading-weight);
+    line-height: 1.04;
+    letter-spacing: -0.035em;
   }
 
-  .site-footer-link {
-    line-height: 1.3;
-  }
-
-  /* The contact entry is a button: it opens the contact drawer, not a page. */
-  button.site-footer-link {
-    @apply cursor-pointer border-0 bg-transparent p-0 text-left;
-  }
-
-  .site-footer-text {
-    @apply max-w-[22rem] text-body;
-    color: var(--footer-muted);
-  }
-
-  .site-footer-copyright {
-    @apply mt-3 text-body-sm;
-    color: var(--footer-muted);
-  }
-
-  /* "Frisdahl Studio" across the full width: the path's viewBox hugs its
-     outline (see FooterWordmark), so width: 100% sets its size. */
-  .site-footer-wordmark {
-    @apply mt-3xl block h-auto w-full lg:mt-4xl;
-    fill: var(--footer-ink);
+  @media (max-width: 1023px) {
+    .site-footer-logo {
+      letter-spacing: -0.03em;
+    }
   }
 
 

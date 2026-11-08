@@ -1,4 +1,4 @@
-import { CASES_PATH, CONTACT_PATH, MEET_US_PATH, PRIVACY_POLICY_PATH, PROCESS_PATH } from '../lib/routes'
+import { CASES_PATH, CONTACT_PATH, MEET_US_PATH } from '../lib/routes'
 import type { Locale } from './navigation'
 import { defaultLocale } from './navigation'
 
@@ -12,19 +12,26 @@ export interface FooterSocialLink {
   href: string
 }
 
+// Set the studio phone number here (e.g. '+45 12 34 56 78') and the footer shows
+// it with a tel: link. Empty means the line is hidden.
+const PHONE: string = ''
+const PHONE_HREF: string = PHONE ? `tel:${PHONE.replace(/[^+\d]/g, '')}` : ''
+
 const footerContent = {
   da: {
     logoLabel: 'Frisdahl Studio',
     navAriaLabel: 'Footer navigation',
     // The four columns' small headings, left to right.
     columnTitles: { contact: 'Kontakt', nav: 'Navigation', studio: 'Studio', legal: 'Privatliv' },
+    ctaTitle: 'Klar til at starte dit projekt?',
+    backToTop: 'Tilbage til toppen',
+    phone: PHONE,
+    phoneHref: PHONE_HREF,
+    image: { src: '/images/footer-sign--4-3.webp', alt: 'Skilt med teksten "Clearly its’ a Sign." og Frisdahl Studio' },
     // Tagensvej 55, 2200 Nørrebro (OpenStreetMap).
     coordinates: '55.7003° N, 12.5523° E',
-    // The full-width wordmark along the bottom.
-    wordmark: 'Frisdahl Studio',
     links: [
       { label: 'Cases', href: CASES_PATH },
-      { label: 'Proces', href: PROCESS_PATH },
       { label: 'Mød mig', href: MEET_US_PATH },
       { label: 'Kontakt', href: CONTACT_PATH },
     ],
@@ -32,11 +39,6 @@ const footerContent = {
     email: 'hello@frisdahlstudio.dk',
     emailHref: 'mailto:hello@frisdahlstudio.dk',
     copyright: '© Frisdahl Studio. Alle rettigheder forbeholdes.',
-    legalLinks: [
-      { label: 'Datapolitik', href: PRIVACY_POLICY_PATH },
-      { label: 'Databehandleraftale', href: '#databehandleraftale' },
-      { label: 'Salgs- og leveringsaftaler', href: '#salgs-og-leveringsaftaler' },
-    ],
     // PLACEHOLDER profile URLs — replace with the verified profiles before launch.
     socialLinks: [
       {
@@ -57,11 +59,14 @@ const footerContent = {
     logoLabel: 'Frisdahl Studio',
     navAriaLabel: 'Footer navigation',
     columnTitles: { contact: 'Contact', nav: 'Navigation', studio: 'Studio', legal: 'Privacy' },
+    ctaTitle: 'Ready to start your project?',
+    backToTop: 'Back to top',
+    phone: PHONE,
+    phoneHref: PHONE_HREF,
+    image: { src: '/images/footer-sign--4-3.webp', alt: 'A sign reading "Clearly its’ a Sign." with Frisdahl Studio' },
     coordinates: '55.7003° N, 12.5523° E',
-    wordmark: 'Frisdahl Studio',
     links: [
       { label: 'Cases', href: CASES_PATH },
-      { label: 'Process', href: PROCESS_PATH },
       { label: 'Meet me', href: MEET_US_PATH },
       { label: 'Contact', href: CONTACT_PATH },
     ],
@@ -69,11 +74,6 @@ const footerContent = {
     email: 'hello@frisdahlstudio.dk',
     emailHref: 'mailto:hello@frisdahlstudio.dk',
     copyright: '© Frisdahl Studio. All rights reserved.',
-    legalLinks: [
-      { label: 'Privacy policy', href: PRIVACY_POLICY_PATH },
-      { label: 'Data processing agreement', href: '#data-processing-agreement' },
-      { label: 'Sales and delivery terms', href: '#sales-and-delivery-terms' },
-    ],
     // PLACEHOLDER profile URLs — replace with the verified profiles before launch.
     socialLinks: [
       {
