@@ -24,6 +24,10 @@ const SWAP_AT = 0.4
 const VEIL_OUT_AT = 0.85
 // The case page's text rising in.
 const ENTER_EASE = 'power3.out'
+// The heading goes first; the meta columns start this far into it (seconds),
+// then follow each other from left to right, this far apart.
+const HEADING_LEAD = 0.55
+const COLUMN_STAGGER = 0.16
 // A mask clips at its line box, which cuts off descenders (g, y, comma); this
 // much room is added below (and a little above) and taken back from the margin,
 // so the layout does not change.
@@ -169,9 +173,17 @@ export async function runSharedCaseTransition(
 
     await new Promise<void>((resolve) => {
       const enter = gsap.timeline({ onComplete: resolve, defaults: { ease: ENTER_EASE } })
+      // The heading rises first; once it is mostly in, the meta row follows one
+      // column at a time from left to right (label fades in, value rises).
       if (nameSplit) enter.to(nameSplit.lines, { yPercent: 0, duration: 1, stagger: 0.08 }, 0)
-      if (metaLabels.length) enter.to(metaLabels, { opacity: 1, duration: 0.7, ease: 'power1.out', stagger: 0.06 }, 0)
-      if (metaValues.length) enter.to(metaValues, { yPercent: 0, duration: 0.9, stagger: 0.06 }, 0.15)
+      const columnsAt = nameSplit ? HEADING_LEAD : 0
+      metaItems.forEach((item, index) => {
+        const at = columnsAt + index * COLUMN_STAGGER
+        const label = item.querySelector('.case-detail-hero-meta-label')
+        const value = item.querySelector('.case-detail-hero-meta-value')
+        if (label) enter.to(label, { opacity: 1, duration: 0.7, ease: 'power1.out' }, at)
+        if (value) enter.to(value, { yPercent: 0, duration: 0.9 }, at + 0.08)
+      })
     })
   } finally {
     ghost.remove()
