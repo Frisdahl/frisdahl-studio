@@ -13,11 +13,7 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
       { imageSrc: '/cases/nordwear/macbook-alle-produkter--3-2.webp', imageAlt: 'Nordwear produktoversigt på en MacBook Pro', aspectRatio: '3 / 2' },
       { imageSrc: '/cases/nordwear/macbook-produktside--3-2.webp', imageAlt: 'Nordwear produktside på en MacBook Pro', aspectRatio: '3 / 2' },
     ],
-    bottomWide: {
-      imageSrc: '/cases/nordwear/ipad-glas--3-2.webp',
-      imageAlt: 'Nordwear forside på en iPad Pro',
-      aspectRatio: '3 / 2',
-    },
+    afterPalette: { imageSrc: '/cases/nordwear/ipad-glas--3-2.webp', imageAlt: 'Nordwear forside på en iPad Pro', aspectRatio: '3 / 2' },
     verticalPairBottom: [
       { imageSrc: '/cases/nordwear/mobile--5-6.jpg', imageAlt: 'Nordwear forside' },
       { imageSrc: '/cases/nordwear/mobile2--5-6.jpg', imageAlt: 'Nordwear mobilvisning' },
