@@ -44,6 +44,17 @@ export function CasesSection() {
           type: 'lines',
           mask: 'lines',
           linesClass: 'home-cases-intro-line',
+          // The text stays readable to assistive tech (the default hides the lines and labels
+          // the parent, which hid the title links inside the split text and put aria-label on <p>).
+          aria: 'none',
+        })
+        // Splitting a title that is a link leaves an empty copy of the link beside the real
+        // one (until the split is undone); take it out of the tab order and the accessibility tree.
+        gsap.utils.toArray<Element>(targets).forEach((target) => {
+          target.querySelectorAll('a:empty').forEach((link) => {
+            link.setAttribute('tabindex', '-1')
+            link.setAttribute('aria-hidden', 'true')
+          })
         })
         splits.push(split)
         return split
@@ -123,6 +134,8 @@ export function CasesSection() {
             <img
               src="/images/gallery-board--16-9.webp"
               alt="Galleritavle med udvalgt designarbejde fra Frisdahl Studio"
+              width={2000}
+              height={1131}
               loading="lazy"
               decoding="async"
             />
@@ -138,9 +151,9 @@ export function CasesSection() {
             <p className="home-cases-intro-text">{cases.intro.textMore}</p>
           </div>
         </div>
-        <h1 ref={listTitleRef} className="home-cases-list-title">
+        <h2 ref={listTitleRef} className="home-cases-list-title">
           <WithHeadingDot>{cases.listTitle}</WithHeadingDot>
-        </h1>
+        </h2>
 
         {/* Inside the content container, so the images line up with the
             page's side margins like the text above. */}

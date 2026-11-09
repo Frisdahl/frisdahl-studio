@@ -101,9 +101,14 @@ export function Navbar() {
     }
   }, [])
 
-  useEffect(() => {
+  // The menu closes whenever the page or the #section changes. Done while rendering, which is how
+  // React says to reset state when a value changes: an effect would render once with the old state first.
+  const routeKey = `${pathname}${hash}`
+  const [menuLocation, setMenuLocation] = useState(routeKey)
+  if (menuLocation !== routeKey) {
+    setMenuLocation(routeKey)
     setIsOpen(false)
-  }, [pathname, hash])
+  }
 
   // The menu's picture is decoded while the browser is idle, so the first time the
   // overlay slides in it doesn't have to be decoded then (a hitch on slow devices).

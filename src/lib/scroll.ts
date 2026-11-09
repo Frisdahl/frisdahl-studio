@@ -104,6 +104,18 @@ export function destroySmoothScroll() {
   lenis = null
 }
 
+/**
+ * Smooth scroll turns GSAP's lag smoothing off, so a tween catches up with real time after a slow
+ * frame. That is right while scrolling, but a transition with the scroll locked would skip ahead
+ * through a hitch (a visible jump). While `on`, a frame longer than 100 ms counts as 33 ms, so the
+ * motion carries on from where it was; `off` puts back what the smooth scroll needs.
+ */
+export function setTransitionLagSmoothing(on: boolean) {
+  if (on) gsap.ticker.lagSmoothing(100, 33)
+  else if (lenis) gsap.ticker.lagSmoothing(0)
+  else gsap.ticker.lagSmoothing(500, 33)
+}
+
 export function getSmoothScroll() {
   return lenis
 }

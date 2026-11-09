@@ -70,6 +70,9 @@ export function MaskedLineReveal({
       SplitText.create(root, {
         type: 'lines',
         mask: 'lines',
+        // Keeps the text readable to assistive tech (the default hides the lines and puts an
+        // aria-label on the parent, which is not allowed on a <p>, <span> or <div>).
+        aria: 'none',
         // Gives each line's mask a class (.masked-line-reveal-line-mask in index.css).
         linesClass: 'masked-line-reveal-line',
         autoSplit: true,

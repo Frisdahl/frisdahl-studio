@@ -42,7 +42,7 @@ export function ArrowChipButton({
   const textTrackRef = useRef<HTMLSpanElement>(null)
   const hoverTimeline = useRef<gsap.core.Timeline | null>(null)
 
-  // Same scrubbed, linear timeline as CtaPillButton's fill hover. The left chip
+  // A scrubbed, linear timeline (play and reverse follow the pointer). The left chip
   // turns the other way, mirroring the right one.
   useLayoutEffect(() => {
     const turn = direction === 'right' ? 90 : -90

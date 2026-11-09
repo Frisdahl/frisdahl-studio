@@ -9,7 +9,7 @@ export function MeetUsPage() {
   const { titles } = getPageMetaContent(locale)
 
   return (
-    <main className="page-surface bg-background">
+    <main id="main-content" className="page-surface bg-background">
       <PageEntrance />
       <PageMeta title={titles.meetUs} />
       <MeetUsPageSection />

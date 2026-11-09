@@ -6,7 +6,7 @@ Alexander's own web design and development studio site. Business site and portfo
 
 ## Purpose
 
-Presents the studio's services (web development, design), process, pricing and case studies. Visitors can get in touch through a contact drawer with a booking picker. The site is in Danish only; the English version and the language switcher were removed on 2026-11-08 (`LocaleContext` is kept as a one-language provider, `Locale` is `'da'`).
+Presents the studio's services (web development, design) and case studies. Visitors can get in touch through a contact drawer with a booking picker. The site is in Danish only; the English version and the language switcher were removed on 2026-11-08 (`LocaleContext` is kept as a one-language provider, `Locale` is `'da'`).
 
 Relationship to Portfolio 2026: Frisdahl Studio is the business-facing site and Portfolio 2026 is the personal portfolio. Keep their roles distinct so they don't compete.
 
@@ -61,8 +61,8 @@ The repository has its own `AI_CONTEXT.md`, the original brief: goals, design st
 
 ## Deployment Requirements
 
-- Static SPA: `npm run build` produces `dist/`. Unknown routes must fall back to `index.html` for React Router.
-- Recommended host: Cloudflare Workers static assets (`not_found_handling = "single-page-application"`), the same setup as Peter Salling. Free tier.
+- Static SPA: `npm run build` produces `dist/`. The build also writes one HTML copy of the app shell per real route (`dist/cases.html`, `dist/cases/<slug>.html`, ...) and a `dist/404.html` (`scripts/generate-route-pages.mjs`), so a removed address gets a real HTTP 404 and no redirect.
+- The host must serve `404.html` with a 404 status for unmatched paths, not fall back to `index.html` (that would answer 200 for every address). Recommended host: Cloudflare Workers static assets with `not_found_handling = "404-page"` (not `"single-page-application"`). Free tier.
 - A working contact form needs a small server-side endpoint, e.g. a Worker route sending email through a transactional email service. Its API key must live in a Worker secret, never in the frontend.
 - The site references the domain `frisdahlstudio.dk`. Domain ownership hasn't been verified.
 

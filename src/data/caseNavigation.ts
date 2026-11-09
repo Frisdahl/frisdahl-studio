@@ -42,10 +42,10 @@ const nextCaseLabels: Record<Locale, string> = {
 
 const nextCaseAriaLabels: Record<Locale, Record<(typeof caseOrder)[number], string>> = {
   da: {
-    nordwear: 'Se næste case: Nordwear',
-    'fresh-cut': 'Se næste case: Fresh Cut',
-    'peter-salling': 'Se næste case: Peter Salling',
-    'det-kollektive-klaedeskab': 'Se næste case: Det Kollektive Klædeskab',
+    nordwear: 'Se næste projekt: Nordwear',
+    'fresh-cut': 'Se næste projekt: Fresh Cut',
+    'peter-salling': 'Se næste projekt: Peter Salling',
+    'det-kollektive-klaedeskab': 'Se næste projekt: Det Kollektive Klædeskab',
   },
 }
 

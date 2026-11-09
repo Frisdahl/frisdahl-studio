@@ -146,48 +146,6 @@ const homeContent = {
       ],
       link: "Se hele portfolio",
     },
-    process: {
-      eyebrow: "Proces",
-      title: "Struktureret samarbejde \u2014 fra id\u00e9 til lancering",
-      description:
-        "Jeg arbejder tæt sammen med dig gennem hele forløbet, så du altid ved, hvor projektet står, og hvad der sker næste skridt.",
-      steps: [
-        {
-          number: "01",
-          title: "Indsigt & strategi",
-          description:
-            "Jeg starter med at forstå din virksomhed, målgruppe og mål.",
-        },
-        {
-          number: "02",
-          title: "Design & udvikling",
-          description:
-            "Visuelle koncepter og robust kode \u2014 testet og finpudset.",
-        },
-        {
-          number: "03",
-          title: "Lancering & support",
-          description:
-            "Jeg sørger for en smooth go-live og er klar, når du har brug for mig.",
-        },
-      ],
-    },
-    pricing: {
-      eyebrow: "Ikke bare en template",
-      title: "Høj performance med lavere risiko og hurtig time-to-market",
-      description:
-        "Du får et unikt website, der performer hurtigere og mere sikkert, fordi jeg bygger det på gennemtestede komponenter. Det gør, at jeg kan fokusere på det, der skaber forretningsværdi – f.eks. forretningskritiske funktioner og din visuelle identitet.",
-      sliderAriaLabel: "Priseksempler",
-      sliderPrev: "Forrige",
-      sliderNext: "N\u00e6ste",
-      sliderStatus: "Billede {current} af {total}",
-      slides: [
-        { imageSrc: '/cases/nordwear/mobile2--16-10.jpg', imageAlt: 'Nordwear hjemmeside' },
-        { imageSrc: '/cases/fresh-cut/mobile1--16-10.jpg', imageAlt: 'Fresh Cut hjemmeside' },
-        { imageSrc: '/cases/fresh-cut/mobile2--16-10.jpg', imageAlt: 'Fresh Cut hjemmeside' },
-        { imageSrc: '/cases/visuel-atelier/hero--16-10.jpg', imageAlt: 'Visuel Atelier hjemmeside' },
-      ],
-    },
     contact: {
       eyebrow: "Tøv ikke – jeg er altid klar på en snak",
       title: "Lad os tage en snak om dit digitale projekt",
@@ -229,72 +187,6 @@ const homeContent = {
         back: "Tilbage",
         next: "N\u00e6ste",
         closeLabel: "Luk panel",
-      },
-    },
-    pricingPage: {
-      hero: {
-        eyebrow: "Priser",
-        headlineLine1: "Find den løsning,",
-        headlineLine2: "der passer til dig",
-        description:
-          "Tre former for samarbejde, alt skr\u00e6ddersyet kodet og motion-drevet. Prisen kommer på bordet i det første møde, så jeg kan tilpasse den til det, du faktisk skal bygge.",
-        ctaPrimary: "Start dit projekt",
-        ctaSecondary: "Se priser",
-        imageSrc: "/images/pricing/digital-strategy.webp",
-        imageAlt: "Digital strategi illustration",
-      },
-      examplesIntro: {
-        title: "Tre m\u00e5der at samarbejde p\u00e5",
-        subtitle:
-          "Alle l\u00f8sninger er skr\u00e6ddersyet kodet fra bunden med fokus p\u00e5 performance, motion og brand. Den rigtige model finder vi sammen i første samtale.",
-      },
-      plans: {
-        items: [
-          {
-            id: "kickstart",
-            eyebrow: "Hjemmeside",
-            title: "Per projekt",
-            cta: "Start et projekt",
-            ctaAction: "book",
-            featured: false,
-            features: [
-              "Skr\u00e6ddersyet frontend fra bunden",
-              "Motion og animation integreret i oplevelsen",
-              "Brand og identitet b\u00e6res gennem alle breakpoints",
-              "CMS-ops\u00e6tning og indholdsstruktur",
-              "Performance og Core Web Vitals ved lancering",
-            ],
-          },
-          {
-            id: "business",
-            eyebrow: "V\u00e6kst",
-            title: "Per scope",
-            cta: "Start et projekt",
-            ctaAction: "book",
-            featured: true,
-            features: [
-              "Alt fra Per projekt",
-              "Visuel identitet og designretning",
-              "Motion-sprog og interaktionsdesign",
-              "Typografi og designsystem som fundament",
-              "Konverteringsfokus og SEO-struktur",
-            ],
-          },
-          {
-            id: "custom",
-            eyebrow: "Skr\u00e6ddersyet",
-            title: "Per engagement",
-            cta: "Kontakt mig",
-            ctaAction: "contact",
-            featured: false,
-            features: [
-              "Specialudviklede funktioner og flows",
-              "Webshop, booking eller medlemssystem",
-              "API-integrationer og kundelogin",
-              "Typisk 6\u201312 uger per overflade",
-            ],
-          },
-        ],
       },
     },
   },

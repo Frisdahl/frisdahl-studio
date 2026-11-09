@@ -59,6 +59,11 @@
   color: var(--color-accent);
 }
 
+/* Keeps the last words (and the dot) on one line. */
+.titleTail {
+  white-space: nowrap;
+}
+
 /* A round dot in place of the full stop, sitting on the baseline. */
 .titleDot {
   display: inline-block;
