@@ -49,6 +49,8 @@ export function prepareAndPlayPageEntrance(main: HTMLElement, revealed: Promise<
         mask: 'lines',
         linesClass: 'page-enter-line',
         wordsClass: 'page-enter-word',
+        // Readable to assistive tech while it plays (the default hides the lines, and links inside).
+        aria: 'none',
         autoSplit: true,
         onSplit: (self) => {
           const reveal = gsap.from(self.lines, {

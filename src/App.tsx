@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import { Footer, GlobalLayout, Navbar, PageTransition, ScrollToTop, SmoothScroll } from './components/layout'
+import { Footer, GlobalLayout, Navbar, PageTransition, ScrollToTop, SkipLink, SmoothScroll } from './components/layout'
 import { ContactDrawerProvider } from './context/ContactDrawerProvider'
 import { LocaleProvider } from './context/LocaleProvider'
 import { GridOverlay } from './components/ui/GridOverlay'
@@ -10,9 +10,7 @@ import {
   CONTACT_PATH,
   MEET_US_LEGACY_PATH,
   MEET_US_PATH,
-  PRICING_PATH,
   PRIVACY_POLICY_PATH,
-  PROCESS_PATH,
 } from './lib/routes'
 import { HomePage } from './pages/HomePage'
 
@@ -26,7 +24,6 @@ const MeetUsPage = lazy(() => import('./pages/MeetUsPage').then((m) => ({ defaul
 const ContactPage = lazy(() =>
   import('./pages/ContactPage').then((m) => ({ default: m.ContactPage })),
 )
-const ProcessPage = lazy(() => import('./pages/ProcessPage').then((m) => ({ default: m.ProcessPage })))
 const PrivacyPolicyPage = lazy(() =>
   import('./pages/PrivacyPolicyPage').then((m) => ({ default: m.PrivacyPolicyPage })),
 )
@@ -39,6 +36,7 @@ function App() {
     <LocaleProvider>
       <ContactDrawerProvider>
         <BrowserRouter>
+          <SkipLink />
           <SmoothScroll />
           <ScrollToTop />
           {import.meta.env.DEV && <GridOverlay />}
@@ -52,14 +50,11 @@ function App() {
               <Suspense fallback={<div className="min-h-screen" aria-busy="true" />}>
                 <Routes>
                   <Route path="/" element={<HomePage />} />
-                  {/* Old pricing links: the pricing section is gone, so land on the homepage. */}
-                  <Route path={PRICING_PATH} element={<Navigate to="/" replace />} />
                   <Route path={CASES_PATH} element={<CasesPage />} />
                   <Route path={`${CASES_PATH}/:caseSlug`} element={<CaseDetailPage />} />
                   <Route path={MEET_US_PATH} element={<MeetUsPage />} />
                   <Route path={MEET_US_LEGACY_PATH} element={<Navigate to={MEET_US_PATH} replace />} />
                   <Route path={CONTACT_PATH} element={<ContactPage />} />
-                  <Route path={PROCESS_PATH} element={<ProcessPage />} />
                   <Route path={PRIVACY_POLICY_PATH} element={<PrivacyPolicyPage />} />
                   <Route path="*" element={<NotFoundPage />} />
                 </Routes>

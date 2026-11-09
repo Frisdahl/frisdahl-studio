@@ -1,4 +1,4 @@
-import { CASES_PATH, CONTACT_PATH, MEET_US_PATH, PROCESS_PATH } from '../lib/routes'
+import { CASES_PATH, CONTACT_PATH, MEET_US_PATH } from '../lib/routes'
 
 export type Locale = 'da'
 
@@ -15,7 +15,6 @@ export type NavDropdownIcon =
   | 'content'
   | 'maintenance'
   | 'meet'
-  | 'process'
   | 'culture'
   | 'blog'
 
@@ -35,12 +34,6 @@ const aboutUsDropdownColumns = {
       icon: 'meet',
     },
     {
-      title: 'Proces',
-      description: 'Sådan arbejder jeg — fra første idé til lancering og videre.',
-      href: PROCESS_PATH,
-      icon: 'process',
-    },
-    {
       title: 'Kultur',
       description: 'Værdier, mindset og det, der driver mig i hverdagen.',
       href: '#kultur',
@@ -55,12 +48,12 @@ const aboutUsDropdownColumns = {
   ],
 } as const satisfies Record<Locale, NavDropdownColumn[]>
 
-// No nav item opens a dropdown any more; "Om mig" links straight to the Mød mig page.
+// No nav item opens a dropdown any more; "Mød mig" links straight to the Mød mig page.
 export const navDropdownHrefs = new Set<string>()
 
 export const navItems: NavItem[] = [
   { href: CASES_PATH, labels: { da: 'Cases',  } },
-  { href: MEET_US_PATH, labels: { da: 'Om mig',  } },
+  { href: MEET_US_PATH, labels: { da: 'Mød mig',  } },
   { href: CONTACT_PATH, labels: { da: 'Kontakt',  } },
 ]
 

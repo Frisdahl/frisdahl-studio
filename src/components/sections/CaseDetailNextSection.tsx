@@ -5,6 +5,7 @@ import { useLocale } from '../../context/LocaleContext'
 import { getCaseDetail } from '../../data/caseDetails'
 import { useScrollTrackProgress } from '../../hooks/useScrollTrackProgress'
 import { navigateWithSharedTransition } from '../../lib/pageTransition'
+import { lockScroll, unlockScroll } from '../../lib/scroll'
 import type { CaseDetailNext } from '../../types/caseDetail'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 import { Container } from '../ui'
@@ -18,6 +19,9 @@ interface CaseDetailNextSectionProps {
 const IMAGE_ZOOM = 0.06
 // Smooth scrolling eases into the last pixels for seconds, so waiting for exactly 1 feels stuck.
 const TRIGGER_PROGRESS = 0.985
+// How long the full bar stays on screen before the transition starts (ms). The transition hides
+// the card in the frame it begins, so started at once the full bar would never be painted.
+const FULL_BAR_HOLD = 160
 
 /**
  * The next case at the end of the page. The card sticks while the section's
@@ -36,8 +40,19 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
   const { locale } = useLocale()
   const shouldReduceMotion = useReducedMotion()
 
+  const holdTimerRef = useRef(0)
+  // The scroll is frozen while the full bar is held, until the transition takes over (or is cancelled).
+  const holdPendingRef = useRef(false)
+
   useEffect(() => {
     hasNavigatedRef.current = false
+    return () => {
+      window.clearTimeout(holdTimerRef.current)
+      if (holdPendingRef.current) {
+        holdPendingRef.current = false
+        unlockScroll()
+      }
+    }
   }, [href])
 
   // The next case's hero picture is fetched and decoded now, while the card is on its way up,
@@ -56,6 +71,8 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
 
   const onProgress = useCallback(
     (progress: number) => {
+      // Once the bar has been filled and the page is on its way, later scroll frames leave it full.
+      if (hasNavigatedRef.current) return
       if (barRef.current) barRef.current.style.transform = `scaleX(${progress})`
       if (imageRef.current && !shouldReduceMotion) {
         imageRef.current.style.transform = `scale(${1 + IMAGE_ZOOM * progress})`
@@ -66,13 +83,19 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
       if (progress < TRIGGER_PROGRESS || shouldReduceMotion || hasNavigatedRef.current) return
       hasNavigatedRef.current = true
       // The trigger fires a hair before the end of the scroll: finish the bar (and the zoom
-      // that goes with it) so it reads as full when the transition starts.
+      // that goes with it), and let that full bar be seen before the page moves on.
       if (barRef.current) barRef.current.style.transform = 'scaleX(1)'
       if (imageRef.current) imageRef.current.style.transform = `scale(${1 + IMAGE_ZOOM})`
-      // The image grows into the next case's hero, like a card on the home page.
-      const card = cardRef.current
-      if (card) navigateWithSharedTransition(href, card, navigate)
-      else navigate(href)
+      // Scrolling stops here, momentum included: the page does not drift on while the bar is held.
+      lockScroll()
+      holdPendingRef.current = true
+      holdTimerRef.current = window.setTimeout(() => {
+        holdPendingRef.current = false
+        // The image grows into the next case's hero, like a card on the home page.
+        const card = cardRef.current
+        if (card) navigateWithSharedTransition(href, card, navigate)
+        else navigate(href)
+      }, FULL_BAR_HOLD)
     },
     [href, navigate, shouldReduceMotion],
   )

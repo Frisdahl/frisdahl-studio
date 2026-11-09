@@ -1,4 +1,3 @@
-export { ProcessPage } from './ProcessPage'
 export { MeetUsPage } from './MeetUsPage'
 export { HomePage } from './HomePage'
 export { CaseDetailPage } from './CaseDetailPage'

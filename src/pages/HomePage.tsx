@@ -3,7 +3,7 @@ import { AddedValueSection, CasesSection, Hero, ReviewsSection } from '../compon
 
 export function HomePage() {
   return (
-    <main className="page-surface bg-home-page overflow-x-clip">
+    <main id="main-content" className="page-surface bg-home-page overflow-x-clip">
       <PageMeta />
       <Hero />
       <CasesSection />

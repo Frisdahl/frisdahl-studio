@@ -13,7 +13,7 @@ const heroContent = {
     headingLead: 'Digitale løsninger',
     headingBefore: 'med ',
     headingAccent: 'webudvikling',
-    headingAfter: ' i fokus',
+    headingAfter: 'i fokus',
     intro: 'Webudvikling, design og digitale oplevelser, der kombinerer æstetik, funktion og performance.',
     cta: 'Udforsk projekter',
     carouselLabel: 'Udvalgte projekter',
@@ -408,8 +408,12 @@ export function Hero() {
               <br />
               {content.headingBefore}
               <span className={styles.titleAccent}>{content.headingAccent}</span>
-              {content.headingAfter}
-              <span className={styles.titleDot} aria-hidden="true" />
+              {' '}
+              {/* The end stays together ("i fokus."), so a phone never leaves a lone "fokus." on its own line. */}
+              <span className={styles.titleTail}>
+                {content.headingAfter}
+                <span className={styles.titleDot} aria-hidden="true" />
+              </span>
             </MaskedLineReveal>
           </h1>
 

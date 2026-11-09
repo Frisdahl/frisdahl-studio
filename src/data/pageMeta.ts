@@ -10,10 +10,8 @@ const pageMetaContent = {
       'Jeg skaber digitale oplevelser, der styrker dit brand og skaber målbare resultater. Strategi, design og teknologi – alt samlet ét sted.',
     titles: {
       cases: 'Cases',
-      pricing: 'Priser',
       meetUs: 'Mød mig',
       contact: 'Kontakt',
-      process: 'Proces',
       privacyPolicy: 'Datapolitik',
       notFound: 'Siden blev ikke fundet',
     },

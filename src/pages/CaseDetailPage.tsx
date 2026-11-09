@@ -38,7 +38,7 @@ function CaseDetail({ caseSlug }: { caseSlug: string | undefined }) {
   }
 
   return (
-    <main className="page-surface case-detail-page bg-background">
+    <main id="main-content" className="page-surface case-detail-page bg-background">
       <PageEntrance />
       <PageMeta title={detail.hero.title} description={detail.hero.description} />
       <CaseDetailHero hero={detail.hero} />

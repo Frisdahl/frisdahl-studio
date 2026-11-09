@@ -1,5 +1,6 @@
 import { gsap } from 'gsap'
 import { SplitText } from 'gsap/SplitText'
+import { setTransitionLagSmoothing } from './scroll'
 
 gsap.registerPlugin(SplitText)
 
@@ -42,6 +43,11 @@ const VEIL_DURATION = 0.45
 // The image grows to the hero's place; the page appears under it as it lands.
 const GROW_DURATION = 1.1
 const GROW_EASE = 'power3.inOut'
+// The picture first slides to the hero's place at its own size, then changes size there: it
+// never gets taller or shorter while it travels. The size change starts a little before the
+// slide has quite stopped, so the two read as one movement.
+const SLIDE_DURATION = 0.55
+const RESIZE_AT = 0.45
 const SWAP_AT = 0.4
 const VEIL_OUT_AT = 0.65
 // The case page's text rising in.
@@ -122,6 +128,7 @@ export async function runSharedCaseTransition(
 
   // The case page's hero is hidden from the moment it mounts (see index.css).
   root.classList.add('is-shared-transition', 'is-shared-image')
+  if (isNext) root.classList.add('is-shared-next')
   card.classList.add('is-transition-source')
 
   const from = media.getBoundingClientRect()
@@ -187,6 +194,9 @@ export async function runSharedCaseTransition(
   let metaItems: HTMLElement[] = []
 
   try {
+    // A slow frame must not make the motion skip ahead (see setTransitionLagSmoothing); undone in `finally`.
+    setTransitionLagSmoothing(true)
+
     // 1. Leave: the text slides up out of the card, the card settles to rest,
     //    then the image is lifted out into the ghost and the page fades under it.
     await new Promise<void>((resolve) => {
@@ -272,10 +282,16 @@ export async function runSharedCaseTransition(
         if (value) enter!.to(value, { yPercent: 0, duration: COLUMN_VALUE_DURATION, ease: COLUMN_EASE }, at + 0.08)
       })
     })
+    // Revealing the case page under the veil is the heaviest frame of the whole transition (style,
+    // layout, paint). Let it happen now, so it is not spent inside the grow and cut the start off.
+    await nextFrames(2)
     await new Promise<void>((resolve) => {
       const grow = gsap.timeline({ onComplete: resolve, defaults: { ease: GROW_EASE } })
-      grow.to(ghost, { x: to.left, y: to.top, scale: 1, borderRadius: radius, duration: GROW_DURATION }, 0)
-      if (cropped) grow.to(ghost, { clipPath: 'inset(0px 0px 0px 0px)', duration: GROW_DURATION }, 0)
+      // 1. Slide: the ghost's top left corner (its transform origin) travels to the hero's, size unchanged.
+      grow.to(ghost, { x: to.left, y: to.top, duration: SLIDE_DURATION }, 0)
+      // 2. Resize: from that corner out to the hero's width and height.
+      grow.to(ghost, { scale: 1, borderRadius: radius, duration: GROW_DURATION - RESIZE_AT }, RESIZE_AT)
+      if (cropped) grow.to(ghost, { clipPath: 'inset(0px 0px 0px 0px)', duration: GROW_DURATION - RESIZE_AT }, RESIZE_AT)
       if (isNext) {
         // The zoom settles and the dark overlay lifts, so the hero's picture is plain.
         // Fully settled before the swap below, so the two pictures line up exactly.
@@ -294,12 +310,13 @@ export async function runSharedCaseTransition(
     })
 
     // 4. Hand over: the real image takes the ghost's place, then the text rises.
-    root.classList.remove('is-shared-image')
+    root.classList.remove('is-shared-image', 'is-shared-next')
     await nextFrames(2)
     ghost.remove()
 
     await entered
   } finally {
+    setTransitionLagSmoothing(false)
     ghost.remove()
     split.revert()
     nameSplit?.revert()
@@ -308,6 +325,6 @@ export async function runSharedCaseTransition(
     if (metaItems.length) gsap.set(metaItems, { clearProps: 'overflow,paddingBottom,marginBottom' })
     if (bar) gsap.set(bar, { clearProps: 'opacity,visibility' })
     gsap.set(veil, { autoAlpha: 0 })
-    root.classList.remove('is-shared-transition', 'is-shared-image')
+    root.classList.remove('is-shared-transition', 'is-shared-image', 'is-shared-next')
   }
 }
