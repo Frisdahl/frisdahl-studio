@@ -11,11 +11,6 @@ import { lockScroll, prefersReducedMotion, unlockScroll } from '../../lib/scroll
 
 gsap.registerPlugin(ScrollTrigger)
 
-// Each panel wipes over the screen, and off it again, in this long; the second
-// panel follows the first this much later (and leaves this much before it).
-const DURATION = 1
-const STAGGER = 0.075
-const EASE = 'expo.inOut'
 /** An in-app link this transition should handle, or null to leave it alone. */
 function transitionHref(event: MouseEvent, currentPath: string): string | null {
   if (event.defaultPrevented || event.button !== 0) return null
@@ -34,18 +29,16 @@ function transitionHref(event: MouseEvent, currentPath: string): string | null {
 }
 
 /**
- * Wipe page transition: two panels (accent, then dark) rise up over the page
- * one just after the other, the route changes under them, and they rise on
- * off the top in reverse order (dark first) to uncover the new page. Handles
- * in-app link clicks anywhere on the site; reduced motion navigates directly.
- * Project cards on the home page use a shared-image transition instead
- * (lib/sharedCaseTransition.ts).
+ * Page transition for in-app links anywhere on the site: the page's content leaves (text
+ * slides up out of its masks, images close, the rest fades; lib/pageExit.ts), the route
+ * changes while the page is empty, and the new page comes in with its own entrance. Reduced
+ * motion navigates directly. Project cards on the home page and the "next project" card use
+ * a shared-image transition instead (lib/sharedCaseTransition.ts).
  */
 export function PageTransition() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const pathnameRef = useRef(pathname)
-  const loaderRef = useRef<HTMLDivElement>(null)
   const veilRef = useRef<HTMLDivElement>(null)
   const runningRef = useRef(false)
 
@@ -54,57 +47,10 @@ export function PageTransition() {
   }, [pathname])
 
   useEffect(() => {
-    const loader = loaderRef.current
     const shell = document.querySelector<HTMLElement>('.page-shell')
-    if (!loader || !shell) return
-    const panels = gsap.utils.toArray<HTMLElement>('.page-transition-panel', loader)
+    if (!shell) return
 
-    const run = async (href: string) => {
-      if (runningRef.current) return
-      if (prefersReducedMotion()) {
-        navigate(href)
-        return
-      }
-      runningRef.current = true
-      lockScroll()
-      coverPage()
-      document.documentElement.classList.add('is-page-transitioning')
-      gsap.set(loader, { autoAlpha: 1 })
-
-      // 1. The panels rise from below and open up to cover the screen.
-      await gsap.fromTo(
-        panels,
-        { yPercent: 25, clipPath: 'inset(75% 0% 0% 0%)' },
-        { yPercent: 0, clipPath: 'inset(0% 0% 0% 0%)', duration: DURATION, ease: EASE, stagger: STAGGER },
-      )
-
-      // 2. Change the page under them, and wait for its first screen.
-      const previous = shell.querySelector(':scope > .global-layout > main')
-      navigate(href)
-      const main = await waitForPage(shell, previous)
-      window.scrollTo(0, 0)
-      await firstScreenImages(main, window.innerHeight)
-
-      // 3. The panels rise on off the top, the dark one first. The new page's entrance
-      // starts as they begin to uncover it.
-      gsap.delayedCall(0.3, revealPage)
-      await gsap.to(panels, {
-        yPercent: -25,
-        clipPath: 'inset(0% 0% 75% 0%)',
-        duration: DURATION,
-        ease: EASE,
-        stagger: { from: 'end', each: STAGGER },
-      })
-
-      gsap.set(loader, { autoAlpha: 0 })
-      gsap.set(panels, { clearProps: 'transform,clipPath' })
-      document.documentElement.classList.remove('is-page-transitioning')
-      unlockScroll()
-      ScrollTrigger.refresh()
-      runningRef.current = false
-    }
-
-    // The logo: no wipe panels. The page's content leaves (text slides up out of its masks,
+    // The page's content leaves (text slides up out of its masks,
     // images close to their centre, the rest fades; lib/pageExit.ts), the route changes while
     // the page is empty, and the new page comes in (the home page with its own entrance, any
     // other with a rise). Same sequence as a link in the menu.
@@ -192,17 +138,17 @@ export function PageTransition() {
       // The home page's project cards, or the "next project" card on a case page.
       const card = (event.target as Element).closest<HTMLElement>('.case-card, .case-detail-next')
       if (card && canShareCard(card) && !prefersReducedMotion()) void runShared(href, card)
-      else if ((event.target as Element).closest('.site-header-logo')) void runContent(href)
-      else void run(href)
+      // Every other link: the content leaves and the new page comes in.
+      else void runContent(href)
     }
 
     // Capture phase: runs before React Router's <Link> handler, which then sees
     // the default prevented and leaves the navigation to the transition.
     document.addEventListener('click', onClick, true)
-    registerPageTransition((href) => void run(href))
+    registerPageTransition((href) => void runContent(href))
     registerSharedTransition((href, card) => {
       if (canShareCard(card) && !prefersReducedMotion()) void runShared(href, card)
-      else void run(href)
+      else void runContent(href)
     })
     return () => {
       document.removeEventListener('click', onClick, true)
@@ -212,12 +158,6 @@ export function PageTransition() {
   }, [navigate])
 
   return (
-    <>
-      <div ref={veilRef} className="page-transition-veil" aria-hidden="true" />
-      <div ref={loaderRef} className="page-transition" aria-hidden="true">
-        <div className="page-transition-panel page-transition-panel--accent" />
-        <div className="page-transition-panel page-transition-panel--dark" />
-      </div>
-    </>
+    <div ref={veilRef} className="page-transition-veil" aria-hidden="true" />
   )
 }

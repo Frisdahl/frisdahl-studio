@@ -16,7 +16,7 @@ export function CaseDetailCtaBar({ previousHref, nextHref, liveUrl }: CaseDetail
         label="Forrige case"
         href={previousHref}
       />
-      <ArrowButton href={liveUrl ?? CONTACT_PATH} external={Boolean(liveUrl)}>
+      <ArrowButton arrow="right" href={liveUrl ?? CONTACT_PATH} external={Boolean(liveUrl)}>
         Se live
       </ArrowButton>
       <ArrowChipButton

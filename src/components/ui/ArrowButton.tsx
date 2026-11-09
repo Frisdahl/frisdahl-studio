@@ -15,6 +15,8 @@ interface ArrowButtonProps {
    * 'text': no fill, border or padding; the label and arrow are dark. Same arrow swap on hover.
    */
   variant?: 'solid' | 'text'
+  /** 'up-right' (default) or 'right': the way the arrow points and leaves on hover. */
+  arrow?: 'up-right' | 'right'
   className?: string
 }
 
@@ -44,6 +46,7 @@ export function ArrowButton({
   type = 'button',
   external = false,
   variant = 'solid',
+  arrow = 'up-right',
   className = '',
 }: ArrowButtonProps) {
   const rootRef = useRef<HTMLAnchorElement & HTMLButtonElement>(null)
@@ -59,12 +62,13 @@ export function ArrowButton({
 
       // The old arrow leaves top right, the new one comes from the bottom
       // left, both along the arrow's own diagonal.
+      const y = arrow === 'right' ? 0 : 130
       timeline.current = gsap
         .timeline({ paused: true })
-        .to(arrowOut, { xPercent: 130, yPercent: -130, duration: 0.4, ease: 'power3.inOut' }, 0)
+        .to(arrowOut, { xPercent: 130, yPercent: -y, duration: 0.4, ease: 'power3.inOut' }, 0)
         .fromTo(
           arrowIn,
-          { xPercent: -130, yPercent: 130 },
+          { xPercent: -130, yPercent: y },
           { xPercent: 0, yPercent: 0, duration: 0.4, ease: 'power3.inOut' },
           0,
         )
@@ -75,7 +79,7 @@ export function ArrowButton({
       ctx.revert()
       timeline.current = null
     }
-  }, [])
+  }, [arrow])
 
   const go = (target: 0 | 1) => {
     const tl = timeline.current
@@ -116,8 +120,8 @@ export function ArrowButton({
     <>
       <span>{children}</span>
       <span className="arrow-btn-icon" aria-hidden="true">
-        <ArrowIcon className="arrow-btn-arrow arrow-btn-arrow-out" rotate={-45} />
-        <ArrowIcon className="arrow-btn-arrow arrow-btn-arrow-in" rotate={-45} />
+        <ArrowIcon className="arrow-btn-arrow arrow-btn-arrow-out" rotate={arrow === 'right' ? 0 : -45} />
+        <ArrowIcon className="arrow-btn-arrow arrow-btn-arrow-in" rotate={arrow === 'right' ? 0 : -45} />
       </span>
     </>
   )
