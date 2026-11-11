@@ -62,7 +62,7 @@ export async function playPageExit(layout: Element): Promise<() => void> {
   return () => {
     timeline.kill()
     splits.forEach((split) => split.revert())
-    gsap.set(imageFrames, { clearProps: 'clipPath' })
+    if (imageFrames.length) gsap.set(imageFrames, { clearProps: 'clipPath' })
     gsap.set(everything, { clearProps: 'transform,opacity,visibility' })
   }
 }

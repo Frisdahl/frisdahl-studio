@@ -34,6 +34,14 @@ const MENU_FADE_MS = 550
 
 const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms))
 
+/** The longest `duration + delay` (ms) of a computed transition list such as "0.95s, 0.2s". */
+function longestTransitionMs(style: CSSStyleDeclaration) {
+  const toMs = (value: string) => value.split(',').map((part) => (parseFloat(part) || 0) * (part.includes('ms') ? 1 : 1000))
+  const durations = toMs(style.transitionDuration)
+  const delays = toMs(style.transitionDelay)
+  return Math.max(0, ...durations.map((duration, index) => duration + (delays[index % delays.length] ?? 0)))
+}
+
 interface MenuToggleIconProps {
   isOpen: boolean
 }
@@ -67,6 +75,10 @@ export function Navbar() {
   const leavingRef = useRef(false)
   const navigate = useNavigate()
   const headerRef = useRef<HTMLElement>(null)
+  const menuRef = useRef<HTMLElement>(null)
+  const toggleRef = useRef<HTMLButtonElement>(null)
+  // True from the moment the menu has opened, so a close knows to hand focus back.
+  const menuWasOpenRef = useRef(false)
   const menuImageRef = useRef<HTMLImageElement>(null)
   const { locale } = useLocale()
   const { pathname, hash } = useLocation()
@@ -156,10 +168,65 @@ export function Navbar() {
       unlockScroll()
       const href = pendingHrefRef.current
       pendingHrefRef.current = null
-      if (href) navigateWithTransition(href, navigate)
+      if (!href) return
+      // The same page (a section or query on it): there is no page to swap, so no transition.
+      if (new URL(href, window.location.href).pathname === window.location.pathname) navigate(href)
+      else navigateWithTransition(href, navigate)
     }, closeMs)
     return () => window.clearTimeout(timer)
   }, [isOpen, navigate])
+
+  // Keyboard focus. Opening: once the panel has finished sliding in (or fading in, with reduced
+  // motion), focus moves to the first menu link, so Tab continues through the menu (the panel
+  // comes before the header in the page, so otherwise Tab would leave it). Closing, by any route
+  // (Escape, the toggle, a link, Back or Forward): if focus was in the menu, or was dropped
+  // because the menu became inert, it goes back to the toggle instead of being left on a hidden
+  // link. `preventScroll`, so neither move scrolls the page. No focus trap: the menu is a
+  // disclosure, and the page behind it is already inert.
+  useEffect(() => {
+    if (!isOpen) {
+      if (!menuWasOpenRef.current) return
+      menuWasOpenRef.current = false
+      const active = document.activeElement
+      if (!active || active === document.body || menuRef.current?.contains(active)) {
+        toggleRef.current?.focus({ preventScroll: true })
+      }
+      return
+    }
+
+    menuWasOpenRef.current = true
+    const panel = menuRef.current
+    if (!panel) return
+    let done = false
+    let timer = 0
+    let frame = 0
+    const focusFirstLink = () => {
+      if (done) return
+      done = true
+      window.clearTimeout(timer)
+      panel.removeEventListener('transitionend', onEnd)
+      panel.querySelector<HTMLElement>('.menu-link')?.focus({ preventScroll: true })
+    }
+    const onEnd = (event: TransitionEvent) => {
+      if (event.target === panel && (event.propertyName === 'transform' || event.propertyName === 'opacity')) {
+        focusFirstLink()
+      }
+    }
+    panel.addEventListener('transitionend', onEnd)
+    // Two frames on: the other effect has added .menu-open by then, so the computed transition
+    // is the opening one. The timer covers a transitionend that never comes.
+    frame = requestAnimationFrame(() => {
+      frame = requestAnimationFrame(() => {
+        timer = window.setTimeout(focusFirstLink, longestTransitionMs(getComputedStyle(panel)) + 150)
+      })
+    })
+    return () => {
+      done = true
+      cancelAnimationFrame(frame)
+      window.clearTimeout(timer)
+      panel.removeEventListener('transitionend', onEnd)
+    }
+  }, [isOpen])
 
   useEffect(() => {
     if (!isOpen) {
@@ -227,10 +294,18 @@ export function Navbar() {
   }
 
   // A link chosen in the menu. To another page: the content leaves and the page changes
-  // under the panel (leaveMenuTo). The same page (or a section on it), or reduced motion:
-  // the overlay slides back up and then the link is followed.
+  // under the panel (leaveMenuTo). The same page, or reduced motion: the overlay slides back up
+  // and then the link is followed (on the same page without a transition, since no page changes;
+  // the identical location is not followed at all).
   const closeMenuAndGo = (href: string) => {
-    const samePage = new URL(href, window.location.href).pathname === pathname
+    const target = new URL(href, window.location.href)
+    const samePage = target.pathname === pathname
+    // Exactly where we already are (path, query and #section): nothing to follow, the menu only closes.
+    if (samePage && target.search === window.location.search && target.hash === window.location.hash) {
+      pendingHrefRef.current = null
+      setIsOpen(false)
+      return
+    }
     if (samePage || prefersReducedMotion() || leavingRef.current) {
       pendingHrefRef.current = href
       setIsOpen(false)
@@ -256,7 +331,7 @@ export function Navbar() {
 
   return (
     <>
-      <nav id="mobile-menu" className="menu-panel" aria-label={navAriaLabel} inert={!isOpen}>
+      <nav ref={menuRef} id="mobile-menu" className="menu-panel" aria-label={navAriaLabel} inert={!isOpen}>
         <Container columns className="menu-panel-container" contentClassName="menu-panel-grid">
           <div className="menu-panel-main">
             <ul className="menu-links">
@@ -322,6 +397,7 @@ export function Navbar() {
 
             <div className="site-header-actions">
               <button
+                ref={toggleRef}
                 type="button"
                 className="header-menu-toggle"
                 aria-expanded={isOpen}

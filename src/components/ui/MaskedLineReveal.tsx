@@ -8,6 +8,7 @@ import { usePresence } from 'framer-motion'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
+import { DUR, EASE, STAGGER } from '../../lib/motion'
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
@@ -17,10 +18,19 @@ interface MaskedLineRevealProps {
   duration?: number
   /** Seconds between lines. */
   stagger?: number
+  /** GSAP ease of the rise. */
+  ease?: string
   /** 'view' waits until the text scrolls into view, 'mount' starts at once. */
   trigger?: 'view' | 'mount'
   /** ScrollTrigger start, for trigger 'view'. */
   start?: string
+  /** For trigger 'view': start when the nearest ancestor matching this selector reaches `start`
+   *  (a card's row), instead of when the text itself does. */
+  triggerClosest?: string
+  /** Undo the split once the reveal has played, so the text is plain again afterwards (and later
+   *  code that splits it, such as a page transition, finds ordinary text). It then no longer
+   *  re-splits on resize. */
+  revertWhenDone?: boolean
   /** Seconds to wait before the first line starts. */
   delay?: number
   /** Hold the reveal until this has resolved (the page cover going, see lib/pageReveal.ts). */
@@ -38,10 +48,13 @@ interface MaskedLineRevealProps {
  */
 export function MaskedLineReveal({
   children,
-  duration = 1.1,
-  stagger = 0.1,
+  duration = DUR.lineLong,
+  stagger = STAGGER.slow,
+  ease = EASE.reveal,
   trigger = 'view',
   start = 'top 85%',
+  triggerClosest,
+  revertWhenDone = false,
   delay = 0,
   startAfter,
   as: Tag = 'p',
@@ -80,14 +93,29 @@ export function MaskedLineReveal({
         onSplit: (self) => {
           linesRef.current = self.lines
           gsap.set(root, { visibility: 'visible' })
+          // Splitting a link leaves an empty copy of it beside the real one (until the split is
+          // undone): out of the tab order and the accessibility tree, so there is no second link.
+          root.querySelectorAll('a:empty').forEach((link) => {
+            link.setAttribute('tabindex', '-1')
+            link.setAttribute('aria-hidden', 'true')
+          })
           reveal = gsap.from(self.lines, {
             yPercent: 125,
             duration,
             stagger,
             delay,
-            ease: 'expo.out',
+            ease,
             paused: !started,
-            scrollTrigger: trigger === 'view' ? { trigger: root, start, once: true } : undefined,
+            scrollTrigger:
+              trigger === 'view'
+                ? { trigger: (triggerClosest ? root.closest(triggerClosest) : null) ?? root, start, once: true }
+                : undefined,
+            onComplete: revertWhenDone
+              ? () => {
+                  linesRef.current = []
+                  self.revert()
+                }
+              : undefined,
           })
           return reveal
         },
@@ -103,7 +131,7 @@ export function MaskedLineReveal({
       linesRef.current = []
       mm.revert()
     }
-  }, [duration, stagger, trigger, start, delay, startAfter])
+  }, [duration, stagger, ease, trigger, start, triggerClosest, revertWhenDone, delay, startAfter])
 
   // Exit: the lines keep travelling upward, out of their masks.
   useLayoutEffect(() => {
