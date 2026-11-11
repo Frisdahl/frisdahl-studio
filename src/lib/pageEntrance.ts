@@ -68,8 +68,9 @@ export function prepareAndPlayPageEntrance(main: HTMLElement, revealed: Promise<
     )
   })
 
-  gsap.set(imageFrames, { clipPath: 'inset(50% 0% 50% 0%)' })
-  gsap.set(controls, { autoAlpha: 0 })
+  // (GSAP warns when it is given no targets, as on a page with no images or no buttons.)
+  if (imageFrames.length) gsap.set(imageFrames, { clipPath: 'inset(50% 0% 50% 0%)' })
+  if (controls.length) gsap.set(controls, { autoAlpha: 0 })
 
   const tweens: gsap.core.Tween[] = []
   void revealed.then(() => {
@@ -92,15 +93,17 @@ export function prepareAndPlayPageEntrance(main: HTMLElement, revealed: Promise<
         ),
       )
     })
-    tweens.push(
-      gsap.to(controls, {
-        autoAlpha: 1,
-        duration: CONTROL_DURATION,
-        delay: CONTROL_DELAY,
-        ease: 'power2.out',
-        clearProps: 'opacity,visibility',
-      }),
-    )
+    if (controls.length) {
+      tweens.push(
+        gsap.to(controls, {
+          autoAlpha: 1,
+          duration: CONTROL_DURATION,
+          delay: CONTROL_DELAY,
+          ease: 'power2.out',
+          clearProps: 'opacity,visibility',
+        }),
+      )
+    }
   })
 
   // The text is split only while it plays; the page's own framework must find its text again.
@@ -115,7 +118,7 @@ export function prepareAndPlayPageEntrance(main: HTMLElement, revealed: Promise<
     reveals.forEach((reveal) => reveal.kill())
     tweens.forEach((tween) => tween.kill())
     splits.forEach((split) => split.revert())
-    gsap.set(imageFrames, { clearProps: 'clipPath' })
-    gsap.set(controls, { clearProps: 'opacity,visibility' })
+    if (imageFrames.length) gsap.set(imageFrames, { clearProps: 'clipPath' })
+    if (controls.length) gsap.set(controls, { clearProps: 'opacity,visibility' })
   }
 }

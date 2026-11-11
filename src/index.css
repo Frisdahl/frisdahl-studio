@@ -2038,15 +2038,6 @@
     color: var(--cases-muted);
   }
 
-  /* The line masks (GSAP SplitText) clip to the line box, which cuts off
-     descenders at tight line heights (g, j, p) until the split is undone after
-     the animation. Extra room below, taken back with a negative margin, keeps
-     them whole; the lines start 125% down so their tops stay hidden. */
-  .home-cases-intro-line-mask {
-    padding-bottom: 0.2em;
-    margin-bottom: -0.2em;
-  }
-
   .home-cases-intro-text + .home-cases-intro-text {
     @apply mt-md;
   }

@@ -109,10 +109,8 @@ export function CasesPageSection() {
     const cards = Array.from(grid.children) as HTMLElement[]
     const leaving = cards.filter((card) => !nextIds.has(card.dataset.caseId ?? ''))
     // One that was closing but now stays (a quick second click) opens fully again.
-    gsap.set(
-      cards.filter((card) => nextIds.has(card.dataset.caseId ?? '')),
-      { clearProps: 'clipPath' },
-    )
+    const staying = cards.filter((card) => nextIds.has(card.dataset.caseId ?? ''))
+    if (staying.length) gsap.set(staying, { clearProps: 'clipPath' })
 
     // Called right before the list swaps, once the leaving projects are gone.
     const swap = () => {
@@ -172,20 +170,23 @@ export function CasesPageSection() {
     previousIds.current = new Set(
       (Array.from(grid.children) as HTMLElement[]).map((card) => card.dataset.caseId ?? ''),
     )
-    const tween = gsap.fromTo(
-      entering,
-      { clipPath: CLIP_HIDDEN },
-      {
-        clipPath: CLIP_SHOWN,
-        duration: 0.7,
-        ease: 'power3.out',
-        stagger: 0.06,
-        overwrite: true,
-        clearProps: 'clipPath',
-      },
-    )
+    // Nothing opens when the new list only has projects that were already there (GSAP warns on no targets).
+    const tween = entering.length
+      ? gsap.fromTo(
+          entering,
+          { clipPath: CLIP_HIDDEN },
+          {
+            clipPath: CLIP_SHOWN,
+            duration: 0.7,
+            ease: 'power3.out',
+            stagger: 0.06,
+            overwrite: true,
+            clearProps: 'clipPath',
+          },
+        )
+      : null
     return () => {
-      tween.kill()
+      tween?.kill()
     }
   }, [shown])
 

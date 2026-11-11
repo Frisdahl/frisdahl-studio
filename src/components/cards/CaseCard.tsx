@@ -2,6 +2,24 @@ import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 import { ArrowIcon } from '../ui/ArrowIcon'
+import { MaskedLineReveal } from '../ui/MaskedLineReveal'
+import { DUR, EASE, STAGGER } from '../../lib/motion'
+
+/**
+ * The row's text rises once, when the row's top reaches 78% of the screen: the same line rise
+ * the page used before it was moved onto MaskedLineReveal (1 s, power3.out, 0.08 s between lines),
+ * with the split undone afterwards so the shared-image transition finds plain text. The keywords
+ * start one stagger step after the title, as when both were split together.
+ */
+const ROW_REVEAL = {
+  trigger: 'view',
+  start: 'top 78%',
+  triggerClosest: '.case-card',
+  duration: DUR.line,
+  stagger: STAGGER.lines,
+  ease: EASE.rise,
+  revertWhenDone: true,
+} as const
 
 export interface CaseCardProps {
   client: string
@@ -13,6 +31,9 @@ export interface CaseCardProps {
   metaBelow?: boolean
   /** The arrow that slides in next to the title on hover (default on). */
   showArrow?: boolean
+  /** Title and keywords rise line by line out of their masks once the row scrolls in (the home
+   *  page). Off where the page's own entrance already animates the text. */
+  revealOnScroll?: boolean
 }
 
 /**
@@ -24,7 +45,7 @@ export interface CaseCardProps {
  * its full slide in: if the mouse leaves before it has arrived, it finishes arriving
  * and then carries on to the top right.
  */
-export function CaseCard({ client, keywords, imageSrc, imageAlt, href, metaBelow = false, showArrow = true }: CaseCardProps) {
+export function CaseCard({ client, keywords, imageSrc, imageAlt, href, metaBelow = false, showArrow = true, revealOnScroll = false }: CaseCardProps) {
   // The title's arrow: waits at the bottom left ('idle'), slides in on hover ('in'),
   // leaves at the top right when the mouse does ('out'), then waits again.
   const [arrow, setArrow] = useState<'idle' | 'in' | 'out'>('idle')
@@ -37,11 +58,19 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, href, metaBelow
       <div className="case-card-meta">
         {/* Each title is an h3 under the section's "Latest projects" h2. */}
         <div className="case-card-title-row">
-          <h3 className="case-card-client">
-            <Link to={href} className="case-card-title-link">
-              {client}
-            </Link>
-          </h3>
+          {revealOnScroll ? (
+            <MaskedLineReveal as="h3" className="case-card-client" {...ROW_REVEAL}>
+              <Link to={href} className="case-card-title-link">
+                {client}
+              </Link>
+            </MaskedLineReveal>
+          ) : (
+            <h3 className="case-card-client">
+              <Link to={href} className="case-card-title-link">
+                {client}
+              </Link>
+            </h3>
+          )}
           {showArrow && (
             <span className="case-card-arrow" aria-hidden="true">
               <span
@@ -65,7 +94,13 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, href, metaBelow
             </span>
           )}
         </div>
-        <p className="case-card-keywords">{keywords}</p>
+        {revealOnScroll ? (
+          <MaskedLineReveal as="p" className="case-card-keywords" {...ROW_REVEAL} delay={STAGGER.lines}>
+            {keywords}
+          </MaskedLineReveal>
+        ) : (
+          <p className="case-card-keywords">{keywords}</p>
+        )}
       </div>
 
       {/* Same target as the title link, so it's left out of the tab order and
