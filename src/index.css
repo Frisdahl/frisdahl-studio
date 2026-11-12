@@ -586,7 +586,7 @@
   .cases-page-grid {
     /* The home cases' resting (light) colours, which CaseCard reads. */
     --cases-ink: var(--color-dark);
-    --cases-muted: color-mix(in srgb, var(--color-dark) 55%, transparent);
+    --cases-muted: color-mix(in srgb, var(--color-dark) 60%, transparent);
     --cases-placeholder: #ececec;
     @apply relative z-[1] m-0 grid list-none grid-cols-1 gap-5 p-0 pt-2xl md:grid-cols-2 md:gap-y-12 lg:pt-3xl;
   }
@@ -1149,7 +1149,7 @@
     @apply relative z-[1] mt-4xl lg:mt-5xl;
     /* Project details: rules and labels in the ink colour at low opacity. */
     --overview-rule: color-mix(in srgb, var(--color-dark) 15%, transparent);
-    --overview-label: color-mix(in srgb, var(--color-dark) 50%, transparent);
+    --overview-label: color-mix(in srgb, var(--color-dark) 60%, transparent);
   }
 
   /* The content column sits to the right, capped at 42rem. */
@@ -1200,7 +1200,7 @@
   .case-detail-typography {
     @apply relative z-[1] mt-4xl lg:mt-5xl;
     --overview-rule: color-mix(in srgb, var(--color-dark) 15%, transparent);
-    --overview-label: color-mix(in srgb, var(--color-dark) 50%, transparent);
+    --overview-label: color-mix(in srgb, var(--color-dark) 60%, transparent);
   }
 
   /* Side by side from 1280px; below that the letter grid would squeeze the
@@ -1267,6 +1267,8 @@
     border-color: #ff4f56;
     background-color: #ff4f56;
     color: var(--color-light);
+    /* Bold, so the letter (20px and up) counts as large text: white on the accent is 3.2:1. */
+    font-weight: 700;
   }
 
   /* Colour palette: shares the typography split; rounded, borderless swatches
@@ -1328,7 +1330,7 @@
 
   .case-detail-palette-hex {
     @apply text-caption font-bold uppercase tracking-[0.12em];
-    opacity: 0.7;
+    opacity: 0.75;
   }
 
   .case-detail-intro-pair {
@@ -1520,6 +1522,45 @@
     height: 1rem;
   }
 
+  /* Keyboard focus and #anchors scroll a target clear of the bar (WCAG 2.4.11, focus not obscured). */
+  :root:has(.case-detail-cta-bar) {
+    scroll-padding-bottom: 5.5rem;
+  }
+
+  /* Below 80rem the text runs under the middle of the screen, so the floating buttons sat on top
+     of it with lines showing between them. There the bar becomes a dock: a page-coloured strip
+     across the bottom (its top 1.25rem fades out) with the same three buttons centred in it, so
+     the text passes under a clean edge. The strip lets clicks through around the buttons. */
+  @media (max-width: 79.99rem) {
+    .case-detail-cta-bar {
+      left: 0;
+      right: 0;
+      bottom: 0;
+      justify-content: center;
+      padding: 1.25rem var(--page-gutter) max(1rem, env(safe-area-inset-bottom));
+      background: linear-gradient(to top, var(--color-background) calc(100% - 1.25rem), transparent);
+      transform: none;
+      pointer-events: none;
+    }
+
+    .case-detail-cta-bar > * {
+      pointer-events: auto;
+    }
+  }
+
+  /* From 80rem the bar keeps floating at the bottom centre, but the text column starts beside it,
+     so lines still passed behind the buttons. A page-coloured backing hugs the button group (the
+     gap between the buttons, all round) so nothing shows around them. The bar moves down by the
+     padding, so the buttons stay exactly where they were. */
+  @media (min-width: 80rem) {
+    .case-detail-cta-bar {
+      bottom: calc(clamp(1rem, 3svh, 1.5rem) - 0.5rem);
+      padding: 0.5rem;
+      border-radius: 0.875rem;
+      background-color: var(--color-background);
+    }
+  }
+
   /* Fades out once the next-case card is on the screen (CaseDetailNextSection). */
   .is-next-case-visible .case-detail-cta-bar {
     opacity: 0;
@@ -1640,6 +1681,13 @@
     font-size: var(--text-body);
   }
 
+  /* The click area is 4px larger on every side than the text (20px high becomes 28px). */
+  .arrow-chip-btn-diagonal::before {
+    content: "";
+    position: absolute;
+    inset: -0.25rem;
+  }
+
   .arrow-chip-btn-diagonal .arrow-chip-btn-arrows {
     position: absolute;
     inset: 0;
@@ -1691,7 +1739,7 @@
        below. Two lines of the same length. */
     max-width: 30rem;
     text-wrap: balance;
-    color: color-mix(in srgb, var(--color-dark) 55%, transparent);
+    color: color-mix(in srgb, var(--color-dark) 60%, transparent);
     font-size: 1rem;
     line-height: 1.5;
   }
@@ -1735,7 +1783,7 @@
 
   .cases-page-filter-title {
     margin: 0;
-    color: color-mix(in srgb, var(--color-dark) 50%, transparent);
+    color: color-mix(in srgb, var(--color-dark) 60%, transparent);
     font-family: var(--font-nav);
     font-size: 0.8125rem;
     font-weight: 500;
@@ -1887,7 +1935,7 @@
     font-size: 0.875rem;
     font-weight: 500;
     font-variant-numeric: tabular-nums;
-    color: #b2b2b2;
+    color: #757575;
   }
 
   /* A topic without a number: its content starts at the heading's left edge. */
@@ -1959,7 +2007,7 @@
     --cases-mix: calc(var(--cases-light) * 100%);
     --cases-bg: color-mix(in srgb, var(--color-home-page) var(--cases-mix), #8a8989);
     --cases-ink: color-mix(in srgb, var(--color-dark) var(--cases-mix), var(--color-light));
-    --cases-muted: color-mix(in srgb, color-mix(in srgb, var(--color-dark) 55%, transparent) var(--cases-mix), #a3a3a3);
+    --cases-muted: color-mix(in srgb, color-mix(in srgb, var(--color-dark) 60%, transparent) var(--cases-mix), #a3a3a3);
     --cases-label: color-mix(in srgb, color-mix(in srgb, var(--color-dark) 45%, transparent) var(--cases-mix), #7a7a7a);
     --cases-value: color-mix(in srgb, var(--color-dark) var(--cases-mix), #f3f3f3);
     --cases-rule: color-mix(in srgb, color-mix(in srgb, var(--color-dark) 12%, transparent) var(--cases-mix), rgb(243 243 243 / 0.18));
@@ -2403,7 +2451,7 @@
   .added-value-number {
     flex-shrink: 0;
     width: var(--added-value-number-width);
-    color: #b2b2b2;
+    color: #757575;
     font-family: var(--font-sans);
     font-size: 0.875rem;
     font-weight: 500;
@@ -2411,7 +2459,7 @@
   }
 
   .added-value-title {
-    color: #b2b2b2;
+    color: #8f8f8f;
     font-family: var(--font-heading);
     font-size: clamp(2rem, 3.35vw, 3rem);
     font-weight: var(--heading-weight);
@@ -2444,7 +2492,7 @@
     max-width: 30rem;
     margin: 0;
     padding: 0.5rem 0 clamp(1.25rem, 2vw, 1.75rem) var(--added-value-number-width);
-    color: color-mix(in srgb, var(--color-dark) 55%, transparent);
+    color: color-mix(in srgb, var(--color-dark) 60%, transparent);
     font-size: 1rem;
     line-height: 1.6;
     opacity: 0;
@@ -2780,7 +2828,7 @@
     --contact-ink: var(--color-dark);
     /* 60%, not 50%: the form note is 14px text, which needs 4.5:1 on this grey (50% gives 3.4:1). */
     --contact-muted: color-mix(in srgb, var(--color-dark) 60%, transparent);
-    --contact-rule: color-mix(in srgb, var(--color-dark) 30%, transparent);
+    --contact-rule: color-mix(in srgb, var(--color-dark) 48%, transparent);
 
     position: relative;
     background-color: var(--contact-bg);
@@ -2900,7 +2948,8 @@
 
   /* The required-field marker, in the accent red. */
   .contact-form-required {
-    color: var(--color-accent);
+    /* The accent, deepened to 4.5:1 on the form's grey (the accent itself is 3:1). */
+    color: #c93e44;
   }
 
   /* Underline fields: no box, just a rule that turns the accent red on focus. */
@@ -2926,7 +2975,7 @@
   }
 
   .contact-form-input::placeholder {
-    color: color-mix(in srgb, var(--color-dark) 35%, transparent);
+    color: color-mix(in srgb, var(--color-dark) 60%, transparent);
   }
 
   /* Keep autofilled fields on the page colour instead of the browser's fill. */
@@ -2989,8 +3038,8 @@
      divider and the small print. It sits in normal flow under the page. */
   .site-footer {
     --footer-ink: var(--color-dark);
-    --footer-muted: color-mix(in srgb, var(--color-dark) 50%, transparent);
-    --footer-label: color-mix(in srgb, var(--color-dark) 50%, transparent);
+    --footer-muted: color-mix(in srgb, var(--color-dark) 60%, transparent);
+    --footer-label: color-mix(in srgb, var(--color-dark) 60%, transparent);
     --footer-divider: color-mix(in srgb, var(--color-dark) 9%, transparent);
 
     @apply relative pt-section-sm pb-5 lg:pt-section lg:pb-6;
@@ -3052,6 +3101,15 @@
     @apply relative block w-fit text-body font-bold;
     color: var(--footer-ink);
     line-height: 1.3;
+  }
+
+  /* The click area is 3px taller above and below than the text (the gap between links is 6px,
+     so neighbours never overlap): 28px high instead of 22px, nothing visible changes. */
+  .site-footer-link::before,
+  .site-footer-top-button::before {
+    content: "";
+    position: absolute;
+    inset: -3px 0;
   }
 
   .site-footer-link::after {
@@ -3251,7 +3309,7 @@
 
   /* Plain text, but still a button: keyboard-focusable and it does not navigate. */
   .site-footer-top-button {
-    @apply cursor-pointer border-0 bg-transparent p-0 text-left sm:text-right;
+    @apply relative cursor-pointer border-0 bg-transparent p-0 text-left sm:text-right;
   }
 
   /* The call to action: the home hero's h1 (Hero.module.css) one step larger. */
