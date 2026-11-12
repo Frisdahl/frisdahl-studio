@@ -11,13 +11,12 @@ const contactPageContent = {
     headingPhrases: ['noget smukt.', 'noget unikt.', 'noget bedre.'],
     sourceLabel: 'Hvordan fandt du min hjemmeside?',
     sourcePlaceholder: 'Hvilken lille fugl fortalte mig',
-    sourceMailLabel: 'Fandt siden via',
     messageLabel: 'Besked*',
     requiredNote: 'Alle felter markeret med * er nødvendige',
     submit: 'Send besked',
-    // The form has no backend yet: sending opens the visitor's mail app.
-    sent: 'Tak! Din mail-app åbner med beskeden klar til at sende.',
-    mailSubject: 'Ny henvendelse fra',
+    sending: 'Sender…',
+    sent: 'Tak for din besked! Jeg vender tilbage hurtigst muligt.',
+    error: 'Noget gik galt. Prøv igen, eller skriv direkte til hello@frisdahlstudio.dk.',
   },
 } as const
 

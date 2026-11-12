@@ -31,3 +31,7 @@ public/fonts/PPMori*
 # always have the variants and the manifest that src/lib/responsiveImage.ts imports.
 public/_img/
 src/data/generated/
+
+# Cloudflare Worker (local secrets and state)
+.dev.vars
+.wrangler
