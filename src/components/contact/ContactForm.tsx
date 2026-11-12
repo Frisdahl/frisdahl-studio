@@ -1,7 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { useLocale } from '../../context/LocaleContext'
 import { getContactPageContent } from '../../data/contact'
-import { getFooterContent } from '../../data/footer'
 import { getHomeContent } from '../../data/home'
 import { ArrowButton } from '../ui'
 
@@ -57,15 +56,14 @@ function Field({ id, label, value, onChange, placeholder, type = 'text', autoCom
 }
 
 /**
- * The contact page form. There is no form backend yet, so sending composes the
- * message as an email to the studio address in the visitor's mail app. The
- * browser's own validation covers the required fields.
+ * The contact page form. Sending posts it to the site's Worker (worker/index.ts, POST
+ * /api/contact), which emails it through Resend. The browser's own validation covers the
+ * required fields; the hidden "website" field is a honeypot for bots.
  */
 export function ContactForm() {
   const { locale } = useLocale()
   const { form } = getHomeContent(locale).contact.drawer
   const copy = getContactPageContent(locale)
-  const { email: studioEmail } = getFooterContent(locale)
 
   const [name, setName] = useState('')
   const [company, setCompany] = useState('')
@@ -73,17 +71,30 @@ export function ContactForm() {
   const [phone, setPhone] = useState('')
   const [source, setSource] = useState('')
   const [message, setMessage] = useState('')
-  const [isSent, setIsSent] = useState(false)
+  const [website, setWebsite] = useState('')
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const sender = company.trim() ? `${name.trim()}, ${company.trim()}` : name.trim()
-    const details = [sender, email.trim(), phone.trim()]
-    if (source.trim()) details.push(`${copy.sourceMailLabel}: ${source.trim()}`)
-    const body = [message.trim(), '', ...details].join('\n')
-    const subject = `${copy.mailSubject} ${sender}`
-    window.location.href = `mailto:${studioEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-    setIsSent(true)
+    if (status === 'sending') return
+    setStatus('sending')
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ name, company, email, phone, source, message, website }),
+      })
+      if (!response.ok) throw new Error(String(response.status))
+      setStatus('sent')
+      setName('')
+      setCompany('')
+      setEmail('')
+      setPhone('')
+      setSource('')
+      setMessage('')
+    } catch {
+      setStatus('error')
+    }
   }
 
   return (
@@ -149,11 +160,24 @@ export function ContactForm() {
         <p className="contact-form-note">
           <WithRequiredMark text={copy.requiredNote} />
         </p>
-        <ArrowButton type="submit">{copy.submit}</ArrowButton>
+        <ArrowButton type="submit">
+          {status === 'sending' ? copy.sending : copy.submit}
+        </ArrowButton>
       </div>
 
+      <input
+        type="text"
+        name="website"
+        value={website}
+        onChange={(event) => setWebsite(event.target.value)}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
+      />
+
       <p className="contact-form-status" role="status">
-        {isSent ? copy.sent : ''}
+        {status === 'sent' ? copy.sent : status === 'error' ? copy.error : ''}
       </p>
     </form>
   )
