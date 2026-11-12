@@ -1,12 +1,13 @@
 import { useId, useState } from 'react'
 import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
-import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
+import { AddedValueOrbit } from './AddedValueOrbit'
 
 /**
  * "What I can offer": numbered service rows on the left that work as an
- * accordion (one always open, its text revealed below the heading) and an
- * image on the right that crossfades to the open row's image.
+ * accordion (one always open, its text revealed below the heading) and, on the
+ * right, a circular image carousel that rotates to the open row's image.
+ * Clicking an image in the carousel opens the matching row.
  */
 export function AddedValueSection() {
   const { locale } = useLocale()
@@ -65,17 +66,7 @@ export function AddedValueSection() {
         </div>
 
         <div className="added-value-media">
-          {addedValue.items.map((item, index) => (
-            <img
-              key={item.imageSrc}
-              {...responsiveImageProps(item.imageSrc, IMAGE_SIZES.halfFromDesktop)}
-              alt={index === activeIndex ? item.imageAlt : ''}
-              aria-hidden={index === activeIndex ? undefined : true}
-              className={`added-value-image${index === activeIndex ? ' is-active' : ''}`}
-              loading="lazy"
-              decoding="async"
-            />
-          ))}
+          <AddedValueOrbit items={addedValue.items} activeIndex={activeIndex} onSelect={setActiveIndex} />
         </div>
       </div>
     </section>
