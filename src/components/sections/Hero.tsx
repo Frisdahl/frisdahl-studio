@@ -9,7 +9,7 @@ import styles from './Hero.module.css'
 
 const heroContent = {
   da: {
-    // Two lines in the dark ink; the accent word in Machine, a red dot to end on.
+    // Two lines in the dark ink; the accent word in red, a red dot to end on.
     headingLead: 'Digitale løsninger',
     headingBefore: 'med ',
     headingAccent: 'design',

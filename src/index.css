@@ -40,15 +40,6 @@
   font-display: swap;
 }
 
-/* Machine (a demo file, gitignored like PP Neue Montreal). Single weight. */
-@font-face {
-  font-family: "Machine";
-  src: url("/fonts/Machine.otf") format("opentype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* ArrowButton hover progress, 0 (dark fill) to 1 (transparent fill). Registered
    so it can be transitioned; the fill and the label colour are both derived
    from it, which keeps them in step however often the hover reverses. */
@@ -59,12 +50,15 @@
 }
 
 @theme {
-  /* Typography. Regular text: PP Neue Montreal (Manrope as fallback). Headings, nav and
-     brand stay Manrope (variable, 200–800). */
+  /* Typography. Regular text and headings: PP Neue Montreal (Manrope as fallback). The nav
+     and brand stay Manrope (variable, 200–800). */
+  /* Bold text is Medium: PP Neue Montreal has Book (400), Medium (500) and Bold (700), and Bold
+     (also what 600 snapped to) was too heavy for the regular text. font-bold and font-semibold both
+     resolve here. */
+  --font-weight-semibold: 500;
+  --font-weight-bold: 500;
   --font-sans: "PP Neue Montreal", "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
   --font-heading: "PP Neue Montreal", "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
-  /* Imported, not used anywhere yet. */
-  --font-machine: "Machine", "PP Neue Montreal", ui-sans-serif, system-ui, sans-serif;
   --font-nav: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
   --font-brand: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
 
@@ -480,7 +474,7 @@
     background-color: var(--color-dark);
     color: var(--color-light);
     font-size: var(--text-button);
-    font-weight: 600;
+    font-weight: var(--font-weight-bold);
     transform: translateY(-200%);
   }
 
@@ -1677,6 +1671,7 @@
     position: relative;
     /* The footer links' size (the arrow follows it in em). */
     font-size: var(--text-body);
+    font-weight: 500;
   }
 
   .arrow-chip-btn-diagonal .arrow-chip-btn-arrows {
@@ -2098,9 +2093,9 @@
   /* The red dot ending a heading: the hero's dot (Hero.module.css, .titleDot). */
   .heading-dot {
     display: inline-block;
-    width: 0.17em;
-    height: 0.17em;
-    margin-left: 0.06em;
+    width: 0.14em;
+    height: 0.14em;
+    margin-left: 0.04em;
     border-radius: 50%;
     background-color: var(--color-accent);
     vertical-align: baseline;
@@ -2173,6 +2168,27 @@
     .home-cases-list .case-card:nth-child(even) .case-card-meta {
       grid-column: 5 / span 8;
     }
+  }
+
+  /* Home: the title (left) and the keywords (far right) share one row under the image, like they
+     did above it. On a phone they stack (the .case-card-meta rule below the card styles). */
+  @media (min-width: 640px) {
+    .home-cases-list .case-card-meta-below .case-card-meta {
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.5rem 1.5rem;
+      padding-top: 1rem;
+    }
+
+    .home-cases-list .case-card-meta-below .case-card-keywords {
+      text-align: right;
+    }
+  }
+
+  /* The keywords are lighter here than the title's bold uppercase look elsewhere. */
+  .home-cases-list .case-card-keywords {
+    font-weight: 400;
   }
 
   .case-card-media-link {
@@ -2262,7 +2278,7 @@
     }
   }
 
-  /* The title now sits above its image, so the rows need their own space. */
+  /* The title and keywords sit with their image, so the rows need their own space. */
   .case-card:not(:last-child) {
     margin-bottom: 3rem;
   }
@@ -2360,7 +2376,7 @@
     text-align: right;
     color: var(--cases-muted);
     font-size: 0.8125rem;
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
     line-height: 1.5;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -2414,11 +2430,10 @@
     margin: 0;
     color: var(--color-dark);
     font-family: var(--font-sans);
-    font-size: 0.8125rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0;
     line-height: 1.4;
-    text-transform: uppercase;
   }
 
   .added-value-dot {
@@ -3218,7 +3233,7 @@
     color: var(--color-dark);
     /* The type of the text beside it (the project page's other details). */
     font-size: var(--text-body);
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
     line-height: inherit;
   }
 

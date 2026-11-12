@@ -69,6 +69,7 @@ export function CasesSection() {
               imageSrc={item.imageSrc}
               imageAlt={item.imageAlt}
               href={item.href}
+              metaBelow
               revealOnScroll
             />
           ))}
