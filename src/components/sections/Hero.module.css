@@ -54,9 +54,10 @@
   display: block;
 }
 
-/* The accent word, in the site's red. */
+/* The accent word: Machine, in the dark ink like the rest of the heading. */
 .titleAccent {
-  color: var(--color-accent);
+  color: var(--color-dark);
+  font-family: var(--font-machine);
 }
 
 /* Keeps the last words (and the dot) on one line. */
