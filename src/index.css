@@ -2277,12 +2277,6 @@
     color: var(--color-accent);
   }
 
-  /* The same slightly heavier line as the other arrows (0.7 in the 32-unit viewBox). */
-  .case-card-arrow svg {
-    stroke: currentColor;
-    stroke-width: 0.7;
-    stroke-linejoin: round;
-  }
 
   .case-card-arrow-slider {
     display: flex;
@@ -3208,12 +3202,7 @@
 
   .arrow-btn-arrow {
     @apply absolute inset-0 block h-full w-full;
-    /* A touch heavier than the glyph's own line (0.7 in the 32-unit viewBox), the same
-       as the hero button's arrow. Both follow the label's colour (white, dark on hover,
-       flipped at the halfway point). */
-    stroke: currentColor;
-    stroke-width: 0.7;
-    stroke-linejoin: round;
+    /* Follows the label's colour (white, dark on hover, flipped at the halfway point). */
   }
 
 
@@ -3237,11 +3226,7 @@
 
   .site-footer-link-icon svg {
     @apply shrink-0;
-    /* A touch heavier than the glyph's own line (0.7 in the 32-unit viewBox), the same as
-       the hero button's arrow; the colour is the link's own (dark). */
-    stroke: currentColor;
-    stroke-width: 0.7;
-    stroke-linejoin: round;
+    /* The colour is the link's own (dark). */
     width: 0.85em;
     height: 0.85em;
   }
