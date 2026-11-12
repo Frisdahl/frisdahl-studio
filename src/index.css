@@ -40,6 +40,15 @@
   font-display: swap;
 }
 
+/* Machine (a demo file, gitignored like PP Neue Montreal). Single weight. */
+@font-face {
+  font-family: "Machine";
+  src: url("/fonts/Machine.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ArrowButton hover progress, 0 (dark fill) to 1 (transparent fill). Registered
    so it can be transitioned; the fill and the label colour are both derived
    from it, which keeps them in step however often the hover reverses. */
@@ -53,7 +62,9 @@
   /* Typography. Regular text: PP Neue Montreal (Manrope as fallback). Headings, nav and
      brand stay Manrope (variable, 200–800). */
   --font-sans: "PP Neue Montreal", "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "PP Neue Montreal", "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
+  /* Imported, not used anywhere yet. */
+  --font-machine: "Machine", "PP Neue Montreal", ui-sans-serif, system-ui, sans-serif;
   --font-nav: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
   --font-brand: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
 
@@ -185,7 +196,7 @@
   --header-gap: clamp(0.5rem, 0.8vw, 1rem);
   --content-max-width: 96rem; /* 1536px */
   /* Weight for all page and section headings (Manrope is variable, 200–800). */
-  --heading-weight: 600;
+  --heading-weight: 500;
   --page-gutter: clamp(1rem, 2.5vw, 2.5rem); /* the grid's outer margin */
   --site-grid-gap: 1rem; /* the gutter between columns; 1.25rem from 901px, below */
   /* The grid's width in px terms, for the few blocks that size themselves from
