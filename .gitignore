@@ -26,6 +26,8 @@ dist-ssr
 # PP Mori is not licensed for this project; never commit it.
 public/fonts/PPMori*
 
+# PP Neue Montreal is licensed (Pangram Pangram); keep the font files out of the public repo.
+public/fonts/PPNeueMontreal*
 # Output of `npm run images` (scripts/optimize-images.mjs). Regenerated rather
 # than committed: the predev/prebuild hooks run it, so dev and production builds
 # always have the variants and the manifest that src/lib/responsiveImage.ts imports.

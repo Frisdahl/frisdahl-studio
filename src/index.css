@@ -13,6 +13,33 @@
 @import "@fontsource-variable/raleway/wght.css";
 @import "@fontsource/dm-serif-display/400.css";
 
+/* PP Neue Montreal (Pangram Pangram) for the regular text. Licensed: the files in
+   public/fonts are gitignored (see .gitignore) and Manrope is the fallback when they
+   are missing. Book, Medium and Bold only; other weights snap to the nearest. */
+@font-face {
+  font-family: "PP Neue Montreal";
+  src: url("/fonts/PPNeueMontreal-Book.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PP Neue Montreal";
+  src: url("/fonts/PPNeueMontreal-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "PP Neue Montreal";
+  src: url("/fonts/PPNeueMontreal-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ArrowButton hover progress, 0 (dark fill) to 1 (transparent fill). Registered
    so it can be transitioned; the fill and the label colour are both derived
    from it, which keeps them in step however often the hover reverses. */
@@ -23,9 +50,15 @@
 }
 
 @theme {
-  /* Typography. One family for the whole site: Manrope (variable, 200–800). */
-  --font-sans: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
+  /* Typography. Regular text and headings: PP Neue Montreal (Manrope as fallback). The nav
+     and brand stay Manrope (variable, 200–800). */
+  /* Bold text is Medium: PP Neue Montreal has Book (400), Medium (500) and Bold (700), and Bold
+     (also what 600 snapped to) was too heavy for the regular text. font-bold and font-semibold both
+     resolve here. */
+  --font-weight-semibold: 500;
+  --font-weight-bold: 500;
+  --font-sans: "PP Neue Montreal", "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "PP Neue Montreal", "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
   --font-nav: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
   --font-brand: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
 
@@ -157,7 +190,7 @@
   --header-gap: clamp(0.5rem, 0.8vw, 1rem);
   --content-max-width: 96rem; /* 1536px */
   /* Weight for all page and section headings (Manrope is variable, 200–800). */
-  --heading-weight: 600;
+  --heading-weight: 500;
   --page-gutter: clamp(1rem, 2.5vw, 2.5rem); /* the grid's outer margin */
   --site-grid-gap: 1rem; /* the gutter between columns; 1.25rem from 901px, below */
   /* The grid's width in px terms, for the few blocks that size themselves from
@@ -441,7 +474,7 @@
     background-color: var(--color-dark);
     color: var(--color-light);
     font-size: var(--text-button);
-    font-weight: 600;
+    font-weight: var(--font-weight-bold);
     transform: translateY(-200%);
   }
 
@@ -1679,6 +1712,7 @@
     position: relative;
     /* The footer links' size (the arrow follows it in em). */
     font-size: var(--text-body);
+    font-weight: 500;
   }
 
   /* The click area is 4px larger on every side than the text (20px high becomes 28px). */
@@ -1700,12 +1734,49 @@
     left: 0;
     width: 1em;
     height: 1em;
-    color: var(--color-dark);
-    /* A touch heavier than the glyph's own 2-unit line: a thin stroke in the same colour
-       (in the 32-unit viewBox, so 0.7 widens the line by about a third). */
-    stroke: currentColor;
-    stroke-width: 0.7;
-    stroke-linejoin: round;
+    color: inherit;
+    transform: rotate(-45deg);
+    transition: transform 500ms var(--ease-smooth);
+  }
+
+  /* Hover: text and arrow turn the accent red, the arrow turns from up-right to right, and an
+     underline draws in from the left (it leaves toward the right). */
+  .arrow-chip-btn-diagonal {
+    transition: color 400ms var(--ease-smooth);
+  }
+
+  .arrow-chip-btn-diagonal::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.2em;
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform 500ms var(--ease-smooth);
+  }
+
+  .arrow-chip-btn-diagonal:is(:hover, :focus-visible) {
+    color: var(--color-accent);
+  }
+
+  .arrow-chip-btn-diagonal:is(:hover, :focus-visible)::after {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+
+  .arrow-chip-btn-diagonal:is(:hover, :focus-visible) .arrow-chip-btn-arrows .arrow-chip-btn-arrow {
+    transform: rotate(0deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .arrow-chip-btn-diagonal,
+    .arrow-chip-btn-diagonal::after,
+    .arrow-chip-btn-diagonal .arrow-chip-btn-arrows .arrow-chip-btn-arrow {
+      transition: none;
+    }
   }
 
   .arrow-chip-btn-left .arrow-chip-btn-arrow-next {
@@ -2070,9 +2141,9 @@
   /* The red dot ending a heading: the hero's dot (Hero.module.css, .titleDot). */
   .heading-dot {
     display: inline-block;
-    width: 0.17em;
-    height: 0.17em;
-    margin-left: 0.06em;
+    width: 0.14em;
+    height: 0.14em;
+    margin-left: 0.04em;
     border-radius: 50%;
     background-color: var(--color-accent);
     vertical-align: baseline;
@@ -2145,6 +2216,27 @@
     .home-cases-list .case-card:nth-child(even) .case-card-meta {
       grid-column: 5 / span 8;
     }
+  }
+
+  /* Home: the title (left) and the keywords (far right) share one row under the image, like they
+     did above it. On a phone they stack (the .case-card-meta rule below the card styles). */
+  @media (min-width: 640px) {
+    .home-cases-list .case-card-meta-below .case-card-meta {
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.5rem 1.5rem;
+      padding-top: 1rem;
+    }
+
+    .home-cases-list .case-card-meta-below .case-card-keywords {
+      text-align: right;
+    }
+  }
+
+  /* The keywords are lighter here than the title's bold uppercase look elsewhere. */
+  .home-cases-list .case-card-keywords {
+    font-weight: 400;
   }
 
   .case-card-media-link {
@@ -2234,7 +2326,7 @@
     }
   }
 
-  /* The title now sits above its image, so the rows need their own space. */
+  /* The title and keywords sit with their image, so the rows need their own space. */
   .case-card:not(:last-child) {
     margin-bottom: 3rem;
   }
@@ -2288,12 +2380,6 @@
     color: var(--color-accent);
   }
 
-  /* The same slightly heavier line as the other arrows (0.7 in the 32-unit viewBox). */
-  .case-card-arrow svg {
-    stroke: currentColor;
-    stroke-width: 0.7;
-    stroke-linejoin: round;
-  }
 
   .case-card-arrow-slider {
     display: flex;
@@ -2338,7 +2424,7 @@
     text-align: right;
     color: var(--cases-muted);
     font-size: 0.8125rem;
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
     line-height: 1.5;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -2392,11 +2478,10 @@
     margin: 0;
     color: var(--color-dark);
     font-family: var(--font-sans);
-    font-size: 0.8125rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0;
     line-height: 1.4;
-    text-transform: uppercase;
   }
 
   .added-value-dot {
@@ -3206,7 +3291,7 @@
     color: var(--color-dark);
     /* The type of the text beside it (the project page's other details). */
     font-size: var(--text-body);
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
     line-height: inherit;
   }
 
@@ -3229,12 +3314,7 @@
 
   .arrow-btn-arrow {
     @apply absolute inset-0 block h-full w-full;
-    /* A touch heavier than the glyph's own line (0.7 in the 32-unit viewBox), the same
-       as the hero button's arrow. Both follow the label's colour (white, dark on hover,
-       flipped at the halfway point). */
-    stroke: currentColor;
-    stroke-width: 0.7;
-    stroke-linejoin: round;
+    /* Follows the label's colour (white, dark on hover, flipped at the halfway point). */
   }
 
 
@@ -3258,11 +3338,7 @@
 
   .site-footer-link-icon svg {
     @apply shrink-0;
-    /* A touch heavier than the glyph's own line (0.7 in the 32-unit viewBox), the same as
-       the hero button's arrow; the colour is the link's own (dark). */
-    stroke: currentColor;
-    stroke-width: 0.7;
-    stroke-linejoin: round;
+    /* The colour is the link's own (dark). */
     width: 0.85em;
     height: 0.85em;
   }
