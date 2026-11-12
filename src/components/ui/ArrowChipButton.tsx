@@ -5,8 +5,8 @@ import { ArrowIcon } from './ArrowIcon'
 
 interface ArrowChipButtonProps {
   direction: 'left' | 'right'
-  /** 'diagonal': no filled chip; an up-right arrow that leaves through the top right
-   *  corner on hover while a second one arrives from the bottom left. */
+  /** 'diagonal': no filled chip; on hover an underline draws left to right, the up-right
+   *  arrow turns to point right, and the text and arrow turn red (CSS only). */
   variant?: 'chip' | 'diagonal'
   label: string
   /** Visible text before the chip; it rolls up on hover, a copy rising in from below. */
@@ -47,24 +47,14 @@ export function ArrowChipButton({
   useLayoutEffect(() => {
     const turn = direction === 'right' ? 90 : -90
     const ctx = gsap.context(() => {
+      // The diagonal variant is pure CSS (underline, red, arrow turn): no timeline.
+      if (variant === 'diagonal') return
       const timeline = gsap.timeline({ paused: true, defaults: { ease: 'none' } })
-      if (variant === 'diagonal') {
-        // Both arrows sit on the same spot, pointing up and right: the first leaves
-        // along that diagonal, the second arrives from the opposite corner.
-        const [arrowOut, arrowIn] = Array.from(
-          chipRef.current?.querySelectorAll('.arrow-chip-btn-arrow') ?? [],
-        )
-        timeline
-          .to(arrowOut, { xPercent: 160, yPercent: -160, duration: 0.85 }, 0)
-          .fromTo(arrowIn, { xPercent: -160, yPercent: 160 }, { xPercent: 0, yPercent: 0, duration: 0.85 }, 0)
-      } else {
-        timeline
-          .to(chipRef.current, { rotation: turn, duration: 1 }, 0)
-          .to(arrowWrapRef.current, { rotation: -turn, duration: 1 }, 0)
-          .to(arrowTrackRef.current, { xPercent: direction === 'right' ? 200 : -200, duration: 0.85 }, 0)
-      }
-      // The diagonal variant keeps its text still.
-      if (textTrackRef.current && variant !== 'diagonal') {
+      timeline
+        .to(chipRef.current, { rotation: turn, duration: 1 }, 0)
+        .to(arrowWrapRef.current, { rotation: -turn, duration: 1 }, 0)
+        .to(arrowTrackRef.current, { xPercent: direction === 'right' ? 200 : -200, duration: 0.85 }, 0)
+      if (textTrackRef.current) {
         timeline.to(textTrackRef.current, { yPercent: -100, duration: 0.85 }, 0)
       }
       hoverTimeline.current = timeline
@@ -85,16 +75,11 @@ export function ArrowChipButton({
       timeline.progress(progress)
       return
     }
-    // The diagonal arrow swap is short, so it is eased at both ends and given a little more
-    // time to be seen; the chip variants keep their quick start.
-    if (variant === 'diagonal') {
-      gsap.to(timeline, { progress, duration: progress === 1 ? 0.6 : 0.5, ease: 'power3.inOut', overwrite: true })
-      return
-    }
     gsap.to(timeline, { progress, duration, ease: 'power3.out', overwrite: true })
   }
 
-  const rotate = variant === 'diagonal' ? -45 : direction === 'left' ? 180 : 0
+  // The diagonal arrow's turn (up-right at rest, right on hover) is a CSS transform.
+  const rotate = direction === 'left' ? 180 : 0
   const interactionProps = {
     className: `arrow-chip-btn arrow-chip-btn-${direction}${text ? ' arrow-chip-btn-with-text' : ''}${variant === 'diagonal' ? ' arrow-chip-btn-diagonal' : ''} ${className}`.trim(),
     // Visible text names the link itself; the label only stands in for a bare chip.
@@ -121,7 +106,9 @@ export function ArrowChipButton({
         <span ref={arrowWrapRef} className="arrow-chip-btn-arrow-wrap">
           <span ref={arrowTrackRef} className="arrow-chip-btn-arrows">
             <ArrowIcon className="arrow-chip-btn-arrow" rotate={rotate} />
-            <ArrowIcon className="arrow-chip-btn-arrow arrow-chip-btn-arrow-next" rotate={rotate} />
+            {variant !== 'diagonal' && (
+              <ArrowIcon className="arrow-chip-btn-arrow arrow-chip-btn-arrow-next" rotate={rotate} />
+            )}
           </span>
         </span>
       </span>

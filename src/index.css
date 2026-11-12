@@ -1652,12 +1652,54 @@
     left: 0;
     width: 1em;
     height: 1em;
-    color: var(--color-dark);
+    color: inherit;
     /* A touch heavier than the glyph's own 2-unit line: a thin stroke in the same colour
        (in the 32-unit viewBox, so 0.7 widens the line by about a third). */
     stroke: currentColor;
     stroke-width: 0.7;
     stroke-linejoin: round;
+    transform: rotate(-45deg);
+    transition: transform 500ms var(--ease-smooth);
+  }
+
+  /* Hover: text and arrow turn the accent red, the arrow turns from up-right to right, and an
+     underline draws in from the left (it leaves toward the right). */
+  .arrow-chip-btn-diagonal {
+    transition: color 400ms var(--ease-smooth);
+  }
+
+  .arrow-chip-btn-diagonal::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.2em;
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform 500ms var(--ease-smooth);
+  }
+
+  .arrow-chip-btn-diagonal:is(:hover, :focus-visible) {
+    color: var(--color-accent);
+  }
+
+  .arrow-chip-btn-diagonal:is(:hover, :focus-visible)::after {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+
+  .arrow-chip-btn-diagonal:is(:hover, :focus-visible) .arrow-chip-btn-arrows .arrow-chip-btn-arrow {
+    transform: rotate(0deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .arrow-chip-btn-diagonal,
+    .arrow-chip-btn-diagonal::after,
+    .arrow-chip-btn-diagonal .arrow-chip-btn-arrows .arrow-chip-btn-arrow {
+      transition: none;
+    }
   }
 
   .arrow-chip-btn-left .arrow-chip-btn-arrow-next {
