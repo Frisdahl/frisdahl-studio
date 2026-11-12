@@ -88,7 +88,7 @@
   max-width: 26rem;
   margin: 0;
   /* The heading's dark ink at lower opacity. */
-  color: color-mix(in srgb, var(--color-dark) 55%, transparent);
+  color: color-mix(in srgb, var(--color-dark) 60%, transparent);
   font-family: var(--font-sans);
   font-size: clamp(1rem, 1.2vw, 1.1875rem);
   font-weight: 400;
