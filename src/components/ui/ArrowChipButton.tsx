@@ -105,7 +105,21 @@ export function ArrowChipButton({
       <span ref={chipRef} className="arrow-chip-btn-chip" aria-hidden="true">
         <span ref={arrowWrapRef} className="arrow-chip-btn-arrow-wrap">
           <span ref={arrowTrackRef} className="arrow-chip-btn-arrows">
-            <ArrowIcon className="arrow-chip-btn-arrow" rotate={rotate} />
+            {variant === 'diagonal' ? (
+              <svg
+                className="arrow-chip-btn-arrow"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+                focusable="false"
+              >
+                {/* The hero arrow (designer's arrow.svg, 24x24), pointing right. */}
+                <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z" />
+              </svg>
+            ) : (
+              <ArrowIcon className="arrow-chip-btn-arrow" rotate={rotate} />
+            )}
             {variant !== 'diagonal' && (
               <ArrowIcon className="arrow-chip-btn-arrow arrow-chip-btn-arrow-next" rotate={rotate} />
             )}

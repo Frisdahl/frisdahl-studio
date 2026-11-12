@@ -1653,11 +1653,6 @@
     width: 1em;
     height: 1em;
     color: inherit;
-    /* A touch heavier than the glyph's own 2-unit line: a thin stroke in the same colour
-       (in the 32-unit viewBox, so 0.7 widens the line by about a third). */
-    stroke: currentColor;
-    stroke-width: 0.7;
-    stroke-linejoin: round;
     transform: rotate(-45deg);
     transition: transform 500ms var(--ease-smooth);
   }
