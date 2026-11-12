@@ -1,6 +1,5 @@
 export { Hero } from './Hero'
 export { MeetUsPageSection } from './MeetUsPageSection'
-export { CaseDetailCtaBar } from './CaseDetailCtaBar'
 export { CaseDetailNextSection } from './CaseDetailNextSection'
 export { CaseDetailAfterPalette, CaseDetailGallery, CaseDetailIntroPair } from './CaseDetailGallery'
 export { CaseDetailHero } from './CaseDetailHero'
