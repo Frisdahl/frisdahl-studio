@@ -807,6 +807,18 @@
     }
   }
 
+  /* Phones: slightly larger links with more room between them (still held to the
+     screen's height so four links and the info under them fit). */
+  @media (max-width: 639px) {
+    .menu-links {
+      gap: clamp(1.25rem, 4vh, 2rem);
+    }
+
+    .menu-link-item {
+      font-size: clamp(2.5rem, 7vh, 3rem);
+    }
+  }
+
   .menu-link:focus-visible {
     outline: 2px solid var(--color-dark);
     outline-offset: 2px;
@@ -1076,6 +1088,15 @@
 
   .cases-page {
     overflow-x: clip;
+  }
+
+  /* Below 1024 the title sits the same distance under the header as the home hero's title
+     (Hero.module.css .content): the header height plus the hero's gap, on top of the page
+     surface's own offset. */
+  @media (max-width: 1023px) {
+    .cases-page {
+      padding-top: calc(var(--site-header-height) + clamp(1.5rem, 4vh, 2.5rem));
+    }
   }
 
   .case-detail {
@@ -1379,6 +1400,17 @@
     height: 200svh;
   }
 
+  /* Phones: the 16:9 card is short, so at the bottom of a full-screen pinned box there is a
+     screen's worth of empty space above it. The section is pulled up over that space (the box
+     is transparent) so the card follows the content after a normal gap; the scroll length
+     that fills the bar is unchanged. */
+  @media (max-width: 639px) {
+    .case-detail-next-section {
+      --next-card-height: calc((100vw - 2 * var(--page-gutter)) * 9 / 16);
+      margin-top: calc(-1 * max(0px, 100svh - var(--page-gutter) - var(--next-card-height)));
+    }
+  }
+
   /* The card sits at the bottom of the screen, as far from the bottom edge
      as the content is from the sides. Column flex keeps the Container's own
      width and side margins. */
@@ -1658,6 +1690,11 @@
     stroke: currentColor;
     stroke-width: 0.7;
     stroke-linejoin: round;
+  }
+
+  /* The arrow that arrives on hover is the accent red. */
+  .arrow-chip-btn-diagonal .arrow-chip-btn-arrows .arrow-chip-btn-arrow-next {
+    color: var(--color-accent);
   }
 
   .arrow-chip-btn-left .arrow-chip-btn-arrow-next {
@@ -3186,6 +3223,11 @@
     stroke: currentColor;
     stroke-width: 0.7;
     stroke-linejoin: round;
+  }
+
+  /* Text variant (the project page's "Se live"): the arrow that arrives on hover is the accent red. */
+  .arrow-btn-text .arrow-btn-arrow-in {
+    color: var(--color-accent);
   }
 
 

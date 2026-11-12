@@ -20,13 +20,17 @@ const ROW_START = 'top 78%'
 export function CasesSection() {
   const { locale } = useLocale()
   const { cases } = getHomeContent(locale)
+  const introTitleRef = useRef<HTMLHeadingElement>(null)
+  const introTextRef = useRef<HTMLDivElement>(null)
   const listTitleRef = useRef<HTMLHeadingElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
+    const introTitle = introTitleRef.current
+    const introText = introTextRef.current
     const listTitle = listTitleRef.current
     const list = listRef.current
-    if (!listTitle || !list) return
+    if (!introTitle || !introText || !listTitle || !list) return
 
     const mm = gsap.matchMedia()
 
@@ -60,10 +64,11 @@ export function CasesSection() {
         return split
       }
 
-      // "Seneste projekter" rises line by line when it scrolls into view. The
-      // intro above it (heading and text) is plain, static text.
+      // The intro heading, its two paragraphs and "Seneste projekter" each rise line by line when
+      // they scroll into view.
       const slideUp = (targets: Element | NodeListOf<Element>, start: string, trigger: Element) => {
         const split = splitLines(targets)
+        gsap.set(targets, { autoAlpha: 1 })
         gsap.set(split.lines, { yPercent: 125 })
         gsap.to(split.lines, {
           yPercent: 0,
@@ -84,6 +89,8 @@ export function CasesSection() {
       }))
 
       // Hidden straight away (not after the fonts), so nothing flashes.
+      const introParagraphs = Array.from(introText.querySelectorAll<HTMLElement>('.home-cases-intro-text'))
+      gsap.set([introTitle, ...introParagraphs], { autoAlpha: 0 })
       rows.forEach(({ texts }) => gsap.set(texts, { autoAlpha: 0 }))
 
       const revealRow = ({ row, texts }: (typeof rows)[number]) => {
@@ -105,6 +112,8 @@ export function CasesSection() {
         // context.add runs this now and records its tweens in the matchMedia
         // context, so they are reverted with it although they start late.
         context.add(() => {
+          slideUp(introTitle, 'top 85%', introTitle)
+          introParagraphs.forEach((paragraph) => slideUp(paragraph, 'top 88%', paragraph))
           slideUp(listTitle, 'top 85%', listTitle)
           rows.forEach(revealRow)
         })
@@ -127,7 +136,7 @@ export function CasesSection() {
     >
       <Container columns>
         <div className="home-cases-intro">
-          <h2 className="home-cases-intro-title">
+          <h2 ref={introTitleRef} className="home-cases-intro-title">
             <WithHeadingDot>{cases.intro.title}</WithHeadingDot>
           </h2>
           <div className="home-cases-intro-image-wrapper">
@@ -140,7 +149,7 @@ export function CasesSection() {
               decoding="async"
             />
           </div>
-          <div className="home-cases-intro-text-col">
+          <div ref={introTextRef} className="home-cases-intro-text-col">
             <p className="home-cases-intro-text">
               {cases.intro.textBefore}
               <Link to={MEET_US_PATH} className="home-cases-intro-link">

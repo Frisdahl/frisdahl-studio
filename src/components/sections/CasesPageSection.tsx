@@ -197,7 +197,7 @@ export function CasesPageSection() {
   )
 
   return (
-    <section className="cases-page relative isolate py-section-sm lg:py-section" aria-label={titleLines.join(' ')}>
+    <section className="cases-page relative isolate pb-section-sm lg:py-section" aria-label={titleLines.join(' ')}>
       <Container className="relative z-[1]">
         <div className="cases-page-intro">
           <h1 className="cases-page-title">

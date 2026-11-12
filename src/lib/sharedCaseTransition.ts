@@ -1,6 +1,7 @@
 import { gsap } from 'gsap'
 import { SplitText } from 'gsap/SplitText'
-import { setTransitionLagSmoothing } from './scroll'
+import { HERO_ZOOM } from './heroZoom'
+import { prefersReducedMotion, setTransitionLagSmoothing } from './scroll'
 
 gsap.registerPlugin(SplitText)
 
@@ -43,11 +44,6 @@ const VEIL_DURATION = 0.45
 // The image grows to the hero's place; the page appears under it as it lands.
 const GROW_DURATION = 1.1
 const GROW_EASE = 'power3.inOut'
-// The picture first slides to the hero's place at its own size, then changes size there: it
-// never gets taller or shorter while it travels. The size change starts a little before the
-// slide has quite stopped, so the two read as one movement.
-const SLIDE_DURATION = 0.55
-const RESIZE_AT = 0.45
 const SWAP_AT = 0.4
 const VEIL_OUT_AT = 0.65
 // The case page's text rising in.
@@ -287,11 +283,10 @@ export async function runSharedCaseTransition(
     await nextFrames(2)
     await new Promise<void>((resolve) => {
       const grow = gsap.timeline({ onComplete: resolve, defaults: { ease: GROW_EASE } })
-      // 1. Slide: the ghost's top left corner (its transform origin) travels to the hero's, size unchanged.
-      grow.to(ghost, { x: to.left, y: to.top, duration: SLIDE_DURATION }, 0)
-      // 2. Resize: from that corner out to the hero's width and height.
-      grow.to(ghost, { scale: 1, borderRadius: radius, duration: GROW_DURATION - RESIZE_AT }, RESIZE_AT)
-      if (cropped) grow.to(ghost, { clipPath: 'inset(0px 0px 0px 0px)', duration: GROW_DURATION - RESIZE_AT }, RESIZE_AT)
+      // The picture scales up and settles into the hero's place in one movement: its top left
+      // corner (the transform origin) travels to the hero's while it grows to the hero's size.
+      grow.to(ghost, { x: to.left, y: to.top, scale: 1, borderRadius: radius, duration: GROW_DURATION }, 0)
+      if (cropped) grow.to(ghost, { clipPath: 'inset(0px 0px 0px 0px)', duration: GROW_DURATION }, 0)
       if (isNext) {
         // The zoom settles and the dark overlay lifts, so the hero's picture is plain.
         // Fully settled before the swap below, so the two pictures line up exactly.
@@ -304,6 +299,8 @@ export async function runSharedCaseTransition(
         grow.to(fromImage, { scale: 1, xPercent: 0, yPercent: 0, duration: PARALLAX_SETTLE, ease: 'power2.out' }, 0)
       }
       const swapAt = isNext ? NEXT_SWAP_AT : parallaxPose ? PARALLAX_SWAP_AT : SWAP_AT
+      // The hero picture starts zoomed in on the case page (CaseDetailHero), so it lands at that zoom.
+      if (!prefersReducedMotion()) grow.fromTo(topImage, { scale: 1 }, { scale: HERO_ZOOM, duration: GROW_DURATION }, 0)
       grow.to(topImage, { opacity: 1, duration: isNext ? 0.15 : parallaxPose ? 0.3 : 0.5, ease: 'power1.inOut' }, swapAt)
       grow.to(veil, { autoAlpha: 0, duration: 0.4, ease: 'power2.out' }, VEIL_OUT_AT)
       grow.call(() => void enter?.play(), [], GROW_DURATION - ENTER_OVERLAP)
