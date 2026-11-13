@@ -1154,8 +1154,13 @@
   }
 
   .case-detail-hero-image {
-    @apply mt-xl w-full overflow-hidden;
+    @apply relative mt-xl w-full overflow-hidden;
     aspect-ratio: 16 / 9;
+  }
+
+  /* The hero's clip sits over its picture, same box. */
+  .case-detail-hero-video {
+    @apply absolute inset-0 block h-full w-full object-cover;
   }
 
   .case-detail-hero-meta-item {
@@ -1366,6 +1371,46 @@
     opacity: 0.75;
   }
 
+  /* Results: the palette's split (text left, grey panel right), with the measured figures as
+     rounded white tiles in place of the swatches. */
+  .case-detail-results {
+    @apply relative z-[1] pb-section-sm lg:pb-section;
+  }
+
+  .case-detail-results-panel {
+    @apply self-start rounded-control-sm p-2 sm:p-3;
+    background-color: var(--color-background-soft);
+  }
+
+  .case-detail-results-grid {
+    @apply grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3;
+  }
+
+  .case-detail-results-metric {
+    @apply flex min-h-[10rem] flex-col items-start rounded-control-sm p-4 sm:min-h-[16rem] sm:p-5;
+    background-color: var(--color-light);
+    color: var(--color-dark);
+  }
+
+  .case-detail-results-label {
+    @apply text-caption font-bold uppercase tracking-[0.12em];
+    opacity: 0.6;
+  }
+
+  .case-detail-results-value {
+    @apply mt-auto text-h2 text-primary;
+    font-weight: var(--heading-weight);
+  }
+
+  .case-detail-results-detail {
+    @apply mt-2 max-w-[18rem] text-body text-secondary;
+  }
+
+  .case-detail-results-note {
+    @apply mt-md text-caption font-bold uppercase tracking-[0.12em];
+    color: var(--overview-label);
+  }
+
   .case-detail-intro-pair {
     @apply relative z-[1] mt-3xl lg:mt-4xl;
   }
@@ -1494,118 +1539,8 @@
     @apply h-full w-full object-cover object-center;
   }
 
-  /* Case detail CTA bar: previous / "Se hjemmeside" / next, floating at the
-     bottom centre of the screen. The middle one is the header contact button
-     (ContactButton); the arrow chips match its height. */
-  .case-detail-cta-bar {
-    position: fixed;
-    left: 50%;
-    bottom: clamp(1rem, 3svh, 1.5rem);
-    z-index: 50;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transform: translateX(-50%);
-    transition:
-      opacity 300ms ease,
-      visibility 0s linear 0s;
-  }
-
-  /* The bar floats over the page's pictures, so its button keeps its dark fill on hover (the
-     arrow swap is the hover feedback) instead of going transparent. */
-  .case-detail-cta-bar .arrow-btn,
-  .case-detail-cta-bar .arrow-btn:hover,
-  .case-detail-cta-bar .arrow-btn:focus-visible {
-    --arrow-btn-p: 0;
-  }
-
-  /* Hover and keyboard focus fill the button with the red, like the arrow chips beside it;
-     the label and arrows stay light. */
-  .case-detail-cta-bar .arrow-btn {
-    transition:
-      background-color 500ms var(--ease-smooth),
-      border-color 500ms var(--ease-smooth);
-  }
-
-  .case-detail-cta-bar .arrow-btn:focus-visible {
-    border-color: var(--color-accent);
-    background-color: var(--color-accent);
-  }
-
-  @media (hover: hover) {
-    .case-detail-cta-bar .arrow-btn:hover {
-      border-color: var(--color-accent);
-      background-color: var(--color-accent);
-    }
-  }
-
-  /* All three share one height and one arrow size (the button's own: 16px). */
-  .case-detail-cta-bar .arrow-btn {
-    height: 2.75rem;
-    padding-block: 0;
-  }
-
-  .case-detail-cta-bar .arrow-chip-btn-chip {
-    width: 2.75rem;
-    height: 2.75rem;
-  }
-
-  .case-detail-cta-bar .arrow-chip-btn-arrow {
-    width: 1rem;
-    height: 1rem;
-  }
-
-  /* Keyboard focus and #anchors scroll a target clear of the bar (WCAG 2.4.11, focus not obscured). */
-  :root:has(.case-detail-cta-bar) {
-    scroll-padding-bottom: 5.5rem;
-  }
-
-  /* Below 80rem the text runs under the middle of the screen, so the floating buttons sat on top
-     of it with lines showing between them. There the bar becomes a dock: a page-coloured strip
-     across the bottom (its top 1.25rem fades out) with the same three buttons centred in it, so
-     the text passes under a clean edge. The strip lets clicks through around the buttons. */
-  @media (max-width: 79.99rem) {
-    .case-detail-cta-bar {
-      left: 0;
-      right: 0;
-      bottom: 0;
-      justify-content: center;
-      padding: 1.25rem var(--page-gutter) max(1rem, env(safe-area-inset-bottom));
-      background: linear-gradient(to top, var(--color-background) calc(100% - 1.25rem), transparent);
-      transform: none;
-      pointer-events: none;
-    }
-
-    .case-detail-cta-bar > * {
-      pointer-events: auto;
-    }
-  }
-
-  /* From 80rem the bar keeps floating at the bottom centre, but the text column starts beside it,
-     so lines still passed behind the buttons. A page-coloured backing hugs the button group (the
-     gap between the buttons, all round) so nothing shows around them. The bar moves down by the
-     padding, so the buttons stay exactly where they were. */
-  @media (min-width: 80rem) {
-    .case-detail-cta-bar {
-      bottom: calc(clamp(1rem, 3svh, 1.5rem) - 0.5rem);
-      padding: 0.5rem;
-      border-radius: 0.875rem;
-      background-color: var(--color-background);
-    }
-  }
-
-  /* Fades out once the next-case card is on the screen (CaseDetailNextSection). */
-  .is-next-case-visible .case-detail-cta-bar {
-    opacity: 0;
-    visibility: hidden;
-    transition:
-      opacity 300ms ease,
-      visibility 0s linear 300ms;
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .site-header,
-    .case-detail-cta-bar {
+    .site-header {
       transition: none;
     }
   }
@@ -2286,31 +2221,6 @@
       top 0.5s cubic-bezier(0.25, 0.1, 0.25, 1),
       width 0.5s cubic-bezier(0.25, 0.1, 0.25, 1),
       height 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
-  }
-
-  /* Hover (mouse only): a slight zoom inside the frame, which clips it. It is done by
-     growing the picture's box (2% out on every side, 104% in all) rather than with
-     transform: scale, which the browser draws at the old size and stretches, so the
-     picture went soft and then blinked sharp when it was drawn again at the end. A
-     resized box is drawn sharp on every frame. */
-  @media (hover: hover) {
-    .case-card-media-link:hover .case-card-image {
-      left: -2%;
-      top: -2%;
-      width: 104%;
-      height: 104%;
-    }
-  }
-
-  /* The clicked card zooms back out first, in step with the settle that
-     sharedCaseTransition waits for before it lifts the picture out. */
-  .case-card.is-transition-source .case-card-image {
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    transition-duration: 0.35s;
-    transition-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
   }
 
   /* The clicked card's arrow settles out before its image is lifted. */
@@ -3471,6 +3381,6 @@
     .case-detail-hero-image,
     .case-detail-gallery-item,
     .case-detail-next
-  ) :is(img, canvas) {
+  ) :is(img, canvas, video) {
   border-radius: inherit;
 }

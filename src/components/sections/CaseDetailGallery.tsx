@@ -1,6 +1,7 @@
 import type { CaseDetailGallery, CaseDetailGalleryImage } from '../../types/caseDetail'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 import { Container } from '../ui'
+import { LoopVideo } from '../ui/LoopVideo'
 
 interface CaseDetailGalleryProps {
   gallery: CaseDetailGallery
@@ -22,7 +23,15 @@ function GalleryFigure({ image, variant, background }: GalleryFigureProps) {
         backgroundColor: image.transparent ? background : undefined,
       }}
     >
-      {image.imageSrc ? (
+      {image.video ? (
+        <LoopVideo
+          src={image.video.src}
+          poster={image.video.poster}
+          label={image.imageAlt}
+          className="h-full w-full object-cover"
+          mode="visible"
+        />
+      ) : image.imageSrc ? (
         <img
           {...responsiveImageProps(
             image.imageSrc,

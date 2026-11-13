@@ -1,14 +1,15 @@
 import type { CaseDetailHero as CaseDetailHeroContent } from '../../types/caseDetail'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 import { CONTACT_PATH } from '../../lib/routes'
-import { ArrowButton, ArrowIcon, Container, WithHeadingDot } from '../ui'
+import { ArrowChipButton, ArrowIcon, Container, WithHeadingDot } from '../ui'
+import { LoopVideo } from '../ui/LoopVideo'
 
 interface CaseDetailHeroProps {
   hero: CaseDetailHeroContent
 }
 
 export function CaseDetailHero({ hero }: CaseDetailHeroProps) {
-  const { title, name, slides, meta } = hero
+  const { title, name, slides, meta, video } = hero
   const image = slides[0]
 
   return (
@@ -26,9 +27,15 @@ export function CaseDetailHero({ hero }: CaseDetailHeroProps) {
                   <dt className="case-detail-hero-meta-label">{item.label}</dt>
                   <dd className="case-detail-hero-meta-value">
                     {item.button && item.value ? (
-                      <ArrowButton variant="text" href={item.href ?? CONTACT_PATH} external={Boolean(item.href)}>
-                        {item.value}
-                      </ArrowButton>
+                      /* The homepage hero's link: underline draws in, the arrow turns to point right. */
+                      <ArrowChipButton
+                        direction="right"
+                        variant="diagonal"
+                        label={item.value}
+                        text={item.value}
+                        href={item.href ?? CONTACT_PATH}
+                        external={Boolean(item.href)}
+                      />
                     ) : item.href && item.value ? (
                       <a
                         className="case-detail-hero-meta-link"
@@ -56,6 +63,18 @@ export function CaseDetailHero({ hero }: CaseDetailHeroProps) {
                 className="h-full w-full object-cover"
                 decoding="async"
               />
+              {video ? (
+                // Plays while the hero is on screen, over the picture (which the shared transition
+                // measures and the poster matches); it continues the clip the clicked card was playing.
+                <LoopVideo
+                  src={video.src}
+                  poster={video.poster}
+                  label={image.imageAlt}
+                  className="case-detail-hero-video"
+                  mode="visible"
+                  preload="auto"
+                />
+              ) : null}
             </figure>
           )}
         </div>

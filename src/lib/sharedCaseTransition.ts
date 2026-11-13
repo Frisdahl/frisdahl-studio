@@ -32,6 +32,11 @@ const ENTER_OVERLAP = 0.25
 // The card's zoom is gone by NEXT_ZOOM_SETTLE; only then is the real hero picture faded in.
 const NEXT_ZOOM_SETTLE = 0.75
 const NEXT_SWAP_AT = 0.9
+// A playing clip's second copy starts this far ahead of the first (s): seeking takes a moment, and
+// the clip moves on meanwhile.
+const GHOST_LEAD = 0.08
+// The hero's clip may be this far (s) from the ghost's at the hand-over before it is seeked again.
+const MAX_CLIP_DRIFT = 0.12
 // The longest the transition waits for the case page's hero picture (ms).
 const HERO_WAIT = 800
 const EXIT_TEXT_DURATION = 0.65
@@ -104,6 +109,31 @@ function coverImage(src: string | null) {
   return image
 }
 
+/**
+ * The ghost's picture when the card shows a clip: a second player on the same file (already in the
+ * cache from the card), so the scene keeps playing while the picture is lifted out and grows.
+ */
+function coverVideo(src: string, poster: string) {
+  const video = document.createElement('video')
+  video.src = src
+  video.poster = poster
+  video.muted = true
+  video.loop = true
+  video.playsInline = true
+  video.preload = 'auto'
+  Object.assign(video.style, {
+    position: 'absolute',
+    inset: '0',
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    display: 'block',
+    willChange: 'transform, opacity',
+    transform: 'translateZ(0)',
+  })
+  return video
+}
+
 export async function runSharedCaseTransition(
   card: HTMLElement,
   veil: HTMLElement,
@@ -121,6 +151,10 @@ export async function runSharedCaseTransition(
   ]
   const bar = isNext ? card.querySelector<HTMLElement>('.case-detail-next-bar') : null
   const settle = isNext ? NEXT_SETTLE : SETTLE
+  // A card that shows a clip (and a visitor who accepts motion): the clip keeps playing through the
+  // whole transition, from where the card had got to, and carries on in the case page's hero.
+  const cardVideo = isNext ? null : card.querySelector<HTMLVideoElement>('.case-card-video')
+  const keepPlaying = Boolean(cardVideo?.currentSrc) && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
   // The case page's hero is hidden from the moment it mounts (see index.css).
   root.classList.add('is-shared-transition', 'is-shared-image')
@@ -132,6 +166,7 @@ export async function runSharedCaseTransition(
   const topImage = coverImage(null)
   topImage.style.opacity = '0'
   const fromImage = coverImage(cardImage.currentSrc)
+  const ghostVideo = keepPlaying && cardVideo ? coverVideo(cardVideo.currentSrc, cardImage.currentSrc) : null
   let overlay: HTMLDivElement | null = null
   if (isNext) {
     // Start in the card's own pose: zoomed in by the scroll, under its dark overlay.
@@ -147,7 +182,7 @@ export async function runSharedCaseTransition(
       backgroundColor: cardOverlay ? getComputedStyle(cardOverlay).backgroundColor : 'transparent',
     })
   }
-  ghost.append(fromImage, topImage, ...(overlay ? [overlay] : []))
+  ghost.append(ghostVideo ?? fromImage, topImage, ...(overlay ? [overlay] : []))
   Object.assign(ghost.style, {
     position: 'fixed',
     left: '0',
@@ -161,6 +196,24 @@ export async function runSharedCaseTransition(
   ghost.setAttribute('aria-hidden', 'true')
   const fromRadius = parseFloat(getComputedStyle(media).borderTopLeftRadius) || 0
   gsap.set(ghost, { width: from.width, height: from.height, x: from.left, y: from.top, borderRadius: fromRadius })
+
+  if (ghostVideo && cardVideo) {
+    // The ghost's copy of the clip starts now, hidden, a hair ahead of the card's (the seek takes a
+    // moment). By the time it is revealed it has been playing for a while, so it never shows a
+    // stalled or still frame: the card's clip simply carries on in it.
+    gsap.set(ghost, { opacity: 0 })
+    document.body.append(ghost)
+    const begin = () => {
+      try {
+        ghostVideo.currentTime = cardVideo.currentTime + GHOST_LEAD
+      } catch {
+        /* not seekable yet: it plays from the start */
+      }
+      void ghostVideo.play().catch(() => {})
+    }
+    if (ghostVideo.readyState >= 1) begin()
+    else ghostVideo.addEventListener('loadedmetadata', begin, { once: true })
+  }
 
   const split = SplitText.create(texts, { type: 'lines', mask: 'lines' })
   roomInMasks(split.masks)
@@ -179,7 +232,19 @@ export async function runSharedCaseTransition(
       const leave = gsap.timeline({ onComplete: resolve })
       leave.to(split.lines, { yPercent: -125, duration: isNext ? NEXT_EXIT_TEXT_DURATION : EXIT_TEXT_DURATION, ease: isNext ? 'power2.in' : 'power3.in', stagger: isNext ? 0.03 : 0.05 }, 0)
       if (bar) leave.to(bar, { autoAlpha: 0, duration: 0.4, ease: 'power2.out' }, 0)
-      leave.call(() => document.body.append(ghost), [], settle)
+      leave.call(
+        () => {
+          if (!ghostVideo || !cardVideo) {
+            document.body.append(ghost)
+            return
+          }
+          // The ghost's clip is already playing, in step with the card's: show it, and let the card's rest.
+          gsap.set(ghost, { opacity: 1 })
+          cardVideo.pause()
+        },
+        [],
+        settle,
+      )
       leave.to(veil, { autoAlpha: 1, duration: isNext ? NEXT_VEIL_DURATION : VEIL_DURATION, ease: 'power2.inOut' }, settle)
     })
 
@@ -204,6 +269,17 @@ export async function runSharedCaseTransition(
     await Promise.race([heroImage.decode().catch(() => {}), new Promise((resolve) => setTimeout(resolve, HERO_WAIT))])
     const to = hero.getBoundingClientRect()
     const radius = parseFloat(getComputedStyle(hero).borderTopLeftRadius) || 0
+    // The hero's own clip joins the ghost's now, hidden under the picture while it grows, so at the
+    // hand-over both show the same frame and nothing has to seek at the last moment.
+    const heroVideo = ghostVideo ? main.querySelector<HTMLVideoElement>('.case-detail-hero-video') : null
+    if (ghostVideo && heroVideo) {
+      try {
+        heroVideo.currentTime = ghostVideo.currentTime + GHOST_LEAD
+      } catch {
+        /* not seekable yet: it plays from the start */
+      }
+      void heroVideo.play().catch(() => {})
+    }
     topImage.src = heroImage.currentSrc || heroImage.src
     // Decoded before it fades in, so the swap never waits on the picture.
     await Promise.race([topImage.decode().catch(() => {}), new Promise((resolve) => setTimeout(resolve, HERO_WAIT))])
@@ -265,10 +341,10 @@ export async function runSharedCaseTransition(
     await nextFrames(2)
     await new Promise<void>((resolve) => {
       const grow = gsap.timeline({ onComplete: resolve, defaults: { ease: GROW_EASE } })
-      if (sideways) {
-        // A card that sits to one side of the hero (the right-hand project): position and size
-        // change together, on one ease, so its outer edge stays where it is and the picture simply
-        // grows to the hero's size instead of sliding across first.
+      if (sideways || !isNext) {
+        // A home page project card (and a card that sits to one side of the hero): position and
+        // size change together, on one ease, so the picture simply grows from where it stands to
+        // the hero's size instead of sliding to the hero's place first.
         grow.to(ghost, { x: to.left, y: to.top, scale: 1, borderRadius: radius, duration: GROW_DURATION }, 0)
         if (cropped) grow.to(ghost, { clipPath: 'inset(0px 0px 0px 0px)', duration: GROW_DURATION }, 0)
       } else {
@@ -285,12 +361,30 @@ export async function runSharedCaseTransition(
         if (overlay) grow.to(overlay, { opacity: 0, duration: NEXT_OVERLAY_FADE, ease: 'power1.inOut' }, 0)
       }
       const swapAt = isNext ? NEXT_SWAP_AT : SWAP_AT
-      grow.to(topImage, { opacity: 1, duration: isNext ? 0.15 : 0.5, ease: 'power1.inOut' }, swapAt)
+      // A playing clip is the same picture as the hero's, so nothing is swapped over it: it just keeps playing.
+      if (!ghostVideo) grow.to(topImage, { opacity: 1, duration: isNext ? 0.15 : 0.5, ease: 'power1.inOut' }, swapAt)
       grow.to(veil, { autoAlpha: 0, duration: 0.4, ease: 'power2.out' }, VEIL_OUT_AT)
       grow.call(() => void enter?.play(), [], GROW_DURATION - ENTER_OVERLAP)
     })
 
     // 4. Hand over: the real image takes the ghost's place, then the text rises.
+    if (ghostVideo && heroVideo) {
+      // The hero's clip has been playing in step with the ghost's; only if the two have drifted apart
+      // (a slow frame, a loop point in between) is it seeked again before the ghost lets go.
+      const length = ghostVideo.duration || 0
+      const apart = Math.abs(heroVideo.currentTime - ghostVideo.currentTime)
+      const drift = length ? Math.min(apart, length - apart) : apart
+      if (drift > MAX_CLIP_DRIFT) {
+        const seeked = new Promise<void>((resolve) => heroVideo.addEventListener('seeked', () => resolve(), { once: true }))
+        try {
+          heroVideo.currentTime = ghostVideo.currentTime + GHOST_LEAD
+          await Promise.race([seeked, new Promise((resolve) => setTimeout(resolve, 250))])
+        } catch {
+          /* leave it where it is */
+        }
+      }
+      if (heroVideo.paused) void heroVideo.play().catch(() => {})
+    }
     root.classList.remove('is-shared-image', 'is-shared-next')
     await nextFrames(2)
     ghost.remove()
@@ -298,6 +392,7 @@ export async function runSharedCaseTransition(
     await entered
   } finally {
     setTransitionLagSmoothing(false)
+    ghostVideo?.pause()
     ghost.remove()
     split.revert()
     nameSplit?.revert()

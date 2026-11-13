@@ -44,7 +44,7 @@ const casesPageContent = {
         industry: 'Film',
         category: 'website',
         href: '/cases/peter-salling',
-        imageSrc: '/cases/peter-salling/main-higgs--16-9.webp',
+        imageSrc: '/cases/peter-salling/main--16-9.webp',
         imageAlt: 'Peter Salling case',
         keywords: ['Website', 'Design', 'Udvikling', 'CMS'],
         description:

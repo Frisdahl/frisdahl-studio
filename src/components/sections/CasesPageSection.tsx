@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { CaseCard } from '../cards/CaseCard'
+import { getCaseMainVideo } from '../../data/caseVideos'
 import { useLocale } from '../../context/LocaleContext'
 import { getCasesPageContent } from '../../data/cases'
 import { Container, WithHeadingDot } from '../ui'
@@ -247,6 +248,7 @@ export function CasesPageSection() {
                   keywords={item.keywords.join(' • ')}
                   imageSrc={item.imageSrc}
                   imageAlt={item.imageAlt}
+                  video={getCaseMainVideo(item.id)}
                   href={item.href}
                   metaBelow
                   showArrow={false}

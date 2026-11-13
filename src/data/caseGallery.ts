@@ -56,15 +56,32 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     hoverTrio: [
       { imageSrc: '/cases/peter-salling/iphone-sikkerheden-er-paa-spil--4-3.webp', imageAlt: 'Sikkerheden er på spil på Peter Sallings projektside på en iPhone' },
       { imageSrc: '/cases/peter-salling/macbook-alt-jeg-forventede--4-3.webp', imageAlt: 'Alt jeg forventede på Peter Sallings projektside på en MacBook Pro' },
-      { imageSrc: '/cases/peter-salling/iphone-kamma--4-3.webp', imageAlt: 'Kamma på Peter Sallings projektside på en iPhone' },
+      { imageSrc: '/cases/peter-salling/iphone-live-life-in-colour--4-3.webp', imageAlt: 'Live Life in Colour på Peter Sallings projektside på en iPhone' },
     ],
     introPair: [
-      { imageSrc: '/cases/peter-salling/macbook-alt-jeg-forventede--4-3.webp', imageAlt: 'Alt jeg forventede på Peter Sallings projektside på en MacBook Pro', aspectRatio: '4 / 3' },
+      {
+        imageSrc: '/cases/peter-salling/macbook-alt-jeg-forventede--4-3.webp',
+        imageAlt: 'Alt jeg forventede på Peter Sallings projektside på en MacBook Pro',
+        aspectRatio: '4 / 3',
+        // The screen plays a recording of the real project page; the laptop and table stay a still.
+        video: {
+          src: '/cases/peter-salling/macbook-alt-jeg-forventede--4-3.mp4',
+          poster: '/cases/peter-salling/macbook-alt-jeg-forventede--poster--4-3.webp',
+        },
+      },
       { imageSrc: '/cases/peter-salling/macbook-make-football-your-game--4-3.webp', imageAlt: 'Make Football Your Game på Peter Sallings projektside på en MacBook Pro', aspectRatio: '4 / 3' },
     ],
     verticalPairTop: [
-      { imageSrc: '/cases/peter-salling/iphone-sikkerheden-er-paa-spil--4-3.webp', imageAlt: 'Sikkerheden er på spil på Peter Sallings projektside på en iPhone', aspectRatio: '4 / 3' },
-      { imageSrc: '/cases/peter-salling/iphone-kamma--4-3.webp', imageAlt: 'Kamma på Peter Sallings projektside på en iPhone', aspectRatio: '4 / 3' },
+      {
+        imageSrc: '/cases/peter-salling/iphone-sikkerheden-er-paa-spil--4-3.webp',
+        imageAlt: 'Sikkerheden er på spil på Peter Sallings projektside på en iPhone',
+        aspectRatio: '4 / 3',
+        video: {
+          src: '/cases/peter-salling/iphone-sikkerheden-er-paa-spil--4-3.mp4',
+          poster: '/cases/peter-salling/iphone-sikkerheden-er-paa-spil--poster--4-3.webp',
+        },
+      },
+      { imageSrc: '/cases/peter-salling/iphone-live-life-in-colour--4-3.webp', imageAlt: 'Live Life in Colour på Peter Sallings projektside på en iPhone', aspectRatio: '4 / 3' },
     ],
     horizontalTopHidden: true,
     horizontalTop: {

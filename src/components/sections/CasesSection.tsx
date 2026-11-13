@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { CaseCard } from '../cards/CaseCard'
+import { getCaseMainVideo } from '../../data/caseVideos'
 import { Container, MaskedLineReveal, WithHeadingDot } from '../ui'
 import { MEET_US_PATH } from '../../lib/routes'
 import { useLocale } from '../../context/LocaleContext'
@@ -68,6 +69,7 @@ export function CasesSection() {
               keywords={item.keywords}
               imageSrc={item.imageSrc}
               imageAlt={item.imageAlt}
+              video={getCaseMainVideo(item.id)}
               href={item.href}
               metaBelow
               revealOnScroll

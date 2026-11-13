@@ -2,17 +2,16 @@ import { PageEntrance } from '../components/layout/PageEntrance'
 import { Navigate, useParams } from 'react-router-dom'
 import { PageMeta } from '../components/layout'
 import { useLocale } from '../context/LocaleContext'
-import { getCaseDetail, getCaseLiveUrl } from '../data/caseDetails'
-import { getAdjacentCaseHrefs } from '../data/caseNavigation'
+import { getCaseDetail } from '../data/caseDetails'
 import { CASES_PATH } from '../lib/routes'
 import {
   CaseDetailAfterPalette,
-  CaseDetailCtaBar,
   CaseDetailGallery,
   CaseDetailHero,
   CaseDetailIntroPair,
   CaseDetailOverview,
   CaseDetailPalette,
+  CaseDetailResults,
   CaseDetailTypography,
   CaseDetailNextSection,
 } from '../components/sections'
@@ -30,8 +29,6 @@ export function CaseDetailPage() {
 function CaseDetail({ caseSlug }: { caseSlug: string | undefined }) {
   const { locale } = useLocale()
   const detail = caseSlug ? getCaseDetail(locale, caseSlug) : null
-  const adjacent = caseSlug ? getAdjacentCaseHrefs(caseSlug) : null
-  const liveUrl = caseSlug ? getCaseLiveUrl(caseSlug) : null
 
   if (!detail) {
     return <Navigate to={CASES_PATH} replace />
@@ -48,14 +45,8 @@ function CaseDetail({ caseSlug }: { caseSlug: string | undefined }) {
       <CaseDetailGallery gallery={detail.gallery} />
       {detail.palette ? <CaseDetailPalette palette={detail.palette} /> : null}
       <CaseDetailAfterPalette gallery={detail.gallery} />
+      {detail.results ? <CaseDetailResults results={detail.results} /> : null}
       <CaseDetailNextSection nextCase={detail.nextCase} />
-      {adjacent ? (
-        <CaseDetailCtaBar
-          previousHref={adjacent.previous}
-          nextHref={adjacent.next}
-          liveUrl={liveUrl}
-        />
-      ) : null}
     </main>
   )
 }
