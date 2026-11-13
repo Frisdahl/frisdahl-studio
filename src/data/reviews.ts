@@ -50,7 +50,7 @@ const reviewsContent: Record<Locale, ReviewsContent> = {
         name: 'Laura Kiær',
         role: 'Marketingansvarlig',
         company: 'Havn & Co',
-        imageSrc: '/cases/peter-salling/main-higgs--16-9.webp',
+        imageSrc: '/cases/peter-salling/main--16-9.webp',
         imageAlt: 'Laura Kiær fra Havn & Co',
       },
     ],

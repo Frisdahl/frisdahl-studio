@@ -1,7 +1,9 @@
 import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
+import type { CaseDetailGalleryVideo } from '../../types/caseDetail'
 import { ArrowIcon } from '../ui/ArrowIcon'
+import { LoopVideo } from '../ui/LoopVideo'
 import { MaskedLineReveal } from '../ui/MaskedLineReveal'
 import { DUR, EASE, STAGGER } from '../../lib/motion'
 
@@ -26,6 +28,8 @@ export interface CaseCardProps {
   keywords: string
   imageSrc: string | null
   imageAlt: string
+  /** The image as a clip: plays while the card is on screen and stops when it scrolls out of view. */
+  video?: CaseDetailGalleryVideo
   href: string
   /** Put the title and keywords under the image instead of above it. */
   metaBelow?: boolean
@@ -45,7 +49,7 @@ export interface CaseCardProps {
  * its full slide in: if the mouse leaves before it has arrived, it finishes arriving
  * and then carries on to the top right.
  */
-export function CaseCard({ client, keywords, imageSrc, imageAlt, href, metaBelow = false, showArrow = true, revealOnScroll = false }: CaseCardProps) {
+export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, metaBelow = false, showArrow = true, revealOnScroll = false }: CaseCardProps) {
   // The title's arrow: waits at the bottom left ('idle'), slides in on hover ('in'),
   // leaves at the top right when the mouse does ('out'), then waits again.
   const [arrow, setArrow] = useState<'idle' | 'in' | 'out'>('idle')
@@ -134,6 +138,17 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, href, metaBelow
               className="case-card-image"
               loading="lazy"
               decoding="async"
+            />
+          ) : null}
+          {imageSrc && video ? (
+            // Over the picture, with its box (and so its hover zoom). The picture stays underneath: the
+            // shared page transition and the layout rely on it.
+            <LoopVideo
+              src={video.src}
+              poster={video.poster}
+              label={imageAlt}
+              className="case-card-image case-card-video"
+              mode="visible"
             />
           ) : null}
         </div>

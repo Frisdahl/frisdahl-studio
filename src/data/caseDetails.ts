@@ -5,17 +5,19 @@ import type {
   CaseDetailHeroMeta,
   CaseDetailOverview,
   CaseDetailPalette,
+  CaseDetailResults,
   CaseDetailTypography,
 } from '../types/caseDetail'
 import type { Locale } from './navigation'
 import { defaultLocale } from './navigation'
 import { getCaseCategoryLabel, getCaseItemSummary } from './cases'
 import { getCaseGallery } from './caseGallery'
+import { getCaseMainVideo } from './caseVideos'
 import { getCaseYear, getNextCasePreview } from './caseNavigation'
 
 type CaseDetailBase = Omit<
   CaseDetailContent,
-  'gallery' | 'nextCase' | 'hero' | 'overview' | 'typography' | 'palette'
+  'gallery' | 'nextCase' | 'hero' | 'overview' | 'typography' | 'palette' | 'results'
 > & {
   hero: Omit<CaseDetailHero, 'meta' | 'name'>
 }
@@ -103,7 +105,7 @@ const caseDetails = {
           'En redaktionel og filmisk portfolio, hvor filmene er i centrum, og hvor Peter selv styrer indholdet i et indbygget admin-panel.',
         sliderAriaLabel: 'Automatisk gennemløb af Peter Salling case-billeder',
         slides: [
-          { imageSrc: '/cases/peter-salling/main-higgs--16-9.webp', imageAlt: 'Peter Sallings Alt jeg forventede-side på en MacBook på et glasbord' },
+          { imageSrc: '/cases/peter-salling/main--16-9.webp', imageAlt: 'Peter Sallings projektside for Live Life in Colour på en MacBook' },
         ],
       },
       columns: [
@@ -418,6 +420,34 @@ const casePalettes: Partial<
   ],
 }
 
+const resultsTitles: Record<Locale, string> = { da: 'Resultater' }
+
+/**
+ * Measured on the live site with Lighthouse 13 CLI: 5 cold runs per page, mobile (simulated Slow 4G, 4x CPU) and desktop preset.
+ * Mobile LCP was 4.1 s on the home page and 2.9 s on project pages (Google's "good" is 2.5 s): not shown as a tile.
+ * Only cases with a live site and real measurements have an entry; re-measure before changing a figure.
+ */
+const caseResults: Partial<Record<string, Record<Locale, Omit<CaseDetailResults, 'title'>>>> = {
+  'peter-salling': {
+    da: {
+      description:
+        'Sitet er målt live på petersalling.com: forsiden og to projektsider, fem målinger på hver, på mobil med netværks- og CPU-begrænsning og på desktop. Siderne er fyldt med film og vejer 4–6 MB, men de vises stabilt, og søgemaskineoptimeringen er i orden.',
+      metrics: [
+        { label: 'Hastighed', value: '87–94', detail: 'Lighthouse-score for ydelse på mobil, 96–99 på desktop.' },
+        { label: 'Stabilitet', value: '0,00', detail: 'Praktisk talt ingen layout-skift (CLS højst 0,003).' },
+        { label: 'Kvalitet', value: '89–100', detail: 'Lighthouse-tilgængelighed: 100 på forsiden, 89 på projektsiderne. Best practice: 100.' },
+        { label: 'SEO', value: '100', detail: 'Fuld score i Lighthouse på alle tre sider.' },
+      ],
+      note: 'Lighthouse 13, median af fem målinger pr. side, november 2026.',
+    },
+  },
+}
+
+function getCaseResults(locale: Locale, caseSlug: string): CaseDetailResults | undefined {
+  const results = caseResults[caseSlug]?.[locale]
+  return results ? { title: resultsTitles[locale], ...results } : undefined
+}
+
 function getCasePalette(locale: Locale, caseSlug: string): CaseDetailPalette | undefined {
   const swatches = casePalettes[caseSlug]
   if (!swatches) return undefined
@@ -532,10 +562,12 @@ export function getCaseDetail(
       ...detail.hero,
       name: getCaseItemSummary(locale, caseSlug)?.client ?? detail.hero.title,
       meta: getCaseHeroMeta(locale, caseSlug),
+      video: getCaseMainVideo(caseSlug),
     },
     overview: getCaseOverview(locale, caseSlug, detail.hero.description),
     typography: getCaseTypography(locale, caseSlug),
     palette: getCasePalette(locale, caseSlug),
+    results: getCaseResults(locale, caseSlug),
     gallery,
     nextCase,
   }

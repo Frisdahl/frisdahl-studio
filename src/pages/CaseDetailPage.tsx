@@ -11,6 +11,7 @@ import {
   CaseDetailIntroPair,
   CaseDetailOverview,
   CaseDetailPalette,
+  CaseDetailResults,
   CaseDetailTypography,
   CaseDetailNextSection,
 } from '../components/sections'
@@ -44,6 +45,7 @@ function CaseDetail({ caseSlug }: { caseSlug: string | undefined }) {
       <CaseDetailGallery gallery={detail.gallery} />
       {detail.palette ? <CaseDetailPalette palette={detail.palette} /> : null}
       <CaseDetailAfterPalette gallery={detail.gallery} />
+      {detail.results ? <CaseDetailResults results={detail.results} /> : null}
       <CaseDetailNextSection nextCase={detail.nextCase} />
     </main>
   )
