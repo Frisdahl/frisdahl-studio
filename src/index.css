@@ -614,22 +614,20 @@
   /* The two chips: frosted glass. Only these two elements blur what is behind them, each
      small (about 130 x 48 and 56 x 48 px), at a modest radius, and the blur is never
      animated, so it costs very little; the hover only changes the fill. The fill is light
-     and fairly dense, so the dark ink stays readable over any picture, and the bright
-     hairline and soft shadow keep the chip visible over the white page, where there is
+     and fairly dense, so the dark ink stays readable over any picture, and the soft
+     shadow keeps the chip visible over the white page, where there is
      nothing to blur. */
   .site-header :is(.site-header-logo, .header-menu-toggle) {
     pointer-events: auto;
     align-items: center;
     justify-content: center;
     min-height: 3rem;
-    border: 1px solid rgb(255 255 255 / 0.7);
+    border: 0;
     border-radius: var(--radius-control-sm);
     background-color: rgb(255 255 255 / 0.55);
     -webkit-backdrop-filter: blur(12px) saturate(160%);
     backdrop-filter: blur(12px) saturate(160%);
-    box-shadow:
-      0 2px 14px rgb(0 0 0 / 0.07),
-      inset 0 1px 0 rgb(255 255 255 / 0.8);
+    box-shadow: 0 2px 14px rgb(0 0 0 / 0.07);
   }
 
   .site-header .site-header-logo {
