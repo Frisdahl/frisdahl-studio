@@ -13,7 +13,7 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     ],
     // Only supplies the next-project preview; the pair below is what the gallery shows.
     horizontalTop: {
-      imageSrc: '/cases/nordwear/main-higgs--16-9.webp',
+      imageSrc: '/cases/nordwear/main--16-9.webp',
       imageAlt: 'Nordwear forside på en MacBook Pro',
     },
     horizontalTopPair: [

@@ -43,7 +43,7 @@ const homeContent = {
           client: "Nordwear",
           keywords: "E-commerce • Design • Udvikling",
           href: '/cases/nordwear',
-          imageSrc: "/cases/nordwear/main-higgs--16-9.webp",
+          imageSrc: "/cases/nordwear/main--16-9.webp",
           imageAlt: "Nordwear case",
         },
         {

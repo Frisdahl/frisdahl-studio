@@ -33,7 +33,7 @@ const caseDetails = {
           'En skarp digital platform med fokus på performance, branding og visuel identitet — bygget til at konvertere og skalere med brandet.',
         sliderAriaLabel: 'Automatisk gennemløb af Nordwear case-billeder',
         slides: [
-          { imageSrc: '/cases/nordwear/main-higgs--16-9.webp', imageAlt: 'Nordwear forside på en bærbar' },
+          { imageSrc: '/cases/nordwear/main--16-9.webp', imageAlt: 'Nordwear forside på en bærbar' },
         ],
       },
       columns: [

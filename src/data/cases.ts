@@ -56,7 +56,7 @@ const casesPageContent = {
         industry: 'Mode',
         category: 'website',
         href: '/cases/nordwear',
-        imageSrc: '/cases/nordwear/main-higgs--16-9.webp',
+        imageSrc: '/cases/nordwear/main--16-9.webp',
         imageAlt: 'Nordwear case',
         panelHoverColor: '#f0e0e4',
         keywords: ['Website', 'UX-design', 'Branding', 'Udvikling'],
