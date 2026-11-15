@@ -2640,7 +2640,9 @@
   @media (min-width: 1024px) {
     .reviews-quote-mark {
       position: absolute;
-      top: 0.4rem;
+      /* Its middle sits on the top edge of the review: half above it, half beside the first line. */
+      top: 0;
+      transform: translateY(-50%);
       right: 100%;
       margin: 0 1.5rem 0 0;
     }
