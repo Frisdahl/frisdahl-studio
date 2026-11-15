@@ -612,10 +612,12 @@
   }
 
   /* The two chips: frosted glass. Only these two elements blur what is behind them, each
-     small (about 130 x 48 and 56 x 48 px), at a modest radius, and the blur is never
-     animated, so it costs very little; the hover only changes the fill. The fill is light
-     and fairly dense, so the dark ink stays readable over any picture, and the soft
-     shadow keeps the chip visible over the white page, where there is
+     small (about 80 x 48 and 56 x 48 px), at a modest radius, and the blur is never
+     animated, so it costs very little. At the very top of the page the chips are invisible
+     (no fill, no shadow: they melt into the page); after a short scroll the header gets
+     .is-scrolled (Navbar) and the fill and the shadow fade in, which is all that
+     transitions. The fill is light and fairly dense, so the dark ink stays readable over any
+     picture, and the soft shadow keeps the chip visible over the white page, where there is
      nothing to blur. */
   .site-header :is(.site-header-logo, .header-menu-toggle) {
     pointer-events: auto;
@@ -624,9 +626,18 @@
     min-height: 3rem;
     border: 0;
     border-radius: var(--radius-control-sm);
-    background-color: rgb(255 255 255 / 0.55);
+    background-color: rgb(255 255 255 / 0);
     -webkit-backdrop-filter: blur(12px) saturate(160%);
     backdrop-filter: blur(12px) saturate(160%);
+    box-shadow: 0 2px 14px rgb(0 0 0 / 0);
+    transition:
+      color 400ms var(--ease-smooth),
+      background-color 400ms var(--ease-smooth),
+      box-shadow 400ms var(--ease-smooth);
+  }
+
+  .site-header.is-scrolled :is(.site-header-logo, .header-menu-toggle) {
+    background-color: rgb(255 255 255 / 0.55);
     box-shadow: 0 2px 14px rgb(0 0 0 / 0.07);
   }
 
@@ -639,32 +650,33 @@
     padding: 0 0.75rem;
   }
 
-  .site-header :is(.site-header-logo, .header-menu-toggle):is(:hover, :focus-visible) {
+  .site-header.is-scrolled :is(.site-header-logo, .header-menu-toggle):is(:hover, :focus-visible) {
     background-color: rgb(255 255 255 / 0.75);
   }
 
-  /* No backdrop-filter: a nearly opaque chip. Reduced transparency: a solid one. */
+  /* No backdrop-filter: a nearly opaque chip. Reduced transparency: a solid one. Both only once
+     scrolled; at the top the chips stay invisible. */
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .site-header :is(.site-header-logo, .header-menu-toggle) {
+    .site-header.is-scrolled :is(.site-header-logo, .header-menu-toggle) {
       background-color: rgb(255 255 255 / 0.92);
     }
   }
 
   @media (prefers-reduced-transparency: reduce) {
     .site-header :is(.site-header-logo, .header-menu-toggle) {
-      background-color: var(--color-background);
       -webkit-backdrop-filter: none;
       backdrop-filter: none;
     }
-  }
 
-  .site-header .site-header-logo:is(:hover, :focus-visible) {
-    color: var(--color-accent);
+    .site-header.is-scrolled :is(.site-header-logo, .header-menu-toggle) {
+      background-color: var(--color-background);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .site-header-logo,
-    .header-menu-toggle {
+    .header-menu-toggle,
+    .site-header :is(.site-header-logo, .header-menu-toggle) {
       transition: none;
     }
   }

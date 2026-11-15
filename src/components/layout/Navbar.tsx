@@ -32,6 +32,9 @@ const MENU_CLOSE_REDUCED_MS = 200
 const MENU_LEAVE_MS = 650
 const MENU_FADE_MS = 550
 
+/** How far (px) the page scrolls before the header's glass chips appear. */
+const HEADER_GLASS_SCROLL = 40
+
 const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms))
 
 /** The longest `duration + delay` (ms) of a computed transition list such as "0.95s, 0.2s". */
@@ -111,6 +114,17 @@ export function Navbar() {
       observer?.disconnect()
       window.removeEventListener('resize', sync)
     }
+  }, [])
+
+  // The chips' glass (.site-header in index.css) is invisible at the very top of the page and
+  // fades in once the page has scrolled a little: a class on the header, set only when it changes.
+  useEffect(() => {
+    const header = headerRef.current
+    if (!header) return
+    const update = () => header.classList.toggle('is-scrolled', window.scrollY > HEADER_GLASS_SCROLL)
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    return () => window.removeEventListener('scroll', update)
   }, [])
 
   // The menu closes whenever the page or the #section changes. Done while rendering, which is how
