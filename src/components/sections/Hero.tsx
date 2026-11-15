@@ -37,7 +37,7 @@ const heroSlides: HeroSlide[] = [
 ]
 
 /** Carousel drift in px per second (right to left). */
-const AUTO_SPEED = 38
+const AUTO_SPEED = 80
 /** How fast a released drag eases back into the drift (per second). */
 const RETURN_RATE = 2.2
 /** Speed (px/s) at which the slides reach their smallest size, and that size's shrink. */

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { Fragment, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 import type { CaseDetailGalleryVideo } from '../../types/caseDetail'
@@ -38,6 +38,20 @@ export interface CaseCardProps {
   /** Title and keywords rise line by line out of their masks once the row scrolls in (the home
    *  page). Off where the page's own entrance already animates the text. */
   revealOnScroll?: boolean
+}
+
+/**
+ * The keywords arrive as one string with " • " between them. The font draws that
+ * bullet as a small square, so each separator becomes a round dot (CSS), and
+ * stays out of the accessibility tree.
+ */
+function keywordsWithDots(keywords: string) {
+  return keywords.split(' • ').map((word, index) => (
+    <Fragment key={word}>
+      {index > 0 && <span className="case-card-dot" aria-hidden="true" />}
+      <span className="case-card-keyword">{word}</span>
+    </Fragment>
+  ))
 }
 
 /**
@@ -100,10 +114,10 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, me
         </div>
         {revealOnScroll ? (
           <MaskedLineReveal as="p" className="case-card-keywords" {...ROW_REVEAL} delay={STAGGER.lines}>
-            {keywords}
+            {keywordsWithDots(keywords)}
           </MaskedLineReveal>
         ) : (
-          <p className="case-card-keywords">{keywords}</p>
+          <p className="case-card-keywords">{keywordsWithDots(keywords)}</p>
         )}
       </div>
 

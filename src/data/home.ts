@@ -43,7 +43,7 @@ const homeContent = {
           client: "Nordwear",
           keywords: "E-commerce • Design • Udvikling",
           href: '/cases/nordwear',
-          imageSrc: "/cases/nordwear/main-higgs--16-9.webp",
+          imageSrc: "/cases/nordwear/main--16-9.webp",
           imageAlt: "Nordwear case",
         },
         {
@@ -92,6 +92,13 @@ const homeContent = {
           text: "Hurtige, tilgængelige og skalerbare hjemmesider, bygget med moderne teknologi og nemme at vedligeholde, i takt med at jeres virksomhed vokser.",
           imageSrc: "/images/offer/hjemmeside-udvikling--4-5.webp",
           imageAlt: "Bærbar computer med en rød skærm og teksten frisdahl studio",
+        },
+        {
+          title: "Vedligeholdelse og support",
+          text: "Jeg følger op efter lanceringen med opdateringer, hurtig hjælp og løbende forbedringer, så jeres hjemmeside forbliver sikker, hurtig og tidssvarende.",
+          // Placeholder: a copy of the brand identity image until a dedicated one is made.
+          imageSrc: "/images/offer/vedligeholdelse-support--4-5.webp",
+          imageAlt: "Notesbog med Frisdahl Studios FS-logo på en hylde",
         },
       ],
     },

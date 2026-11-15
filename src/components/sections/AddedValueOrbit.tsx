@@ -30,73 +30,95 @@ const SHRINK_DURATION = 0.6
 const SHRINK_EASE = 'power3.inOut'
 
 /**
- * Orbit geometry, as fractions of the stage. The active image sits in the
- * centre, in portrait. The others sit on an ellipse around it in landscape,
- * slightly blurred and faded.
+ * Line geometry, as fractions of the stage. The active image sits in the
+ * centre, in portrait. The others sit on one straight line through it, in list
+ * order, two on each side: a near pair and a far pair. A card's place on the
+ * line is its `pos` (0 is the centre, ±1 the near pair, ±2 the far pair), and
+ * everything about how it is drawn is read off that number, so a card keeps
+ * changing smoothly while it travels. The near pair is small and sharp, the far
+ * pair larger, softer and fainter, as in the reference.
  */
-const RING_RADIUS_X = 0.37 // × stage width
-const RING_RADIUS_Y = 0.4 // × stage height
-const RING_START_ANGLE = 300 // degrees clockwise from the top: upper left, upper right, bottom
-const ORBIT_SCALE = 0.48 // width of a card on the ring, relative to the centre card
-const ORBIT_OPACITY = 0.75
-const ORBIT_BLUR_PX = 2.5
+const LINE_OFFSET = [0, 0.56, 0.74] // × stage width, at pos 0, 1, 2
+const LINE_SCALE = [1, 0.22, 0.36] // width of a card, relative to the centre card
+const LINE_OPACITY = [1, 0.95, 0.8]
+const LINE_BLUR_PX = [0, 1, 3]
 /**
- * Landscape window on the ring: the share of the portrait card's height hidden
- * at the top and at the bottom. Together with ORBIT_SCALE this makes a ring card
- * lose a little width but much more height than the centre card.
+ * Landscape window on the line: the share of the portrait card's height hidden
+ * at the top and at the bottom.
  */
-const ORBIT_CROP_PERCENT = 26
+const LINE_CROP_PERCENT = 26
 const CARD_RADIUS_PX = 8
-
-/** The ring never stops turning: degrees per second (one full turn in 40s). */
+/**
+ * The line never stops turning clockwise around the centre card, as in the
+ * reference (about 9° a second, measured from it): degrees per second. The
+ * angle only grows; the line looks the same after 180°, so it simply keeps going.
+ */
 const SPIN_DEGREES_PER_SECOND = 9
+const SPIN_START_DEGREES = 8
 
 /**
- * Per-card state. `reach` is how far the card is from the centre: 0 is the
- * centre (full width, sharp), 1 is on the ring (narrower, blurred, faded).
- * `tall` is its height: 1 is the full portrait card, 0 the landscape window.
- * They animate separately, so a card can arrive at the centre still landscape
- * and grow afterwards. `slot` is the card's place on the ring (0…count-2), or
- * -1 for the centre. It is exact and only ever changes in a swap. `base` is
- * the angle the card is currently drawn at, in degrees before the spin; it
- * animates towards its slot's angle, so an interrupted animation can never
- * corrupt the slot.
+ * The centre card follows the cursor: it drifts a little towards it and tilts
+ * in 3D to face it. The cursor's distance from the stage centre, in stage
+ * widths and heights, maps to -1…1. The follow is smoothed (time constant in
+ * seconds) so it trails the pointer instead of snapping to it.
  */
-type CardState = { reach: number; tall: number; base: number; slot: number }
+const FOLLOW_DRIFT = 0.03 // × stage width, at full follow
+const FOLLOW_TILT_DEGREES = 9
+const FOLLOW_SMOOTHING_SECONDS = 0.18
+const FOLLOW_PERSPECTIVE_PX = 900
 
-/** The angle of a ring slot, in degrees before the spin. */
-const slotAngle = (slot: number, count: number) => RING_START_ANGLE + (slot / (count - 1)) * 360
+/** Linear interpolation through a three-point table, by |pos| (0 to 2). */
+function along(table: readonly number[], distance: number) {
+  const d = Math.min(Math.abs(distance), 2)
+  const i = Math.min(Math.floor(d), 1)
+  return table[i] + (table[i + 1] - table[i]) * (d - i)
+}
+
+/**
+ * Per-card state. `pos` is the card's place on the line (see above); it
+ * animates between slots. `tall` is its height: 1 is the full portrait card, 0
+ * the landscape window; it animates separately, so a card can arrive at the
+ * centre still landscape and grow afterwards. `slot` is the card's place among
+ * the inactive cards (0…count-2), or -1 for the centre. It is exact and only
+ * ever changes in a swap, so an interrupted animation can never corrupt it.
+ */
+type CardState = { pos: number; tall: number; slot: number }
+
+/** The line position of an inactive slot: -2, -1, 1, 2 for four of them. */
+const slotPos = (slot: number, count: number) => {
+  const rank = slot - (count - 2) / 2 // centred on zero, in steps of one
+  return rank < 0 ? rank - 0.5 : rank + 0.5
+}
 
 function createCards(count: number, centre: number): CardState[] {
   let slot = 0
   return Array.from({ length: count }, (_, index) => {
-    if (index === centre) return { reach: 0, tall: 1, base: RING_START_ANGLE, slot: -1 }
-    const state = { reach: 1, tall: 0, base: slotAngle(slot, count), slot }
+    if (index === centre) return { pos: 0, tall: 1, slot: -1 }
+    const state = { pos: slotPos(slot, count), tall: 0, slot }
     slot += 1
     return state
   })
 }
 
-/** Shortest signed turn from one angle to another, in degrees. */
-const shortestTurn = (from: number, to: number) => ((((to - from) % 360) + 540) % 360) - 180
-
 /**
- * Circular image carousel for "Hvad jeg kan tilbyde". It is controlled: the
- * accordion beside it owns which item is active, and clicking an image here
- * reports the same choice back through `onSelect`.
+ * Image carousel for "Hvad jeg kan tilbyde". It is controlled: the accordion
+ * beside it owns which item is active, and clicking an image here reports the
+ * same choice back through `onSelect`.
  *
  * Choosing an image swaps just two cards, whichever one it is: the chosen card
- * slides in from its slot to the centre, still landscape, and only then grows
- * to portrait, while the old centre card slides out into that slot and shrinks
- * back to landscape. The other cards stay in their slots. The
- * landscape/portrait change is a clip window over an unstretched portrait image.
+ * slides in from its place on the line to the centre, still landscape, and
+ * only then grows to portrait, while the old centre card slides out into that
+ * place and shrinks back to landscape. The other cards stay in their places on
+ * the line. The landscape/portrait change is a clip window over an unstretched
+ * portrait image.
  *
- * The ring also turns slowly and constantly, never pausing for the pointer.
- * It only stops while the carousel is off screen, and entirely with reduced
- * motion.
+ * The line itself never stops turning around the centre card, so the inactive
+ * cards orbit it constantly, never pausing for the pointer. It only stops while
+ * the carousel is off screen, and entirely with reduced motion.
  *
- * Behaviour (an orbiting image selector) is the general technique seen on
- * kommakomma.is; no code or assets were taken from it.
+ * Behaviour (an image selector with the inactive images on a turning line) is
+ * the general technique seen on kommakomma.is; no code or assets were taken
+ * from it.
  */
 export function AddedValueOrbit({ items, activeIndex, onSelect }: AddedValueOrbitProps) {
   const count = items.length
@@ -104,30 +126,42 @@ export function AddedValueOrbit({ items, activeIndex, onSelect }: AddedValueOrbi
   const cardRefs = useRef<(HTMLButtonElement | null)[]>([])
   const cards = useRef<CardState[]>(createCards(count, activeIndex))
   const centre = useRef(activeIndex)
-  // Constant turn of the ring on top of the slots: how far it has turned.
-  const spin = useRef({ degrees: 0 })
+  // How far the line has turned, in degrees (0 is horizontal, positive turns
+  // clockwise). Only the ticker below changes it.
+  const spin = useRef({ degrees: SPIN_START_DEGREES })
+  // Where the cursor is (`pointer`, -1…1 from the stage centre) and where the
+  // centre card has got to in following it (`follow`).
+  const pointer = useRef({ x: 0, y: 0 })
+  const follow = useRef({ x: 0, y: 0 })
 
   const render = useCallback(() => {
     const stage = stageRef.current
     if (!stage) return
     const width = stage.clientWidth
     const height = stage.clientHeight
+    const tilt = (spin.current.degrees * Math.PI) / 180
 
     cardRefs.current.forEach((card, index) => {
       const state = cards.current[index]
       if (!card || !state) return
-      const { reach } = state
-      const angle = ((state.base + spin.current.degrees) * Math.PI) / 180
-      const crop = (ORBIT_CROP_PERCENT * (1 - state.tall)).toFixed(2)
+      const distance = Math.abs(state.pos)
+      const offset = Math.sign(state.pos) * along(LINE_OFFSET, distance) * width
+      const blur = along(LINE_BLUR_PX, distance)
+      const crop = (LINE_CROP_PERCENT * (1 - state.tall)).toFixed(2)
+      // Only the card in the centre follows the cursor (fading out as it leaves).
+      const centred = Math.max(0, 1 - distance)
       gsap.set(card, {
         xPercent: -50,
         yPercent: -50,
-        x: Math.sin(angle) * RING_RADIUS_X * width * reach,
-        y: -Math.cos(angle) * RING_RADIUS_Y * height * reach,
-        scale: 1 - (1 - ORBIT_SCALE) * reach,
-        opacity: 1 - (1 - ORBIT_OPACITY) * reach,
-        zIndex: Math.round(200 - reach * 100),
-        filter: reach > 0.001 ? `blur(${(ORBIT_BLUR_PX * reach).toFixed(2)}px)` : 'none',
+        x: Math.cos(tilt) * offset + follow.current.x * FOLLOW_DRIFT * width * centred,
+        y: Math.sin(tilt) * offset + follow.current.y * FOLLOW_DRIFT * height * centred,
+        transformPerspective: FOLLOW_PERSPECTIVE_PX,
+        rotationY: follow.current.x * FOLLOW_TILT_DEGREES * centred,
+        rotationX: -follow.current.y * FOLLOW_TILT_DEGREES * centred,
+        scale: along(LINE_SCALE, distance),
+        opacity: along(LINE_OPACITY, distance),
+        zIndex: Math.round(200 - distance * 50),
+        filter: blur > 0.01 ? `blur(${blur.toFixed(2)}px)` : 'none',
         clipPath: `inset(${crop}% 0% ${crop}% 0% round ${CARD_RADIUS_PX}px)`,
       })
     })
@@ -143,7 +177,7 @@ export function AddedValueOrbit({ items, activeIndex, onSelect }: AddedValueOrbi
     return () => observer.disconnect()
   }, [render])
 
-  // The constant orbit. Runs on the GSAP ticker, only while the stage is on
+  // The constant turn, and the smoothed follow of the cursor. Runs on the GSAP ticker, only while the stage is on
   // screen, and only when the visitor has not asked for reduced motion.
   useLayoutEffect(() => {
     const stage = stageRef.current
@@ -157,15 +191,35 @@ export function AddedValueOrbit({ items, activeIndex, onSelect }: AddedValueOrbi
       })
       observer.observe(stage)
 
+      const clamp = (value: number) => Math.max(-1, Math.min(1, value))
+      const handlePointerMove = (event: PointerEvent) => {
+        if (event.pointerType === 'touch') return
+        const box = stage.getBoundingClientRect()
+        pointer.current.x = clamp((event.clientX - (box.left + box.width / 2)) / box.width)
+        pointer.current.y = clamp((event.clientY - (box.top + box.height / 2)) / box.height)
+      }
+      const handlePointerLeave = () => {
+        pointer.current.x = 0
+        pointer.current.y = 0
+      }
+      window.addEventListener('pointermove', handlePointerMove, { passive: true })
+      document.documentElement.addEventListener('pointerleave', handlePointerLeave)
+
       const tick = (_time: number, deltaTime: number) => {
         if (!visible) return
-        spin.current.degrees += SPIN_DEGREES_PER_SECOND * (deltaTime / 1000)
+        const seconds = deltaTime / 1000
+        spin.current.degrees += SPIN_DEGREES_PER_SECOND * seconds
+        const ease = 1 - Math.exp(-seconds / FOLLOW_SMOOTHING_SECONDS)
+        follow.current.x += (pointer.current.x - follow.current.x) * ease
+        follow.current.y += (pointer.current.y - follow.current.y) * ease
         render()
       }
       gsap.ticker.add(tick)
 
       return () => {
         gsap.ticker.remove(tick)
+        window.removeEventListener('pointermove', handlePointerMove)
+        document.documentElement.removeEventListener('pointerleave', handlePointerLeave)
         observer.disconnect()
       }
     })
@@ -187,13 +241,12 @@ export function AddedValueOrbit({ items, activeIndex, onSelect }: AddedValueOrbi
     const slot = chosen.slot
     previous.slot = slot
     chosen.slot = -1
-    const target = slotAngle(slot, count)
+    const target = slotPos(slot, count)
 
     if (prefersReducedMotion()) {
-      previous.base = target
-      previous.reach = 1
+      previous.pos = target
       previous.tall = 0
-      chosen.reach = 0
+      chosen.pos = 0
       chosen.tall = 1
       render()
       return
@@ -202,19 +255,11 @@ export function AddedValueOrbit({ items, activeIndex, onSelect }: AddedValueOrbi
     const timeline = gsap.timeline({ onUpdate: render })
     // Beat 1: the chosen card slides in, still landscape; the old centre card
     // slides out and shrinks to landscape.
-    timeline.to(chosen, { reach: 0, duration: SLIDE_DURATION, ease: SLIDE_EASE }, 0)
-    timeline.to(previous, { reach: 1, duration: SLIDE_DURATION, ease: SLIDE_EASE }, 0)
+    timeline.to(chosen, { pos: 0, duration: SLIDE_DURATION, ease: SLIDE_EASE }, 0)
+    timeline.to(previous, { pos: target, duration: SLIDE_DURATION, ease: SLIDE_EASE }, 0)
     timeline.to(previous, { tall: 0, duration: SHRINK_DURATION, ease: SHRINK_EASE }, 0)
     // Beat 2: once it is centred, the chosen card grows to portrait.
     timeline.to(chosen, { tall: 1, duration: GROW_DURATION, ease: GROW_EASE }, SLIDE_DURATION)
-    // The old centre card leaves along the chosen card's slot. A card sitting in
-    // the centre has no angle worth keeping, so it simply takes that slot's; a
-    // card still on its way in (rapid clicks) turns to it by the shortest way.
-    if (previous.reach < 0.02) {
-      previous.base = target
-    } else {
-      timeline.to(previous, { base: previous.base + shortestTurn(previous.base, target), duration: SLIDE_DURATION, ease: SLIDE_EASE }, 0)
-    }
   }, [activeIndex, count, render])
 
   useLayoutEffect(() => {
