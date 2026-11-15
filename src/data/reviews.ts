@@ -41,7 +41,7 @@ const reviewsContent: Record<Locale, ReviewsContent> = {
         name: 'Michael Holm',
         role: 'E-commerce chef',
         company: 'Nordvest Interiør',
-        imageSrc: '/cases/nordwear/main-higgs--16-9.webp',
+        imageSrc: '/cases/nordwear/main--16-9.webp',
         imageAlt: 'Michael Holm fra Nordvest Interiør',
       },
       {
