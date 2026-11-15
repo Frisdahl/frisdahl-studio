@@ -2625,7 +2625,7 @@
     color: var(--color-light);
   }
 
-  /* The quotation mark (an SVG, 63:41) in the accent red. Above the text on
+  /* The quotation mark (an SVG, 4:3, hooks up) in the accent red. Above the text on
      phones and tablets; from desktop it hangs just left of the first line, a
      little above it. */
   .reviews-quote-mark {
@@ -2634,13 +2634,13 @@
     height: auto;
     margin-bottom: 1rem;
     color: var(--color-accent);
-    opacity: 0.35;
+    opacity: 0.2;
   }
 
   @media (min-width: 1024px) {
     .reviews-quote-mark {
       position: absolute;
-      top: -1.25rem;
+      top: 0.4rem;
       right: 100%;
       margin: 0 1.5rem 0 0;
     }
@@ -2688,7 +2688,7 @@
 
   .reviews-avatar {
     @apply aspect-square shrink-0 object-cover;
-    width: 4.5rem;
+    width: 6.5rem;
     border-radius: 9999px;
     background-color: #ececec;
   }

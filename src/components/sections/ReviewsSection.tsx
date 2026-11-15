@@ -129,18 +129,18 @@ export function ReviewsSection() {
           <AnimatePresence mode="wait">
             <motion.div key={index} className="reviews-swap" variants={swapVariants} initial="hidden" animate="show" exit="exit">
               <div className="reviews-body">
-                {/* The quotation mark (the designer's SVG, rotated 90°) in the accent red stands
+                {/* The quotation mark (the designer's SVG, rotated 180°: the pointed hooks face up) in the accent red stands
                     in for the quote's own marks (there is no closing one). It
                     doesn't animate: it stays while the review switches. */}
                 <svg
                   className="reviews-quote-mark"
                   xmlns="http://www.w3.org/2000/svg"
-                  viewBox="4 0 24 32"
+                  viewBox="0 4 32 24"
                   fill="currentColor"
                   aria-hidden="true"
                   focusable="false"
                 >
-                  <g transform="rotate(90 16 16)">
+                  <g transform="rotate(180 16 16)">
                     <path d="M0,4v12h8c0,4.41-3.586,8-8,8v4c6.617,0,12-5.383,12-12V4H0z" />
                     <path d="M20,4v12h8c0,4.41-3.586,8-8,8v4c6.617,0,12-5.383,12-12V4H20z" />
                   </g>
