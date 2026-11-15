@@ -1436,6 +1436,46 @@
     @apply m-0 overflow-hidden bg-surface shadow-soft;
   }
 
+  /* A figure that crossfades through several pictures (GallerySlideshow). Each slide fills the frame
+     with its backdrop colour and holds a square picture, centred, as tall as the frame: the whole
+     product shows, not a crop. The square's left and right edges fade into the backdrop, so the
+     small differences between picture and colour never show as a seam. */
+  .case-detail-slideshow {
+    @apply relative h-full w-full;
+  }
+
+  .case-detail-slideshow-slide {
+    @apply absolute inset-0 flex items-center justify-center;
+    opacity: 0;
+    transform: scale(1.03);
+    transition:
+      opacity 0.9s cubic-bezier(0.215, 0.61, 0.355, 1),
+      transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .case-detail-slideshow-slide.is-active {
+    opacity: 1;
+    transform: none;
+  }
+
+  .case-detail-gallery-item .case-detail-slideshow-image {
+    display: block;
+    height: 100%;
+    width: auto;
+    aspect-ratio: 1 / 1;
+    max-width: none;
+    object-fit: cover;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .case-detail-slideshow-slide {
+      transform: none;
+      transition: none;
+    }
+  }
+
   .case-detail-gallery-item-transparent {
     background-color: transparent;
     box-shadow: none;
@@ -1485,6 +1525,14 @@
      stays in view too. */
   .case-detail-next-image {
     @apply absolute inset-0 h-full w-full object-cover;
+    object-position: 50% 5%;
+    transform-origin: 50% 65%;
+    will-change: transform;
+  }
+
+  /* The clip sits over the picture, in the same box and pose (it zooms with it). */
+  .case-detail-next-video {
+    @apply absolute inset-0 block h-full w-full object-cover;
     object-position: 50% 5%;
     transform-origin: 50% 65%;
     will-change: transform;
@@ -2110,7 +2158,7 @@
 
   /* The section's heading, on the left over the projects. */
   .home-cases-list-title {
-    @apply mt-5xl mb-10 text-h1 text-left lg:mt-[12rem] lg:mb-20;
+    @apply mt-5xl mb-6 text-h1 text-left lg:mt-[12rem] lg:mb-10;
     /* An h2 in the outline (the page's only h1 is the hero's), set at the site's h1 size, line
        height and letter spacing, as it was when it was an h1. */
     font-weight: var(--heading-weight);
@@ -2153,25 +2201,53 @@
     }
   }
 
-  /* Home: the title (left) and the keywords (far right) share one row under the image, like they
-     did above it. On a phone they stack (the .case-card-meta rule below the card styles). */
-  @media (min-width: 640px) {
-    .home-cases-list .case-card-meta-below .case-card-meta {
-      flex-direction: row;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 0.5rem 1.5rem;
-      padding-top: 1rem;
-    }
-
-    .home-cases-list .case-card-meta-below .case-card-keywords {
-      text-align: right;
-    }
+  /* Home: the keywords sit under the title, at its left edge, on every screen size. */
+  .home-cases-list .case-card-meta-below .case-card-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.375rem;
+    padding-top: 1rem;
   }
 
-  /* The keywords are lighter here than the title's bold uppercase look elsewhere. */
+  .home-cases-list .case-card-meta-below .case-card-keywords {
+    text-align: left;
+  }
+
+  /* Home: the title and the keywords are the same size, 72% of the site's h3
+     (16 to 19px). The keywords are lowercase with only the first letter
+     capitalised (the first letter is done by ::first-letter). */
+  .home-cases-list .case-card-title-row,
+  .home-cases-list .case-card-client {
+    font-size: calc(var(--text-h3) * 0.72);
+  }
+
   .home-cases-list .case-card-keywords {
-    font-weight: 400;
+    font-size: calc(var(--text-h3) * 0.72);
+    font-weight: var(--font-weight-bold);
+    color: #a6a6a6;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    text-transform: lowercase;
+  }
+
+  /* Each keyword starts with a capital (the rest stays lowercase, from the rule above). */
+  .home-cases-list .case-card-keyword {
+    display: inline-block;
+  }
+
+  .home-cases-list .case-card-keyword::first-letter {
+    text-transform: uppercase;
+  }
+
+  /* Less room between the two projects than the base spacing below. */
+  .home-cases-list .case-card:not(:last-child) {
+    margin-bottom: 2rem;
+  }
+
+  @media (min-width: 1024px) {
+    .home-cases-list .case-card:not(:last-child) {
+      margin-bottom: 3rem;
+    }
   }
 
   .case-card-media-link {
@@ -2327,6 +2403,21 @@
   .case-card-title-link:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 0.25rem;
+  }
+
+  /* The round dot between keywords (the font's bullet is a square). It takes the
+     keywords' colour and scales with their size. */
+  .case-card-dot {
+    display: inline-block;
+    width: 0.26em;
+    height: 0.26em;
+    margin: 0 0.32em;
+    border-radius: 50%;
+    background-color: currentColor;
+    vertical-align: middle;
+    /* Sits on the middle of the lowercase letters, not the capital height. */
+    position: relative;
+    top: -0.03em;
   }
 
   .case-card-keywords {
@@ -2534,7 +2625,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 70%;
+    width: 80%;
     aspect-ratio: 4 / 5;
     padding: 0;
     border: 0;
@@ -2645,18 +2736,19 @@
      little above it. */
   .reviews-quote-mark {
     display: block;
-    width: clamp(1.75rem, 2.8vw, 2.5rem);
+    width: clamp(2.75rem, 4.6vw, 4.25rem);
     height: auto;
     margin-bottom: 1rem;
     color: var(--color-accent);
+    opacity: 0.35;
   }
 
   @media (min-width: 1024px) {
     .reviews-quote-mark {
       position: absolute;
-      top: -0.875rem;
+      top: -1.25rem;
       right: 100%;
-      margin: 0 1.25rem 0 0;
+      margin: 0 1.5rem 0 0;
     }
   }
 
@@ -2665,7 +2757,7 @@
     position: relative;
     /* 32px from desktop, scaling down to 24px on phones; the measure layer
        inherits it, so the line breaks match the visible wrap. */
-    font-size: clamp(1.5rem, calc(14px + 1.3vw), 32px);
+    font-size: clamp(1.75rem, calc(16px + 1.7vw), 40px);
     line-height: 1.2;
     letter-spacing: -0.02em;
     font-weight: 500;

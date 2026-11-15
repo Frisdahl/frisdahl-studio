@@ -9,6 +9,7 @@ import { lockScroll, unlockScroll } from '../../lib/scroll'
 import type { CaseDetailNext } from '../../types/caseDetail'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 import { Container } from '../ui'
+import { LoopVideo } from '../ui/LoopVideo'
 
 interface CaseDetailNextSectionProps {
   nextCase: CaseDetailNext
@@ -30,11 +31,12 @@ const FULL_BAR_HOLD = 160
  * next case's hero (the shared-image transition) and the page moves on.
  */
 export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) {
-  const { href, name, label, image, ariaLabel } = nextCase
+  const { href, name, label, image, video, ariaLabel } = nextCase
   const trackRef = useRef<HTMLElement>(null)
   const cardRef = useRef<HTMLAnchorElement>(null)
   const barRef = useRef<HTMLSpanElement>(null)
   const imageRef = useRef<HTMLImageElement & HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const hasNavigatedRef = useRef(false)
   const navigate = useNavigate()
   const { locale } = useLocale()
@@ -74,8 +76,10 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
       // Once the bar has been filled and the page is on its way, later scroll frames leave it full.
       if (hasNavigatedRef.current) return
       if (barRef.current) barRef.current.style.transform = `scaleX(${progress})`
-      if (imageRef.current && !shouldReduceMotion) {
-        imageRef.current.style.transform = `scale(${1 + IMAGE_ZOOM * progress})`
+      if (!shouldReduceMotion) {
+        const zoom = `scale(${1 + IMAGE_ZOOM * progress})`
+        if (imageRef.current) imageRef.current.style.transform = zoom
+        if (videoRef.current) videoRef.current.style.transform = zoom
       }
 
       // Reduced motion: the bar still shows progress, but the page never
@@ -86,6 +90,7 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
       // that goes with it), and let that full bar be seen before the page moves on.
       if (barRef.current) barRef.current.style.transform = 'scaleX(1)'
       if (imageRef.current) imageRef.current.style.transform = `scale(${1 + IMAGE_ZOOM})`
+      if (videoRef.current) videoRef.current.style.transform = `scale(${1 + IMAGE_ZOOM})`
       // Scrolling stops here, momentum included: the page does not drift on while the bar is held.
       lockScroll()
       holdPendingRef.current = true
@@ -153,6 +158,21 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
                 aria-hidden="true"
               />
             )}
+
+            {image.imageSrc && video ? (
+              // The same clip the next case's hero plays, over the same picture, so the card and the
+              // hero are alike when the shared transition carries it across: no still turning into
+              // a clip at the last moment. It plays while the card is on screen.
+              <LoopVideo
+                ref={videoRef}
+                src={video.src}
+                poster={video.poster}
+                label=""
+                className="case-detail-next-video"
+                mode="visible"
+                preload="auto"
+              />
+            ) : null}
 
             <div className="case-detail-next-overlay" aria-hidden="true" />
 

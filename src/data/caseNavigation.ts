@@ -1,6 +1,7 @@
-import type { CaseDetailGalleryImage } from '../types/caseDetail'
+import type { CaseDetailGalleryImage, CaseDetailGalleryVideo } from '../types/caseDetail'
 import type { Locale } from './navigation'
 import { getCaseGallery } from './caseGallery'
+import { getCaseMainVideo } from './caseVideos'
 import { getCaseItemSummary, hiddenCaseIds } from './cases'
 
 export interface CaseDetailNext {
@@ -10,6 +11,7 @@ export interface CaseDetailNext {
   label: string
   year: string
   image: CaseDetailGalleryImage
+  video?: CaseDetailGalleryVideo
   ariaLabel: string
 }
 
@@ -84,6 +86,7 @@ export function getNextCasePreview(
     label: nextCaseLabels[locale],
     year: caseYears[nextSlug],
     image: mainImage?.(nextSlug) ?? gallery.horizontalTop,
+    video: getCaseMainVideo(nextSlug),
     ariaLabel: nextCaseAriaLabels[locale][nextSlug],
   }
 }

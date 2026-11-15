@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import type { CaseDetailGallery, CaseDetailGalleryImage } from '../../types/caseDetail'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 import { Container } from '../ui'
@@ -14,6 +15,56 @@ interface GalleryFigureProps {
   background?: string
 }
 
+// How long each picture stays before the next one fades in (ms).
+const SLIDE_DWELL = 3400
+
+/**
+ * Crossfades through a case's pictures, one after another. The next one fades (and settles from a
+ * slight zoom) in over the one before it. It only runs while on screen, and with reduced motion it
+ * stays on the first picture.
+ */
+function GallerySlideshow({ slides }: { slides: CaseDetailGalleryImage[] }) {
+  const root = useRef<HTMLDivElement>(null)
+  const [active, setActive] = useState(0)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const element = root.current
+    if (!element) return
+    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { threshold: 0.35 })
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    if (!visible || slides.length < 2) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const timer = window.setTimeout(() => setActive((index) => (index + 1) % slides.length), SLIDE_DWELL)
+    return () => window.clearTimeout(timer)
+  }, [visible, active, slides.length])
+
+  return (
+    <div ref={root} className="case-detail-slideshow">
+      {slides.map((slide, index) => (
+        <div
+          key={slide.imageSrc}
+          className={`case-detail-slideshow-slide${index === active ? ' is-active' : ''}`}
+          style={{ backgroundColor: slide.background }}
+          aria-hidden={index === active ? undefined : true}
+        >
+          <img
+            {...responsiveImageProps(slide.imageSrc ?? '', IMAGE_SIZES.halfContainer)}
+            alt={slide.imageAlt}
+            className="case-detail-slideshow-image"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      ))}
+    </div>
+  )
+}
+
 function GalleryFigure({ image, variant, background }: GalleryFigureProps) {
   return (
     <figure
@@ -23,7 +74,9 @@ function GalleryFigure({ image, variant, background }: GalleryFigureProps) {
         backgroundColor: image.transparent ? background : undefined,
       }}
     >
-      {image.video ? (
+      {image.slideshow ? (
+        <GallerySlideshow slides={image.slideshow} />
+      ) : image.video ? (
         <LoopVideo
           src={image.video.src}
           poster={image.video.poster}

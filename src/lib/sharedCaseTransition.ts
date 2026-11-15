@@ -44,11 +44,6 @@ const VEIL_DURATION = 0.45
 // The image grows to the hero's place; the page appears under it as it lands.
 const GROW_DURATION = 1.1
 const GROW_EASE = 'power3.inOut'
-// The picture first slides to the hero's place at its own size, then changes size there: it
-// never gets taller or shorter while it travels. The size change starts a little before the
-// slide has quite stopped, so the two read as one movement.
-const SLIDE_DURATION = 0.55
-const RESIZE_AT = 0.45
 const SWAP_AT = 0.4
 const VEIL_OUT_AT = 0.65
 // The case page's text rising in.
@@ -153,7 +148,7 @@ export async function runSharedCaseTransition(
   const settle = isNext ? NEXT_SETTLE : SETTLE
   // A card that shows a clip (and a visitor who accepts motion): the clip keeps playing through the
   // whole transition, from where the card had got to, and carries on in the case page's hero.
-  const cardVideo = isNext ? null : card.querySelector<HTMLVideoElement>('.case-card-video')
+  const cardVideo = card.querySelector<HTMLVideoElement>('.case-card-video, .case-detail-next-video')
   const keepPlaying = Boolean(cardVideo?.currentSrc) && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
   // The case page's hero is hidden from the moment it mounts (see index.css).
@@ -170,8 +165,10 @@ export async function runSharedCaseTransition(
   let overlay: HTMLDivElement | null = null
   if (isNext) {
     // Start in the card's own pose: zoomed in by the scroll, under its dark overlay.
-    fromImage.style.objectPosition = '50% 5%'
-    gsap.set(fromImage, { scale: new DOMMatrix(getComputedStyle(cardImage).transform).a, transformOrigin: '50% 65%' })
+    // The card's clip (when it has one) is what the ghost shows, so it takes the same pose.
+    const fromMedia = ghostVideo ?? fromImage
+    fromMedia.style.objectPosition = '50% 5%'
+    gsap.set(fromMedia, { scale: new DOMMatrix(getComputedStyle(cardImage).transform).a, transformOrigin: '50% 65%' })
     const cardOverlay = card.querySelector<HTMLElement>('.case-detail-next-overlay')
     overlay = document.createElement('div')
     Object.assign(overlay.style, {
@@ -309,8 +306,6 @@ export async function runSharedCaseTransition(
     // is cut to that and opens up to the full picture as it grows.
     const crop = isNext ? Math.max(0, to.height - from.height / startScale) : 0
     const cropped = crop > 0.5
-    // The card is not lined up with the hero horizontally (the right-hand column).
-    const sideways = Math.abs(to.left - from.left) > 1
     gsap.set(ghost, {
       width: to.width,
       height: to.height,
@@ -341,23 +336,15 @@ export async function runSharedCaseTransition(
     await nextFrames(2)
     await new Promise<void>((resolve) => {
       const grow = gsap.timeline({ onComplete: resolve, defaults: { ease: GROW_EASE } })
-      if (sideways || !isNext) {
-        // A home page project card (and a card that sits to one side of the hero): position and
-        // size change together, on one ease, so the picture simply grows from where it stands to
-        // the hero's size instead of sliding to the hero's place first.
-        grow.to(ghost, { x: to.left, y: to.top, scale: 1, borderRadius: radius, duration: GROW_DURATION }, 0)
-        if (cropped) grow.to(ghost, { clipPath: 'inset(0px 0px 0px 0px)', duration: GROW_DURATION }, 0)
-      } else {
-        // 1. Slide: the ghost's top left corner (its transform origin) travels to the hero's, size unchanged.
-        grow.to(ghost, { x: to.left, y: to.top, duration: SLIDE_DURATION }, 0)
-        // 2. Resize: from that corner out to the hero's width and height.
-        grow.to(ghost, { scale: 1, borderRadius: radius, duration: GROW_DURATION - RESIZE_AT }, RESIZE_AT)
-        if (cropped) grow.to(ghost, { clipPath: 'inset(0px 0px 0px 0px)', duration: GROW_DURATION - RESIZE_AT }, RESIZE_AT)
-      }
+      // Position, size and the crop open together, on one ease, so the picture glides from where it
+      // stands to the hero's place and size in a single movement (no slide first and resize after,
+      // which read as two moves with a stop between them).
+      grow.to(ghost, { x: to.left, y: to.top, scale: 1, borderRadius: radius, duration: GROW_DURATION }, 0)
+      if (cropped) grow.to(ghost, { clipPath: 'inset(0px 0px 0px 0px)', duration: GROW_DURATION }, 0)
       if (isNext) {
         // The zoom settles and the dark overlay lifts, so the hero's picture is plain.
         // Fully settled before the swap below, so the two pictures line up exactly.
-        grow.to(fromImage, { scale: 1, duration: NEXT_ZOOM_SETTLE, ease: 'power2.out' }, 0)
+        grow.to(ghostVideo ?? fromImage, { scale: 1, duration: NEXT_ZOOM_SETTLE, ease: 'power2.out' }, 0)
         if (overlay) grow.to(overlay, { opacity: 0, duration: NEXT_OVERLAY_FADE, ease: 'power1.inOut' }, 0)
       }
       const swapAt = isNext ? NEXT_SWAP_AT : SWAP_AT

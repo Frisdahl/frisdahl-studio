@@ -103,6 +103,10 @@ export interface CaseDetailGalleryImage {
   imageAlt: string
   /** When set, the figure plays this clip instead of showing imageSrc (which other places still use). */
   video?: CaseDetailGalleryVideo
+  /** When set, the figure crossfades through these images, one after another (imageSrc is the first). */
+  slideshow?: CaseDetailGalleryImage[]
+  /** A slideshow's square picture sits centred on this colour, which fills the frame around it. */
+  background?: string
   placeholderClassName?: string
   /** Frame ratio when the image isn't the slot's default (16:9 or 5:6), e.g. '5 / 4'. */
   aspectRatio?: string
@@ -156,5 +160,7 @@ export interface CaseDetailNext {
   label: string
   year: string
   image: CaseDetailGalleryImage
+  /** The case's main clip, when it has one: it plays on the card, as it does in the case page's hero. */
+  video?: CaseDetailGalleryVideo
   ariaLabel: string
 }
