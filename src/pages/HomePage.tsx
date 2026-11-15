@@ -7,8 +7,8 @@ export function HomePage() {
       <PageMeta />
       <Hero />
       <CasesSection />
-      <ReviewsSection />
       <AddedValueSection />
+      <ReviewsSection />
     </main>
   )
 }

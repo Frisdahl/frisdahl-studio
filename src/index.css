@@ -64,19 +64,25 @@
 
   /* Type scale. Fluid ranges, so the same token reads correctly from 390px to
      1440px without a stack of breakpoint overrides.
-     h1 (page/hero titles) 36–76px · h2 (section titles) 32–44px ·
+     h1 (page/hero titles, the biggest) 40–88px · h2 (section titles) 36–70px ·
      h3 (card titles) 22–26px · h4 (item titles) 20–24px ·
      body 15–17px · body-lg (lead) 16–19px · body-sm 14–15px ·
      button/nav 14–15px · caption/labels 12px. */
   --text-h1: clamp(
-    calc(var(--fluid-unit) * 36),
-    calc(var(--fluid-unit) * 36 + var(--fluid-unit) * (76 - 36) * var(--fluid-slope)),
-    calc(var(--fluid-unit) * 76)
+    calc(var(--fluid-unit) * 40),
+    calc(var(--fluid-unit) * 40 + var(--fluid-unit) * (88 - 40) * var(--fluid-slope)),
+    calc(var(--fluid-unit) * 88)
   );
   --text-h1--line-height: 1.04;
   --text-h1--letter-spacing: -0.03em;
 
   --text-h2: clamp(
+    calc(var(--fluid-unit) * 36),
+    calc(var(--fluid-unit) * 36 + var(--fluid-unit) * (70 - 36) * var(--fluid-slope)),
+    calc(var(--fluid-unit) * 70)
+  );
+  /* The smaller h2 scale (32–44px) for compact uses: dense legal text and stat values. */
+  --h2-compact-size: clamp(
     calc(var(--fluid-unit) * 32),
     calc(var(--fluid-unit) * 32 + var(--fluid-unit) * (44 - 32) * var(--fluid-slope)),
     calc(var(--fluid-unit) * 44)
@@ -432,6 +438,7 @@
 
   .legal-page-section-title {
     @apply mt-lg text-h2;
+    font-size: var(--h2-compact-size);
     font-weight: var(--heading-weight);
   }
 
@@ -1399,6 +1406,7 @@
 
   .case-detail-results-value {
     @apply mt-auto text-h2 text-primary;
+    font-size: var(--h2-compact-size);
     font-weight: var(--heading-weight);
   }
 
@@ -1921,7 +1929,7 @@
   .meet-us-topic-title {
     margin: 0;
     font-family: var(--font-heading);
-    /* The size of the homepage's "Brand identitet" (.added-value-title). */
+    /* Matches the homepage offer column titles' scale. */
     font-size: clamp(2rem, 3.35vw, 3rem);
     font-weight: 500;
     line-height: 1.2;
@@ -2110,9 +2118,8 @@
 
   /* The section's heading, on the left over the projects. */
   .home-cases-list-title {
-    @apply mt-5xl mb-10 text-h1 text-left lg:mt-[12rem] lg:mb-20;
-    /* An h2 in the outline (the page's only h1 is the hero's), set at the site's h1 size, line
-       height and letter spacing, as it was when it was an h1. */
+    @apply mt-5xl mb-10 text-h2 text-left lg:mt-[12rem] lg:mb-20;
+    /* An h2 in the outline (the page's only h1 is the hero's), at the site's h2 size. */
     font-weight: var(--heading-weight);
     text-wrap: balance;
     color: var(--cases-ink);
@@ -2340,247 +2347,137 @@
     text-transform: uppercase;
   }
 
-  /* Added value ("Hvad jeg kan tilbyde"): numbered accordion rows on the left,
-     a crossfading image on the right that follows the open row. */
+  /* Added value ("Hvad jeg kan tilbyde"): a big heading over a bordered
+     three-column grid (label, title, list, looping mark). Stacks on phones. */
   .added-value {
-    /* Width of the number column; the open text is indented by the same. */
-    --added-value-number-width: 3.75rem;
     @apply py-section-sm lg:py-section;
-    /* More room below, before the footer: 8rem (12rem from desktop), twice
-       the section's top padding. */
-    padding-bottom: 8rem;
     background-color: var(--color-home-page);
     color: var(--color-dark);
   }
 
-  @media (min-width: 1024px) {
-    .added-value {
-      padding-bottom: 12rem;
-    }
-  }
-
   .added-value-inner {
-    display: grid;
-    gap: clamp(2rem, 5vw, 5rem);
-    width: 100%;
-    /* Narrower than the page's other content (82rem instead of 96rem). */
-    max-width: calc(82rem + 2 * var(--page-gutter));
+    /* The site's shared content column, like the other sections. */
+    width: var(--site-grid-width);
     margin-inline: auto;
-    padding-inline: var(--page-gutter);
+  }
+
+  .added-value-heading {
+    max-width: 16ch;
+    margin: 0 0 clamp(2.5rem, 5vw, 4.5rem);
+    /* The site's default h2 size. */
+    @apply text-h2;
+    font-weight: var(--heading-weight);
+    text-wrap: balance;
+    color: var(--color-dark);
+  }
+
+  .added-value-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid var(--color-border);
   }
 
   @media (min-width: 1024px) {
-    .added-value {
-      --added-value-number-width: 5rem;
-    }
-
-    /* The list gets the larger share so each heading stays on one line. */
-    .added-value-inner {
-      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-      align-items: start;
+    .added-value-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 
-  .added-value-eyebrow {
+  .added-value-col {
+    display: flex;
+    flex-direction: column;
+    min-height: 22rem;
+    padding: 1.25rem 1.25rem 1.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .added-value-col:first-child {
+    border-top: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .added-value-col {
+      min-height: clamp(24rem, 28vw, 28rem);
+      padding: 1.5rem 1.5rem 1.75rem;
+      border-top: 0;
+      border-left: 1px solid var(--color-border);
+    }
+
+    .added-value-col:first-child {
+      border-left: 0;
+    }
+  }
+
+  .added-value-label {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin: 0;
-    color: var(--color-dark);
-    font-family: var(--font-sans);
-    font-size: 1rem;
-    font-weight: 400;
-    letter-spacing: 0;
-    line-height: 1.4;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1;
   }
 
   .added-value-dot {
-    flex-shrink: 0;
-    width: 0.5rem;
-    height: 0.5rem;
+    width: 0.4375rem;
+    height: 0.4375rem;
     border-radius: 9999px;
     background-color: var(--color-accent);
-    animation: added-value-blink 1.6s ease-in-out infinite;
-  }
-
-  @keyframes added-value-blink {
-    0%,
-    100% {
-      opacity: 1;
-    }
-
-    50% {
-      opacity: 0.2;
-    }
-  }
-
-  .added-value-list {
-    margin: clamp(2rem, 4vw, 3rem) 0 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .added-value-item-heading {
-    margin: 0;
-  }
-
-  /* The number is centred on the heading's line. */
-  .added-value-trigger {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    width: 100%;
-    padding: clamp(0.5rem, 1vw, 0.875rem) 0;
-    border: 0;
-    background: none;
-    color: inherit;
-    text-align: left;
-    cursor: pointer;
-  }
-
-  .added-value-trigger:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 0.25rem;
-  }
-
-  .added-value-number {
-    flex-shrink: 0;
-    width: var(--added-value-number-width);
-    color: #757575;
-    font-family: var(--font-sans);
-    font-size: 0.875rem;
-    font-weight: 500;
-    font-variant-numeric: tabular-nums;
   }
 
   .added-value-title {
-    color: #8f8f8f;
+    margin: 3.5rem 0 1rem;
     font-family: var(--font-heading);
-    font-size: clamp(2rem, 3.35vw, 3rem);
-    font-weight: var(--heading-weight);
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-    transition: color 400ms var(--ease-smooth);
-  }
-
-  .added-value-trigger:hover .added-value-title,
-  .added-value-item.is-active .added-value-title {
+    font-size: clamp(1.5rem, 2.2vw, 2rem);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
     color: var(--color-dark);
   }
 
-  .added-value-panel {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 600ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .added-value-item.is-active .added-value-panel {
-    grid-template-rows: 1fr;
-  }
-
-  .added-value-panel-inner {
-    overflow: hidden;
-    min-height: 0;
-  }
-
-  .added-value-text {
-    max-width: 30rem;
+  .added-value-items {
     margin: 0;
-    padding: 0.5rem 0 clamp(1.25rem, 2vw, 1.75rem) var(--added-value-number-width);
-    color: color-mix(in srgb, var(--color-dark) 60%, transparent);
-    font-size: 1rem;
-    line-height: 1.6;
-    opacity: 0;
-    transform: translateY(0.5rem);
-    transition:
-      opacity 500ms var(--ease-smooth),
-      transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .added-value-item.is-active .added-value-text {
-    opacity: 1;
-    transform: none;
-    transition-delay: 150ms;
-  }
-
-  /* Stage for the orbit carousel (AddedValueOrbit). On phones it sits above the
-     list; on desktop beside it, at a capped height. */
-  .added-value-media {
-    position: relative;
-    order: -1;
-    /* The pictures are portrait (4:5), like the desktop frame. No backdrop:
-       the cards orbit directly on the page. */
-    aspect-ratio: 4 / 5;
-  }
-
-  @media (min-width: 1024px) {
-    .added-value-media {
-      order: 0;
-      height: clamp(28rem, 36vw, 38rem);
-      aspect-ratio: auto;
-    }
-  }
-
-  .added-value-orbit {
-    position: absolute;
-    inset: 0;
-  }
-
-  /* Cards are centred on the stage; the component moves them along the ring.
-     A card is always the full portrait box; on the ring the component clips it
-     to a landscape window (clip-path) and blurs it slightly, so the image is
-     never stretched. */
-  .added-value-orbit-card {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 70%;
-    aspect-ratio: 4 / 5;
     padding: 0;
-    border: 0;
-    background: none;
-    cursor: pointer;
-    will-change: transform, opacity;
+    list-style: none;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--color-muted);
   }
 
-  .added-value-orbit-card.is-active {
-    cursor: default;
-  }
-
-  .added-value-orbit-card:focus-visible {
-    /* Inside the box: the clip-path would cut an outer outline off. */
-    outline: 2px solid var(--color-accent);
-    outline-offset: -0.25rem;
-  }
-
-  .added-value-orbit-image {
+  /* Looping marks, pushed to the bottom of the column. */
+  .added-value-icon {
     display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    pointer-events: none;
-    user-select: none;
+    width: 6rem;
+    height: 6rem;
+    margin-top: auto;
+    fill: var(--color-dark);
+    overflow: visible;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .added-value-dot {
-      animation: none;
-    }
+  /* Pull each mark's artwork to the text edge (its box has empty space inside). */
+  .added-value-icon--brand { margin-left: -0.6875rem; }
+  .added-value-icon--design { margin-left: -0.75rem; }
+  .added-value-icon--development { margin-left: -0.5rem; }
 
-    .added-value-title,
-    .added-value-panel,
-    .added-value-text {
-      transition: none;
-    }
-  }
+  /* The marks are animated with GSAP (see AddedValueSection). */
 
   /* Reviews, on the 12-column grid (from 1024px): the arrows on the left
      (columns 2-4), the quote on the right (columns 6-12), and under it, at its
      left edge, the reviewer's portrait, name and role. No timer: the arrows
      change the review. Stacked on phones and tablets. */
   .reviews-section {
+    @apply py-section-sm lg:py-section;
+    /* More room below, before the footer: 8rem (12rem from desktop). */
+    padding-bottom: 8rem;
     background-color: var(--color-home-page);
     color: var(--color-dark);
+  }
+
+  @media (min-width: 1024px) {
+    .reviews-section {
+      padding-bottom: 12rem;
+    }
   }
 
   .reviews-grid {
@@ -2603,10 +2500,7 @@
     }
 
     .reviews-controls {
-      /* Starts on the left edge of the added-value content beneath (its
-         82rem column, centred), not on a grid column line. */
       grid-column: 1 / span 4;
-      margin-left: max(0px, calc((100vw - 82rem) / 2 - var(--page-gutter)));
       grid-row: 1;
       align-self: start;
     }
@@ -2649,6 +2543,7 @@
     height: auto;
     margin-bottom: 1rem;
     color: var(--color-accent);
+    opacity: 0.45;
   }
 
   @media (min-width: 1024px) {
@@ -3363,7 +3258,6 @@
    Hero.module.css; circles (avatars, blobs) are not image frames. */
 :is(
     .case-card-media,
-    .added-value-media,
     .meet-us-member-portrait,
     .home-cases-intro-image-wrapper,
     .case-detail-hero-image,
@@ -3375,7 +3269,6 @@
 
 :is(
     .case-card-media,
-    .added-value-media,
     .meet-us-member-portrait,
     .home-cases-intro-image-wrapper,
     .case-detail-hero-image,
