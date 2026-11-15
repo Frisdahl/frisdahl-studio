@@ -66,39 +66,22 @@ const homeContent = {
     },
     addedValue: {
       ariaLabel: "Hvad jeg kan tilbyde",
-      eyebrow: "Hvad jeg kan tilbyde jeres virksomhed",
-      // Portrait (4:5) mockups made for the studio: warm stone light, off-white objects, dark type, red dot.
-      items: [
+      heading: "Hvad jeg kan tilbyde jeres virksomhed",
+      columns: [
         {
           title: "Brand identitet",
-          text: "Logo, farver, typografi og et visuelt sprog, der føles som jer – samlet i et system, der fungerer lige godt på skærm, i tryk og på sociale medier.",
-          imageSrc: "/images/offer/brand-identitet--4-5.webp",
-          imageAlt: "Notesbog med Frisdahl Studios FS-logo på en hylde",
-        },
-        {
-          title: "Brand præsentation",
-          text: "Jeg sørger for, at jeres brand fremstår skarpt overalt – fra præsentationer og salgsmaterialer til de første indtryk, kunderne møder.",
-          imageSrc: "/images/offer/brand-praesentation--4-5.webp",
-          imageAlt: "To visitkort med teksten Frisdahl Studio Design på armlænet af en lænestol",
+          icon: "brand",
+          items: ["Logo", "Farver og typografi", "Visuelt sprog", "Brand guidelines", "Præsentationer"],
         },
         {
           title: "Hjemmeside design",
-          text: "Gennemarbejdet design med fokus på brugeroplevelse og konvertering, hvor hver side guider den besøgende videre mod næste skridt.",
-          imageSrc: "/images/offer/hjemmeside-design--4-5.webp",
-          imageAlt: "En hånd rækker en telefon med FS-logoet frem mod en anden hånd",
+          icon: "design",
+          items: ["UX / UI-design", "Designsystem", "Landingssider", "Webshops", "Prototyper"],
         },
         {
           title: "Hjemmeside udvikling",
-          text: "Hurtige, tilgængelige og skalerbare hjemmesider, bygget med moderne teknologi og nemme at vedligeholde, i takt med at jeres virksomhed vokser.",
-          imageSrc: "/images/offer/hjemmeside-udvikling--4-5.webp",
-          imageAlt: "Bærbar computer med en rød skærm og teksten frisdahl studio",
-        },
-        {
-          title: "Vedligeholdelse og support",
-          text: "Jeg følger op efter lanceringen med opdateringer, hurtig hjælp og løbende forbedringer, så jeres hjemmeside forbliver sikker, hurtig og tidssvarende.",
-          // Placeholder: a copy of the brand identity image until a dedicated one is made.
-          imageSrc: "/images/offer/vedligeholdelse-support--4-5.webp",
-          imageAlt: "Notesbog med Frisdahl Studios FS-logo på en hylde",
+          icon: "development",
+          items: ["Hurtige hjemmesider", "Tilgængelighed", "CMS og redigering", "Animation", "Vedligeholdelse"],
         },
       ],
     },

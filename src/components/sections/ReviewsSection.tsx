@@ -101,7 +101,7 @@ export function ReviewsSection() {
   )
 
   return (
-    <section className="reviews-section py-section-sm lg:py-section" aria-label={ariaLabel}>
+    <section className="reviews-section" aria-label={ariaLabel}>
       <Container columns>
         <div className="reviews-grid">
           <div className="reviews-controls">
@@ -129,18 +129,21 @@ export function ReviewsSection() {
           <AnimatePresence mode="wait">
             <motion.div key={index} className="reviews-swap" variants={swapVariants} initial="hidden" animate="show" exit="exit">
               <div className="reviews-body">
-                {/* The quotation mark (the designer's SVG) in the accent red stands
+                {/* The quotation mark (the designer's SVG, rotated 90°) in the accent red stands
                     in for the quote's own marks (there is no closing one). It
                     doesn't animate: it stays while the review switches. */}
                 <svg
                   className="reviews-quote-mark"
                   xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 63 41"
+                  viewBox="4 0 24 32"
                   fill="currentColor"
                   aria-hidden="true"
                   focusable="false"
                 >
-                  <path d="M62.6996 0.000183105C61.7996 4.2002 60.8496 8.75019 59.8496 13.6502C58.8496 18.4502 57.9496 23.1502 57.1496 27.7502C56.4496 32.3502 55.8496 36.5502 55.3496 40.3502H34.4996L33.4496 38.7002C34.3496 35.1002 35.4996 31.0002 36.8996 26.4002C38.2996 21.8002 39.7996 17.1502 41.3996 12.4502C43.0996 7.75019 44.7496 3.60019 46.3496 0.000183105H62.6996ZM29.0996 0.000183105C28.1996 4.2002 27.2496 8.75019 26.2496 13.6502C25.2496 18.4502 24.3496 23.1502 23.5496 27.7502C22.8496 32.3502 22.2496 36.5502 21.7496 40.3502H0.89961L-0.00039053 38.7002C0.89961 35.1002 2.04961 31.0002 3.44961 26.4002C4.84961 21.8002 6.34961 17.1502 7.94961 12.4502C9.64961 7.75019 11.2996 3.60019 12.8996 0.000183105H29.0996Z" />
+                  <g transform="rotate(90 16 16)">
+                    <path d="M0,4v12h8c0,4.41-3.586,8-8,8v4c6.617,0,12-5.383,12-12V4H0z" />
+                    <path d="M20,4v12h8c0,4.41-3.586,8-8,8v4c6.617,0,12-5.383,12-12V4H20z" />
+                  </g>
                 </svg>
                 {/* Hidden copies of every quote at the same width and type;
                     the tallest one sets the height reserved below. */}
