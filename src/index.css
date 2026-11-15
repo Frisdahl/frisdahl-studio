@@ -673,6 +673,15 @@
     }
   }
 
+  /* While the menu is open (.menu-active, on <html>, from the moment it opens until it has
+     closed) the chips are hidden too: the logo and the X sit directly on the menu. They fade
+     out as it opens and come back once it has gone. */
+  .menu-active .site-header.is-scrolled :is(.site-header-logo, .header-menu-toggle),
+  .menu-active .site-header.is-scrolled :is(.site-header-logo, .header-menu-toggle):is(:hover, :focus-visible) {
+    background-color: rgb(255 255 255 / 0);
+    box-shadow: 0 2px 14px rgb(0 0 0 / 0);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .site-header-logo,
     .header-menu-toggle,
