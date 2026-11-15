@@ -18,7 +18,20 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     },
     horizontalTopPair: [
       { imageSrc: '/cases/nordwear/macbook-alle-produkter--3-2.webp', imageAlt: 'Nordwear produktoversigt på en MacBook Pro', aspectRatio: '3 / 2' },
-      { imageSrc: '/cases/nordwear/macbook-produktside--3-2.webp', imageAlt: 'Nordwear produktside på en MacBook Pro', aspectRatio: '3 / 2' },
+      {
+        // The main pictures of products from the shop's category pages, one after another: square, each
+        // on its own backdrop colour (which fills the frame around it).
+        imageSrc: '/cases/nordwear/product-sneakers--1-1.webp',
+        imageAlt: 'Nordwear sneakers',
+        aspectRatio: '3 / 2',
+        slideshow: [
+          { imageSrc: '/cases/nordwear/product-sneakers--1-1.webp', imageAlt: 'Nordwear sneakers', background: '#d9d9d9' },
+          { imageSrc: '/cases/nordwear/product-loafers--1-1.webp', imageAlt: 'Nordwear loafers', background: '#dbdbdb' },
+          { imageSrc: '/cases/nordwear/product-dress-shoes--1-1.webp', imageAlt: 'Nordwear dress shoes', background: '#d6d6d6' },
+          { imageSrc: '/cases/nordwear/product-boots--1-1.webp', imageAlt: 'Nordwear boots', background: '#d8d8d8' },
+          { imageSrc: '/cases/nordwear/product-accessories--1-1.webp', imageAlt: 'Nordwear crossbody-taske', background: '#dddddd' },
+        ],
+      },
     ],
     afterPalette: { imageSrc: '/cases/nordwear/ipad-glas--3-2.webp', imageAlt: 'Nordwear forside på en iPad Pro', aspectRatio: '3 / 2' },
     horizontalBottomPair: [

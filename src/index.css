@@ -1436,6 +1436,46 @@
     @apply m-0 overflow-hidden bg-surface shadow-soft;
   }
 
+  /* A figure that crossfades through several pictures (GallerySlideshow). Each slide fills the frame
+     with its backdrop colour and holds a square picture, centred, as tall as the frame: the whole
+     product shows, not a crop. The square's left and right edges fade into the backdrop, so the
+     small differences between picture and colour never show as a seam. */
+  .case-detail-slideshow {
+    @apply relative h-full w-full;
+  }
+
+  .case-detail-slideshow-slide {
+    @apply absolute inset-0 flex items-center justify-center;
+    opacity: 0;
+    transform: scale(1.03);
+    transition:
+      opacity 0.9s cubic-bezier(0.215, 0.61, 0.355, 1),
+      transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .case-detail-slideshow-slide.is-active {
+    opacity: 1;
+    transform: none;
+  }
+
+  .case-detail-gallery-item .case-detail-slideshow-image {
+    display: block;
+    height: 100%;
+    width: auto;
+    aspect-ratio: 1 / 1;
+    max-width: none;
+    object-fit: cover;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .case-detail-slideshow-slide {
+      transform: none;
+      transition: none;
+    }
+  }
+
   .case-detail-gallery-item-transparent {
     background-color: transparent;
     box-shadow: none;
@@ -1485,6 +1525,14 @@
      stays in view too. */
   .case-detail-next-image {
     @apply absolute inset-0 h-full w-full object-cover;
+    object-position: 50% 5%;
+    transform-origin: 50% 65%;
+    will-change: transform;
+  }
+
+  /* The clip sits over the picture, in the same box and pose (it zooms with it). */
+  .case-detail-next-video {
+    @apply absolute inset-0 block h-full w-full object-cover;
     object-position: 50% 5%;
     transform-origin: 50% 65%;
     will-change: transform;
