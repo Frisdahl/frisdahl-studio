@@ -412,7 +412,6 @@ export function Hero() {
               {/* The end stays together ("i fokus."), so a phone never leaves a lone "fokus." on its own line. */}
               <span className={styles.titleTail}>
                 {content.headingAfter}
-                <span className={styles.titleDot} aria-hidden="true" />
               </span>
             </MaskedLineReveal>
           </h1>

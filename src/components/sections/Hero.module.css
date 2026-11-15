@@ -57,24 +57,15 @@
 /* The accent word, in the site's red. */
 .titleAccent {
   color: var(--color-accent);
+  /* No italic cut of the font is loaded, so the browser slants the regular one. */
+  font-style: italic;
+  /* The slant overhangs to the right: keep a little room before the next word. */
+  margin-right: 0.06em;
 }
 
 /* Keeps the last words (and the dot) on one line. */
 .titleTail {
   white-space: nowrap;
-}
-
-/* A round dot in place of the full stop, sitting on the baseline. */
-.titleDot {
-  display: inline-block;
-  /* Sized to PP Neue Montreal's own full stop (about 0.13em across); a round dot sits a
-     little larger to read as the same weight. */
-  width: 0.14em;
-  height: 0.14em;
-  margin-left: 0.04em;
-  border-radius: 50%;
-  background: #ff4f56;
-  vertical-align: baseline;
 }
 
 .aside {
