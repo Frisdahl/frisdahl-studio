@@ -1,6 +1,7 @@
 export { ArrowButton } from './ArrowButton'
 export { ArrowChipButton } from './ArrowChipButton'
 export { ArrowIcon } from './ArrowIcon'
+export { PillButton } from './PillButton'
 export { MaskedLineReveal } from './MaskedLineReveal'
 export { BrandMonogram } from './BrandMonogram'
 export { Button } from './Button'

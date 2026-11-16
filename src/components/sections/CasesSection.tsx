@@ -47,17 +47,22 @@ export function CasesSection() {
         </div>
         {/* "Seneste projekter" rises line by line when it scrolls into view; the intro above it is
             plain, static text. The project rows do the same inside CaseCard (revealOnScroll). */}
-        <MaskedLineReveal
-          as="h2"
-          className="home-cases-list-title"
-          start="top 85%"
-          duration={DUR.line}
-          stagger={STAGGER.lines}
-          ease={EASE.rise}
-          revertWhenDone
-        >
-          <WithHeadingDot>{cases.listTitle}</WithHeadingDot>
-        </MaskedLineReveal>
+        <div className="home-cases-list-head">
+          <MaskedLineReveal
+            as="h2"
+            className="home-cases-list-title"
+            start="top 85%"
+            duration={DUR.line}
+            stagger={STAGGER.lines}
+            ease={EASE.rise}
+            revertWhenDone
+          >
+            <WithHeadingDot>{cases.listTitle}</WithHeadingDot>
+          </MaskedLineReveal>
+          <span className="home-cases-list-count" aria-hidden="true">
+            {String(Math.min(FEATURED_COUNT, cases.items.length)).padStart(2, '0')}
+          </span>
+        </div>
 
         {/* Inside the content container, so the images line up with the
             page's side margins like the text above. */}

@@ -4,7 +4,7 @@
   overflow: hidden;
   background: var(--color-home-page);
   color: var(--color-dark);
-  --hero-slide-gap: var(--image-gap);
+  --hero-slide-gap: clamp(0.5rem, 0.8vw, 0.75rem);
 }
 
 .content {
@@ -23,29 +23,31 @@
 }
 
 @media (min-width: 900px) {
-  /* The heading spans 8 columns, the intro and button the last 4. */
+  /* The heading spans nine columns, the intro and the button the last three, level with the
+     heading's last line. */
   .inner {
     align-items: end;
   }
 
   .title {
-    grid-column: 1 / span 8;
+    grid-column: 1 / span 9;
   }
 
   .aside {
-    grid-column: 9 / -1;
+    grid-column: 10 / -1;
   }
 }
 
+/* The headline is the page: Geist Medium, set big and tight; the accent word changes voice. */
 .title {
   max-width: none;
   margin: 0;
   color: var(--color-dark);
   font-family: var(--font-heading);
-  font-size: var(--text-h1);
+  font-size: clamp(2.75rem, 1.2rem + 6.4vw, 7rem);
   font-weight: 500;
-  line-height: 1.04;
-  letter-spacing: -0.035em;
+  line-height: 0.98;
+  letter-spacing: -0.05em;
 }
 
 /* The heading's lines slide up out of masks (MaskedLineReveal); the wrapper is a block so
@@ -54,15 +56,18 @@
   display: block;
 }
 
-/* The accent word, in the site's red. */
+/* The accent word, in the site's red and in the serif's own italic (Instrument Serif): the one
+   place the page changes voice. It is drawn smaller than Geist at the same size, so it is set a
+   little larger, and with a touch less tracking. */
 .titleAccent {
   color: var(--color-accent);
-  /* No italic cut of the font is loaded, so the browser slants the regular one. */
+  font-family: var(--font-serif);
   font-style: italic;
-  /* The browser slants the Medium cut, which reads heavier than the upright words: one step lighter. */
   font-weight: 400;
+  font-size: 1.1em;
+  letter-spacing: -0.02em;
   /* The slant overhangs to the right: keep a little room before the next word. */
-  margin-right: 0.06em;
+  margin-right: 0.04em;
 }
 
 /* Keeps the last words (and the dot) on one line. */
@@ -76,19 +81,19 @@
   align-items: flex-start;
   gap: clamp(1.25rem, 2.5vh, 1.75rem);
   /* Lines the paragraph up with the heading's last line, not its descenders. */
-  padding-bottom: 0.35rem;
+  padding-bottom: 0.5rem;
 }
 
 .intro {
-  max-width: 26rem;
+  max-width: 24rem;
   margin: 0;
   /* The heading's dark ink at lower opacity. */
   color: color-mix(in srgb, var(--color-dark) 60%, transparent);
   font-family: var(--font-sans);
-  font-size: clamp(1rem, 1.2vw, 1.1875rem);
-  font-weight: 500;
-  line-height: 1.6;
-  letter-spacing: -0.01em;
+  font-size: clamp(1rem, 1.15vw, 1.125rem);
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: -0.015em;
 }
 
 /* Carousel: full-bleed, 3.5 portrait slides across a desktop screen. */

@@ -4,7 +4,7 @@ import { useLocale } from '../../context/LocaleContext'
 import { whenPageRevealed } from '../../lib/pageReveal'
 import { CASES_PATH } from '../../lib/routes'
 import { responsiveImageProps } from '../../lib/responsiveImage'
-import { ArrowChipButton, Container, MaskedLineReveal } from '../ui'
+import { Container, MaskedLineReveal, PillButton } from '../ui'
 import styles from './Hero.module.css'
 
 const heroContent = {
@@ -421,13 +421,7 @@ export function Hero() {
               {content.intro}
             </MaskedLineReveal>
             <div ref={ctaRef}>
-              <ArrowChipButton
-                direction="right"
-                variant="diagonal"
-                label={content.cta}
-                text={content.cta}
-                href={CASES_PATH}
-              />
+              <PillButton href={CASES_PATH}>{content.cta}</PillButton>
             </div>
           </div>
         </Container>

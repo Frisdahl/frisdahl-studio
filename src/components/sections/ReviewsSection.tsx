@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'framer-motion'
 import { useLocale } from '../../context/LocaleContext'
 import { getReviewsContent } from '../../data/reviews'
-import { ArrowChipButton, ArrowIcon, Container, MaskedLineReveal } from '../ui'
+import { ArrowIcon, Container, MaskedLineReveal, PillButton } from '../ui'
 
 /** The person (portrait, name and role) fades out and fades in, without moving. */
 const personVariants: Variants = {
@@ -98,14 +98,9 @@ export function ReviewsSection() {
         </p>
       </div>
       {review.caseHref && (
-        <ArrowChipButton
-          direction="right"
-          variant="diagonal"
-          label={caseLinkLabel}
-          text={caseLinkLabel}
-          href={review.caseHref}
-          className="reviews-case-link"
-        />
+        <PillButton href={review.caseHref} className="reviews-case-link">
+          {caseLinkLabel}
+        </PillButton>
       )}
     </>
   )
@@ -113,6 +108,7 @@ export function ReviewsSection() {
   return (
     <section className="reviews-section" aria-label={ariaLabel}>
       <Container columns>
+        <p className="reviews-eyebrow">{ariaLabel}</p>
         <div className="reviews-grid">
           <div className="reviews-controls">
             <button
