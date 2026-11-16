@@ -9,12 +9,15 @@ export interface ReviewItem {
   /** The reviewer's portrait. */
   imageSrc: string
   imageAlt: string
+  /** The project the review is about: a link under the review. */
+  caseHref?: string
 }
 
 export interface ReviewsContent {
   ariaLabel: string
   previousLabel: string
   nextLabel: string
+  caseLinkLabel: string
   reviews: ReviewItem[]
 }
 
@@ -24,6 +27,7 @@ const reviewsContent: Record<Locale, ReviewsContent> = {
     ariaLabel: 'Anmeldelser',
     previousLabel: 'Forrige anmeldelse',
     nextLabel: 'Næste anmeldelse',
+    caseLinkLabel: 'Se projektet',
     reviews: [
       {
         quote:
@@ -33,6 +37,7 @@ const reviewsContent: Record<Locale, ReviewsContent> = {
         company: 'petersalling.com',
         imageSrc: '/images/reviews/peter-salling.webp',
         imageAlt: 'Portræt af filmproducer Peter Salling',
+        caseHref: '/cases/peter-salling',
       },
     ],
   },

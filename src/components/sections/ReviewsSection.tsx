@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'framer-motion'
 import { useLocale } from '../../context/LocaleContext'
 import { getReviewsContent } from '../../data/reviews'
@@ -31,7 +32,7 @@ const swapVariants: Variants = {
  */
 export function ReviewsSection() {
   const { locale } = useLocale()
-  const { ariaLabel, previousLabel, nextLabel, reviews } = getReviewsContent(locale)
+  const { ariaLabel, previousLabel, nextLabel, caseLinkLabel, reviews } = getReviewsContent(locale)
   const reduced = useReducedMotion() === true
   const [index, setIndex] = useState(0)
 
@@ -97,6 +98,12 @@ export function ReviewsSection() {
           {review.role} · {review.company}
         </p>
       </div>
+      {review.caseHref && (
+        <Link to={review.caseHref} className="reviews-case-link">
+          {caseLinkLabel}
+          <ArrowIcon rotate={-45} width="0.9em" height="0.9em" />
+        </Link>
+      )}
     </>
   )
 
@@ -104,6 +111,20 @@ export function ReviewsSection() {
     <section className="reviews-section" aria-label={ariaLabel}>
       <Container columns>
         <div className="reviews-grid">
+          {/* The section's label, in the same style as the numbered labels in "Hvad jeg kan
+              tilbyde": the accent dot and the name, with the position (01 / 03) at the right
+              when there is more than one review. */}
+          <div className="reviews-label" aria-hidden="true">
+            <span className="reviews-label-text">
+              <span className="added-value-dot" />
+              {ariaLabel}
+            </span>
+            {count > 1 && (
+              <span className="reviews-count">
+                {String(index + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}
+              </span>
+            )}
+          </div>
           <div className="reviews-controls">
             <button
               type="button"
