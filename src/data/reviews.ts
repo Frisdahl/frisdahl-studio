@@ -6,7 +6,7 @@ export interface ReviewItem {
   name: string
   role: string
   company: string
-  /** Placeholder: reused case imagery until real portraits exist. */
+  /** Portrait. The placeholder reviews still reuse case imagery until real portraits exist. */
   imageSrc: string
   imageAlt: string
 }
@@ -18,14 +18,23 @@ export interface ReviewsContent {
   reviews: ReviewItem[]
 }
 
-// Placeholder testimonials: invented names, companies and quotes until real
-// reviews exist. Keep them clearly replaceable.
+// The first review (Peter Salling) is real. The others are placeholders with invented names,
+// companies and quotes until real reviews exist. Keep them clearly replaceable.
 const reviewsContent: Record<Locale, ReviewsContent> = {
   da: {
     ariaLabel: 'Anmeldelser',
     previousLabel: 'Forrige anmeldelse',
     nextLabel: 'Næste anmeldelse',
     reviews: [
+      {
+        quote:
+          'Alexander var super skarp i behovsafsøgningsfasen. Han satte sig godt ind i konventionerne for mit felt, og kom tilbage med elegante løsninger til hvordan man kunne forbedre og styrke de konventioner af hjemmesidedesign. Han har leveret et produkt, som er meget høj kvalitet, super stilet og som dækker mine kommunikationsbehov. Og så er han rigtig behagelig og serviceminded hele vejen igennem. Stor anbefaling herfra!',
+        name: 'Peter Salling',
+        role: 'Filmproducer',
+        company: 'petersalling.com',
+        imageSrc: '/images/reviews/peter-salling.webp',
+        imageAlt: 'Portræt af filmproducer Peter Salling',
+      },
       {
         quote:
           'Alexander forstod vores brand med det samme og leverede en hjemmeside, der både er lynhurtig og smuk at se på. Hele forløbet var hurtigt, overskueligt og uden stress.',
