@@ -1370,6 +1370,25 @@
     @apply grid gap-2xl xl:grid-cols-[minmax(0,1fr)_minmax(0,46rem)] xl:gap-32;
   }
 
+  /* The type specimen: the left column is as wide as the left picture of a two-picture row
+     (half the content width less half the gap between pictures), so the cap height and baseline
+     rules end where the picture below ends. The letter grid takes what is left, up to 46rem. */
+  @media (min-width: 1280px) {
+    .case-detail-typography .case-detail-typography-grid {
+      grid-template-columns: calc(50% - var(--image-gap) / 2) minmax(0, 46rem);
+      column-gap: var(--image-gap);
+      justify-content: space-between;
+    }
+  }
+
+  /* Stacked (the letter grid below the text): from 1024px the rules still end under the
+     left picture's edge. Narrower, the specimen keeps the full width, or its letter gets too small. */
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    .case-detail-typography .case-detail-typography-specimen {
+      width: calc(50% - var(--image-gap) / 2);
+    }
+  }
+
   .case-detail-typography-description {
     @apply mt-md max-w-[34rem] text-body text-secondary;
   }
@@ -2418,7 +2437,7 @@
 
   /* The clicked card's arrow settles out before its image is lifted. */
   .case-card.is-transition-source .case-card-arrow-slider {
-    transform: translate(100%, -100%);
+    transform: translate(100%, 0);
     transition: transform 0.35s cubic-bezier(0.55, 0.055, 0.675, 0.19);
   }
 
@@ -2463,32 +2482,35 @@
     }
   }
 
-  /* The title and its arrow. The arrow sits in a clipped box the height of the
-     title's text: it waits below and to the left of it, slides up to the right
-     into the box on hover, and leaves up and to the right (CaseCard sets
-     is-in / is-out). */
+  /* The title and its arrow. The arrow stands in the page's side margin, to the left of the
+     title, in a clipped box the height of the title's text: it waits out of sight to its left,
+     slides in on hover to point at the title, and leaves to the right (CaseCard sets
+     is-in / is-out). It is out of the flow, so the title keeps lining up with the image. */
   .case-card-title-row {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 0.4em;
     @apply text-h3;
   }
 
   .case-card-arrow {
+    position: absolute;
+    top: 50%;
+    right: 100%;
     display: inline-flex;
-    flex: none;
     width: 0.9em;
     height: 0.9em;
+    margin-right: 0.4em;
     overflow: hidden;
     color: var(--color-accent);
+    transform: translateY(-50%);
   }
-
 
   .case-card-arrow-slider {
     display: flex;
     width: 100%;
     height: 100%;
-    transform: translate(-100%, 100%);
+    transform: translate(-100%, 0);
   }
 
   .case-card-arrow-slider.is-in {
@@ -2497,7 +2519,7 @@
   }
 
   .case-card-arrow-slider.is-out {
-    transform: translate(100%, -100%);
+    transform: translate(100%, 0);
     transition: transform 0.5s cubic-bezier(0.45, 0, 0.55, 1);
   }
 

@@ -33,7 +33,7 @@ export interface CaseCardProps {
   href: string
   /** Put the title and keywords under the image instead of above it. */
   metaBelow?: boolean
-  /** The arrow that slides in next to the title on hover (default on). */
+  /** The arrow that slides in to the left of the title on hover (default on). */
   showArrow?: boolean
   /** Title and keywords rise line by line out of their masks once the row scrolls in (the home
    *  page). Off where the page's own entrance already animates the text. */
@@ -64,8 +64,8 @@ function keywordsWithDots(keywords: string) {
  * and then carries on to the top right.
  */
 export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, metaBelow = false, showArrow = true, revealOnScroll = false }: CaseCardProps) {
-  // The title's arrow: waits at the bottom left ('idle'), slides in on hover ('in'),
-  // leaves at the top right when the mouse does ('out'), then waits again.
+  // The title's arrow: waits out of sight to the left ('idle'), slides in on hover ('in'),
+  // leaves to the right when the mouse does ('out'), then waits again.
   const [arrow, setArrow] = useState<'idle' | 'in' | 'out'>('idle')
   // The arrow has arrived (its slide in is done); until then a leaving mouse has to wait.
   const arrived = useRef(false)
@@ -76,19 +76,6 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, me
       <div className="case-card-meta">
         {/* Each title is an h3 under the section's "Latest projects" h2. */}
         <div className="case-card-title-row">
-          {revealOnScroll ? (
-            <MaskedLineReveal as="h3" className="case-card-client" {...ROW_REVEAL}>
-              <Link to={href} className="case-card-title-link">
-                {client}
-              </Link>
-            </MaskedLineReveal>
-          ) : (
-            <h3 className="case-card-client">
-              <Link to={href} className="case-card-title-link">
-                {client}
-              </Link>
-            </h3>
-          )}
           {showArrow && (
             <span className="case-card-arrow" aria-hidden="true">
               <span
@@ -106,10 +93,23 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, me
                   }
                 }}
               >
-                {/* The site's arrow, turned to point up to the right corner. */}
-                <ArrowIcon rotate={-45} width="100%" height="100%" />
+                {/* The site's arrow, pointing right: at the title it stands to the left of. */}
+                <ArrowIcon width="100%" height="100%" />
               </span>
             </span>
+          )}
+          {revealOnScroll ? (
+            <MaskedLineReveal as="h3" className="case-card-client" {...ROW_REVEAL}>
+              <Link to={href} className="case-card-title-link">
+                {client}
+              </Link>
+            </MaskedLineReveal>
+          ) : (
+            <h3 className="case-card-client">
+              <Link to={href} className="case-card-title-link">
+                {client}
+              </Link>
+            </h3>
           )}
         </div>
         {revealOnScroll ? (
