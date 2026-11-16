@@ -44,7 +44,16 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     ],
     afterPalette: { imageSrc: '/cases/nordwear/ipad-glas--3-2.webp', imageAlt: 'Nordwear forside på en iPad Pro', aspectRatio: '3 / 2' },
     horizontalBottomPair: [
-      { imageSrc: '/cases/nordwear/iphone-forside--4-3.webp', imageAlt: 'Nordwear forside på en iPhone', aspectRatio: '4 / 3' },
+      {
+        imageSrc: '/cases/nordwear/iphone-produktside-video--poster--4-3.webp',
+        imageAlt: 'Nordwear produktside på en iPhone',
+        aspectRatio: '4 / 3',
+        // The screen plays a recording of the real shop: the product page scrolling.
+        video: {
+          src: '/cases/nordwear/iphone-produktside-video--4-3.mp4',
+          poster: '/cases/nordwear/iphone-produktside-video--poster--4-3.webp',
+        },
+      },
       { imageSrc: '/cases/nordwear/iphone-produktside--4-3.webp', imageAlt: 'Nordwear produktside på en iPhone', aspectRatio: '4 / 3' },
     ],
   },
