@@ -218,6 +218,7 @@ export async function runSharedCaseTransition(
   let metaValues: Element[] = []
   let metaLabels: Element[] = []
   let metaItems: HTMLElement[] = []
+  let heroCatchUp: HTMLVideoElement | null = null
 
   try {
     // A slow frame must not make the motion skip ahead (see setTransitionLagSmoothing); undone in `finally`.
@@ -276,6 +277,23 @@ export async function runSharedCaseTransition(
         /* not seekable yet: it plays from the start */
       }
       void heroVideo.play().catch(() => {})
+      // The seek takes a few hundred ms, in which the ghost's clip moves on, so the hero's clip
+      // lands behind it. A second seek at the hand-over would leave it without a frame for a moment
+      // (the flash), so it catches up here instead, hidden under the grow, by playing a little
+      // faster; the rate goes back to normal at the hand-over.
+      heroCatchUp = heroVideo
+      heroVideo.addEventListener(
+        'seeked',
+        () => {
+          const length = ghostVideo.duration || 0
+          let lag = ghostVideo.currentTime - heroVideo.currentTime
+          if (length && lag > length / 2) lag -= length
+          else if (length && lag < -length / 2) lag += length
+          const rate = 1 + lag / Math.max(0.4, GROW_DURATION - 0.3)
+          heroVideo.playbackRate = Math.min(2, Math.max(0.5, rate))
+        },
+        { once: true },
+      )
     }
     topImage.src = heroImage.currentSrc || heroImage.src
     // Decoded before it fades in, so the swap never waits on the picture.
@@ -355,6 +373,7 @@ export async function runSharedCaseTransition(
     })
 
     // 4. Hand over: the real image takes the ghost's place, then the text rises.
+    if (heroCatchUp) heroCatchUp.playbackRate = 1
     if (ghostVideo && heroVideo) {
       // The hero's clip has been playing in step with the ghost's; only if the two have drifted apart
       // (a slow frame, a loop point in between) is it seeked again before the ghost lets go.
@@ -379,6 +398,7 @@ export async function runSharedCaseTransition(
     await entered
   } finally {
     setTransitionLagSmoothing(false)
+    if (heroCatchUp) heroCatchUp.playbackRate = 1
     ghostVideo?.pause()
     ghost.remove()
     split.revert()
