@@ -2663,10 +2663,9 @@
 
   /* The marks are animated with GSAP (see AddedValueSection). */
 
-  /* Reviews, on the 12-column grid (from 1024px): the arrows on the left
-     (columns 2-4), the quote on the right (columns 6-12), and under it, at its
-     left edge, the reviewer's portrait, name and role. No timer: the arrows
-     change the review. Stacked on phones and tablets. */
+  /* Reviews, on the 12-column grid (from 1024px): the quote from column 3, and under it, at
+     its left edge, the reviewer's portrait, name and role, with the arrows at the right end of
+     that row. No timer: the arrows change the review. Stacked on phones and tablets. */
   .reviews-section {
     @apply py-section-sm lg:py-section;
     /* More room below, before the footer: 8rem (12rem from desktop). */
@@ -2700,19 +2699,22 @@
       grid-column: 1 / -1;
     }
 
+    /* The review starts at column 3 (columns 3-11). The arrows sit in the portrait's row,
+       at the right end of the review. */
     .reviews-controls {
-      grid-column: 1 / span 4;
-      grid-row: 1;
-      align-self: start;
+      grid-column: 3 / span 9;
+      grid-row: 2;
+      align-self: center;
+      justify-self: end;
     }
 
     .reviews-body {
-      grid-column: 6 / span 7;
+      grid-column: 3 / span 9;
       grid-row: 1;
     }
 
     .reviews-person {
-      grid-column: 6 / span 7;
+      grid-column: 3 / span 9;
       grid-row: 2;
     }
   }
@@ -2761,9 +2763,10 @@
   /* The quote's lines animate in masks (see ReviewsSection). */
   .reviews-quote {
     position: relative;
-    /* 32px from desktop, scaling down to 24px on phones; the measure layer
-       inherits it, so the line breaks match the visible wrap. */
-    font-size: clamp(1.75rem, calc(16px + 1.7vw), 40px);
+    /* The same size as the column titles in "Hvad jeg kan tilbyde" (.added-value-title, e.g.
+       "Brand identitet"): 24px on phones up to 32px. The measure layer inherits it, so the line
+       breaks match the visible wrap. */
+    font-size: clamp(1.5rem, 2.2vw, 2rem);
     line-height: 1.2;
     letter-spacing: -0.02em;
     font-weight: 500;

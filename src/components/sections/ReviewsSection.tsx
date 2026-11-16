@@ -105,27 +105,22 @@ export function ReviewsSection() {
       <Container columns>
         <div className="reviews-grid">
           <div className="reviews-controls">
-            {/* One review has nothing to page through. */}
-            {count > 1 && (
-              <>
-                <button
-                  type="button"
-                  className="reviews-arrow"
-                  aria-label={previousLabel}
-                  onClick={() => goTo(index - 1)}
-                >
-                  <ArrowIcon rotate={180} />
-                </button>
-                <button
-                  type="button"
-                  className="reviews-arrow"
-                  aria-label={nextLabel}
-                  onClick={() => goTo(index + 1)}
-                >
-                  <ArrowIcon />
-                </button>
-              </>
-            )}
+            <button
+              type="button"
+              className="reviews-arrow"
+              aria-label={previousLabel}
+              onClick={() => goTo(index - 1)}
+            >
+              <ArrowIcon rotate={180} />
+            </button>
+            <button
+              type="button"
+              className="reviews-arrow"
+              aria-label={nextLabel}
+              onClick={() => goTo(index + 1)}
+            >
+              <ArrowIcon />
+            </button>
           </div>
 
           {/* One presence for both: the quote lines and the person switch
