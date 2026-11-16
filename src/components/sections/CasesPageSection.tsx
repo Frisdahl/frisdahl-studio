@@ -251,7 +251,6 @@ export function CasesPageSection() {
                   video={getCaseMainVideo(item.id)}
                   href={item.href}
                   metaBelow
-                  showArrow={false}
                 />
               </li>
             ))}

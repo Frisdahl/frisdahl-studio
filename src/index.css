@@ -627,18 +627,57 @@
     border: 0;
     border-radius: var(--radius-control-sm);
     background-color: rgb(255 255 255 / 0);
-    -webkit-backdrop-filter: blur(12px) saturate(160%);
-    backdrop-filter: blur(12px) saturate(160%);
-    box-shadow: 0 2px 14px rgb(0 0 0 / 0);
+    /* Liquid glass, kept cheap: one static blur per chip (never animated) with extra saturation
+       and a touch of brightness so the picture behind stays vivid. The rest of the look is
+       box-shadow and a gradient, which cost almost nothing. isolation keeps the ::before sheen
+       inside the chip. */
+    -webkit-backdrop-filter: blur(14px) saturate(180%) brightness(1.05);
+    backdrop-filter: blur(14px) saturate(180%) brightness(1.05);
+    position: relative;
+    isolation: isolate;
+    box-shadow:
+      0 8px 24px rgb(0 0 0 / 0),
+      inset 0 0 0 1px rgb(255 255 255 / 0),
+      inset 0 1px 0 rgb(255 255 255 / 0),
+      inset 0 -1px 0 rgb(0 0 0 / 0);
     transition:
       color 400ms var(--ease-smooth),
       background-color 400ms var(--ease-smooth),
       box-shadow 400ms var(--ease-smooth);
   }
 
+  /* The sheen: light falling from the top-left, fading out towards the bottom-right. It only
+     fades (opacity), so it composites on the GPU without repainting. */
+  .site-header :is(.site-header-logo, .header-menu-toggle)::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(
+      135deg,
+      rgb(255 255 255 / 0.5) 0%,
+      rgb(255 255 255 / 0.12) 38%,
+      rgb(255 255 255 / 0) 62%,
+      rgb(255 255 255 / 0.18) 100%
+    );
+    opacity: 0;
+    transition: opacity 400ms var(--ease-smooth);
+  }
+
   .site-header.is-scrolled :is(.site-header-logo, .header-menu-toggle) {
-    background-color: rgb(255 255 255 / 0.55);
-    box-shadow: 0 2px 14px rgb(0 0 0 / 0.07);
+    background-color: rgb(255 255 255 / 0.34);
+    box-shadow:
+      0 8px 24px rgb(0 0 0 / 0.1),
+      0 1px 3px rgb(0 0 0 / 0.06),
+      inset 0 0 0 1px rgb(255 255 255 / 0.5),
+      inset 0 1px 0 rgb(255 255 255 / 0.85),
+      inset 0 -1px 0 rgb(0 0 0 / 0.06);
+  }
+
+  .site-header.is-scrolled :is(.site-header-logo, .header-menu-toggle)::before {
+    opacity: 1;
   }
 
   .site-header .site-header-logo {
@@ -651,7 +690,7 @@
   }
 
   .site-header.is-scrolled :is(.site-header-logo, .header-menu-toggle):is(:hover, :focus-visible) {
-    background-color: rgb(255 255 255 / 0.75);
+    background-color: rgb(255 255 255 / 0.5);
   }
 
   /* No backdrop-filter: a nearly opaque chip. Reduced transparency: a solid one. Both only once
@@ -671,6 +710,10 @@
     .site-header.is-scrolled :is(.site-header-logo, .header-menu-toggle) {
       background-color: var(--color-background);
     }
+
+    .site-header :is(.site-header-logo, .header-menu-toggle)::before {
+      display: none;
+    }
   }
 
   /* While the menu is open (.menu-active, on <html>, from the moment it opens until it has
@@ -679,13 +722,22 @@
   .menu-active .site-header.is-scrolled :is(.site-header-logo, .header-menu-toggle),
   .menu-active .site-header.is-scrolled :is(.site-header-logo, .header-menu-toggle):is(:hover, :focus-visible) {
     background-color: rgb(255 255 255 / 0);
-    box-shadow: 0 2px 14px rgb(0 0 0 / 0);
+    box-shadow:
+      0 8px 24px rgb(0 0 0 / 0),
+      inset 0 0 0 1px rgb(255 255 255 / 0),
+      inset 0 1px 0 rgb(255 255 255 / 0),
+      inset 0 -1px 0 rgb(0 0 0 / 0);
+  }
+
+  .menu-active .site-header.is-scrolled :is(.site-header-logo, .header-menu-toggle)::before {
+    opacity: 0;
   }
 
   @media (prefers-reduced-motion: reduce) {
     .site-header-logo,
     .header-menu-toggle,
-    .site-header :is(.site-header-logo, .header-menu-toggle) {
+    .site-header :is(.site-header-logo, .header-menu-toggle),
+    .site-header :is(.site-header-logo, .header-menu-toggle)::before {
       transition: none;
     }
   }
@@ -2273,29 +2325,29 @@
   }
 
   /* Home: the keywords sit under the title, at its left edge, on every screen size. */
-  .home-cases-list .case-card-meta-below .case-card-meta {
+  :is(.home-cases-list, .cases-page-grid) .case-card-meta-below .case-card-meta {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.375rem;
     padding-top: 1rem;
   }
 
-  .home-cases-list .case-card-meta-below .case-card-keywords {
+  :is(.home-cases-list, .cases-page-grid) .case-card-meta-below .case-card-keywords {
     text-align: left;
   }
 
   /* Home: the title and the keywords are the same size, 72% of the site's h3
      (16 to 19px). The keywords are lowercase with only the first letter
      capitalised (the first letter is done by ::first-letter). */
-  .home-cases-list .case-card-title-row,
-  .home-cases-list .case-card-client {
+  :is(.home-cases-list, .cases-page-grid) .case-card-title-row,
+  :is(.home-cases-list, .cases-page-grid) .case-card-client {
     font-size: calc(var(--text-h3) * 0.72);
   }
 
   /* The keywords use the same text style as the keywords in "Hvad jeg kan tilbyde"
      (.added-value-items): 15px, line height 1.55, the muted grey, regular weight and
      the words' own capitalisation. */
-  .home-cases-list .case-card-keywords {
+  :is(.home-cases-list, .cases-page-grid) .case-card-keywords {
     font-size: 0.9375rem;
     font-weight: 400;
     line-height: 1.55;
