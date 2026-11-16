@@ -2663,9 +2663,8 @@
 
   /* The marks are animated with GSAP (see AddedValueSection). */
 
-  /* Reviews, on the 12-column grid (from 1024px): the quote from column 3, and under it, at
-     its left edge, the reviewer's portrait, name and role, with the arrows at the right end of
-     that row. No timer: the arrows change the review. Stacked on phones and tablets. */
+  /* Reviews, on the 12-column grid (from 1024px): the arrows at the top left (columns 1-2), the
+     quote from column 3, and under it, at its left edge, the reviewer's portrait, name and role. No timer: the arrows change the review. Stacked on phones and tablets. */
   .reviews-section {
     @apply py-section-sm lg:py-section;
     /* More room below, before the footer: 8rem (12rem from desktop). */
@@ -2699,13 +2698,23 @@
       grid-column: 1 / -1;
     }
 
-    /* The review starts at column 3 (columns 3-11). The arrows sit in the portrait's row,
-       at the right end of the review. */
+    /* The review starts at column 3 (columns 3-11); the arrows stay at the top left, in
+       columns 1-2. */
     .reviews-controls {
-      grid-column: 3 / span 9;
-      grid-row: 2;
-      align-self: center;
-      justify-self: end;
+      grid-column: 1 / span 2;
+      grid-row: 1;
+      align-self: start;
+      /* Two columns are too narrow for both arrows beside the hanging quote mark, so below
+         1600px they stack. */
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    @media (min-width: 1600px) {
+      .reviews-controls {
+        flex-direction: row;
+        align-items: center;
+      }
     }
 
     .reviews-body {
