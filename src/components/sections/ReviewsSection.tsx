@@ -1,9 +1,8 @@
 import { useLayoutEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'framer-motion'
 import { useLocale } from '../../context/LocaleContext'
 import { getReviewsContent } from '../../data/reviews'
-import { ArrowIcon, Container, MaskedLineReveal } from '../ui'
+import { ArrowChipButton, ArrowIcon, Container, MaskedLineReveal } from '../ui'
 
 /** The person (portrait, name and role) fades out and fades in, without moving. */
 const personVariants: Variants = {
@@ -99,10 +98,14 @@ export function ReviewsSection() {
         </p>
       </div>
       {review.caseHref && (
-        <Link to={review.caseHref} className="reviews-case-link">
-          {caseLinkLabel}
-          <ArrowIcon rotate={-45} width="0.9em" height="0.9em" />
-        </Link>
+        <ArrowChipButton
+          direction="right"
+          variant="diagonal"
+          label={caseLinkLabel}
+          text={caseLinkLabel}
+          href={review.caseHref}
+          className="reviews-case-link"
+        />
       )}
     </>
   )
@@ -111,20 +114,6 @@ export function ReviewsSection() {
     <section className="reviews-section" aria-label={ariaLabel}>
       <Container columns>
         <div className="reviews-grid">
-          {/* The section's label, in the same style as the numbered labels in "Hvad jeg kan
-              tilbyde": the accent dot and the name, with the position (01 / 03) at the right
-              when there is more than one review. */}
-          <div className="reviews-label" aria-hidden="true">
-            <span className="reviews-label-text">
-              <span className="added-value-dot" />
-              {ariaLabel}
-            </span>
-            {count > 1 && (
-              <span className="reviews-count">
-                {String(index + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}
-              </span>
-            )}
-          </div>
           <div className="reviews-controls">
             <button
               type="button"
@@ -142,6 +131,12 @@ export function ReviewsSection() {
             >
               <ArrowIcon />
             </button>
+            {/* The position (01 / 03), only when there is more than one review. */}
+            {count > 1 && (
+              <span className="reviews-count" aria-hidden="true">
+                {String(index + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}
+              </span>
+            )}
           </div>
 
           {/* One presence for both: the quote lines and the person switch

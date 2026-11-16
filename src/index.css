@@ -2702,37 +2702,20 @@
        left, in columns 1-4, side by side. */
     .reviews-grid .reviews-controls {
       grid-column: 1 / span 4;
-      grid-row: 2;
-      align-self: start;
-    }
-
-    /* The label row, over the review's columns. */
-    .reviews-grid .reviews-label {
-      grid-column: 1 / -1;
       grid-row: 1;
-      display: grid;
-      grid-template-columns: subgrid;
-    }
-
-    .reviews-grid .reviews-label-text {
-      grid-column: 5 / span 6;
-    }
-
-    .reviews-grid .reviews-count {
-      grid-column: 11 / span 2;
-      justify-self: end;
+      align-self: start;
     }
 
     /* Eight columns, flush with the right edge (columns 5-12): about 60 characters a line at
        this size, inside the 45-75 that reads comfortably. */
     .reviews-body {
       grid-column: 5 / span 8;
-      grid-row: 2;
+      grid-row: 1;
     }
 
     .reviews-person {
       grid-column: 5 / span 8;
-      grid-row: 3;
+      grid-row: 2;
     }
   }
 
@@ -2740,25 +2723,11 @@
     @apply flex items-center gap-sm;
   }
 
-  /* The label row above the review: the dot and the name (like the labels in "Hvad jeg kan
-     tilbyde") and the position counter. */
-  .reviews-label {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+  /* The position beside the arrows (01 / 03): a small muted label, shown with several reviews. */
+  .reviews-count {
+    margin-left: 0.75rem;
     font-size: 0.875rem;
     line-height: 1;
-    color: var(--color-dark);
-  }
-
-  .reviews-label-text {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .reviews-count {
     font-variant-numeric: tabular-nums;
     color: var(--color-muted);
   }
@@ -2846,29 +2815,11 @@
     border-top: 1px solid color-mix(in srgb, var(--color-dark) 14%, transparent);
   }
 
-  /* "Se projektet ↗" at the right end of the author row: where the review is from. */
+  /* "Se projektet ↗" at the right end of the author row: the hero's link (ArrowChipButton,
+     diagonal), at this size. */
   .reviews-case-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4em;
     margin-left: auto;
     font-size: 0.9375rem;
-    font-weight: 500;
-    color: var(--color-dark);
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.25em;
-    text-decoration-color: color-mix(in srgb, var(--color-dark) 35%, transparent);
-    transition: text-decoration-color 300ms var(--ease-smooth);
-  }
-
-  .reviews-case-link:is(:hover, :focus-visible) {
-    text-decoration-color: var(--color-dark);
-  }
-
-  .reviews-case-link:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 0.25rem;
   }
 
   @media (max-width: 639px) {
@@ -2879,12 +2830,6 @@
     .reviews-case-link {
       margin-left: 0;
       flex-basis: 100%;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .reviews-case-link {
-      transition: none;
     }
   }
 
