@@ -173,7 +173,7 @@ export async function runSharedCaseTransition(
     // scale 1 as well: starting at the still's zoom made it jump 6% bigger the moment it took over, and then
     // rescale while playing. Only the still carries the scroll's zoom.
     gsap.set(fromMedia, { scale: ghostVideo ? 1 : new DOMMatrix(getComputedStyle(cardImage).transform).a, transformOrigin: '50% 50%' })
-    const cardOverlay = card.querySelector<HTMLElement>('.case-detail-next-overlay')
+    const cardOverlay = card.querySelector<HTMLElement>('.case-media-scrim')
     overlay = document.createElement('div')
     Object.assign(overlay.style, {
       position: 'absolute',
