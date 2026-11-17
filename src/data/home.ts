@@ -65,6 +65,8 @@ const homeContent = {
           keywords: "Website • Branding • Booking",
           href: '/cases/fresh-cut',
           imageSrc: "/cases/fresh-cut/official--16-9.webp",
+          // Where the picture is centred in a narrow card: on the start of the headline and the barber.
+          focus: "38% 50%",
           imageAlt: "Fresh Cut case",
         },
         {
