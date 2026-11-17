@@ -51,7 +51,8 @@ const MEDIA_SIZES = '(min-width: 1024px) 25vw, 46vw'
  * brackets sits under the first word.
  *
  * Motion, first load of a visit to the home page (the intro): "( )" in the middle of the screen parts to
- * the sides, "Beyond Digital" rises between them, the brackets fade and the words scale out to their
+ * the sides, and once they have finished "Beyond Digital" rises between them, both words together, the
+ * brackets fade and the words scale out to their
  * places, the picture falls in from the top, then the line's brackets part, its text rises and the
  * header fades in. Scrolling is locked meanwhile. Otherwise the words just rise out of their masks.
  * The picture changes with a wipe from the top, one mockup after the other (paused while the hero is
@@ -169,22 +170,29 @@ export function Hero() {
               finish()
             },
           })
+          // The brackets part first; only when they have finished does "Beyond Digital" rise, both
+          // words together (no stagger). Everything after follows the words, with the same gaps as before.
+          const PART_AT = 0.5
+          const PART_DURATION = 1.2
+          const WORDS_AT = PART_AT + PART_DURATION
+          const WORDS_DURATION = 1
+          const AFTER_WORDS = WORDS_AT + WORDS_DURATION
           tl.to(brackets, { opacity: 1, duration: 0.35, ease: 'power1.out' }, 0.1)
             // ( ) part to the sides ...
-            .to(brackets[0], { x: -apart, duration: 1.2, ease: 'expo.inOut' }, 0.5)
-            .to(brackets[1], { x: apart, duration: 1.2, ease: 'expo.inOut' }, 0.5)
-            // ... "Beyond Digital" rises between them ...
-            .to(words, { yPercent: 0, duration: 1, ease: 'expo.out', stagger: 0.1 }, 1.1)
+            .to(brackets[0], { x: -apart, duration: PART_DURATION, ease: 'expo.inOut' }, PART_AT)
+            .to(brackets[1], { x: apart, duration: PART_DURATION, ease: 'expo.inOut' }, PART_AT)
+            // ... then "Beyond Digital" rises between them, both words at the same time ...
+            .to(words, { yPercent: 0, duration: WORDS_DURATION, ease: 'expo.out' }, WORDS_AT)
             // ... the brackets fade and the words scale out to their places ...
-            .to(brackets, { opacity: 0, duration: 0.5, ease: 'power2.inOut' }, 2.2)
-            .to(masks, { x: 0, y: 0, scale: 1, duration: 1.4, ease: 'expo.inOut' }, 2.2)
+            .to(brackets, { opacity: 0, duration: 0.5, ease: 'power2.inOut' }, AFTER_WORDS)
+            .to(masks, { x: 0, y: 0, scale: 1, duration: 1.4, ease: 'expo.inOut' }, AFTER_WORDS)
             // ... the picture falls from the top ...
-            .to(media, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.3, ease: 'expo.inOut' }, 3.0)
+            .to(media, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.3, ease: 'expo.inOut' }, AFTER_WORDS + 0.8)
             // ... the line's brackets part and its text rises, as the header fades in.
-            .set(line, { autoAlpha: 1 }, 4.0)
-            .to(lineBrackets, { x: 0, duration: 1.1, ease: 'expo.inOut' }, 4.0)
-            .to(lineText, { yPercent: 0, duration: 0.9, ease: 'expo.out' }, 4.5)
-            .to(header, { opacity: 1, duration: 0.9, ease: 'power2.out' }, 4.0)
+            .set(line, { autoAlpha: 1 }, AFTER_WORDS + 1.8)
+            .to(lineBrackets, { x: 0, duration: 1.1, ease: 'expo.inOut' }, AFTER_WORDS + 1.8)
+            .to(lineText, { yPercent: 0, duration: 0.9, ease: 'expo.out' }, AFTER_WORDS + 2.3)
+            .to(header, { opacity: 1, duration: 0.9, ease: 'power2.out' }, AFTER_WORDS + 1.8)
         })
       })
 
