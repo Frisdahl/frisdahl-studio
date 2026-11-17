@@ -64,8 +64,8 @@ const homeContent = {
           keywords: "Website • Design • Udvikling",
           href: '/cases/rethink-furniture',
           imageSrc: "/cases/rethink-furniture/mockup--4-3.webp",
-          // Where the picture is centred in a narrow card: on the iPad.
-          focus: "52.7% 50%",
+          // Where the picture is centred in a narrow card: on the iPad (the clip is framed with the iPad in the middle).
+          focus: "50% 50%",
           imageAlt: "Rethink Furniture på en iPad Pro på en sten",
         },
         {
