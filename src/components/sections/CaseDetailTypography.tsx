@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import type { CaseDetailTypography as CaseDetailTypographyContent } from '../../types/caseDetail'
 import { Container, RevealText } from '../ui'
-import { useMediaReveal } from '../../hooks'
 
 interface CaseDetailTypographyProps {
   typography: CaseDetailTypographyContent
@@ -21,8 +20,6 @@ const SPECIMEN_WIDTH = 2.1 * EM
  */
 export function CaseDetailTypography({ typography }: CaseDetailTypographyProps) {
   const [active, setActive] = useState('a')
-  const specimenRef = useMediaReveal<HTMLDivElement>()
-  const lettersRef = useMediaReveal<HTMLDivElement>(0.1)
   const {
     title,
     description,
@@ -48,9 +45,7 @@ export function CaseDetailTypography({ typography }: CaseDetailTypographyProps) 
             <RevealText as="h2" className="case-detail-overview-title">
               {title}
             </RevealText>
-            <RevealText as="p" className="case-detail-typography-description">
-              {description}
-            </RevealText>
+            <p className="case-detail-typography-description">{description}</p>
 
             <dl className="case-detail-typography-facts">
               <div>
@@ -63,7 +58,7 @@ export function CaseDetailTypography({ typography }: CaseDetailTypographyProps) 
               </div>
             </dl>
 
-            <div ref={specimenRef} className="case-detail-typography-specimen">
+            <div className="case-detail-typography-specimen">
               <span className="case-detail-typography-rule">
                 <span className="case-detail-overview-label">{capHeightLabel}</span>
               </span>
@@ -84,7 +79,7 @@ export function CaseDetailTypography({ typography }: CaseDetailTypographyProps) 
             </div>
           </div>
 
-          <div ref={lettersRef} className="case-detail-typography-letters" style={{ fontFamily }}>
+          <div className="case-detail-typography-letters" style={{ fontFamily }}>
             {LETTERS.map((letter) => (
               <button
                 key={letter}

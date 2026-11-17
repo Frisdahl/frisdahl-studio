@@ -1,6 +1,5 @@
 import type { CaseDetailOverview as CaseDetailOverviewContent } from '../../types/caseDetail'
 import { Container, RevealText } from '../ui'
-import { STAGGER } from '../../lib/motion'
 
 interface CaseDetailOverviewProps {
   overview: CaseDetailOverviewContent
@@ -8,7 +7,8 @@ interface CaseDetailOverviewProps {
 
 /**
  * Under the hero image: two rows with the heading on the left and its content
- * on the right. The details row is left out when a case has no details yet.
+ * on the right. The details row is left out when a case has no details yet. Only the small
+ * headings animate (RevealText); the text and everything else on the case page stands still.
  */
 export function CaseDetailOverview({ overview }: CaseDetailOverviewProps) {
   const { descriptionTitle, description, detailsTitle, details } = overview
@@ -22,9 +22,7 @@ export function CaseDetailOverview({ overview }: CaseDetailOverviewProps) {
           </RevealText>
           <div className="case-detail-overview-description">
             {description.map((paragraph) => (
-              <RevealText key={paragraph} as="p">
-                {paragraph}
-              </RevealText>
+              <p key={paragraph}>{paragraph}</p>
             ))}
           </div>
         </div>
@@ -35,15 +33,10 @@ export function CaseDetailOverview({ overview }: CaseDetailOverviewProps) {
               {detailsTitle}
             </RevealText>
             <dl className="case-detail-overview-details">
-              {details.map((fact, index) => (
+              {details.map((fact) => (
                 <div key={fact.label} className="case-detail-overview-detail">
-                  {/* One after the other, a beat apart: the rows read as a list being written. */}
-                  <RevealText as="dt" className="case-detail-overview-label" delay={index * STAGGER.lines}>
-                    {fact.label}
-                  </RevealText>
-                  <RevealText as="dd" className="case-detail-overview-value" delay={index * STAGGER.lines}>
-                    {fact.value}
-                  </RevealText>
+                  <dt className="case-detail-overview-label">{fact.label}</dt>
+                  <dd className="case-detail-overview-value">{fact.value}</dd>
                 </div>
               ))}
             </dl>

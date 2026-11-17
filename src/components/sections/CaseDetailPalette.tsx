@@ -1,6 +1,5 @@
 import type { CaseDetailPalette as CaseDetailPaletteContent } from "../../types/caseDetail";
 import { Container, RevealText } from "../ui";
-import { useMediaReveal } from "../../hooks";
 
 interface CaseDetailPaletteProps {
   palette: CaseDetailPaletteContent;
@@ -8,7 +7,6 @@ interface CaseDetailPaletteProps {
 
 /** The case's colours: heading left, a grid of swatches right, each labelled top left. */
 export function CaseDetailPalette({ palette }: CaseDetailPaletteProps) {
-  const panelRef = useMediaReveal<HTMLDivElement>(0.1);
   return (
     <section className="case-detail-palette" aria-label={palette.title}>
       <Container>
@@ -18,13 +16,11 @@ export function CaseDetailPalette({ palette }: CaseDetailPaletteProps) {
               {palette.title}
             </RevealText>
             {palette.description ? (
-              <RevealText as="p" className="case-detail-typography-description">
-                {palette.description}
-              </RevealText>
+              <p className="case-detail-typography-description">{palette.description}</p>
             ) : null}
           </div>
 
-          <div ref={panelRef} className="case-detail-palette-panel">
+          <div className="case-detail-palette-panel">
             <ul className="case-detail-palette-swatches">
               {palette.swatches.map((swatch) => (
                 <li
