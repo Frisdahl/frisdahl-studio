@@ -90,6 +90,12 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
       imageAlt: 'Rethink Furniture på en iPad Pro',
       aspectRatio: '4 / 3',
     },
+    // The mobile layout: the shop's product grid and the home page's collections, each on an iPhone (the screens are the
+    // real site at 425 px wide; cropped in a little so the screens read well).
+    horizontalBottomPair: [
+      { imageSrc: '/cases/rethink-furniture/iphone-produkter--4-3.webp', imageAlt: 'Rethink Furniture shop med produkter på en iPhone', aspectRatio: '4 / 3' },
+      { imageSrc: '/cases/rethink-furniture/iphone-kollektioner--4-3.webp', imageAlt: 'Rethink Furniture kollektioner på en iPhone', aspectRatio: '4 / 3' },
+    ],
   },
   'fresh-cut': {
     introPair: [
