@@ -1,14 +1,31 @@
-import { useLayoutEffect, useRef, type ElementType, type ReactNode } from 'react'
+import { forwardRef, useImperativeHandle, useLayoutEffect, useRef, type ElementType, type ReactNode } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
+
+/** The moving parts of a label, for a section that drives the opening itself (a scrubbed timeline). */
+export interface SectionLabelParts {
+  /** The closing bracket. */
+  close: HTMLSpanElement
+  /** The text that rises out of its mask. */
+  text: HTMLSpanElement
+  /** How far (px) the closing bracket must be moved back to stand right after the opening one. */
+  travel: () => number
+}
 
 interface SectionLabelProps {
   children: ReactNode
   /** The heading level the label stands in (it is the section's heading). */
   as?: ElementType
   className?: string
+  /** Opens by itself when it scrolls into view (default). With false the label stays finished and a
+   *  parent animates it through `ref.current.parts()`. */
+  autoplay?: boolean
+}
+
+export interface SectionLabelHandle {
+  parts: () => SectionLabelParts | null
 }
 
 /**
@@ -19,13 +36,31 @@ interface SectionLabelProps {
  * (transform only). Reduced motion: the finished label, no movement. The brackets are
  * decoration, so only the text is the heading's accessible name.
  */
-export function SectionLabel({ children, as: Tag = 'h2', className = '' }: SectionLabelProps) {
+export const SectionLabel = forwardRef<SectionLabelHandle, SectionLabelProps>(function SectionLabel(
+  { children, as: Tag = 'h2', className = '', autoplay = true },
+  handle,
+) {
   const rootRef = useRef<HTMLElement>(null)
   const openRef = useRef<HTMLSpanElement>(null)
   const closeRef = useRef<HTMLSpanElement>(null)
   const textRef = useRef<HTMLSpanElement>(null)
 
+  useImperativeHandle(
+    handle,
+    () => ({
+      parts: () => {
+        const open = openRef.current
+        const close = closeRef.current
+        const text = textRef.current
+        if (!open || !close || !text) return null
+        return { close, text, travel: () => close.offsetLeft - (open.offsetLeft + open.offsetWidth) }
+      },
+    }),
+    [],
+  )
+
   useLayoutEffect(() => {
+    if (!autoplay) return
     const root = rootRef.current
     const open = openRef.current
     const close = closeRef.current
@@ -54,7 +89,7 @@ export function SectionLabel({ children, as: Tag = 'h2', className = '' }: Secti
       }
     })
     return () => mm.revert()
-  }, [])
+  }, [autoplay])
 
   return (
     <Tag ref={rootRef} className={`section-label ${className}`.trim()}>
@@ -71,4 +106,4 @@ export function SectionLabel({ children, as: Tag = 'h2', className = '' }: Secti
       </span>
     </Tag>
   )
-}
+})
