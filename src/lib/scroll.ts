@@ -32,7 +32,7 @@ const WHEEL_MULTIPLIER = 0.7
  * the speed stays continuous (an earlier version that raised the easing rate near the end made the
  * page lurch forward just before it stopped).
  */
-const TAIL_SPEED = 45
+const TAIL_SPEED = 120
 
 export const DEFAULT_SCROLL_PRESET: ScrollPresetName = 'B'
 const PRESET_STORAGE_KEY = 'frisdahl:scroll-preset'
