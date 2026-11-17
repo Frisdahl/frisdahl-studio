@@ -236,8 +236,8 @@ export function Hero() {
           const WORDS_AT = PART_AT + PART_DURATION
           const WORDS_DURATION = 1
           const AFTER_WORDS = WORDS_AT + WORDS_DURATION
-          const LINE_AT = AFTER_WORDS + 1.8
-          const LINE_PART_DURATION = 1.1
+          const LINE_AT = AFTER_WORDS + 1.4
+          const LINE_PART_DURATION = 0.8
           tl.to(brackets, { opacity: 1, duration: 0.35, ease: 'power1.out' }, 0.1)
             // ( ) part to the sides ...
             .to(brackets[0], { x: leftX, duration: PART_DURATION, ease: 'expo.inOut' }, PART_AT)
