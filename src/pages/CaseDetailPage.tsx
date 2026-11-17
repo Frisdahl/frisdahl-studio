@@ -40,11 +40,11 @@ function CaseDetail({ caseSlug }: { caseSlug: string | undefined }) {
       <CaseDetailHero hero={detail.hero} />
       <CaseDetailOverview overview={detail.overview} />
       <CaseDetailIntroPair gallery={detail.gallery} />
-      {/* The same order on every project page: overview, the MacBooks, typography, colour palette, the phones (and the
-          tablet), results, the next project. */}
+      {/* The same order on every project page: overview, the MacBooks, typography, the phones, colour palette, the
+          tablet (when there is one), results, a clip under the results (when there is one), the next project. */}
       {detail.typography ? <CaseDetailTypography typography={detail.typography} /> : null}
-      {detail.palette ? <CaseDetailPalette palette={detail.palette} /> : null}
       <CaseDetailGallery gallery={detail.gallery} />
+      {detail.palette ? <CaseDetailPalette palette={detail.palette} /> : null}
       <CaseDetailAfterPalette gallery={detail.gallery} />
       {detail.results ? <CaseDetailResults results={detail.results} /> : null}
       <CaseDetailAfterResults gallery={detail.gallery} />

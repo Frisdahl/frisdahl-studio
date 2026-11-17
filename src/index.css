@@ -1486,14 +1486,8 @@
 
   /* Colour palette: shares the typography split; rounded, borderless swatches
      with the name and hex top left. */
-  /* The same room above as the typography section (they now follow each other), and below it the room the next section
-     needs; the gallery right after it adds none of its own. */
   .case-detail-palette {
-    @apply relative z-[1] mt-4xl pb-section-sm lg:mt-5xl lg:pb-section;
-  }
-
-  .case-detail-palette + .case-detail-gallery-section {
-    @apply mt-0;
+    @apply relative z-[1] pb-section-sm lg:pb-section;
   }
 
   /* An image under the palette (gallery.afterPalette): the palette's own bottom
