@@ -60,6 +60,42 @@ const caseDetails = {
         },
       ],
     },
+    'rethink-furniture': {
+      id: 'rethink-furniture',
+      hero: {
+        eyebrow: 'Case · Website',
+        title: 'Rethink Furniture — en webshop til møbler, der holder længere',
+        description:
+          'En rolig webshop til et dansk møbelbrand, hvor store billeder, serif-typografi og stille animationer lader materialer og håndværk tale.',
+        sliderAriaLabel: 'Automatisk gennemløb af Rethink Furniture case-billeder',
+        slides: [
+          { imageSrc: '/cases/rethink-furniture/mockup--4-3.webp', imageAlt: 'Rethink Furniture på en iPad Pro på en sten' },
+        ],
+      },
+      columns: [
+        {
+          title: 'Kunde',
+          paragraphs: [
+            'Rethink Furniture er et fiktivt dansk møbelbrand, jeg selv har skabt, så designet kunne bygges uden andres rammer.',
+            'Brandet laver få modeller og gør dem rigtigt: massivt træ, uld og sten, samlet til at holde i generationer.',
+          ],
+        },
+        {
+          title: 'Ydelser',
+          paragraphs: [
+            'Jeg stod for hele forløbet: koncept og design i Figma, og derefter udviklingen af en fungerende webshop.',
+            'Fokus var på ro, hierarki og bevægelse, så siden føles håndværksmæssig og ikke som en skabelon.',
+          ],
+        },
+        {
+          title: 'Resultat',
+          paragraphs: [
+            'En komplet shop med forside, shop, produktsider, om os, showroom og kontakt, som fungerer på computer, tablet og mobil.',
+            'Siden viser, hvordan animation kan bruges med måde: den fører blikket og understøtter indholdet uden at stjæle opmærksomheden.',
+          ],
+        },
+      ],
+    },
     'fresh-cut': {
       id: 'fresh-cut',
       hero: {
@@ -235,6 +271,15 @@ const caseProjectDetails: Record<
       deliverables: 'UX/UI-design, frontend, backend og administrationspanel',
       scope: 'Webshop, betaling, fragt, kundekonti, administration',
     },
+    'rethink-furniture': {
+      description: [
+        'Rethink Furniture er et fiktivt, dansk møbelbrand, designet i Figma og bygget som en fungerende webshop. Udtrykket er roligt og redaktionelt: varme, naturlige toner, store billeder og en serif-typografi, der giver siden en følelse af papir og håndværk.',
+        'Shoppen kan filtreres, sorteres og søges i. Hver produktside har et galleri, valg af træsort og højde, antal og uddybende afsnit, og kurven gemmes i browseren. Derudover er der sider om brandet, et showroom med bookingformular og en kontaktside med ofte stillede spørgsmål. Formularer og betaling er demonstrationer, der validerer og forklarer, at intet bliver sendt.',
+        'Bevægelsen er det, der binder siden sammen: overskrifter løfter sig ud af masker, billeder afdækkes og falder til ro, og sider skiftes med et sandfarvet tæppe, der hæver sig. Alt er bygget i React og TypeScript med GSAP og Lenis og tilpasset, så det også fungerer fint med reduceret bevægelse. Produktbillederne er genereret med AI, så detaljerne er tilnærmelser og ikke rigtige møbler.',
+      ],
+      deliverables: 'Koncept, UX/UI-design, frontend og animation',
+      scope: 'Webshop, produktsider, kurv, søgning, showroom',
+    },
     'peter-salling': {
       description: [
         'Peter Salling er filmproducer, og hans portfolio er bygget til at vise filmene frem. Udtrykket er mørkt, redaktionelt og filmisk, så billeder og video står i centrum, og grænsefladen træder i baggrunden. Sitet afløste en tidligere Squarespace-side i oktober 2026.',
@@ -371,6 +416,9 @@ const casePaletteDescriptions: Partial<Record<string, Record<Locale, string>>> =
   nordwear: {
     da: 'Paletten er bevidst afdæmpet, så produkterne står stærkest. Kul bruges til tekst, knapper og rammer, mens den lyse stenfarve er baggrunden for hele butikken. Bordeaux er brandets accent og ses i toppen af hver side, guld markerer anmeldelser, og den grå sten deler indholdet op uden at tage fokus.',
   },
+  'rethink-furniture': {
+    da: 'Paletten er hentet fra selve materialerne. Det lyse papir er baggrunden på hele sitet, den varme sand deler siderne op, og valnød bruges til de mørke flader og footeren. Det næsten sorte blæk bærer tekst og knapper, så billederne af træ, uld og sten får lov at være de eneste farver.',
+  },
   'peter-salling': {
     da: 'Paletten er næsten ren sort og hvid, så filmenes egne farver får hele opmærksomheden. Kul er baggrunden på hele sitet, hvid bruges til titler og navigation, og de grå toner er hvid med lavere gennemsigtighed – til brødtekst, linjer og flader oven på det mørke.',
   },
@@ -393,6 +441,12 @@ const casePalettes: Partial<
     { name: { da: 'Guld',  }, hex: '#C9A326', dark: false },
     { name: { da: 'Sten',  }, hex: '#D1D0CE', dark: false },
     { name: { da: 'Hvid',  }, hex: '#FFFFFF', dark: false },
+  ],
+  'rethink-furniture': [
+    { name: { da: 'Papir', }, hex: '#F6F3EE', dark: false },
+    { name: { da: 'Sand', }, hex: '#EBE5DA', dark: false },
+    { name: { da: 'Blæk', }, hex: '#26231F', dark: true },
+    { name: { da: 'Valnød', }, hex: '#3A2E27', dark: true },
   ],
   'peter-salling': [
     { name: { da: 'Kul',  }, hex: '#0C0C0C', dark: true },

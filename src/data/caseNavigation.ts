@@ -18,6 +18,7 @@ export interface CaseDetailNext {
 export const caseOrder = [
   'peter-salling',
   'nordwear',
+  'rethink-furniture',
   'fresh-cut',
   'det-kollektive-klaedeskab',
 ] as const
@@ -29,6 +30,7 @@ export type CaseSlug = (typeof caseOrder)[number]
 
 const caseYears: Record<CaseSlug, string> = {
   nordwear: '2026',
+  'rethink-furniture': '2026',
   'fresh-cut': '2026',
   'peter-salling': '2026',
   'det-kollektive-klaedeskab': '2026',
@@ -45,6 +47,7 @@ const nextCaseLabels: Record<Locale, string> = {
 const nextCaseAriaLabels: Record<Locale, Record<(typeof caseOrder)[number], string>> = {
   da: {
     nordwear: 'Se næste projekt: Nordwear',
+    'rethink-furniture': 'Se næste projekt: Rethink Furniture',
     'fresh-cut': 'Se næste projekt: Fresh Cut',
     'peter-salling': 'Se næste projekt: Peter Salling',
     'det-kollektive-klaedeskab': 'Se næste projekt: Det Kollektive Klædeskab',
