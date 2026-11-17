@@ -426,11 +426,12 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
   }
 }
 
-/* One offer: number and title on the left, the list in the middle, the mark on the right. */
+/* One offer: the number, then the title with its list under it, and the mark at the end of the row.
+   Everything about an offer is read together on one line of sight, not spread over three columns. */
 .added-value-col {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 1.5rem;
+  gap: 1rem;
   min-height: 0;
   padding: 2rem 0 2.5rem;
   border-top: 1px solid var(--color-border);
@@ -445,41 +446,81 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
   border-bottom: 1px solid var(--color-border);
 }
 
-@media (min-width: 640px) {
-  .added-value-col {
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto;
-    align-items: start;
-    gap: 2rem;
-    min-height: clamp(14rem, 17vw, 16rem);
-    padding: 2rem 0;
-  }
+.added-value-head {
+  display: contents;
 }
 
-.added-value-head {
-  display: flex;
-  flex-direction: column;
+.added-value-title {
+  margin: 0;
+  font-size: clamp(1.75rem, 1rem + 2vw, 2.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+/* The list in two columns under the title: short, so the row stays compact. */
+.added-value-items {
+  columns: 2;
+  column-gap: 1.5rem;
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-muted);
+}
+
+.added-value-items li {
+  break-inside: avoid;
 }
 
 .added-value-dot {
   background-color: var(--color-dark);
 }
 
-.added-value-title {
-  margin: 2.5rem 0 0;
-  font-size: clamp(1.5rem, 1rem + 1.4vw, 2.25rem);
-  letter-spacing: -0.035em;
-}
-
 .added-value-icon {
-  margin-top: 0;
-  margin-left: 0;
-  align-self: end;
+  margin: 0;
 }
 
 .added-value-icon--brand,
 .added-value-icon--design,
 .added-value-icon--development {
   margin-left: 0;
+}
+
+@media (min-width: 640px) {
+  .added-value-col {
+    grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      "num title mark"
+      ". list mark";
+    column-gap: 1.5rem;
+    row-gap: 0.5rem;
+    align-items: start;
+    padding: 2rem 0 2.25rem;
+  }
+
+  .added-value-label {
+    grid-area: num;
+    padding-top: 0.75em;
+  }
+
+  .added-value-title {
+    grid-area: title;
+  }
+
+  .added-value-items {
+    grid-area: list;
+  }
+
+  .added-value-icon {
+    grid-area: mark;
+    align-self: end;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* The label lines up with the first offer's number and title. */
+  .added-value-aside {
+    padding-top: 2.25rem;
+  }
 }
 
 /* ---------- Reviews ---------- */
