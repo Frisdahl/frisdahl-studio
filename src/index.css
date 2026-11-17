@@ -1678,42 +1678,36 @@
     height: 200svh;
   }
 
-  /* The card sits at the bottom of the screen, as far from the bottom edge
-     as the content is from the sides. Column flex keeps the Container's own
-     width and side margins. */
+  /* The card is exactly the size of the project page's main image (full width, 16:9), so the transition to the
+     next page moves it and nothing else: no crop to open, no zoom to settle (both stutter on a playing clip).
+     It is centred in the screen; where the screen is too short for it, it starts at the top gutter and the
+     bottom runs off the screen (`safe center`), as the main images are mockups with the screen in their upper
+     part. Column flex keeps the Container's own width and side margins. */
   .case-detail-next-sticky {
-    @apply sticky top-0 flex flex-col justify-end;
+    @apply sticky top-0 flex flex-col;
+    justify-content: safe center;
     height: 100svh;
-    padding-bottom: var(--page-gutter);
+    padding-block: var(--page-gutter);
   }
 
-  /* Full width at the main images' 16:9, as tall as the screen allows with
-     the same gutter above and below: the header slides away and the CTA bar
-     fades out as the card arrives (CaseDetailNextSection). */
   .case-detail-next {
-    @apply relative block w-full overflow-hidden no-underline;
+    @apply relative block w-full shrink-0 overflow-hidden no-underline;
     aspect-ratio: 16 / 9;
-    max-height: calc(100svh - 2 * var(--page-gutter));
     background-color: var(--color-dark);
   }
 
-  /* Where the card is wider than 16:9, the image is cropped from the bottom:
-     the main images are mockups with the screen in their upper part, and the
-     whole screen should stay in view. It zooms in with the scroll
-     (CaseDetailNextSection) from below the middle, so the top of the screen
-     stays in view too. */
+  /* The picture fills the same 16:9 box as the main image, centred like it, so the two are the same crop. It
+     zooms in with the scroll (CaseDetailNextSection) while there is no clip over it. */
   .case-detail-next-image {
-    @apply absolute inset-0 h-full w-full object-cover;
-    object-position: 50% 5%;
-    transform-origin: 50% 65%;
+    @apply absolute inset-0 h-full w-full object-cover object-center;
+    transform-origin: 50% 50%;
     will-change: transform;
   }
 
   /* The clip sits over the picture, in the same box and pose. It does not zoom: a playing video
      rescaled on every scroll frame shakes. */
   .case-detail-next-video {
-    @apply absolute inset-0 block h-full w-full object-cover;
-    object-position: 50% 5%;
+    @apply absolute inset-0 block h-full w-full object-cover object-center;
   }
 
   .case-detail-next-overlay {

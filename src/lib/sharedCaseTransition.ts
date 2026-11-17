@@ -23,9 +23,11 @@ gsap.registerPlugin(SplitText)
 const SETTLE = 0.4
 // The next-project card: its text sits on the image, so the ghost (which would
 // cover it) is only lifted out once the text has mostly left.
-const NEXT_SETTLE = 0.5
-const NEXT_EXIT_TEXT_DURATION = 0.4
-const NEXT_VEIL_DURATION = 0.25
+// (Tightened 2026-11-17: measured, the card used to stand still for about 1.2 s between the full bar and the
+// start of the grow, which read as stuck. The three waits below are the leaving beat; keep them short.)
+const NEXT_SETTLE = 0.28
+const NEXT_EXIT_TEXT_DURATION = 0.3
+const NEXT_VEIL_DURATION = 0.2
 const NEXT_OVERLAY_FADE = 0.8
 // The case page's text starts this long before the picture has fully landed (s).
 const ENTER_OVERLAP = 0.25
@@ -167,8 +169,10 @@ export async function runSharedCaseTransition(
     // Start in the card's own pose: zoomed in by the scroll, under its dark overlay.
     // The card's clip (when it has one) is what the ghost shows, so it takes the same pose.
     const fromMedia = ghostVideo ?? fromImage
-    fromMedia.style.objectPosition = '50% 5%'
-    gsap.set(fromMedia, { scale: new DOMMatrix(getComputedStyle(cardImage).transform).a, transformOrigin: '50% 65%' })
+    // A clip is never zoomed on the card (a playing video rescaled every frame shakes), so its copy starts at
+    // scale 1 as well: starting at the still's zoom made it jump 6% bigger the moment it took over, and then
+    // rescale while playing. Only the still carries the scroll's zoom.
+    gsap.set(fromMedia, { scale: ghostVideo ? 1 : new DOMMatrix(getComputedStyle(cardImage).transform).a, transformOrigin: '50% 50%' })
     const cardOverlay = card.querySelector<HTMLElement>('.case-detail-next-overlay')
     overlay = document.createElement('div')
     Object.assign(overlay.style, {
@@ -387,7 +391,8 @@ export async function runSharedCaseTransition(
       if (isNext) {
         // The zoom settles and the dark overlay lifts, so the hero's picture is plain.
         // Fully settled before the swap below, so the two pictures line up exactly.
-        grow.to(ghostVideo ?? fromImage, { scale: 1, duration: NEXT_ZOOM_SETTLE, ease: 'power2.out' }, 0)
+        // (Not for a clip: it is already at 1 and must never be rescaled while it plays.)
+        if (!ghostVideo) grow.to(fromImage, { scale: 1, duration: NEXT_ZOOM_SETTLE, ease: 'power2.out' }, 0)
         if (overlay) grow.to(overlay, { opacity: 0, duration: NEXT_OVERLAY_FADE, ease: 'power1.inOut' }, 0)
       }
       const swapAt = isNext ? NEXT_SWAP_AT : SWAP_AT

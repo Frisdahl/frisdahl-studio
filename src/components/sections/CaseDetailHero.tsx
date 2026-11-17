@@ -1,7 +1,7 @@
 import type { CaseDetailHero as CaseDetailHeroContent } from '../../types/caseDetail'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 import { CONTACT_PATH } from '../../lib/routes'
-import { ArrowChipButton, ArrowIcon, Container, WithHeadingDot } from '../ui'
+import { ArrowChipButton, ArrowIcon, Container } from '../ui'
 import { LoopVideo } from '../ui/LoopVideo'
 
 interface CaseDetailHeroProps {
@@ -17,7 +17,7 @@ export function CaseDetailHero({ hero }: CaseDetailHeroProps) {
       <Container className="relative z-[1]">
         <div className="case-detail-hero-intro">
           <h1 className="case-detail-hero-name">
-            <WithHeadingDot>{name}</WithHeadingDot>
+            {name}
           </h1>
 
           {meta.length > 0 && (

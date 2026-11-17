@@ -22,7 +22,7 @@ const IMAGE_ZOOM = 0.06
 const TRIGGER_PROGRESS = 0.985
 // How long the full bar stays on screen before the transition starts (ms). The transition hides
 // the card in the frame it begins, so started at once the full bar would never be painted.
-const FULL_BAR_HOLD = 160
+const FULL_BAR_HOLD = 100
 
 /**
  * The next case at the end of the page. The card sticks while the section's
