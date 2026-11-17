@@ -31,6 +31,8 @@ const WHEEL_MULTIPLIER = 0.7
  */
 const TAIL_PX = 12
 const TAIL_LERP = 0.35
+/** The last pixels or two land in one frame: the glide is already moving about a pixel a frame by then. */
+const FINISH_PX = 2.5
 
 export const DEFAULT_SCROLL_PRESET: ScrollPresetName = 'B'
 const PRESET_STORAGE_KEY = 'frisdahl:scroll-preset'
@@ -106,8 +108,10 @@ export function initSmoothScroll() {
   // notch starts a new glide with the normal rate again).
   const glide = (instance as unknown as { animate: { isRunning: boolean; lerp?: number; to: number; value: number } }).animate
   driveLenis = (time) => {
-    if (glide.isRunning && glide.lerp && Math.abs(glide.to - glide.value) < TAIL_PX) {
-      glide.lerp = Math.max(glide.lerp, TAIL_LERP)
+    if (glide.isRunning && glide.lerp) {
+      const remaining = Math.abs(glide.to - glide.value)
+      if (remaining < FINISH_PX) glide.lerp = 1
+      else if (remaining < TAIL_PX) glide.lerp = Math.max(glide.lerp, TAIL_LERP)
     }
     instance.raf(time * 1000)
   }
