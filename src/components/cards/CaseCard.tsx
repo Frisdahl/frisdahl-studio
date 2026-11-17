@@ -180,6 +180,7 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, ov
               label={imageAlt}
               className="case-card-image case-card-video"
               mode="visible"
+              shared={overlay}
             />
           ) : null}
         </div>
@@ -205,6 +206,7 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, ov
               label={imageAlt}
               className="case-card-image case-card-video"
               mode="visible"
+              shared={overlay}
             />
           ) : null}
         </div>
