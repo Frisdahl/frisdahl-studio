@@ -95,11 +95,11 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     // real site at 425 px wide; cropped in a little so the screens read well).
     horizontalBottomPair: [
       {
-        imageSrc: '/cases/rethink-furniture/iphone-produkter--4-3.webp',
+        imageSrc: '/cases/rethink-furniture/iphone-produkter-v2--4-3.webp',
         imageAlt: 'Rethink Furniture shop med produkter på en iPhone',
         aspectRatio: '4 / 3',
         // A recording of the real shop page scrolling on the phone (top, down through the products, and back).
-        video: { src: '/cases/rethink-furniture/iphone-produkter--4-3.mp4', poster: '/cases/rethink-furniture/iphone-produkter--poster--4-3.webp' },
+        video: { src: '/cases/rethink-furniture/iphone-produkter-v2--4-3.mp4', poster: '/cases/rethink-furniture/iphone-produkter-v2--poster--4-3.webp' },
       },
       { imageSrc: '/cases/rethink-furniture/iphone-kollektioner--4-3.webp', imageAlt: 'Rethink Furniture kollektioner på en iPhone', aspectRatio: '4 / 3' },
     ],
