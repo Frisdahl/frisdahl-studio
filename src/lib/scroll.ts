@@ -22,6 +22,16 @@ export type ScrollPresetName = keyof typeof SCROLL_PRESETS
 /** How much of a wheel notch's native distance the page moves. */
 const WHEEL_MULTIPLIER = 0.7
 
+/**
+ * Lenis eases with an exponential decay, so its last few pixels arrive one at a time, further and
+ * further apart: the last 5 px took about 530 ms and the very last pixel came about 245 ms after
+ * the one before it. The page then looks as if it has stopped and ticks forward once more, which
+ * shows on a large, high-contrast picture such as a project video (and more the bigger the screen).
+ * Closer than TAIL_PX to its end, the glide is sped up so those pixels follow on consecutive frames.
+ */
+const TAIL_PX = 12
+const TAIL_LERP = 0.35
+
 export const DEFAULT_SCROLL_PRESET: ScrollPresetName = 'B'
 const PRESET_STORAGE_KEY = 'frisdahl:scroll-preset'
 
@@ -91,7 +101,16 @@ export function initSmoothScroll() {
   })
   lenis = instance
 
-  driveLenis = (time) => instance.raf(time * 1000)
+  // Lenis keeps the easing rate of the glide in progress on its private `animate` object, and a rate
+  // changed in `options` only reaches the next glide, so the tail is sped up there (a new wheel
+  // notch starts a new glide with the normal rate again).
+  const glide = (instance as unknown as { animate: { isRunning: boolean; lerp?: number; to: number; value: number } }).animate
+  driveLenis = (time) => {
+    if (glide.isRunning && glide.lerp && Math.abs(glide.to - glide.value) < TAIL_PX) {
+      glide.lerp = Math.max(glide.lerp, TAIL_LERP)
+    }
+    instance.raf(time * 1000)
+  }
   gsap.ticker.add(driveLenis, false, true)
   gsap.ticker.lagSmoothing(0)
 
