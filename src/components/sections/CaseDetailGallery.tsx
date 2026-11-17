@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { CaseDetailGallery, CaseDetailGalleryImage } from '../../types/caseDetail'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 import { Container } from '../ui'
+import { useMediaReveal } from '../../hooks'
 import { LoopVideo } from '../ui/LoopVideo'
 
 interface CaseDetailGalleryProps {
@@ -13,6 +14,8 @@ interface GalleryFigureProps {
   variant: 'horizontal' | 'vertical'
   /** Solid colour behind an image with a transparent background. */
   background?: string
+  /** Seconds the picture waits before it opens (the second of a pair opens a beat after the first). */
+  revealDelay?: number
 }
 
 // How long each picture stays before the next one fades in (ms).
@@ -65,9 +68,12 @@ function GallerySlideshow({ slides }: { slides: CaseDetailGalleryImage[] }) {
   )
 }
 
-function GalleryFigure({ image, variant, background }: GalleryFigureProps) {
+function GalleryFigure({ image, variant, background, revealDelay = 0 }: GalleryFigureProps) {
+  const figureRef = useMediaReveal<HTMLElement>(revealDelay)
+
   return (
     <figure
+      ref={figureRef}
       className={`case-detail-gallery-item case-detail-gallery-item-${variant}${image.transparent ? ' case-detail-gallery-item-transparent' : ''}`}
       style={{
         aspectRatio: image.aspectRatio,
@@ -122,7 +128,7 @@ export function CaseDetailIntroPair({ gallery }: CaseDetailGalleryProps) {
           {pairs.map((pair) => (
             <div key={pair[0].imageAlt} className="case-detail-gallery-pair">
               <GalleryFigure image={pair[0]} variant="vertical" background={gallery.mockupBackground} />
-              <GalleryFigure image={pair[1]} variant="vertical" background={gallery.mockupBackground} />
+              <GalleryFigure image={pair[1]} variant="vertical" background={gallery.mockupBackground} revealDelay={0.1} />
             </div>
           ))}
         </div>
@@ -139,7 +145,7 @@ export function CaseDetailGallery({ gallery }: CaseDetailGalleryProps) {
           {gallery.verticalPairTop && (
             <div className="case-detail-gallery-pair">
               <GalleryFigure image={gallery.verticalPairTop[0]} variant="vertical" background={gallery.mockupBackground} />
-              <GalleryFigure image={gallery.verticalPairTop[1]} variant="vertical" background={gallery.mockupBackground} />
+              <GalleryFigure image={gallery.verticalPairTop[1]} variant="vertical" background={gallery.mockupBackground} revealDelay={0.1} />
             </div>
           )}
 
@@ -151,7 +157,7 @@ export function CaseDetailGallery({ gallery }: CaseDetailGalleryProps) {
           {gallery.horizontalBottomPair ? (
             <div className="case-detail-gallery-pair">
               <GalleryFigure image={gallery.horizontalBottomPair[0]} variant="vertical" background={gallery.mockupBackground} />
-              <GalleryFigure image={gallery.horizontalBottomPair[1]} variant="vertical" background={gallery.mockupBackground} />
+              <GalleryFigure image={gallery.horizontalBottomPair[1]} variant="vertical" background={gallery.mockupBackground} revealDelay={0.1} />
             </div>
           ) : (
             gallery.horizontalBottom && <GalleryFigure image={gallery.horizontalBottom} variant="horizontal" background={gallery.mockupBackground} />
@@ -163,7 +169,7 @@ export function CaseDetailGallery({ gallery }: CaseDetailGalleryProps) {
             gallery.verticalPairBottom && (
               <div className="case-detail-gallery-pair">
                 <GalleryFigure image={gallery.verticalPairBottom[0]} variant="vertical" background={gallery.mockupBackground} />
-                <GalleryFigure image={gallery.verticalPairBottom[1]} variant="vertical" background={gallery.mockupBackground} />
+                <GalleryFigure image={gallery.verticalPairBottom[1]} variant="vertical" background={gallery.mockupBackground} revealDelay={0.1} />
               </div>
             )
           )}

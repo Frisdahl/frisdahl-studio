@@ -168,6 +168,42 @@ const caseDetails = {
         },
       ],
     },
+    offscript: {
+      id: 'offscript',
+      hero: {
+        eyebrow: 'Case · Website',
+        title: 'OFFSCRIPT® — et redaktionelt site til et uafhængigt kunstnerbureau',
+        description:
+          'Et redaktionelt, typografiledt site til et uafhængigt kunstnerbureau, hvor store portrætter og rolig bevægelse sætter kunstnerne i centrum.',
+        sliderAriaLabel: 'Automatisk gennemløb af OFFSCRIPT® case-billeder',
+        slides: [
+          { imageSrc: '/cases/offscript/mockup--4-3.webp', imageAlt: 'OFFSCRIPT® på en iPhone' },
+        ],
+      },
+      columns: [
+        {
+          title: 'Kunde',
+          paragraphs: [
+            'OFFSCRIPT® er et uafhængigt kunstnerbureau med ni kunstnere inden for otte genrer.',
+            'Projektet er et designkoncept: Biografier, kontaktoplysninger og udgivelser er pladsholdere, og bookingformularen er en demo, der ikke sender noget.',
+          ],
+        },
+        {
+          title: 'Ydelser',
+          paragraphs: [
+            'Jeg designede sitet i Figma og byggede det i React, TypeScript og GSAP – fra forside og kunstnersider til genresider og kontaktformular.',
+            'Udtrykket er typografiledt: Geist i store, stramt satte størrelser, portrætfotografi, der leverer farven, og én accentfarve, der bruges sparsomt.',
+          ],
+        },
+        {
+          title: 'Resultat',
+          paragraphs: [
+            'Et site, der føles som et trykt magasin: en række af portrætkort, man kan trække i, og en glidende overgang, når et kort åbner kunstnerens side.',
+            'Layoutet er bygget på 12, 8 og 4 kolonner til desktop, tablet og mobil, og al bevægelse tager hensyn til brugerens indstilling for reduceret bevægelse.',
+          ],
+        },
+      ],
+    },
     'det-kollektive-klaedeskab': {
       id: 'det-kollektive-klaedeskab',
       hero: {
@@ -223,6 +259,7 @@ const caseLiveUrls: Record<string, string | null> = {
   nordwear: null,
   'fresh-cut': null,
   'peter-salling': 'https://petersalling.com',
+  offscript: null,
   'det-kollektive-klaedeskab': null,
 }
 
@@ -298,6 +335,15 @@ const caseProjectDetails: Record<
       ],
       deliverables: 'UX/UI-design, frontend og bookingflow',
       scope: 'Website, booking, prisliste, anmeldelser, lokationer',
+    },
+    offscript: {
+      description: [
+        'OFFSCRIPT® er en hjemmeside til et uafhængigt kunstnerbureau. Jeg ville have, at den føles som et magasin og ikke som en typisk bureauside, så designet bygger på store overskrifter i Geist, rolige flader i papir og sort og portrætfotos, der giver farve. Der er kun én accentfarve, en orange-rød, som bruges til tal, hover og bookingknappen.',
+        'Forsiden starter med en preloader og en stor tekst med et portræt, og logoet fylder hele bredden i bunden. Under den ligger kunstnerne i en række af kort i forskellige størrelser, som man kan trække i, og en liste med otte genrer, hvor et portræt følger musen. Klikker man på et kort, flyver portrættet over på kunstnerens side. Klikker man på en genre, åbner genresiden som en sort cirkel, der vokser frem fra klikket.',
+        'Kunstnersiden er delt i to: portræt til venstre, biografi og booking til højre, og man kan gå videre til næste kunstner uden at forlade siden. Sitet er lavet i React, TypeScript og Tailwind CSS, med GSAP og ScrollTrigger til animationerne og Lenis til blød scroll. Teksterne er pladsholdere, og kontaktformularen er en demo.',
+      ],
+      deliverables: 'UX/UI-design, frontend og animation',
+      scope: 'Forside, kunstnersider, genresider, kontaktformular',
     },
     'det-kollektive-klaedeskab': {
       description: [
@@ -384,6 +430,15 @@ const caseTypefaces: Partial<
     fontFamily: "'Raleway Variable', sans-serif",
     capHeight: 0.72,
   },
+  offscript: {
+    typeface: 'Geist',
+    category: { da: 'Neo-grotesk sans-serif' },
+    description: {
+      da: 'Geist er den eneste skrift på hele sitet. Store overskrifter står i fed vægt med stram bogstavafstand, så de bærer siden som plakater, mens små tekster står i medium, og brødteksten i regular dæmpes til 60 % af tekstfarven. Hierarkiet kommer af størrelse og vægt, ikke af flere skrifttyper.',
+    },
+    fontFamily: "'Geist', sans-serif",
+    capHeight: 0.71,
+  },
   'det-kollektive-klaedeskab': {
     typeface: 'DM Serif Display',
     category: { da: 'Display-serif',  },
@@ -425,6 +480,9 @@ const casePaletteDescriptions: Partial<Record<string, Record<Locale, string>>> =
   'fresh-cut': {
     da: 'Paletten er stram og maskulin. Kul bruges til overskrifter, tekst og knapper, mens den varme tan-farve er brandets accent – i logoet, på priser, tal og streger. De lyse flader i hvid og råhvid giver ro omkring ydelserne, grafit bærer de mørke sektioner med lokationer og footer, og den grå tone holder brødteksten afdæmpet.',
   },
+  offscript: {
+    da: 'Paletten er papir og blæk: det varme papir er sidens baggrund, og den næsten sorte blæk bruges til tekst og til de mørke sektioner, som skifter med de lyse ned ad forsiden. Den orange-røde accent bruges sparsomt til tal, hover og bookingknappen, så portrætterne beholder farven.',
+  },
   'det-kollektive-klaedeskab': {
     da: 'Paletten er varm og blød uden ren hvid og sort. Taupe er den primære farve på knapper og links, den lyse sandtone er baggrunden, og den rosa sand er accent på de vigtigste knapper. Mørk espresso bruges til overskrifter og den varme brun til brødtekst, så alt hænger sammen i samme jordnære toneskala.',
   },
@@ -463,6 +521,12 @@ const casePalettes: Partial<
     { name: { da: 'Grafit',  }, hex: '#202121', dark: true },
     { name: { da: 'Råhvid',  }, hex: '#F9FAFB', dark: false },
     { name: { da: 'Grå',  }, hex: '#6B7280', dark: true },
+  ],
+  offscript: [
+    { name: { da: 'Papir' }, hex: '#E9E6DF', dark: false },
+    { name: { da: 'Blæk' }, hex: '#0E0E0D', dark: true },
+    { name: { da: 'Accent' }, hex: '#FF4B1F', dark: true },
+    { name: { da: 'Lys papir' }, hex: '#F6F4EF', dark: false },
   ],
   'det-kollektive-klaedeskab': [
     { name: { da: 'Taupe',  }, hex: '#847165', dark: true },

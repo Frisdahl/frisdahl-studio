@@ -12,6 +12,8 @@ gsap.registerPlugin(SplitText)
 
 const TEXT_DURATION = 1
 const TEXT_STAGGER = 0.08
+/** A swapping line's letters (WavePhrases) rise in a left-to-right wave, one after the other. */
+const WAVE_STAGGER = 0.035
 /** Between one text block and the next (top to bottom), and between one image and the next. */
 const BLOCK_STAGGER = 0.06
 const IMAGE_STAGGER = 0.1
@@ -68,6 +70,22 @@ export function prepareAndPlayPageEntrance(main: HTMLElement, revealed: Promise<
     )
   })
 
+  // A swapping line (WavePhrases, the contact heading's second line) is aria-hidden letters inside a
+  // clipping line, so the text collection above skips it and it would stand there fully visible while
+  // the first line rises. Its first phrase's letters wait below their line (clipped by it) and rise
+  // in the same left-to-right wave, a beat after the block above it.
+  const waveChars = [...main.querySelectorAll<HTMLElement>('.wave-phrase[data-active="true"] .wave-char')]
+  let waveDelay = 0
+  if (waveChars.length) {
+    const waveTop = waveChars[0].getBoundingClientRect().top
+    textBlocks.forEach((block, index) => {
+      if (block.getBoundingClientRect().top < waveTop) {
+        waveDelay = Math.min(index * BLOCK_STAGGER, STAGGER_CAP) + TEXT_STAGGER
+      }
+    })
+    gsap.set(waveChars, { yPercent: 130 })
+  }
+
   // (GSAP warns when it is given no targets, as on a page with no images or no buttons.)
   if (imageFrames.length) gsap.set(imageFrames, { clipPath: 'inset(50% 0% 50% 0%)' })
   if (controls.length) gsap.set(controls, { autoAlpha: 0 })
@@ -77,6 +95,18 @@ export function prepareAndPlayPageEntrance(main: HTMLElement, revealed: Promise<
     if (cancelled) return
     started = true
     reveals.forEach((reveal) => reveal.play())
+    if (waveChars.length) {
+      tweens.push(
+        gsap.to(waveChars, {
+          yPercent: 0,
+          duration: TEXT_DURATION,
+          stagger: WAVE_STAGGER,
+          delay: waveDelay,
+          ease: 'expo.out',
+          clearProps: 'transform',
+        }),
+      )
+    }
     // fromTo, with both clips written out in full (see Hero.tsx).
     imageFrames.forEach((frame, index) => {
       tweens.push(
@@ -120,5 +150,6 @@ export function prepareAndPlayPageEntrance(main: HTMLElement, revealed: Promise<
     splits.forEach((split) => split.revert())
     if (imageFrames.length) gsap.set(imageFrames, { clearProps: 'clipPath' })
     if (controls.length) gsap.set(controls, { clearProps: 'opacity,visibility' })
+    if (waveChars.length) gsap.set(waveChars, { clearProps: 'transform' })
   }
 }

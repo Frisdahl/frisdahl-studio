@@ -251,13 +251,16 @@
   --shadow-large: 0 4px 12px rgb(0 0 0 / 0.05), 0 24px 48px rgb(0 0 0 / 0.08);
   --shadow-cta: 0 4px 14px rgb(250 71 13 / 0.28);
 
-  /* Motion */
-  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-  --default-transition-duration: 200ms;
+  /* Motion. One easing for every hover and state change: it leaves quickly and settles softly (a
+     quint ease-out), where the Material curve it replaces (0.4, 0, 0.2, 1) started slowly and
+     felt generic. The same family as the JS side (lib/motion.ts: power3 / expo). */
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --default-transition-duration: 250ms;
   --default-transition-timing-function: var(--ease-smooth);
+  /* Press and focus feedback / hover on small things / larger surfaces (menus, panels, fills). */
   --duration-fast: 150ms;
-  --duration-base: 200ms;
-  --duration-slow: 300ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
 }
 
 @layer base {
@@ -1045,12 +1048,12 @@
     line-height: 1.35;
     color: var(--color-dark);
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s var(--ease-smooth);
   }
 
   .menu-open .menu-info {
     opacity: 1;
-    transition: opacity 0.6s ease 0.75s;
+    transition: opacity 0.6s var(--ease-smooth) 0.75s;
   }
 
   /* The city is the quiet line: a little smaller than the links under it, and grey. */
@@ -1135,7 +1138,7 @@
 
   .menu-open.menu-leaving .menu-info {
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s var(--ease-smooth);
   }
 
   .menu-open.menu-leaving .menu-panel-media {
@@ -1516,6 +1519,19 @@
     @apply col-span-2 aspect-[4/1] sm:col-span-3 sm:aspect-auto;
   }
 
+  /* Exactly four colours: no bottom row to fill. Three rows (7:3), the main colour across all
+     three on the left and the other three stacked beside it, so the last one moves up under the
+     other two instead of leaving a gap. Phones keep the two-column pairs. */
+  @media (min-width: 40rem) {
+    .case-detail-palette-swatches:has(> :nth-child(4):last-child) {
+      @apply aspect-[7/3] grid-rows-3;
+    }
+
+    .case-detail-palette-swatches > :nth-child(4):last-child {
+      @apply col-span-2 aspect-auto;
+    }
+  }
+
   .case-detail-palette-swatch:first-child .case-detail-palette-name {
     @apply text-h3;
   }
@@ -1693,12 +1709,11 @@
     will-change: transform;
   }
 
-  /* The clip sits over the picture, in the same box and pose (it zooms with it). */
+  /* The clip sits over the picture, in the same box and pose. It does not zoom: a playing video
+     rescaled on every scroll frame shakes. */
   .case-detail-next-video {
     @apply absolute inset-0 block h-full w-full object-cover;
     object-position: 50% 5%;
-    transform-origin: 50% 65%;
-    will-change: transform;
   }
 
   .case-detail-next-overlay {
@@ -3481,7 +3496,7 @@
   }
 
   .site-footer-top-button {
-    transition: color 0.2s ease;
+    transition: color 0.25s var(--ease-smooth);
   }
 
   .site-footer-top-button:hover {

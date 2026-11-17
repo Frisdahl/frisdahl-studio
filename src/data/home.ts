@@ -36,7 +36,7 @@ const homeContent = {
           id: 'offscript',
           client: "OFFSCRIPT®",
           keywords: "Website • Design",
-          href: '/cases/rethink-furniture',
+          href: '/cases/offscript',
           imageSrc: "/cases/offscript/mockup--4-3.webp",
           // Where the picture is centred in a portrait card: on the phone.
           focus: "52.4% 50%",
@@ -62,8 +62,7 @@ const homeContent = {
           id: 'rethink-furniture',
           client: "Rethink Furniture",
           keywords: "Website • Design • Udvikling",
-          // No project page yet: the card is not a link.
-          href: '',
+          href: '/cases/rethink-furniture',
           imageSrc: "/cases/rethink-furniture/mockup--4-3.webp",
           // Where the picture is centred in a narrow card: on the iPad.
           focus: "52.7% 50%",
@@ -80,32 +79,29 @@ const homeContent = {
       ],
     },
     addedValue: {
-      ariaLabel: "Hvad jeg kan tilbyde",
-      heading: "Hvad jeg kan tilbyde jeres virksomhed",
+      ariaLabel: "Mit workflow",
+      heading: "Mit workflow",
       columns: [
         {
-          title: "Brand identitet",
-          icon: "brand",
-          // DRAFT copy (written for the redesign, not from the old site): to be approved or rewritten.
-          description:
-            "Et visuelt sprog, der gør din virksomhed let at genkende: fra logo og farver til typografi og retningslinjer, der holder på tværs af alle flader.",
-          items: ["Logo", "Farver og typografi", "Visuelt sprog", "Brand guidelines", "Præsentationer"],
-        },
-        {
-          title: "Hjemmeside design",
-          icon: "design",
-          // DRAFT copy, see above.
-          description:
-            "Design, der gør det let at forstå, hvad du tilbyder: gennemtænkte brugerflader, et konsekvent designsystem og prototyper, du kan prøve, før noget bliver bygget.",
-          items: ["UX / UI-design", "Designsystem", "Landingssider", "Webshops", "Prototyper"],
-        },
-        {
-          title: "Hjemmeside udvikling",
+          title: "Fra idé til lancering",
           icon: "development",
-          // DRAFT copy, see above.
           description:
-            "Hjemmesider kodet fra bunden med fokus på hastighed og tilgængelighed og med et system, der er let at redigere, så siden bliver ved med at fungere, når din virksomhed vokser.",
-          items: ["Hurtige hjemmesider", "Tilgængelighed", "CMS og redigering", "Animation", "Vedligeholdelse"],
+            "Hvert projekt følger samme forløb: brugerbehov og krav, wireframes og designsystem i Figma, komponentbaseret udvikling og test i rigtige browsere på alle skærmstørrelser, før noget går live.",
+          items: ["Brugerbehov og krav", "Wireframes og prototyper", "Designsystem og tokens", "Responsive breakpoints", "Build og deploy til Cloudflare"],
+        },
+        {
+          title: "Min AI-struktur",
+          icon: "design",
+          description:
+            "Projektviden, designregler og beslutninger ligger i et versioneret vidensystem, som AI-agenterne læser, før de arbejder. Hver opgave får sin egen Git-gren og worktree, og et andet agent-gennemsyn fanger fejl, inden de når master.",
+          items: ["Kontekst som kode", "Git worktrees og branches", "Agent-review", "Regelstyret AI", "Dokumenterede beslutninger"],
+        },
+        {
+          title: "Værktøjer og AI-fluency",
+          icon: "brand",
+          description:
+            "React, TypeScript og Tailwind i bunden. Claude er koblet direkte til mine værktøjer via MCP og plugins: Figma til design, en rigtig browser til test og Lighthouse til performance. Jeg specificerer, reviewer og verificerer, før jeg kalder noget færdigt.",
+          items: ["React 19 og TypeScript", "Claude Code plugins og skills", "MCP: Figma og browser", "Chrome DevTools og Playwright", "WCAG og Lighthouse"],
         },
       ],
     },

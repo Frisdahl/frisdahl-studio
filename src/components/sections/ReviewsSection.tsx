@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'framer-motion'
 import { useLocale } from '../../context/LocaleContext'
 import { getReviewsContent } from '../../data/reviews'
+import { EASE_EXIT_BEZIER, EASE_SMOOTH_BEZIER } from '../../lib/motion'
 import { ArrowIcon, Container, MaskedLineReveal, SectionLabel } from '../ui'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -11,8 +12,8 @@ gsap.registerPlugin(ScrollTrigger)
 /** The person (portrait, name and role) fades out and fades in, without moving. */
 const personVariants: Variants = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { duration: 0.6, ease: 'easeOut' } },
-  exit: { opacity: 0, transition: { duration: 0.4, ease: 'easeIn' } },
+  show: { opacity: 1, transition: { duration: 0.6, ease: EASE_SMOOTH_BEZIER } },
+  exit: { opacity: 0, transition: { duration: 0.4, ease: EASE_EXIT_BEZIER } },
 }
 
 /**

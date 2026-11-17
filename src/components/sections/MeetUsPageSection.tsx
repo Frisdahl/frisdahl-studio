@@ -5,7 +5,7 @@ import { CONTACT_PATH } from '../../lib/routes'
 import type { MeetUsTopic, TeamMember } from '../../types/meetUs'
 import { responsiveImageProps } from '../../lib/responsiveImage'
 import { FooterLink } from '../layout/Footer'
-import { ArrowButton, Container, DanishFlagIcon } from '../ui'
+import { ArrowButton, Container, DanishFlagIcon, RevealText, SectionLabel } from '../ui'
 
 // Full width on phones, half on tablets, three of the twelve columns from desktop.
 const MEMBER_IMAGE_SIZES = '(min-width: 64rem) 24vw, (min-width: 48rem) 50vw, 100vw'
@@ -74,7 +74,12 @@ export function MeetUsPageSection() {
           </div>
         )
       default:
-        return <p className="meet-us-topic-text">{topic.text}</p>
+        // Rises line by line when it scrolls in, after its ( LABEL ) has opened above it.
+        return (
+          <RevealText as="p" className="meet-us-topic-text">
+            {topic.text}
+          </RevealText>
+        )
     }
   }
 
@@ -94,11 +99,10 @@ export function MeetUsPageSection() {
               ))}
             </div>
 
-            {topics.map((topic, index) => (
-              <section key={topic.title} className="meet-us-topic" aria-labelledby={`meet-us-topic-${index}`}>
-                <h2 id={`meet-us-topic-${index}`} className="meet-us-topic-title">
-                  {topic.title}
-                </h2>
+            {topics.map((topic) => (
+              <section key={topic.title} className="meet-us-topic" aria-label={topic.title}>
+                {/* The homepage's ( LABEL ) heading: the brackets open and the text rises when it scrolls in. */}
+                <SectionLabel className="meet-us-topic-title">{topic.title}</SectionLabel>
                 <div className={`meet-us-topic-body${topic.number ? '' : ' meet-us-topic-body-plain'}`}>
                   {topic.number && <span className="meet-us-topic-number">{topic.number}</span>}
                   {renderTopicContent(topic)}

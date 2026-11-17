@@ -18,6 +18,7 @@ export interface CaseDetailNext {
 export const caseOrder = [
   'peter-salling',
   'nordwear',
+  'offscript',
   'rethink-furniture',
   'fresh-cut',
   'det-kollektive-klaedeskab',
@@ -33,6 +34,7 @@ const caseYears: Record<CaseSlug, string> = {
   'rethink-furniture': '2026',
   'fresh-cut': '2026',
   'peter-salling': '2026',
+  offscript: '2026',
   'det-kollektive-klaedeskab': '2026',
 }
 
@@ -50,6 +52,7 @@ const nextCaseAriaLabels: Record<Locale, Record<(typeof caseOrder)[number], stri
     'rethink-furniture': 'Se næste projekt: Rethink Furniture',
     'fresh-cut': 'Se næste projekt: Fresh Cut',
     'peter-salling': 'Se næste projekt: Peter Salling',
+    offscript: 'Se næste projekt: OFFSCRIPT®',
     'det-kollektive-klaedeskab': 'Se næste projekt: Det Kollektive Klædeskab',
   },
 }

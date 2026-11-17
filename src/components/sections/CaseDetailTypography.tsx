@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { CaseDetailTypography as CaseDetailTypographyContent } from '../../types/caseDetail'
-import { Container } from '../ui'
+import { Container, RevealText } from '../ui'
+import { useMediaReveal } from '../../hooks'
 
 interface CaseDetailTypographyProps {
   typography: CaseDetailTypographyContent
@@ -20,6 +21,8 @@ const SPECIMEN_WIDTH = 2.1 * EM
  */
 export function CaseDetailTypography({ typography }: CaseDetailTypographyProps) {
   const [active, setActive] = useState('a')
+  const specimenRef = useMediaReveal<HTMLDivElement>()
+  const lettersRef = useMediaReveal<HTMLDivElement>(0.1)
   const {
     title,
     description,
@@ -42,8 +45,12 @@ export function CaseDetailTypography({ typography }: CaseDetailTypographyProps) 
       <Container>
         <div className="case-detail-typography-grid">
           <div className="case-detail-typography-info">
-            <h2 className="case-detail-overview-title">{title}</h2>
-            <p className="case-detail-typography-description">{description}</p>
+            <RevealText as="h2" className="case-detail-overview-title">
+              {title}
+            </RevealText>
+            <RevealText as="p" className="case-detail-typography-description">
+              {description}
+            </RevealText>
 
             <dl className="case-detail-typography-facts">
               <div>
@@ -56,7 +63,7 @@ export function CaseDetailTypography({ typography }: CaseDetailTypographyProps) 
               </div>
             </dl>
 
-            <div className="case-detail-typography-specimen">
+            <div ref={specimenRef} className="case-detail-typography-specimen">
               <span className="case-detail-typography-rule">
                 <span className="case-detail-overview-label">{capHeightLabel}</span>
               </span>
@@ -77,7 +84,7 @@ export function CaseDetailTypography({ typography }: CaseDetailTypographyProps) 
             </div>
           </div>
 
-          <div className="case-detail-typography-letters" style={{ fontFamily }}>
+          <div ref={lettersRef} className="case-detail-typography-letters" style={{ fontFamily }}>
             {LETTERS.map((letter) => (
               <button
                 key={letter}

@@ -36,6 +36,7 @@ const casesPageContent = {
         { id: 'mode', label: 'Mode', industry: 'Mode' },
         { id: 'moebler', label: 'Møbler', industry: 'Møbler' },
         { id: 'movie-industry', label: 'Movie Industry', industry: 'Film' },
+        { id: 'musik', label: 'Musik', industry: 'Musik' },
       ],
     },
     items: [
@@ -88,6 +89,19 @@ const casesPageContent = {
         description:
           'En levende hjemmeside til en lokal salon med tydelig bookingflow og et udtryk, der matcher brandet.',
       },
+      {
+        id: 'offscript',
+        client: 'OFFSCRIPT®',
+        industry: 'Musik',
+        category: 'website',
+        href: '/cases/offscript',
+        imageSrc: '/cases/offscript/mockup--4-3.webp',
+        imageAlt: 'OFFSCRIPT® case',
+        keywords: ['Website', 'Design', 'Udvikling', 'Animation'],
+        description:
+          'Et redaktionelt site til et uafhængigt kunstnerbureau med store portrætter, store typografiske flader og rolig bevægelse.',
+      },
+      {
       {
         id: 'det-kollektive-klaedeskab',
         client: 'Det Kollektive Klædeskab',

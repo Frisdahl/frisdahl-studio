@@ -6,8 +6,8 @@ const meetUsPageContent = {
   da: {
     title: 'Mød mig',
     intro: [
-      'Jeg er webudvikler med en passion for at kombinere design, teknologi og kreativitet. Jeg arbejder med både frontend og backend og nyder at skabe digitale løsninger, der forener stærkt visuelt design med funktionalitet og gode brugeroplevelser.',
-      'Jeg er særligt interesseret i motion design, animationer og flydende interaktioner, hvor de små detaljer gør en forskel. Samtidig går jeg op i performance og den tekniske struktur bag løsningerne, så design og funktionalitet fungerer naturligt sammen.',
+      'Jeg er webudvikler med en passion for at kombinere design, teknologi og kreativitet, og jeg er fascineret af, hvordan AI kan gøre mit arbejde bedre. Jeg bruger det som en fast del af min proces, fra idé og design til kode og test, men det er stadig mig, der træffer beslutningerne.',
+      'Jeg bliver ved med at forbedre min opsætning: Claude Code med egne plugins og skills, MCP-forbindelser til Figma og browseren og faste tjek af tilgængelighed og performance. Det giver hurtigere iterationer og mere tid til de små detaljer i animationer og interaktioner, så design og funktionalitet fungerer naturligt sammen.',
     ],
     topics: [
       {

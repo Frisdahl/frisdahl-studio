@@ -157,42 +157,18 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
 /* ---------- Statement: ( Frisdahl Studio ) + the description, written out by the scroll ---------- */
 
 .studio-statement {
-  /* The sticky frame is half a screen high and sits in the middle of the screen (25svh from the top), so
-     there is little empty room above and below the text. The section is that frame plus the stretch it
-     stays stuck for (150svh). StudioStatement's trigger uses the same numbers: 'bottom 75%'. */
+  /* The section scrolls with the page like any other; nothing sticks to the screen. It is one frame
+     high (half a screen), and StudioStatement's trigger writes the text while it travels up the screen. */
   --statement-frame: 50svh;
-  --statement-top: 25svh;
   position: relative;
   margin-top: clamp(0.5rem, 2vw, 2rem);
-  min-height: calc(var(--statement-frame) + 150svh);
-  /* `clip`, not `hidden`, so the sticky frame still works. */
-  overflow: clip;
   color: var(--color-dark);
 }
 
-/* Scrolled past: the section needs only the frame (StudioStatement adds this class). */
-.studio-statement.is-written {
-  min-height: var(--statement-frame);
-}
-
-/* Half a screen high; it stays on the screen while the section scrolls past. */
 .studio-statement-frame {
-  position: sticky;
-  top: var(--statement-top);
   display: flex;
   align-items: center;
-  height: var(--statement-frame);
-}
-
-/* Reduced motion: nothing moves, so the section is just the frame with the finished text. */
-@media (prefers-reduced-motion: reduce) {
-  .studio-statement {
-    min-height: var(--statement-frame);
-  }
-
-  .studio-statement-frame {
-    position: static;
-  }
+  min-height: var(--statement-frame);
 }
 
 .studio-statement-container {
@@ -512,13 +488,9 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
     clip-path: inset(-4rem 0 0 0);
   }
 
-  /* The last card has no card coming up over it, so it needs no screen of its own: it is as tall as
-     its content, and the reviews follow without a big empty gap. */
-  .added-value-card:last-child {
-    height: auto;
-    min-height: 0;
-    padding-bottom: clamp(2rem, 4vw, 3rem);
-  }
+  /* The last card is a full screen like the others, so it slides all the way up to the top. It does
+     not stay pinned there: the stack ends and the page carries on scrolling, so the reviews follow
+     without a stop. */
 
   /* The first card has nothing under it to cast a shadow on. */
   .added-value-card:first-child {
@@ -568,6 +540,23 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
 .reviews-section {
   padding-top: clamp(3rem, 6vw, 6rem);
   padding-bottom: clamp(5rem, 11vw, 11rem);
+}
+
+/* From desktop the last card is a full screen with its text at the top, so most of the gap above the
+   label is the card's empty lower part. The section moves up over it (it paints above the cards, z-index 3, under the footer, 5, and
+   nothing is written there), which is what brings the reviews closer to the cards. */
+@media (min-width: 1024px) {
+  .reviews-section {
+    /* Close to the last card above (little room on top), and room below, so the quote and its
+       portrait stand clear of the footer that slides up over this section. The section is pinned
+       while the footer covers it, so it must never be taller than the screen (its top would be cut
+       off): the room below is the smaller of a width-based and a height-based share. */
+    padding-top: clamp(2rem, 3vw, 3rem);
+    padding-bottom: clamp(6rem, min(17vw, 22svh), 16rem);
+    position: relative;
+    z-index: 4;
+    margin-top: -16svh;
+  }
 }
 
 .reviews-label {
@@ -745,13 +734,37 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
   letter-spacing: -0.025em;
 }
 
-/* The footer button is dark with a light label on the light page; on the dark footer it is the
-   other way round: a light fill, a dark label and arrow, and on hover the fill goes transparent
-   and label and arrow turn light (the same hover as on the light page). */
+/* The footer button is the same button as on the page (dark, light label, red on hover); on the
+   dark footer it starts white with a dark label and arrow, and on hover the fill goes to the same
+   red, the label and arrows turning light at the halfway point of the arrow swap. */
 .site-footer .arrow-btn {
   border-color: var(--color-light);
-  background-color: color-mix(in srgb, var(--color-light) calc((1 - var(--arrow-btn-p)) * 100%), transparent);
-  color: color-mix(in srgb, var(--color-light) calc(round(var(--arrow-btn-p), 1) * 100%), var(--color-dark));
+  background-color: var(--color-light);
+  color: var(--color-dark);
+  transition:
+    background-color 500ms var(--ease-smooth),
+    border-color 500ms var(--ease-smooth),
+    color 500ms var(--ease-smooth);
+}
+
+.site-footer .arrow-btn:focus-visible {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent);
+  color: var(--color-light);
+}
+
+@media (hover: hover) {
+  .site-footer .arrow-btn:hover {
+    border-color: var(--color-accent);
+    background-color: var(--color-accent);
+    color: var(--color-light);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-footer .arrow-btn {
+    transition: none;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -799,4 +812,78 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
 
 .site-footer-top-button:hover {
   color: var(--footer-ink);
+}
+
+/* ---------- Meet me (/mod-mig): the homepage's type ---------- */
+
+/* The introduction is set like the statement on the homepage (.studio-statement-text): the same
+   size, weight, line height and tracking, in the ink, with the first line stood in. */
+.meet-us-intro p {
+  font-size: clamp(1.5rem, 0.7rem + 1.85vw, 2.5rem);
+  font-weight: 400;
+  line-height: 1.28;
+  letter-spacing: -0.03em;
+  text-indent: 3.2em;
+  color: var(--color-dark);
+}
+
+.meet-us-intro p + p {
+  margin-top: 1.5em;
+}
+
+/* The topic headings are ( LABELS ) like the homepage's section headings (.section-label). */
+.meet-us-topic {
+  margin-top: clamp(4rem, 8vw, 7rem);
+}
+
+.meet-us-topic-title {
+  /* .section-label supplies the size, tracking and brackets; this only places it. */
+  margin: 0;
+}
+
+.meet-us-topic-body {
+  margin-top: 1.5rem;
+  column-gap: 1.5rem;
+}
+
+/* The smaller text: the homepage's mid size (as the offer sentences), regular weight, the ink at
+   60% for the description and in full for links and the place. */
+.meet-us-topic-text {
+  max-width: 36rem;
+  font-size: clamp(1.125rem, 0.75rem + 0.8vw, 1.5rem);
+  font-weight: 400;
+  line-height: 1.32;
+  letter-spacing: -0.025em;
+  text-indent: 0;
+  color: color-mix(in srgb, var(--color-dark) 60%, transparent);
+}
+
+/* The topic number: a small tracked label, like the offer numbers on the homepage. */
+.meet-us-topic-number {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+}
+
+.meet-us-topic-body-plain,
+.meet-us-topic-body .site-footer-links,
+.meet-us-topic-contact {
+  font-size: clamp(1.125rem, 0.75rem + 0.8vw, 1.5rem);
+  line-height: 1.32;
+  letter-spacing: -0.025em;
+}
+
+.meet-us-topic-body-plain .meet-us-topic-text.meet-us-topic-location {
+  color: var(--color-dark);
+}
+
+/* The footer's own links keep their underline animation, but take this page's small-text size. */
+.meet-us-topic-body .site-footer-link,
+.meet-us-topic-body .site-footer-links a {
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
 }

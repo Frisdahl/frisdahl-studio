@@ -1,1 +1,1 @@
-export {};
+export { useMediaReveal } from './useMediaReveal'
