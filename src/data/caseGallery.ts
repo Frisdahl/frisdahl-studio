@@ -189,6 +189,17 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
       { imageSrc: '/cases/offscript/phone-kontakt--4-3.webp', imageAlt: 'OFFSCRIPT® kontaktsiden på en iPhone', aspectRatio: '4 / 3' },
       { imageSrc: '/cases/offscript/phone-genrer--4-3.webp', imageAlt: 'OFFSCRIPT® genrer på en iPhone', aspectRatio: '4 / 3' },
     ],
+    // Under the results: a recording of the real site on a MacBook (the genres on the home page hovered, a click, the page
+    // transition and the genre page loading).
+    afterResults: {
+      imageSrc: '/cases/offscript/macbook-genrer--4-3.webp',
+      imageAlt: 'OFFSCRIPT®: genrerne på forsiden, et klik og overgangen til genresiden på en MacBook',
+      aspectRatio: '4 / 3',
+      video: {
+        src: '/cases/offscript/macbook-genrer--4-3.mp4',
+        poster: '/cases/offscript/macbook-genrer--poster--4-3.webp',
+      },
+    },
   },
   'det-kollektive-klaedeskab': {
     introPair: [

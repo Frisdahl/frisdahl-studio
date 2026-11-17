@@ -5,6 +5,7 @@ import { getCaseDetail } from '../data/caseDetails'
 import { CASES_PATH } from '../lib/routes'
 import {
   CaseDetailAfterPalette,
+  CaseDetailAfterResults,
   CaseDetailGallery,
   CaseDetailHero,
   CaseDetailIntroPair,
@@ -46,6 +47,7 @@ function CaseDetail({ caseSlug }: { caseSlug: string | undefined }) {
       <CaseDetailGallery gallery={detail.gallery} />
       <CaseDetailAfterPalette gallery={detail.gallery} />
       {detail.results ? <CaseDetailResults results={detail.results} /> : null}
+      <CaseDetailAfterResults gallery={detail.gallery} />
       <CaseDetailNextSection nextCase={detail.nextCase} />
     </main>
   )

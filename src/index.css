@@ -1571,6 +1571,12 @@
     @apply relative z-[1] pb-section-sm lg:pb-section;
   }
 
+  /* A clip under the Results section (gallery.afterResults): the results' own bottom
+     padding spaces it from above, this spaces it from the next-project card. */
+  .case-detail-after-results {
+    @apply relative z-[1] pb-section-sm lg:pb-section;
+  }
+
   .case-detail-results-panel {
     @apply self-start rounded-control-sm p-2 sm:p-3;
     background-color: var(--color-background-soft);
