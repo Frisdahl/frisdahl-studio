@@ -1,9 +1,8 @@
 import { Fragment, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 import type { CaseDetailGalleryVideo } from '../../types/caseDetail'
 import { ArrowIcon } from '../ui/ArrowIcon'
-import { LoopVideo } from '../ui/LoopVideo'
+import { CaseMedia } from './CaseMedia'
 import { MaskedLineReveal } from '../ui/MaskedLineReveal'
 import { DUR, EASE, STAGGER } from '../../lib/motion'
 
@@ -162,53 +161,29 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, ov
         }}
       >
         <div className="case-card-media">
-          {imageSrc ? (
-            <img
-              {...responsiveImageProps(imageSrc, IMAGE_SIZES.container)}
-              alt={imageAlt}
-              className="case-card-image"
-              loading="lazy"
-              decoding="async"
-            />
-          ) : null}
-          {imageSrc && video ? (
-            // Over the picture, with its box (and so its hover zoom). The picture stays underneath: the
-            // shared page transition and the layout rely on it.
-            <LoopVideo
-              src={video.src}
-              poster={video.poster}
-              label={imageAlt}
-              className="case-card-image case-card-video"
-              mode="visible"
-              shared={overlay}
-            />
-          ) : null}
+          <CaseMedia
+            imageSrc={imageSrc}
+            imageAlt={imageAlt}
+            video={video}
+            imageClassName="case-card-image"
+            videoClassName="case-card-image case-card-video"
+            scrim={overlay ? 'gradient' : 'none'}
+            sharedDecoder={overlay}
+          />
         </div>
         </Link>
       ) : (
         <div className="case-card-media-link" data-static>
         <div className="case-card-media">
-          {imageSrc ? (
-            <img
-              {...responsiveImageProps(imageSrc, IMAGE_SIZES.container)}
-              alt={imageAlt}
-              className="case-card-image"
-              loading="lazy"
-              decoding="async"
-            />
-          ) : null}
-          {imageSrc && video ? (
-            // Over the picture, with its box (and so its hover zoom). The picture stays underneath: the
-            // shared page transition and the layout rely on it.
-            <LoopVideo
-              src={video.src}
-              poster={video.poster}
-              label={imageAlt}
-              className="case-card-image case-card-video"
-              mode="visible"
-              shared={overlay}
-            />
-          ) : null}
+          <CaseMedia
+            imageSrc={imageSrc}
+            imageAlt={imageAlt}
+            video={video}
+            imageClassName="case-card-image"
+            videoClassName="case-card-image case-card-video"
+            scrim={overlay ? 'gradient' : 'none'}
+            sharedDecoder={overlay}
+          />
         </div>
         </div>
       )}

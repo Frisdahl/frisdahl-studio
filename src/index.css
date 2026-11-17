@@ -1696,26 +1696,16 @@
     background-color: var(--color-dark);
   }
 
-  /* The picture fills the same 16:9 box as the main image, centred like it, so the two are the same crop. It
-     zooms in with the scroll (CaseDetailNextSection) while there is no clip over it. */
+  /* The picture and the clip are drawn by CaseMedia (.case-media-image / .case-media-video, shared with every
+     project card). The next-project card only adds how its still zooms with the scroll (CaseDetailNextSection);
+     the clip never zooms: a playing video rescaled on every scroll frame shakes. */
   .case-detail-next-image {
-    @apply absolute inset-0 h-full w-full object-cover object-center;
     transform-origin: 50% 50%;
     will-change: transform;
   }
 
-  /* The clip sits over the picture, in the same box and pose. It does not zoom: a playing video
-     rescaled on every scroll frame shakes. */
-  .case-detail-next-video {
-    @apply absolute inset-0 block h-full w-full object-cover object-center;
-  }
-
-  .case-detail-next-overlay {
-    @apply absolute inset-0;
-    background-color: color-mix(in srgb, var(--color-dark) 78%, transparent);
-  }
-
   .case-detail-next-content {
+    z-index: 2;
     @apply absolute inset-0 flex flex-col items-center justify-center px-6 text-center;
     color: var(--color-light);
   }
@@ -2436,6 +2426,43 @@
 
   .case-card-meta-below .case-card-keywords {
     text-align: left;
+  }
+
+  /* The picture, the clip and the dark layer of every project card (CaseMedia): the home grid, the /cases
+     list and the next-project card on a case page. Change how a project's picture is drawn here. The
+     project's own focus point (--case-focus, e.g. OFFSCRIPT on the phone) sets where it is centred. */
+  .case-media-image,
+  .case-media-video {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--case-focus, 50% 50%);
+  }
+
+  .case-media-scrim {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+    /* How dark each kind of layer is. */
+    --scrim-gradient: 62%;
+    --scrim-flat: 78%;
+  }
+
+  /* A soft dark gradient at the foot of the picture keeps a caption readable on any image. */
+  .case-media-scrim--gradient {
+    inset: auto 0 0 0;
+    height: 34%;
+    background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--color-dark) var(--scrim-gradient), transparent));
+  }
+
+  /* All over the picture: the caption is in the middle of it. */
+  .case-media-scrim--flat {
+    inset: 0;
+    background-color: color-mix(in srgb, var(--color-dark) var(--scrim-flat), transparent);
   }
 
   /* One 16:9 frame for every case, with square corners. */

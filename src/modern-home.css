@@ -293,17 +293,6 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
   aspect-ratio: auto;
 }
 
-/* A soft dark gradient at the foot of the picture keeps the caption readable on any image. */
-.case-card-overlay .case-card-media::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0 0;
-  z-index: 1;
-  height: 34%;
-  background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--color-dark) 62%, transparent));
-  pointer-events: none;
-}
-
 /* Title above, keywords below, bottom left. The caption lets the pointer through, so the
    picture under it is what the cursor reacts to. */
 .case-card-overlay .case-card-meta {
@@ -339,11 +328,6 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
   letter-spacing: 0.08em;
   text-align: left;
   text-transform: uppercase;
-}
-
-/* The picture and the clip are centred where the project wants them (OFFSCRIPT: on the phone). */
-.case-card-overlay .case-card-image {
-  object-position: var(--case-focus, 50% 50%);
 }
 
 /* Keywords are separated by a slash, as in the design, not by a dot. It is drawn (a slanted hairline),

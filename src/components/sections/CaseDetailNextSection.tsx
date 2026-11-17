@@ -8,8 +8,8 @@ import { navigateWithSharedTransition } from '../../lib/pageTransition'
 import { lockScroll, unlockScroll } from '../../lib/scroll'
 import type { CaseDetailNext } from '../../types/caseDetail'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
+import { CaseMedia } from '../cards/CaseMedia'
 import { Container } from '../ui'
-import { LoopVideo } from '../ui/LoopVideo'
 
 interface CaseDetailNextSectionProps {
   nextCase: CaseDetailNext
@@ -153,39 +153,24 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
       <div className="case-detail-next-sticky">
         <Container>
           <Link ref={cardRef} to={href} className="case-detail-next" aria-label={ariaLabel}>
-            {image.imageSrc ? (
-              <img
-                ref={imageRef}
-                {...responsiveImageProps(image.imageSrc, IMAGE_SIZES.container)}
-                alt=""
-                className="case-detail-next-image"
-                loading="lazy"
-                decoding="async"
-              />
-            ) : (
-              <div
-                ref={imageRef}
-                className={`case-detail-next-image ${image.placeholderClassName ?? 'bg-peach'}`}
-                aria-hidden="true"
-              />
-            )}
-
-            {image.imageSrc && video ? (
-              // The same clip the next case's hero plays, over the same picture, so the card and the
-              // hero are alike when the shared transition carries it across: no still turning into
-              // a clip at the last moment. It plays while the visitor scrolls down to it and pauses when they scroll up.
-              <LoopVideo
-                ref={videoRef}
-                src={video.src}
-                poster={video.poster}
-                label=""
-                className="case-detail-next-video"
-                mode="manual"
-                preload="auto"
-              />
-            ) : null}
-
-            <div className="case-detail-next-overlay" aria-hidden="true" />
+            {/* The picture, its clip and the dark layer: the same piece as every project card (CaseMedia). The clip is
+                the one the next case's hero plays, over the same picture, so the card and the hero are alike when
+                the shared transition carries it across: no still turning into a clip at the last moment. It plays
+                while the visitor scrolls down to it and pauses when they scroll up. */}
+            <CaseMedia
+              imageSrc={image.imageSrc}
+              imageAlt=""
+              video={video}
+              imageClassName="case-detail-next-image"
+              videoClassName="case-detail-next-video"
+              imageRef={imageRef}
+              videoRef={videoRef}
+              placeholderClassName={image.placeholderClassName ?? 'bg-peach'}
+              scrim="flat"
+              videoMode="manual"
+              preload="auto"
+              videoLabel=""
+            />
 
             <div className="case-detail-next-content">
               <span className="case-detail-next-label">{label}</span>
