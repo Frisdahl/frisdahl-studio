@@ -17,6 +17,19 @@ const contactPageContent = {
     sending: 'Sender…',
     sent: 'Tak for din besked! Jeg vender tilbage hurtigst muligt.',
     error: 'Noget gik galt. Prøv igen, eller skriv direkte til hello@frisdahlstudio.dk.',
+    toast: {
+      close: 'Luk besked',
+      errorLabel: 'Fejl',
+      sendingLabel: 'Et øjeblik',
+      sentLabel: 'Sendt',
+      sendingTitle: 'Sender din besked',
+      sentTitle: 'Besked sendt',
+      errorTitle: 'Det lykkedes ikke',
+      missingTitle: 'Tjek felterne',
+      missingText: 'Navn, e-mail og besked skal udfyldes.',
+      emailTitle: 'Tjek din e-mail',
+      emailText: 'Adressen ser ikke helt rigtig ud. Prøv fx navn@mail.dk.',
+    },
   },
 } as const
 

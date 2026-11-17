@@ -5,6 +5,7 @@ import { getCaseDetail } from '../data/caseDetails'
 import { CASES_PATH } from '../lib/routes'
 import {
   CaseDetailAfterPalette,
+  CaseDetailAfterResults,
   CaseDetailGallery,
   CaseDetailHero,
   CaseDetailIntroPair,
@@ -40,12 +41,13 @@ function CaseDetail({ caseSlug }: { caseSlug: string | undefined }) {
       <CaseDetailOverview overview={detail.overview} />
       <CaseDetailIntroPair gallery={detail.gallery} />
       {/* The same order on every project page: overview, the MacBooks, typography, the phones, colour palette, the
-          tablet (when there is one), results, the next project. */}
+          tablet (when there is one), results, a clip under the results (when there is one), the next project. */}
       {detail.typography ? <CaseDetailTypography typography={detail.typography} /> : null}
       <CaseDetailGallery gallery={detail.gallery} />
       {detail.palette ? <CaseDetailPalette palette={detail.palette} /> : null}
       <CaseDetailAfterPalette gallery={detail.gallery} />
       {detail.results ? <CaseDetailResults results={detail.results} /> : null}
+      <CaseDetailAfterResults gallery={detail.gallery} />
       <CaseDetailNextSection nextCase={detail.nextCase} />
     </main>
   )

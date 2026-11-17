@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { refreshScrollTrigger } from '../../lib/refreshScrollTrigger'
 import { registerPageTransition, registerSharedTransition } from '../../lib/pageTransition'
 import { canShareCard, runSharedCaseTransition } from '../../lib/sharedCaseTransition'
 import { firstScreenImages, waitForPage } from '../../lib/pageSwap'
@@ -171,7 +172,7 @@ export function PageTransition() {
         document.documentElement.classList.remove('is-content-swapping', 'is-page-transitioning')
         revealPage()
         unlockScroll()
-        ScrollTrigger.refresh()
+        refreshScrollTrigger() // not ScrollTrigger.refresh(): that threw the new page down to the old page's scroll
         interruptedRef.current = false
         phaseRef.current = 'idle'
         runningRef.current = false
@@ -205,7 +206,7 @@ export function PageTransition() {
       } finally {
         document.documentElement.classList.remove('is-page-transitioning')
         unlockScroll()
-        ScrollTrigger.refresh()
+        refreshScrollTrigger() // not ScrollTrigger.refresh(): that threw the new page down to the old page's scroll
         interruptedRef.current = false
         phaseRef.current = 'idle'
         runningRef.current = false

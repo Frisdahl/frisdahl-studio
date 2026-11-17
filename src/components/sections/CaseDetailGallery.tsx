@@ -185,6 +185,19 @@ export function CaseDetailGallery({ gallery }: CaseDetailGalleryProps) {
   )
 }
 
+/** The image or clip under the Results section, when a case has one (afterResults). */
+export function CaseDetailAfterResults({ gallery }: CaseDetailGalleryProps) {
+  if (!gallery.afterResults) return null
+
+  return (
+    <section className="case-detail-after-results" aria-label={gallery.ariaLabel}>
+      <Container>
+        <GalleryFigure image={gallery.afterResults} variant="horizontal" background={gallery.mockupBackground} />
+      </Container>
+    </section>
+  )
+}
+
 /** The image under the colour palette, when a case has one (afterPalette): the tablet. */
 export function CaseDetailAfterPalette({ gallery }: CaseDetailGalleryProps) {
   if (!gallery.afterPalette) return null

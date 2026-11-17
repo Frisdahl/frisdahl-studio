@@ -28,6 +28,14 @@ export interface CaseMediaProps {
   videoLabel?: string
   /** How early a clip with preload 'none' starts loading (see LoopVideo's warmMargin). */
   videoWarmMargin?: string
+  /** The width the picture is drawn at, as an HTML `sizes` value, so the browser picks the smallest file that
+   *  is still sharp (default: the full content width, which is too big for a card that is narrower). */
+  imageSizes?: string
+  /** The picture is on the first screen: load it at once and first (it is the page's largest paint). */
+  priority?: boolean
+  /** Leave out the clip's poster. The still under the clip is the same picture and already shown, so the poster
+   *  would only be downloaded a second time. */
+  omitPoster?: boolean
 }
 
 /**
@@ -51,16 +59,20 @@ export function CaseMedia({
   sharedDecoder = false,
   videoLabel,
   videoWarmMargin,
+  imageSizes,
+  priority = false,
+  omitPoster = false,
 }: CaseMediaProps) {
   return (
     <>
       {imageSrc ? (
         <img
           ref={imageRef}
-          {...responsiveImageProps(imageSrc, IMAGE_SIZES.container)}
+          {...responsiveImageProps(imageSrc, imageSizes ?? IMAGE_SIZES.container)}
           alt={imageAlt}
           className={`case-media-image ${imageClassName}`}
-          loading="lazy"
+          loading={priority ? 'eager' : 'lazy'}
+          fetchPriority={priority ? 'high' : undefined}
           decoding="async"
         />
       ) : placeholderClassName ? (
@@ -71,7 +83,7 @@ export function CaseMedia({
         <LoopVideo
           ref={videoRef}
           src={video.src}
-          poster={video.poster}
+          poster={omitPoster ? undefined : video.poster}
           label={videoLabel ?? imageAlt}
           className={`case-media-video ${videoClassName}`}
           mode={videoMode}

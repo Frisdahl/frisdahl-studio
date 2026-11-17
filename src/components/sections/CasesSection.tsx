@@ -18,6 +18,18 @@ const GRID: { id: string; span: 2 | 3 | 4 | 6; shape: 'wide' | 'stretch' | 'port
 ]
 
 /**
+ * The card's clip without a poster. Every card already draws its picture as an <img> under the clip (lazy,
+ * in the right size for the screen), and the clip's poster is the very same picture. A poster is fetched at
+ * page load even for a card far down the page, and as the full-size original: four of them were 600 kB, 80%
+ * of the images on the first screen, fetched at the same moment as the scripts, styles and font the page
+ * needs to start. Without it the <img> shows until the clip plays, exactly as before.
+ */
+function clipFor(id: string) {
+  const video = getCaseMainVideo(id)
+  return video ? { ...video, poster: '' } : undefined
+}
+
+/**
  * "( Seneste projekter )" over the project grid: images packed with a 6px gap, the title and the
  * keywords on a soft gradient at the bottom of each picture. A click lifts the picture into the
  * project page (the shared-image transition).
@@ -42,7 +54,7 @@ export function CasesSection() {
               keywords={item.keywords}
               imageSrc={item.imageSrc}
               imageAlt={item.imageAlt}
-              video={slot.clip ? getCaseMainVideo(item.id) : undefined}
+              video={slot.clip ? clipFor(item.id) : undefined}
               focus={'focus' in item ? item.focus : undefined}
               href={item.href}
               overlay

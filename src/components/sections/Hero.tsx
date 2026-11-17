@@ -51,7 +51,8 @@ const MEDIA_SIZES = '(min-width: 1024px) 25vw, 46vw'
  * brackets sits under the first word.
  *
  * Motion, first load of a visit to the home page (the intro): "( )" in the middle of the screen parts to
- * the sides, "Beyond Digital" rises between them, the brackets fade and the words scale out to their
+ * the sides, and once they have finished "Beyond Digital" rises between them, both words together, the
+ * brackets fade and the words scale out to their
  * places, the picture falls in from the top, then the line's brackets part, its text rises and the
  * header fades in. Scrolling is locked meanwhile. Otherwise the words just rise out of their masks.
  * The picture changes with a wipe from the top, one mockup after the other (paused while the hero is
@@ -78,7 +79,8 @@ export function Hero() {
     if (words.length === 0) return
     const play = shouldPlayHeroIntro()
     let finish: () => void = () => {}
-    if (play) introDone.current = new Promise<void>((resolve) => (finish = resolve))
+    // The picture slider waits for the entrance, the intro or the short one (so it does not change pictures meanwhile).
+    introDone.current = new Promise<void>((resolve) => (finish = resolve))
 
     const mm = gsap.matchMedia()
     let cancelled = false
@@ -92,64 +94,121 @@ export function Hero() {
       const lineText = line?.querySelector<HTMLElement>('.bracket-line-text') ?? null
       const lineBox = line?.querySelector<HTMLElement>('.bracket-line') ?? null
 
+      // The line under "Beyond": its ( ) together in the middle of the line, its text under its mask.
+      const poseLine = () => {
+        if (!lineBox || !lineText || lineBrackets.length < 2) return
+        gsap.set([...lineBrackets, lineText], { clearProps: 'all' })
+        const box = lineBox.getBoundingClientRect()
+        const lb = lineBrackets.map((bracket) => bracket.getBoundingClientRect())
+        const boxCenter = box.left + box.width / 2
+        const lineTogether = lb[0].width * 0.6
+        gsap.set(lineBrackets[0], { x: boxCenter - lineTogether - (lb[0].left + lb[0].width / 2) })
+        gsap.set(lineBrackets[1], { x: boxCenter + lineTogether - (lb[1].left + lb[1].width / 2) })
+        gsap.set(lineText, { yPercent: 115 })
+      }
+
       if (!play || !stage || !media || brackets.length < 2 || lineBrackets.length < 2 || !lineText || !lineBox || !line) {
-        // The short entrance.
-        gsap.set(words, { yPercent: 110 })
-        if (line) gsap.set(line, { autoAlpha: 0 })
-        void revealed.then(() => {
+        // The short entrance (arriving from another page, or coming back to the home page): the words rise,
+        // then the picture falls in from the top, then the line's ( ) part and its text rises, last.
+        const shortPose = () => {
+          gsap.set(words, { yPercent: 110 })
+          if (media) gsap.set(media, { clipPath: 'inset(0% 0% 100% 0%)' })
+          if (line) {
+            gsap.set(line, { autoAlpha: 0 })
+            if (lineBrackets.length === 2 && lineText && lineBox) poseLine()
+          }
+        }
+        shortPose()
+        void revealed.then(() => document.fonts.ready).then(() => {
           if (cancelled) return
+          shortPose() // measured again: the font changes the width of the line
           context.add?.(() => {
-            gsap.to(words, { yPercent: 0, duration: 1.2, ease: 'expo.out', stagger: 0.12, delay: 0.1 })
-            if (line) gsap.to(line, { autoAlpha: 1, duration: 0.9, ease: 'power2.out', delay: 0.7 })
+            // About 20% quicker than the first version (3.4 s -> 2.8 s): every part is shorter, same order and hand-offs.
+            const PICTURE_AT = 0.65 // the words have all but settled (they ease out)
+            const PICTURE_DURATION = 0.9
+            const LINE_AT = PICTURE_AT + PICTURE_DURATION * 0.85
+            const LINE_PART = 0.72
+            const tl = gsap.timeline({
+              onComplete: () => {
+                if (media) gsap.set(media, { clearProps: 'clipPath' })
+                if (lineText) gsap.set([...lineBrackets, lineText], { clearProps: 'all' })
+                finish()
+              },
+            })
+            tl.to(words, { yPercent: 0, duration: 1, ease: 'expo.out', stagger: 0.1 }, 0.08)
+            if (media) tl.to(media, { clipPath: 'inset(0% 0% 0% 0%)', duration: PICTURE_DURATION, ease: 'expo.inOut' }, PICTURE_AT)
+            if (line) {
+              tl.to(line, { autoAlpha: 1, duration: 0.01 }, LINE_AT)
+              if (lineBrackets.length === 2 && lineText) {
+                tl.to(lineBrackets, { x: 0, duration: LINE_PART, ease: 'expo.inOut' }, LINE_AT)
+                  .to(lineText, { yPercent: 0, duration: 0.65, ease: 'expo.out' }, LINE_AT + LINE_PART)
+              }
+            }
           })
         })
         return
       }
 
       // ---- The intro. Measure everything with nothing moved, then put it all in its first pose.
-      gsap.set([...masks, ...words, media, line, ...lineBrackets, lineText, ...brackets], { clearProps: 'all' })
-      const fontSize = parseFloat(getComputedStyle(words[0]).fontSize)
-      const small = Math.min(44, Math.max(26, window.innerWidth * 0.03))
-      const scale = small / fontSize
-      const stageRect = stage.getBoundingClientRect()
-      const cx = stageRect.left + stageRect.width / 2
-      const cy = stageRect.top + stageRect.height / 2
-      const rects = masks.map((mask) => mask.getBoundingClientRect())
-      const gap = small * 0.3
-      const lineWidth = (rects[0].width + rects[1].width) * scale + gap
-      const textHeight = (rects[0].height - fontSize * 0.18) * scale
-      const left = [cx - lineWidth / 2, cx - lineWidth / 2 + rects[0].width * scale + gap]
+      // Measured twice: at once (so nothing shows before the intro) and again when the web fonts are in and the
+      // animation is about to start. The font changes the width of the words (and with it where the line's text
+      // and the brackets must stand), so a pose measured before it arrived put the brackets unevenly.
+      let leftX = 0
+      let rightX = 0
+      const pose = () => {
+        gsap.set([...masks, ...words, media, line, ...lineBrackets, lineText, ...brackets], { clearProps: 'all' })
+        const fontSize = parseFloat(getComputedStyle(words[0]).fontSize)
+        const small = Math.min(44, Math.max(26, window.innerWidth * 0.03))
+        const scale = small / fontSize
+        const stageRect = stage.getBoundingClientRect()
+        const cx = stageRect.left + stageRect.width / 2
+        const cy = stageRect.top + stageRect.height / 2
+        const rects = masks.map((mask) => mask.getBoundingClientRect())
+        const gap = small * 0.3
+        const lineWidth = (rects[0].width + rects[1].width) * scale + gap
+        const textHeight = (rects[0].height - fontSize * 0.18) * scale
+        const left = [cx - lineWidth / 2, cx - lineWidth / 2 + rects[0].width * scale + gap]
 
-      // "Beyond Digital" as one small line in the middle of the screen (top left corner as the origin).
-      masks.forEach((mask, i) => {
-        gsap.set(mask, { transformOrigin: '0 0', x: left[i] - rects[i].left, y: cy - textHeight / 2 - rects[i].top, scale })
-      })
-      gsap.set(words, { yPercent: 110 })
+        // "Beyond Digital" as one small line in the middle of the screen (top left corner as the origin).
+        masks.forEach((mask, i) => {
+          gsap.set(mask, { transformOrigin: '0 0', x: left[i] - rects[i].left, y: cy - textHeight / 2 - rects[i].top, scale })
+        })
+        gsap.set(words, { yPercent: 110 })
 
-      // The two brackets: together in the middle, as tall as that line.
-      const bracketHeight = small * 1.5
-      const bracketWidth = bracketHeight / 3
-      brackets.forEach((bracket) => {
-        gsap.set(bracket, { width: bracketWidth, height: bracketHeight, xPercent: -50, yPercent: -50, visibility: 'visible', opacity: 0 })
-      })
-      const together = bracketWidth * 0.7
-      const apart = lineWidth / 2 + small * 0.55 + bracketWidth / 2
-      gsap.set(brackets[0], { x: -together })
-      gsap.set(brackets[1], { x: together })
+        // The two brackets: together in the middle, as tall as that line.
+        const bracketHeight = small * 1.5
+        const bracketWidth = bracketHeight / 3
+        brackets.forEach((bracket) => {
+          gsap.set(bracket, { width: bracketWidth, height: bracketHeight, xPercent: -50, yPercent: -50, visibility: 'visible', opacity: 0 })
+        })
+        const together = bracketWidth * 0.7
+        // The brackets stand exactly as far from the text as the line under "Beyond" does (and every ( LABEL )):
+        // measured from that line's visible bracket to its text, and from the real edges of the words (the boxes
+        // around them are wider than the letters), so both sides match and it follows the page's own gap.
+        const glyphs = (el: Element) => {
+          const range = document.createRange()
+          range.selectNodeContents(el)
+          return range.getBoundingClientRect()
+        }
+        const lineBracketPath = lineBrackets[0].querySelector('path')
+        const pageGap = lineBracketPath ? glyphs(lineText).left - lineBracketPath.getBoundingClientRect().right : 28
+        const firstWord = glyphs(words[0])
+        const lastWord = glyphs(words[words.length - 1])
+        // A bracket's curve stands a sixth of its width in from the edge that faces the text, and the box is
+        // centred on x = 0, so its visible edge is a third of its width from its centre.
+        leftX = firstWord.left - pageGap - bracketWidth / 3 - cx
+        rightX = lastWord.right + pageGap + bracketWidth / 3 - cx
+        gsap.set(brackets[0], { x: -together })
+        gsap.set(brackets[1], { x: together })
 
-      // The line under "Beyond": its brackets together in the middle of the line, the text under its mask.
-      const box = lineBox.getBoundingClientRect()
-      const lb = lineBrackets.map((bracket) => bracket.getBoundingClientRect())
-      const boxCenter = box.left + box.width / 2
-      const lineTogether = lb[0].width * 0.6
-      gsap.set(lineBrackets[0], { x: boxCenter - lineTogether - (lb[0].left + lb[0].width / 2) })
-      gsap.set(lineBrackets[1], { x: boxCenter + lineTogether - (lb[1].left + lb[1].width / 2) })
-      gsap.set(lineText, { yPercent: 115 })
-      gsap.set(line, { autoAlpha: 0 })
+        poseLine()
+        gsap.set(line, { autoAlpha: 0 })
 
-      // The picture waits above its place; the header waits invisible.
-      gsap.set(media, { clipPath: 'inset(0% 0% 100% 0%)' })
-      if (header) gsap.set(header, { opacity: 0, transition: 'none' })
+        // The picture waits above its place; the header waits invisible.
+        gsap.set(media, { clipPath: 'inset(0% 0% 100% 0%)' })
+        if (header) gsap.set(header, { opacity: 0, transition: 'none' })
+      }
+      pose()
       lockScroll()
 
       const tidy = () => {
@@ -159,8 +218,9 @@ export function Hero() {
         unlockScroll()
       }
 
-      void revealed.then(() => {
+      void revealed.then(() => document.fonts.ready).then(() => {
         if (cancelled) return
+        pose()
         context.add?.(() => {
           const tl = gsap.timeline({
             onComplete: () => {
@@ -169,22 +229,31 @@ export function Hero() {
               finish()
             },
           })
+          // The brackets part first; only when they have finished does "Beyond Digital" rise, both
+          // words together (no stagger). Everything after follows the words, with the same gaps as before.
+          const PART_AT = 0.5
+          const PART_DURATION = 1.2
+          const WORDS_AT = PART_AT + PART_DURATION
+          const WORDS_DURATION = 1
+          const AFTER_WORDS = WORDS_AT + WORDS_DURATION
+          const LINE_AT = AFTER_WORDS + 1.4
+          const LINE_PART_DURATION = 0.8
           tl.to(brackets, { opacity: 1, duration: 0.35, ease: 'power1.out' }, 0.1)
             // ( ) part to the sides ...
-            .to(brackets[0], { x: -apart, duration: 1.2, ease: 'expo.inOut' }, 0.5)
-            .to(brackets[1], { x: apart, duration: 1.2, ease: 'expo.inOut' }, 0.5)
-            // ... "Beyond Digital" rises between them ...
-            .to(words, { yPercent: 0, duration: 1, ease: 'expo.out', stagger: 0.1 }, 1.1)
+            .to(brackets[0], { x: leftX, duration: PART_DURATION, ease: 'expo.inOut' }, PART_AT)
+            .to(brackets[1], { x: rightX, duration: PART_DURATION, ease: 'expo.inOut' }, PART_AT)
+            // ... then "Beyond Digital" rises between them, both words at the same time ...
+            .to(words, { yPercent: 0, duration: WORDS_DURATION, ease: 'expo.out' }, WORDS_AT)
             // ... the brackets fade and the words scale out to their places ...
-            .to(brackets, { opacity: 0, duration: 0.5, ease: 'power2.inOut' }, 2.2)
-            .to(masks, { x: 0, y: 0, scale: 1, duration: 1.4, ease: 'expo.inOut' }, 2.2)
+            .to(brackets, { opacity: 0, duration: 0.5, ease: 'power2.inOut' }, AFTER_WORDS)
+            .to(masks, { x: 0, y: 0, scale: 1, duration: 1.4, ease: 'expo.inOut' }, AFTER_WORDS)
             // ... the picture falls from the top ...
-            .to(media, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.3, ease: 'expo.inOut' }, 3.0)
-            // ... the line's brackets part and its text rises, as the header fades in.
-            .set(line, { autoAlpha: 1 }, 4.0)
-            .to(lineBrackets, { x: 0, duration: 1.1, ease: 'expo.inOut' }, 4.0)
-            .to(lineText, { yPercent: 0, duration: 0.9, ease: 'expo.out' }, 4.5)
-            .to(header, { opacity: 1, duration: 0.9, ease: 'power2.out' }, 4.0)
+            .to(media, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.3, ease: 'expo.inOut' }, AFTER_WORDS + 0.8)
+            // ... the line's brackets part and, once they have finished, its text rises; the header fades in.
+            .set(line, { autoAlpha: 1 }, LINE_AT)
+            .to(lineBrackets, { x: 0, duration: LINE_PART_DURATION, ease: 'expo.inOut' }, LINE_AT)
+            .to(lineText, { yPercent: 0, duration: 0.9, ease: 'expo.out' }, LINE_AT + LINE_PART_DURATION)
+            .to(header, { opacity: 1, duration: 0.9, ease: 'power2.out' }, LINE_AT)
         })
       })
 
@@ -196,6 +265,7 @@ export function Hero() {
     return () => {
       cancelled = true
       mm.revert()
+      finish() // never leave the slider waiting (reduced motion has no entrance to wait for)
     }
   }, [revealed])
 

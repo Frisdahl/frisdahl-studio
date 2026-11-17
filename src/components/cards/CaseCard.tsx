@@ -45,6 +45,12 @@ export interface CaseCardProps {
   /** Title and keywords rise line by line out of their masks once the row scrolls in (the home
    *  page). Off where the page's own entrance already animates the text. */
   revealOnScroll?: boolean
+  /** How wide the picture is drawn (an HTML `sizes` value), so the smallest sharp file is fetched. */
+  imageSizes?: string
+  /** On the first screen: the picture loads at once. */
+  priority?: boolean
+  /** The still under a clip is the clip's poster; leave the second download out. */
+  omitPoster?: boolean
 }
 
 /**
@@ -70,7 +76,7 @@ function keywordsWithDots(keywords: string) {
  * its full slide in: if the mouse leaves before it has arrived, it finishes arriving
  * and then carries on to the top right.
  */
-export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, overlay = false, className = '', focus, metaBelow = false, showArrow = true, revealOnScroll = false }: CaseCardProps) {
+export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, overlay = false, className = '', focus, metaBelow = false, showArrow = true, revealOnScroll = false, imageSizes, priority = false, omitPoster = false }: CaseCardProps) {
   // The title's arrow: waits out of sight to the left ('idle'), slides in on hover ('in'),
   // leaves to the right when the mouse does ('out'), then waits again.
   const [arrow, setArrow] = useState<'idle' | 'in' | 'out'>('idle')
@@ -169,6 +175,9 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, ov
             videoClassName="case-card-image case-card-video"
             scrim={overlay ? 'gradient' : 'none'}
             sharedDecoder={overlay}
+            imageSizes={imageSizes}
+            priority={priority}
+            omitPoster={omitPoster}
           />
         </div>
         </Link>
@@ -183,6 +192,9 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, ov
             videoClassName="case-card-image case-card-video"
             scrim={overlay ? 'gradient' : 'none'}
             sharedDecoder={overlay}
+            imageSizes={imageSizes}
+            priority={priority}
+            omitPoster={omitPoster}
           />
         </div>
         </div>
