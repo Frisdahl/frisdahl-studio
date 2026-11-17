@@ -3,7 +3,7 @@ import gsap from 'gsap'
 import { motion, useReducedMotion } from 'framer-motion'
 import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
-import { MaskedLineReveal } from '../ui'
+import { Container, SectionLabel } from '../ui'
 
 // The mark colour (--color-dark). SVG attributes cannot use CSS variables, so
 // the value is repeated here.
@@ -177,9 +177,10 @@ function ColumnIcon({ name, reduced }: { name: IconName; reduced: boolean }) {
 }
 
 /**
- * "What I can offer": a large heading and, under it, a bordered three-column
- * grid. Each column has a numbered label, a title, a short list and a looping
- * geometric mark at the bottom.
+ * "What I can offer": the heading is a small ( UPPERCASE ) label on the left that stays on the screen
+ * (sticky) while the three offers, stacked one under the other on the right, scroll past it. Each
+ * offer has a numbered label, a title, a short list and a looping geometric mark. Stacked on phones
+ * and tablets (the label is not sticky there).
  */
 export function AddedValueSection() {
   const { locale } = useLocale()
@@ -187,11 +188,11 @@ export function AddedValueSection() {
   const reduceMotion = useReducedMotion()
 
   return (
-    <section className="added-value" data-layout="full-bleed" aria-label={addedValue.ariaLabel}>
-      <div className="added-value-inner">
-        <h2 className="added-value-heading">
-          <MaskedLineReveal as="span">{addedValue.heading}</MaskedLineReveal>
-        </h2>
+    <section className="added-value" aria-label={addedValue.ariaLabel}>
+      <Container columns>
+        <div className="added-value-aside">
+          <SectionLabel className="added-value-label-heading">{addedValue.heading}</SectionLabel>
+        </div>
 
         <ol className="added-value-grid">
           {addedValue.columns.map((column, index) => (
@@ -201,13 +202,15 @@ export function AddedValueSection() {
               initial={reduceMotion ? false : { opacity: 0, y: 32 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '0px 0px -12% 0px' }}
-              transition={{ duration: 0.9, delay: index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             >
-              <span className="added-value-label">
-                <span className="added-value-dot" aria-hidden="true" />
-                {String(index + 1).padStart(2, '0')}
-              </span>
-              <h3 className="added-value-title">{column.title}</h3>
+              <div className="added-value-head">
+                <span className="added-value-label">
+                  <span className="added-value-dot" aria-hidden="true" />
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <h3 className="added-value-title">{column.title}</h3>
+              </div>
               <ul className="added-value-items">
                 {column.items.map((item) => (
                   <li key={item}>{item}</li>
@@ -217,7 +220,7 @@ export function AddedValueSection() {
             </motion.li>
           ))}
         </ol>
-      </div>
+      </Container>
     </section>
   )
 }
