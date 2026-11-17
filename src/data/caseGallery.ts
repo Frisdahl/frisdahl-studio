@@ -57,6 +57,37 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
       { imageSrc: '/cases/nordwear/iphone-produktside--4-3.webp', imageAlt: 'Nordwear produktside på en iPhone', aspectRatio: '4 / 3' },
     ],
   },
+  'rethink-furniture': {
+    // Both clips are recordings of the real site (a stand-in brand I designed and built): its home page with the reveals
+    // that play while scrolling, and the shop's category page, a click on a product and the product page.
+    introPair: [
+      {
+        imageSrc: '/cases/rethink-furniture/macbook-forside--4-3.webp',
+        imageAlt: 'Rethink Furniture forside på en MacBook Pro',
+        aspectRatio: '4 / 3',
+        video: {
+          src: '/cases/rethink-furniture/macbook-forside--4-3.mp4',
+          poster: '/cases/rethink-furniture/macbook-forside--poster--4-3.webp',
+        },
+      },
+      {
+        imageSrc: '/cases/rethink-furniture/monitor-shop-produkt--4-3.webp',
+        imageAlt: 'Rethink Furniture shop og produktside på en skærm',
+        aspectRatio: '4 / 3',
+        video: {
+          src: '/cases/rethink-furniture/monitor-shop-produkt--4-3.mp4',
+          poster: '/cases/rethink-furniture/monitor-shop-produkt--poster--4-3.webp',
+        },
+      },
+    ],
+    // Only supplies the next-project preview; the pair above is what the gallery shows.
+    horizontalTopHidden: true,
+    horizontalTop: {
+      imageSrc: '/cases/rethink-furniture/mockup--4-3.webp',
+      imageAlt: 'Rethink Furniture på en iPad Pro',
+      aspectRatio: '4 / 3',
+    },
+  },
   'fresh-cut': {
     introPair: [
       { imageSrc: '/cases/fresh-cut/freshcut-macbook-hero--5-4.webp', imageAlt: 'Fresh Cut forside på en bærbar', aspectRatio: '5 / 4', transparent: true },
@@ -149,6 +180,7 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
 const caseGalleryAriaLabels: Record<Locale, Record<string, string>> = {
   da: {
     nordwear: 'Projektbilleder fra Nordwear',
+    'rethink-furniture': 'Projektbilleder fra Rethink Furniture',
     'fresh-cut': 'Projektbilleder fra Fresh Cut',
     'peter-salling': 'Projektbilleder fra Peter Salling',
     'det-kollektive-klaedeskab': 'Projektbilleder fra Det Kollektive Klædeskab',

@@ -34,6 +34,7 @@ const casesPageContent = {
       // A case matches an industry by its own industry label.
       industries: [
         { id: 'mode', label: 'Mode', industry: 'Mode' },
+        { id: 'moebler', label: 'Møbler', industry: 'Møbler' },
         { id: 'movie-industry', label: 'Movie Industry', industry: 'Film' },
       ],
     },
@@ -62,6 +63,18 @@ const casesPageContent = {
         keywords: ['Website', 'UX-design', 'Branding', 'Udvikling'],
         description:
           'En skarp digital platform til et moderne tøjbrand med fokus på performance og en stærk visuel identitet.',
+      },
+      {
+        id: 'rethink-furniture',
+        client: 'Rethink Furniture',
+        industry: 'Møbler',
+        category: 'website',
+        href: '/cases/rethink-furniture',
+        imageSrc: '/cases/rethink-furniture/mockup--4-3.webp',
+        imageAlt: 'Rethink Furniture case',
+        keywords: ['Website', 'Design', 'Udvikling', 'Animation'],
+        description:
+          'En webshop til et dansk møbelbrand, hvor rolige animationer og store billeder får håndværket til at stå i centrum.',
       },
       {
         id: 'fresh-cut',
