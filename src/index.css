@@ -3402,6 +3402,30 @@
     }
   }
 
+  /* The footer's links have no underline: while one is hovered (or keyboard-focused) the others in its own column
+     (Navigation, or Kontakt) step back to 30% and only it keeps its full opacity, as the links in the menu do.
+     Each column is its own group, and the email stands outside both: it never changes and changes nothing.
+     Scoped to the footer: the same FooterLink in the menu and on the Mød mig page keeps its own hover. */
+  .site-footer .site-footer-link {
+    transition: opacity 0.3s var(--ease-smooth);
+  }
+
+  .site-footer .site-footer-link::after {
+    display: none;
+  }
+
+  @media (hover: hover) {
+    .site-footer-column:has(.site-footer-link:is(:hover, :focus-visible)) .site-footer-link:not(:hover, :focus-visible) {
+      opacity: 0.3;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-footer .site-footer-link {
+      transition: none;
+    }
+  }
+
   /* The contact button on the left, the email beside it. */
   .site-footer-cta-row {
     @apply mt-10 flex flex-wrap items-center gap-x-8 gap-y-4;
