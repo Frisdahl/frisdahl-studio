@@ -1,5 +1,5 @@
 import type { CaseDetailResults as CaseDetailResultsContent } from "../../types/caseDetail";
-import { Container, RevealText } from "../ui";
+import { Container } from "../ui";
 
 interface CaseDetailResultsProps {
   results: CaseDetailResultsContent;
@@ -12,9 +12,7 @@ export function CaseDetailResults({ results }: CaseDetailResultsProps) {
       <Container>
         <div className="case-detail-typography-grid">
           <div>
-            <RevealText as="h2" className="case-detail-overview-title">
-              {results.title}
-            </RevealText>
+            <h2 className="case-detail-overview-title">{results.title}</h2>
             <p className="case-detail-typography-description">{results.description}</p>
             <p className="case-detail-results-note">{results.note}</p>
           </div>

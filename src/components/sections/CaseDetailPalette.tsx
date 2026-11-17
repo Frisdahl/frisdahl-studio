@@ -1,5 +1,5 @@
 import type { CaseDetailPalette as CaseDetailPaletteContent } from "../../types/caseDetail";
-import { Container, RevealText } from "../ui";
+import { Container } from "../ui";
 
 interface CaseDetailPaletteProps {
   palette: CaseDetailPaletteContent;
@@ -12,9 +12,7 @@ export function CaseDetailPalette({ palette }: CaseDetailPaletteProps) {
       <Container>
         <div className="case-detail-typography-grid">
           <div>
-            <RevealText as="h2" className="case-detail-overview-title">
-              {palette.title}
-            </RevealText>
+            <h2 className="case-detail-overview-title">{palette.title}</h2>
             {palette.description ? (
               <p className="case-detail-typography-description">{palette.description}</p>
             ) : null}

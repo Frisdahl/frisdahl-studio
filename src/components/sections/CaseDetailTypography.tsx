@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { CaseDetailTypography as CaseDetailTypographyContent } from '../../types/caseDetail'
-import { Container, RevealText } from '../ui'
+import { Container } from '../ui'
 
 interface CaseDetailTypographyProps {
   typography: CaseDetailTypographyContent
@@ -42,9 +42,7 @@ export function CaseDetailTypography({ typography }: CaseDetailTypographyProps) 
       <Container>
         <div className="case-detail-typography-grid">
           <div className="case-detail-typography-info">
-            <RevealText as="h2" className="case-detail-overview-title">
-              {title}
-            </RevealText>
+            <h2 className="case-detail-overview-title">{title}</h2>
             <p className="case-detail-typography-description">{description}</p>
 
             <dl className="case-detail-typography-facts">

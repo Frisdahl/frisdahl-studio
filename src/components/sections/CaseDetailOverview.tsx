@@ -1,5 +1,5 @@
 import type { CaseDetailOverview as CaseDetailOverviewContent } from '../../types/caseDetail'
-import { Container, RevealText } from '../ui'
+import { Container } from '../ui'
 
 interface CaseDetailOverviewProps {
   overview: CaseDetailOverviewContent
@@ -7,8 +7,7 @@ interface CaseDetailOverviewProps {
 
 /**
  * Under the hero image: two rows with the heading on the left and its content
- * on the right. The details row is left out when a case has no details yet. Only the small
- * headings animate (RevealText); the text and everything else on the case page stands still.
+ * on the right. The details row is left out when a case has no details yet. Nothing here animates.
  */
 export function CaseDetailOverview({ overview }: CaseDetailOverviewProps) {
   const { descriptionTitle, description, detailsTitle, details } = overview
@@ -17,9 +16,7 @@ export function CaseDetailOverview({ overview }: CaseDetailOverviewProps) {
     <section className="case-detail-overview" aria-label={descriptionTitle}>
       <Container>
         <div className="case-detail-overview-row">
-          <RevealText as="h2" className="case-detail-overview-title">
-            {descriptionTitle}
-          </RevealText>
+          <h2 className="case-detail-overview-title">{descriptionTitle}</h2>
           <div className="case-detail-overview-description">
             {description.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
@@ -29,9 +26,7 @@ export function CaseDetailOverview({ overview }: CaseDetailOverviewProps) {
 
         {details.length > 0 && (
           <div className="case-detail-overview-row">
-            <RevealText as="h2" className="case-detail-overview-title">
-              {detailsTitle}
-            </RevealText>
+            <h2 className="case-detail-overview-title">{detailsTitle}</h2>
             <dl className="case-detail-overview-details">
               {details.map((fact) => (
                 <div key={fact.label} className="case-detail-overview-detail">
