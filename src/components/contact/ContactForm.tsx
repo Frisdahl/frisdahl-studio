@@ -3,6 +3,7 @@ import { useLocale } from '../../context/LocaleContext'
 import { getContactPageContent } from '../../data/contact'
 import { getHomeContent } from '../../data/home'
 import { ArrowButton } from '../ui'
+import { toast } from '../../lib/toast'
 
 /** Copy with every "*" in the accent red (the required-field marker). */
 function WithRequiredMark({ text }: { text: string }) {
@@ -23,17 +24,17 @@ interface FieldProps {
   type?: 'text' | 'email' | 'tel'
   autoComplete?: string
   multiline?: boolean
+  invalid?: boolean
 }
 
 /** A label over an underlined input; a trailing "*" in the label marks it required. */
-function Field({ id, label, value, onChange, placeholder, type = 'text', autoComplete, multiline }: FieldProps) {
-  const required = label.includes('*')
+function Field({ id, label, value, onChange, placeholder, type = 'text', autoComplete, multiline, invalid }: FieldProps) {
   const shared = {
     id,
     className: `contact-form-input${multiline ? ' contact-form-textarea' : ''}`,
     value,
     placeholder,
-    required,
+    'aria-invalid': invalid || undefined,
   }
 
   return (
@@ -57,8 +58,8 @@ function Field({ id, label, value, onChange, placeholder, type = 'text', autoCom
 
 /**
  * The contact page form. Sending posts it to the site's Worker (worker/index.ts, POST
- * /api/contact), which emails it through Resend. The browser's own validation covers the
- * required fields; the hidden "website" field is a honeypot for bots.
+ * /api/contact), which emails it through Resend. Name, e-mail and message are checked
+ * here and answered with toasts at the bottom centre (missing, sending, sent, failed); the hidden "website" field is a honeypot for bots.
  */
 export function ContactForm() {
   const { locale } = useLocale()
@@ -72,12 +73,35 @@ export function ContactForm() {
   const [source, setSource] = useState('')
   const [message, setMessage] = useState('')
   const [website, setWebsite] = useState('')
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const [status, setStatus] = useState<'idle' | 'sending'>('idle')
+  const [invalid, setInvalid] = useState<string[]>([])
+  const t = copy.toast
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (status === 'sending') return
+    const missing = [
+      !name.trim() && 'contact-name',
+      !email.trim() && 'contact-email',
+      !message.trim() && 'contact-message',
+    ].filter(Boolean) as string[]
+    const badEmail = !missing.includes('contact-email') && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
+    const problems = badEmail ? [...missing, 'contact-email'] : missing
+    setInvalid(problems)
+    if (problems.length) {
+      toast.show({
+        id: 'contact',
+        kind: 'error',
+        label: t.errorLabel,
+        closeLabel: t.close,
+        title: missing.length ? t.missingTitle : t.emailTitle,
+        text: missing.length ? t.missingText : t.emailText,
+      })
+      document.getElementById(problems[0])?.focus()
+      return
+    }
     setStatus('sending')
+    toast.show({ id: 'contact', kind: 'info', label: t.sendingLabel, closeLabel: t.close, title: t.sendingTitle })
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
@@ -85,7 +109,7 @@ export function ContactForm() {
         body: JSON.stringify({ name, company, email, phone, source, message, website }),
       })
       if (!response.ok) throw new Error(String(response.status))
-      setStatus('sent')
+      toast.show({ id: 'contact', kind: 'success', label: t.sentLabel, closeLabel: t.close, title: t.sentTitle, text: copy.sent })
       setName('')
       setCompany('')
       setEmail('')
@@ -93,18 +117,21 @@ export function ContactForm() {
       setSource('')
       setMessage('')
     } catch {
-      setStatus('error')
+      toast.show({ id: 'contact', kind: 'error', label: t.errorLabel, closeLabel: t.close, title: t.errorTitle, text: copy.error })
+    } finally {
+      setStatus('idle')
     }
   }
 
   return (
-    <form className="contact-form" onSubmit={handleSubmit}>
+    <form className="contact-form" onSubmit={handleSubmit} noValidate>
       <div className="contact-form-row">
         <Field
           id="contact-name"
+          invalid={invalid.includes('contact-name')}
           label={form.nameLabel}
           value={name}
-          onChange={setName}
+          onChange={(v) => { setName(v); setInvalid((i) => i.filter((x) => x !== 'contact-name')) }}
           placeholder={form.namePlaceholder}
           autoComplete="name"
         />
@@ -121,10 +148,11 @@ export function ContactForm() {
       <div className="contact-form-row">
         <Field
           id="contact-email"
+          invalid={invalid.includes('contact-email')}
           type="email"
           label={form.emailLabel}
           value={email}
-          onChange={setEmail}
+          onChange={(v) => { setEmail(v); setInvalid((i) => i.filter((x) => x !== 'contact-email')) }}
           placeholder={form.emailPlaceholder}
           autoComplete="email"
         />
@@ -149,9 +177,10 @@ export function ContactForm() {
 
       <Field
         id="contact-message"
+          invalid={invalid.includes('contact-message')}
         label={copy.messageLabel}
         value={message}
-        onChange={setMessage}
+        onChange={(v) => { setMessage(v); setInvalid((i) => i.filter((x) => x !== 'contact-message')) }}
         placeholder={form.messagePlaceholder}
         multiline
       />
@@ -175,10 +204,6 @@ export function ContactForm() {
         aria-hidden="true"
         style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
       />
-
-      <p className="contact-form-status" role="status">
-        {status === 'sent' ? copy.sent : status === 'error' ? copy.error : ''}
-      </p>
     </form>
   )
 }
