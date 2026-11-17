@@ -401,9 +401,9 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
   position: relative;
 }
 
-/* Phones and tablets: the heading first, then the cards one after the other. */
-.added-value-rail {
-  padding: clamp(3rem, 8vw, 5rem) 0 1.5rem;
+/* The heading above the cards: normal flow, it scrolls away with the page. */
+.added-value-intro {
+  padding: clamp(4rem, 8vw, 8rem) 0 clamp(2rem, 4vw, 3.5rem);
 }
 
 .added-value-aside {
@@ -449,12 +449,14 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
   background-color: var(--color-dark);
 }
 
+/* The large title of the offer. */
 .added-value-title {
   margin: 0;
-  font-size: clamp(1.5rem, 1rem + 1.2vw, 2.125rem);
+  font-size: clamp(2.25rem, 1rem + 3.4vw, 4.25rem);
   font-weight: 500;
-  line-height: 1.1;
-  letter-spacing: -0.035em;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
 }
 
 .added-value-body {
@@ -463,13 +465,13 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
   gap: 2rem;
 }
 
-/* The big sentence about the offer. */
+/* The sentence about the offer: smaller than the title. */
 .added-value-statement {
   margin: 0;
-  font-size: clamp(1.5rem, 0.8rem + 2vw, 2.75rem);
+  font-size: clamp(1.25rem, 0.8rem + 0.95vw, 1.875rem);
   font-weight: 500;
-  line-height: 1.15;
-  letter-spacing: -0.035em;
+  line-height: 1.22;
+  letter-spacing: -0.03em;
   text-wrap: pretty;
   color: var(--color-dark);
 }
@@ -501,49 +503,13 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
 }
 
 @media (min-width: 1024px) {
-  /* The heading is a layer as tall as the stack, laid over the cards; the label in it sticks to the
-     screen, so it stays in the same place while the cards slide up under it. */
-  .added-value-rail {
-    position: absolute;
-    inset: 0;
-    z-index: 10;
-    display: flex;
-    padding: 0;
-    pointer-events: none;
-  }
-
-  .added-value-rail-container,
-  .added-value-rail-container > * {
-    height: 100%;
-  }
-
-  .added-value-rail-container > * {
-    align-content: stretch;
-  }
-
-  .added-value-aside {
-    grid-column: 1 / span 4;
-    align-self: start;
-    position: sticky;
-    top: var(--added-value-top);
-    pointer-events: auto;
-  }
-
   /* One card is one screen: it sticks to the top, so the next card slides up over it. */
-  .added-value-cards {
-    --added-value-top: calc(var(--site-header-height) + var(--header-gap) + 3rem);
-  }
-
-  .added-value-stack {
-    --added-value-top: calc(var(--site-header-height) + var(--header-gap) + 3rem);
-  }
-
   .added-value-card {
     position: sticky;
     top: 0;
     height: 100svh;
     min-height: 36rem;
-    padding: var(--added-value-top) 0 3rem;
+    padding: calc(var(--site-header-height) + var(--header-gap) + 3rem) 0 3rem;
     box-sizing: border-box;
   }
 
@@ -560,19 +526,15 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
     gap: 0;
   }
 
-  /* The dot, number and title sit under the heading, which stays above them. */
+  /* The dot, number and a large title on the left; the text in a narrower column on the right
+     (columns 6-11), so the title is the main thing and the sentence is the detail. */
   .added-value-head {
     grid-column: 1 / span 4;
-    margin-top: 4.5rem;
   }
 
   .added-value-body {
-    grid-column: 5 / span 8;
-    gap: 2.5rem;
-  }
-
-  .added-value-statement {
-    text-indent: 3.2em;
+    grid-column: 6 / span 6;
+    gap: 2rem;
   }
 
   .added-value-icon {

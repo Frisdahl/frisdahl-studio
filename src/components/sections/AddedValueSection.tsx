@@ -180,9 +180,9 @@ function ColumnIcon({ name, reduced }: { name: IconName; reduced: boolean }) {
 }
 
 /**
- * "What I can offer": one full-screen card per offer, stacked. The small ( UPPERCASE ) heading stays
- * in place on the left through all of them; under it each card shows its dot, number and title. On
- * the right: a big sentence about the offer, its keywords, and its looping mark. Scrolling, the next
+ * "What I can offer": the small ( UPPERCASE ) heading, then one full-screen card per offer, stacked.
+ * Each card shows its dot and number and a large title on the left; on the right, in a narrower
+ * column, a sentence about the offer, its keywords, and its looping mark. Scrolling, the next
  * card slides up over the previous one (the cards are sticky, each one a screen high), and the card
  * that is being covered settles back a little (opacity and a small lift, scrubbed to the scroll).
  * Below 1024px, and with reduced motion, the cards are simply stacked in the page.
@@ -221,9 +221,9 @@ export function AddedValueSection() {
   return (
     <section className="added-value" aria-label={addedValue.ariaLabel}>
       <div ref={stackRef} className="added-value-stack">
-        {/* The heading stays in place over the cards (a sticky element inside a layer as tall as the stack). */}
-        <div className="added-value-rail">
-          <Container columns className="added-value-rail-container">
+        {/* The small heading, above the cards; it scrolls away with the page. */}
+        <div className="added-value-intro">
+          <Container columns>
             <div className="added-value-aside">
               <SectionLabel className="added-value-label-heading">{addedValue.heading}</SectionLabel>
             </div>
