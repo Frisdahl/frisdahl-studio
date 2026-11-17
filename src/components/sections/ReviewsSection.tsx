@@ -1,8 +1,12 @@
 import { useLayoutEffect, useRef, useState } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'framer-motion'
 import { useLocale } from '../../context/LocaleContext'
 import { getReviewsContent } from '../../data/reviews'
 import { ArrowIcon, Container, MaskedLineReveal, SectionLabel } from '../ui'
+
+gsap.registerPlugin(ScrollTrigger)
 
 /** The person (portrait, name and role) fades out and fades in, without moving. */
 const personVariants: Variants = {
@@ -41,6 +45,29 @@ export function ReviewsSection() {
   const goTo = (nextIndex: number) => {
     setIndex((nextIndex + count) % count)
   }
+
+  // The footer slides up over this section instead of pushing it up: from the moment the section's
+  // bottom reaches the bottom of the screen (which is when the footer starts to come in) it stays where
+  // it is, and the footer, which sits above it, covers it as the page scrolls on. No extra scroll
+  // distance is added (pinSpacing: false), so the page is as long as before. Reduced motion: normal flow.
+  const sectionRef = useRef<HTMLElement>(null)
+  useLayoutEffect(() => {
+    const section = sectionRef.current
+    if (!section || !document.querySelector('footer.site-footer')) return
+    const mm = gsap.matchMedia()
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const trigger = ScrollTrigger.create({
+        trigger: section,
+        start: 'bottom bottom',
+        end: () => ScrollTrigger.maxScroll(window),
+        pin: true,
+        pinSpacing: false,
+        invalidateOnRefresh: true,
+      })
+      return () => trigger.kill()
+    })
+    return () => mm.revert()
+  }, [])
 
   const probesRef = useRef<HTMLDivElement>(null)
   // The tallest quote's height: reserved so a shorter review never pulls the
@@ -101,7 +128,7 @@ export function ReviewsSection() {
   )
 
   return (
-    <section className="reviews-section" aria-label={ariaLabel}>
+    <section ref={sectionRef} className="reviews-section" aria-label={ariaLabel}>
       <Container columns>
         <SectionLabel className="reviews-label">{ariaLabel}</SectionLabel>
         <div className="reviews-grid">
