@@ -845,11 +845,9 @@
     outline-offset: 2px;
   }
 
-  /* The links are the footer's own links (FooterLink), so the underline is the footer's
-     animation: it slides in from the left on hover and carries on out to the right when
-     the pointer leaves. Here it is in our red, and a little thicker to suit the type
-     (still inside the mask's 0.1em of room, so it isn't clipped). The two classes win
-     over the footer link's own size, weight, line height and colour. */
+  /* The links are the footer's own links (FooterLink); the two classes win over its size,
+     weight, line height and colour. Unlike the footer, the menu has no hover underline:
+     the hovered link is shown by the others dimming instead (see below). */
   .menu-link.site-footer-link {
     font-size: inherit;
     font-weight: 500;
@@ -858,9 +856,7 @@
   }
 
   .menu-link.site-footer-link::after {
-    height: 1px;
-    bottom: -0.17em;
-    background-color: var(--color-accent);
+    display: none;
   }
 
   .menu-open .menu-link {
