@@ -19,20 +19,18 @@ export const SCROLL_PRESETS = {
 } as const
 export type ScrollPresetName = keyof typeof SCROLL_PRESETS
 
+/**
+ * Whether Lenis takes over the mouse wheel at all. Off (2026-11-17): the page scrolls natively. Lenis sets
+ * the scroll position from JavaScript every frame, in whole pixels, so a glide ends by creeping in 1 px
+ * steps (a large picture such as a project video seems to tick forward after you stop) and any fix for
+ * that either crawls or lurches. Native scrolling has no such tail. Turn this back on to bring the glide
+ * (and the dev-only ScrollPresetSwitcher) back; everything else already works without Lenis (it is also
+ * the reduced-motion path).
+ */
+export const SMOOTH_WHEEL_SCROLL = false
+
 /** How much of a wheel notch's native distance the page moves. */
 const WHEEL_MULTIPLIER = 0.7
-
-/**
- * Lenis eases with an exponential decay, so near its end the page slows to a crawl and its last
- * pixels arrive one at a time, further and further apart (the last 5 px took about 530 ms and the
- * very last pixel came about 245 ms after the one before it). The page then looks as if it has
- * stopped and ticks forward once more, which shows on a large, high-contrast picture such as a
- * project video. So the glide may not slow below TAIL_SPEED (px per second): it keeps its natural
- * slowing down until it reaches that speed, holds it until it lands, and never speeds up again, so
- * the speed stays continuous (an earlier version that raised the easing rate near the end made the
- * page lurch forward just before it stopped).
- */
-const TAIL_SPEED = 120
 
 export const DEFAULT_SCROLL_PRESET: ScrollPresetName = 'B'
 const PRESET_STORAGE_KEY = 'frisdahl:scroll-preset'
@@ -90,7 +88,7 @@ export function prefersReducedMotion() {
  * Lenis keeps in real time.
  */
 export function initSmoothScroll() {
-  if (lenis || prefersReducedMotion()) return null
+  if (lenis || prefersReducedMotion() || !SMOOTH_WHEEL_SCROLL) return null
 
   const instance = new Lenis({
     lerp: SCROLL_PRESETS[preset].lerp,
@@ -103,26 +101,7 @@ export function initSmoothScroll() {
   })
   lenis = instance
 
-  // Lenis keeps the easing rate of the glide in progress on its private `animate` object, and a rate
-  // changed in `options` only reaches the next glide, so the floor is applied there. A new wheel
-  // notch starts a new glide, and the rate is worked out again from the preset every frame.
-  const glide = (instance as unknown as { animate: { isRunning: boolean; lerp?: number; to: number; value: number } }).animate
-  let lastTime = 0
-  driveLenis = (time) => {
-    const dt = lastTime ? time - lastTime : 0
-    lastTime = time
-    if (glide.isRunning && glide.lerp && dt > 0 && dt < 0.1) {
-      const base = SCROLL_PRESETS[preset].lerp
-      const remaining = Math.abs(glide.to - glide.value)
-      const floorStep = TAIL_SPEED * dt
-      // Lenis moves a fraction 1 - e^(-lerp * 60 * dt) of the remaining distance each frame. If that is
-      // less than the floor, use the rate that gives exactly the floor (all of it when it would land).
-      const fraction = remaining <= floorStep ? 0.999 : floorStep / remaining
-      const floorRate = -Math.log(1 - fraction) / (60 * dt)
-      glide.lerp = Math.max(base, floorRate)
-    }
-    instance.raf(time * 1000)
-  }
+  driveLenis = (time) => instance.raf(time * 1000)
   gsap.ticker.add(driveLenis, false, true)
   gsap.ticker.lagSmoothing(0)
 
