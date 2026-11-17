@@ -66,14 +66,14 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     // types/caseDetail.ts), around the device, so the screens fill more of the frame and read better.
     introPair: [
       {
-        imageSrc: '/cases/rethink-furniture/macbook-forside-v2--4-3.webp',
+        imageSrc: '/cases/rethink-furniture/macbook-forside-v3--4-3.webp',
         imageAlt: 'Rethink Furniture forside på en MacBook Pro',
         aspectRatio: '4 / 3',
-        zoom: 1.12,
-        zoomOrigin: '47% 50%',
+        zoom: 1.32,
+        zoomOrigin: '49% 52%',
         video: {
-          src: '/cases/rethink-furniture/macbook-forside-v2--4-3.mp4',
-          poster: '/cases/rethink-furniture/macbook-forside-v2--poster--4-3.webp',
+          src: '/cases/rethink-furniture/macbook-forside-v3--4-3.mp4',
+          poster: '/cases/rethink-furniture/macbook-forside-v3--poster--4-3.webp',
         },
       },
       {
