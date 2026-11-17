@@ -58,7 +58,7 @@ const casesPageContent = {
         industry: 'Mode',
         category: 'website',
         href: '/cases/nordwear',
-        imageSrc: '/cases/nordwear/main--16-9.webp',
+        imageSrc: '/cases/nordwear/main-v2--16-9.webp',
         imageAlt: 'Nordwear case',
         panelHoverColor: '#f0e0e4',
         keywords: ['Website', 'UX-design', 'Branding', 'Udvikling'],
@@ -71,7 +71,7 @@ const casesPageContent = {
         industry: 'Møbler',
         category: 'website',
         href: '/cases/rethink-furniture',
-        imageSrc: '/cases/rethink-furniture/mockup--4-3.webp',
+        imageSrc: '/cases/rethink-furniture/macbook-forside-v3--4-3.webp',
         imageAlt: 'Rethink Furniture case',
         keywords: ['Website', 'Design', 'Udvikling', 'Animation'],
         description:

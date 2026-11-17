@@ -6,18 +6,18 @@ import type { CaseDetailGalleryVideo } from '../types/caseDetail'
  */
 const caseMainVideos: Partial<Record<string, CaseDetailGalleryVideo>> = {
   nordwear: {
-    src: '/cases/nordwear/main--16-9.mp4',
-    poster: '/cases/nordwear/main--16-9.webp',
+    src: '/cases/nordwear/main-v2--16-9.mp4',
+    poster: '/cases/nordwear/main-v2--16-9.webp',
   },
   // A 4:3 clip of the OFFSCRIPT® site on a phone; the home card shows the middle of it (see `focus` in home.ts).
   offscript: {
     src: '/cases/offscript/mockup--4-3.mp4',
     poster: '/cases/offscript/mockup--4-3.webp',
   },
-  // A 4:3 clip of the Rethink Furniture site (preloader through to the hero) on an iPad Pro; the home card shows the middle of it.
+  // A 4:3 clip (2560x1920) of the Rethink Furniture home page, scrolling, on a MacBook Pro; the home card shows the middle of it.
   'rethink-furniture': {
-    src: '/cases/rethink-furniture/mockup--4-3.mp4',
-    poster: '/cases/rethink-furniture/mockup--4-3.webp',
+    src: '/cases/rethink-furniture/macbook-forside-v3--4-3.mp4',
+    poster: '/cases/rethink-furniture/macbook-forside-v3--poster--4-3.webp',
   },
   'peter-salling': {
     src: '/cases/peter-salling/main--16-9.mp4',

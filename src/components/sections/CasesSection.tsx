@@ -5,16 +5,16 @@ import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
 
 /**
- * The grid's two rows (a six-column grid with a 6px gap, every row the same height):
- *   1. Peter Salling, wide, across four columns, with OFFSCRIPT® beside it across two;
- *   2. Rethink Furniture across two columns, with Nordwear, wide, beside it across four (on the right).
+ * The grid's two rows (a twelve-column grid with a 6px gap, every row the same height, the rows mirror each other):
+ *   1. Peter Salling, wide, across seven columns, with OFFSCRIPT® beside it across five;
+ *   2. Rethink Furniture across five columns, with Nordwear, wide like Peter Salling, beside it across seven (on the right).
  * `clip` cards play their clip (the others show the still).
  */
-const GRID: { id: string; span: 2 | 3 | 4 | 6; shape: 'wide' | 'stretch' | 'portrait'; clip?: boolean }[] = [
-  { id: 'peter-salling', span: 4, shape: 'wide', clip: true },
-  { id: 'offscript', span: 2, shape: 'stretch', clip: true },
-  { id: 'rethink-furniture', span: 2, shape: 'stretch', clip: true },
-  { id: 'nordwear', span: 4, shape: 'wide', clip: true },
+const GRID: { id: string; span: 5 | 7 | 12; shape: 'wide' | 'stretch' | 'portrait'; clip?: boolean }[] = [
+  { id: 'peter-salling', span: 7, shape: 'wide', clip: true },
+  { id: 'offscript', span: 5, shape: 'stretch', clip: true },
+  { id: 'rethink-furniture', span: 5, shape: 'stretch', clip: true },
+  { id: 'nordwear', span: 7, shape: 'wide', clip: true },
 ]
 
 /**

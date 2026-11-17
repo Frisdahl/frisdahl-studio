@@ -33,7 +33,7 @@ const caseDetails = {
           'En skarp digital platform med fokus på performance, branding og visuel identitet — bygget til at konvertere og skalere med brandet.',
         sliderAriaLabel: 'Automatisk gennemløb af Nordwear case-billeder',
         slides: [
-          { imageSrc: '/cases/nordwear/main--16-9.webp', imageAlt: 'Nordwear forside på en bærbar' },
+          { imageSrc: '/cases/nordwear/main-v2--16-9.webp', imageAlt: 'Nordwear forside på en bærbar' },
         ],
       },
       columns: [
@@ -69,7 +69,7 @@ const caseDetails = {
           'En rolig webshop til et dansk møbelbrand, hvor store billeder, serif-typografi og stille animationer lader materialer og håndværk tale.',
         sliderAriaLabel: 'Automatisk gennemløb af Rethink Furniture case-billeder',
         slides: [
-          { imageSrc: '/cases/rethink-furniture/mockup--4-3.webp', imageAlt: 'Rethink Furniture på en iPad Pro på en sten' },
+          { imageSrc: '/cases/rethink-furniture/macbook-forside-v3--4-3.webp', imageAlt: 'Rethink Furniture på en MacBook Pro' },
         ],
       },
       columns: [
