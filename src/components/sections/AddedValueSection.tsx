@@ -8,9 +8,9 @@ import { Container, SectionLabel } from '../ui'
 
 gsap.registerPlugin(ScrollTrigger)
 
-// The mark colour (--color-dark). SVG attributes cannot use CSS variables, so
+// The mark colour (--color-accent). SVG attributes cannot use CSS variables, so
 // the value is repeated here.
-const INK = '#131313'
+const INK = '#ff4f56'
 
 type IconName = 'brand' | 'design' | 'development'
 
@@ -109,15 +109,18 @@ function ColumnIcon({ name, reduced }: { name: IconName; reduced: boolean }) {
         tl.to({}, { duration: 1.6 })
         next(LAYOUTS[0])
       } else {
-        // The arrowheads turn edge-on (flatten) as they slide off to the right,
-        // fading, one after another, then come back in from the left the same way.
+        // The arrowheads narrow (not to nothing) as they slide off to the right and fade out, one after
+        // another, then come back in from the left the same way. They are fully faded before they get
+        // thin: a nearly flat arrow that is still visible shows as a hairline with a point at each end.
         const arrows = q('.av-arrow')
         gsap.set(arrows, { transformOrigin: '50% 50%' })
         const train = { each: 0.08, from: 'end' } as const
         tl.to({}, { duration: 2 })
-          .to(arrows, { x: 24, scaleX: 0.03, opacity: 0, duration: 0.7, ease: 'power2.in', stagger: train })
-          .set(arrows, { x: -24, scaleX: 0.03 })
-          .to(arrows, { x: 0, scaleX: 1, opacity: 1, duration: 0.8, ease: 'power3.out', stagger: train })
+          .to(arrows, { x: 24, scaleX: 0.4, duration: 0.7, ease: 'power2.in', stagger: train })
+          .to(arrows, { opacity: 0, duration: 0.3, ease: 'power1.in', stagger: train }, '<')
+          .set(arrows, { x: -24, scaleX: 0.4 })
+          .to(arrows, { x: 0, scaleX: 1, duration: 0.8, ease: 'power3.out', stagger: train })
+          .to(arrows, { opacity: 1, duration: 0.35, ease: 'power1.out', stagger: train }, '<')
       }
 
       const observer = new IntersectionObserver(([entry]) => (entry.isIntersecting ? tl.play() : tl.pause()), { threshold: 0.1 })
