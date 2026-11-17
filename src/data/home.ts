@@ -63,6 +63,16 @@ const homeContent = {
           imageAlt: "Det Kollektive Klædeskab case",
         },
       ],
+      // A portrait clip that stands beside a project on the home page (see CaseVideoCard). Not a
+      // case page yet, so it is not a link.
+      featuredVideo: {
+        id: 'offscript',
+        client: "OFFSCRIPT®",
+        keywords: "Website • Art direction • Animation",
+        videoSrc: '/cases/offscript/mockup--4-3.mp4',
+        posterSrc: '/cases/offscript/mockup--4-3.webp',
+        imageAlt: "OFFSCRIPT® på en iPhone: åbningen af et websted for et uafhængigt artistbureau",
+      },
     },
     addedValue: {
       ariaLabel: "Hvad jeg kan tilbyde",

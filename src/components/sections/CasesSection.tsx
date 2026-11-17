@@ -1,5 +1,7 @@
+import { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { CaseCard } from '../cards/CaseCard'
+import { CaseVideoCard } from '../cards/CaseVideoCard'
 import { getCaseMainVideo } from '../../data/caseVideos'
 import { Container, MaskedLineReveal, WithHeadingDot } from '../ui'
 import { MEET_US_PATH } from '../../lib/routes'
@@ -62,18 +64,22 @@ export function CasesSection() {
         {/* Inside the content container, so the images line up with the
             page's side margins like the text above. */}
         <div className="home-cases-list">
-          {cases.items.slice(0, FEATURED_COUNT).map((item) => (
-            <CaseCard
-              key={item.id}
-              client={item.client}
-              keywords={item.keywords}
-              imageSrc={item.imageSrc}
-              imageAlt={item.imageAlt}
-              video={getCaseMainVideo(item.id)}
-              href={item.href}
-              metaBelow
-              revealOnScroll
-            />
+          {cases.items.slice(0, FEATURED_COUNT).map((item, index) => (
+            <Fragment key={item.id}>
+              <CaseCard
+                client={item.client}
+                keywords={item.keywords}
+                imageSrc={item.imageSrc}
+                imageAlt={item.imageAlt}
+                video={getCaseMainVideo(item.id)}
+                href={item.href}
+                metaBelow
+                revealOnScroll
+                staggered={index === 1}
+              />
+              {/* Beside the first project, in the columns its staggered row leaves free; under it on narrow screens. */}
+              {index === 0 && <CaseVideoCard {...cases.featuredVideo} />}
+            </Fragment>
           ))}
         </div>
       </Container>

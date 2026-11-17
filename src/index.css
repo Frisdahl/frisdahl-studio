@@ -2337,9 +2337,42 @@
 
     /* Staggered: the second project starts four columns in (columns 5-12),
        so the rows don't line up. */
-    .home-cases-list .case-card:nth-child(even) .case-card-media-link,
-    .home-cases-list .case-card:nth-child(even) .case-card-meta {
+    .home-cases-list .case-card-staggered .case-card-media-link,
+    .home-cases-list .case-card-staggered .case-card-meta {
       grid-column: 5 / span 8;
+    }
+
+    /* The portrait clip stands in the four columns the first row leaves free (9-12), top aligned
+       with that row's picture. Its row is explicit because it comes second in the markup, so on
+       narrow screens it follows the first project. */
+    .home-cases-list .case-card-portrait {
+      /* A plain column, not the project rows' twelve-column subgrid. */
+      display: flex;
+      flex-direction: column;
+      grid-template-columns: none;
+      grid-column: 9 / span 4;
+      grid-row: 1;
+      /* Stretches to the row, so its frame ends where the project's picture ends and the titles
+         under them sit on one line. */
+      align-self: stretch;
+    }
+
+    .home-cases-list .case-card-portrait .case-card-media {
+      flex: 1 1 0;
+      min-height: 0;
+      aspect-ratio: auto;
+    }
+
+    /* The clip is a landscape (4:3) mockup with the phone in the middle: this tall frame shows its
+       centre, with the phone at the middle of the frame (it stands at 52% across in the clip). */
+    .home-cases-list .case-card-portrait .case-card-image {
+      object-position: 52.4% 50%;
+    }
+
+    /* The first project shares row 1 with it, so it is placed there too (an explicitly placed item
+       would otherwise be laid out first and push the project to the second row). */
+    .home-cases-list .case-card:not(.case-card-portrait, .case-card-staggered) {
+      grid-row: 1;
     }
   }
 
@@ -2373,6 +2406,25 @@
     letter-spacing: normal;
     color: var(--color-muted);
     text-transform: none;
+  }
+
+  /* The portrait clip's frame: 4:5 when it stands alone, under the first project (the centre of the
+     landscape clip, phone in the middle). From desktop its frame follows the project beside it. */
+  .case-card-portrait .case-card-media {
+    aspect-ratio: 4 / 5;
+  }
+
+  .case-card-portrait .case-card-image {
+    object-position: 52.4% 50%;
+  }
+
+  /* Under the first project on narrow screens, a little narrower than the page so it reads as a
+     clip and not a second full-width row. */
+  @media (max-width: 1023px) {
+    .home-cases-list .case-card-portrait {
+      width: min(100%, 26rem);
+      margin-left: auto;
+    }
   }
 
   /* Less room between the two projects than the base spacing below. */

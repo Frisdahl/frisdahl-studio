@@ -1,27 +1,12 @@
-import { Fragment, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 import type { CaseDetailGalleryVideo } from '../../types/caseDetail'
 import { ArrowIcon } from '../ui/ArrowIcon'
 import { LoopVideo } from '../ui/LoopVideo'
 import { MaskedLineReveal } from '../ui/MaskedLineReveal'
-import { DUR, EASE, STAGGER } from '../../lib/motion'
-
-/**
- * The row's text rises once, when the row's top reaches 78% of the screen: the same line rise
- * the page used before it was moved onto MaskedLineReveal (1 s, power3.out, 0.08 s between lines),
- * with the split undone afterwards so the shared-image transition finds plain text. The keywords
- * start one stagger step after the title, as when both were split together.
- */
-const ROW_REVEAL = {
-  trigger: 'view',
-  start: 'top 78%',
-  triggerClosest: '.case-card',
-  duration: DUR.line,
-  stagger: STAGGER.lines,
-  ease: EASE.rise,
-  revertWhenDone: true,
-} as const
+import { STAGGER } from '../../lib/motion'
+import { ROW_REVEAL, keywordsWithDots } from './caseCardText'
 
 export interface CaseCardProps {
   client: string
@@ -38,20 +23,8 @@ export interface CaseCardProps {
   /** Title and keywords rise line by line out of their masks once the row scrolls in (the home
    *  page). Off where the page's own entrance already animates the text. */
   revealOnScroll?: boolean
-}
-
-/**
- * The keywords arrive as one string with " • " between them. The font draws that
- * bullet as a small square, so each separator becomes a round dot (CSS), and
- * stays out of the accessibility tree.
- */
-function keywordsWithDots(keywords: string) {
-  return keywords.split(' • ').map((word, index) => (
-    <Fragment key={word}>
-      {index > 0 && <span className="case-card-dot" aria-hidden="true" />}
-      <span className="case-card-keyword">{word}</span>
-    </Fragment>
-  ))
+  /** The home list's second row starts four columns in, so the rows don't line up. */
+  staggered?: boolean
 }
 
 /**
@@ -63,7 +36,7 @@ function keywordsWithDots(keywords: string) {
  * its full slide in: if the mouse leaves before it has arrived, it finishes arriving
  * and then carries on to the top right.
  */
-export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, metaBelow = false, showArrow = true, revealOnScroll = false }: CaseCardProps) {
+export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, metaBelow = false, showArrow = true, revealOnScroll = false, staggered = false }: CaseCardProps) {
   // The title's arrow: waits out of sight to the left ('idle'), slides in on hover ('in'),
   // leaves to the right when the mouse does ('out'), then waits again.
   const [arrow, setArrow] = useState<'idle' | 'in' | 'out'>('idle')
@@ -72,7 +45,7 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, me
   const leaveWhenArrived = useRef(false)
 
   return (
-    <div className={`case-card${metaBelow ? ' case-card-meta-below' : ''}`}>
+    <div className={`case-card${metaBelow ? ' case-card-meta-below' : ''}${staggered ? ' case-card-staggered' : ''}`}>
       <div className="case-card-meta">
         {/* Each title is an h3 under the section's "Latest projects" h2. */}
         <div className="case-card-title-row">
