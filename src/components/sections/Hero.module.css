@@ -1,217 +1,149 @@
+/*
+ * The hero is laid out in a unit (--u) so the whole composition scales as one piece: the words are
+ * 11.1u, the picture 25u wide, and the second word starts where the picture's right part begins.
+ * On desktop --u is 1vw; the numbers are the Figma frame (1440 wide) divided by 14.4.
+ */
 .hero {
+  --u: 1vw;
   position: relative;
+  /* The words blend with the page and the picture, so they stay in this section's own layer. */
   isolation: isolate;
-  overflow: hidden;
-  background: var(--color-home-page);
+  background: var(--color-light);
   color: var(--color-dark);
-  --hero-slide-gap: clamp(0.5rem, 0.8vw, 0.75rem);
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(1rem, 2vh, 1.5rem);
-  padding-block: clamp(1.75rem, 4vh, 3.5rem) clamp(1.5rem, 3vh, 2.5rem);
-}
-
-/* Heading on the left; the intro and the button on the right, their bottom
-   lined up with the heading's last line. This is the page container's content
-   subgrid (see Container `columns`), so the columns and the gutter are the
-   page's own. */
-.inner {
-  row-gap: clamp(1.75rem, 4vw, 3rem);
-}
-
-@media (min-width: 900px) {
-  /* The heading spans nine columns, the intro and the button the last three, level with the
-     heading's last line. */
-  .inner {
-    align-items: end;
-  }
-
-  .title {
-    grid-column: 1 / span 9;
-  }
-
-  .aside {
-    grid-column: 10 / -1;
-  }
-}
-
-/* The headline is the page: Geist Medium, set big and tight; the accent word changes voice. */
-.title {
-  max-width: none;
-  margin: 0;
-  color: var(--color-dark);
-  font-family: var(--font-heading);
-  font-size: clamp(2.75rem, 1.2rem + 6.4vw, 7rem);
-  font-weight: 500;
-  line-height: 0.98;
-  letter-spacing: -0.05em;
-}
-
-/* The heading's lines slide up out of masks (MaskedLineReveal); the wrapper is a block so
-   it has lines of its own. */
-.titleLines {
-  display: block;
-}
-
-/* The accent word, in the site's red and in the serif's own italic (Instrument Serif): the one
-   place the page changes voice. It is drawn smaller than Geist at the same size, so it is set a
-   little larger, and with a touch less tracking. */
-.titleAccent {
-  color: var(--color-accent);
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 400;
-  font-size: 1.1em;
-  letter-spacing: -0.02em;
-  /* The slant overhangs to the right: keep a little room before the next word. */
-  margin-right: 0.04em;
-}
-
-/* Keeps the last words (and the dot) on one line. */
-.titleTail {
-  white-space: nowrap;
-}
-
-.aside {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: clamp(1.25rem, 2.5vh, 1.75rem);
-  /* Lines the paragraph up with the heading's last line, not its descenders. */
-  padding-bottom: 0.5rem;
-}
-
-.intro {
-  max-width: 24rem;
-  margin: 0;
-  /* The heading's dark ink at lower opacity. */
-  color: color-mix(in srgb, var(--color-dark) 60%, transparent);
-  font-family: var(--font-sans);
-  font-size: clamp(1rem, 1.15vw, 1.125rem);
-  font-weight: 400;
-  line-height: 1.55;
-  letter-spacing: -0.015em;
-}
-
-/* Carousel: full-bleed, 3.5 portrait slides across a desktop screen. */
-.carousel {
-  width: 100%;
   overflow: hidden;
-  cursor: grab;
-  user-select: none;
-  /* Horizontal drags move the carousel; vertical swipes still scroll the page. */
-  touch-action: pan-y;
 }
 
-.dragging {
-  cursor: grabbing;
-}
-
-/* Moved by the effect in Hero.tsx, which also sets --hero-slide-scale. */
-.track {
-  display: flex;
-  width: max-content;
-  will-change: transform;
-}
-
-.group {
-  display: flex;
-  gap: var(--hero-slide-gap);
-  padding-right: var(--hero-slide-gap);
-}
-
-.slide {
-  flex: none;
-  /* 1.4 slides on phones, 2.3 on tablets, 3.5 from desktop (gaps included). */
-  width: calc((100vw - var(--hero-slide-gap)) / 1.4);
-  aspect-ratio: 4 / 5;
-  margin: 0;
-  overflow: hidden;
-  border-radius: var(--radius-image);
-  background: var(--color-surface-gray);
-  /* Shrinks while the carousel moves fast; its layout box keeps its size, so
-     the visible gaps between slides open up. */
-  transform: scale(var(--hero-slide-scale, 1));
-  will-change: transform;
-}
-
-@media (min-width: 640px) {
-  .slide {
-    width: calc((100vw - 2 * var(--hero-slide-gap)) / 2.3);
-  }
-}
-
-@media (min-width: 1024px) {
-  /* The hero fills the first screen below the header; the carousel takes the
-     height left under the copy, so the slides always end a gap above the
-     bottom of the screen. */
-  .content {
-    height: calc(100svh - var(--site-header-height));
-    min-height: 34rem;
-    padding-bottom: var(--hero-slide-gap);
-  }
-
-  .carousel {
-    flex: 1 1 auto;
-    min-height: 0;
-  }
-
-  .track,
-  .group {
-    height: 100%;
-  }
-
-  /* Slides sit on the bottom of the carousel, so the gap below them stays the
-     same and any spare height goes between the copy and the slides. */
-  .group {
-    align-items: flex-end;
-  }
-
-  /* 3.5 slides across. They fill the height under the copy, so the gap to the text stays
-     small; they get taller than 4:5 to do it, capped at 2:3 so tall screens don't stretch
-     them (the spare height then goes back between the copy and the slides). On a short
-     screen they shrink to the height that is left. */
-  .slide {
-    --hero-slide-width: calc((100vw - 3 * var(--hero-slide-gap)) / 3.5);
-    width: var(--hero-slide-width);
-    height: min(100%, calc(var(--hero-slide-width) * 1.5));
-    aspect-ratio: auto;
-  }
-}
-
-.slide {
+.stage {
   position: relative;
+  height: 100svh;
+  min-height: 38rem;
 }
 
-.slide img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  pointer-events: none;
+/* The centred composition: words and picture share one block, centred on the screen. */
+.block {
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* Centred without a transform: a transform would make this its own layer, and the words
+     could no longer blend with the page behind it. */
+  top: calc(50% - 18.2 * var(--u));
+  height: calc(36.4 * var(--u));
 }
 
-/* Video slides: frames are drawn over the poster image (see Hero.tsx). */
-.videoCanvas {
+.media {
+  position: absolute;
+  left: 50%;
+  top: calc(5 * var(--u));
+  width: calc(25 * var(--u));
+  aspect-ratio: 360 / 380;
+  transform: translateX(-50%);
+  overflow: hidden;
+  background: var(--color-surface-gray);
+}
+
+.slide {
   position: absolute;
   inset: 0;
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  /* The first picture is the lanyard and its cards: keep them in frame. */
+  object-position: 50% 62%;
   pointer-events: none;
 }
 
+/* Only the first picture shows until the script takes over (and for ever with reduced motion). */
+.slide:not(:first-child) {
+  clip-path: inset(100% 0% 0% 0%);
+}
+
+/* White type, difference blend: it inverts the picture (and the page) behind it. The blend
+   needs the picture and the page in the same layer, which .hero's isolation gives it. */
+.title {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  color: var(--color-light);
+  mix-blend-mode: difference;
+  font-family: var(--font-heading);
+  font-size: calc(11.1 * var(--u));
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  pointer-events: none;
+}
+
+.wordMask {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  /* Room for the descenders (y, g) inside the mask. */
+  padding-bottom: 0.18em;
+  margin-bottom: -0.18em;
+}
+
+.word {
+  display: block;
+  will-change: transform;
+}
+
+.first {
+  top: 0;
+  right: calc(50% + 7.64 * var(--u));
+}
+
+.second {
+  top: calc(26.4 * var(--u));
+  left: calc(50% + 7.64 * var(--u));
+}
+
+/* Under the first word, at its left edge. */
+.line {
+  position: absolute;
+  top: calc(10.4 * var(--u));
+  left: calc(50% - 44.2 * var(--u));
+}
+
+@media (min-width: 1536px) {
+  /* The composition stops growing with the screen: it stays centred at the 1536px size. */
+  .hero {
+    --u: 15.36px;
+  }
+}
+
+/* Phones and tablets: the words sit at the page edges (first left, second right) and the
+   picture is wider, so the overlap still works in a narrower column. */
 @media (max-width: 1023px) {
-  /* Not pinned below the header here: the hero starts at the top of the page,
-     under the fixed header, so its height is added to the top padding. */
-  .content {
-    padding-top: calc(var(--site-header-height) + clamp(1.5rem, 4vh, 2.5rem));
+  .block {
+    top: calc(50% - 32 * var(--u));
+    height: calc(64 * var(--u));
+  }
+
+  .media {
+    top: calc(7.65 * var(--u));
+    width: calc(46 * var(--u));
   }
 
   .title {
-    letter-spacing: -0.03em;
+    font-size: calc(17 * var(--u));
+  }
+
+  .first {
+    right: auto;
+    left: var(--page-gutter);
+  }
+
+  .second {
+    top: calc(48.6 * var(--u));
+    left: auto;
+    right: var(--page-gutter);
+  }
+
+  .line {
+    top: auto;
+    bottom: calc(-14 * var(--u));
+    left: var(--page-gutter);
+    right: var(--page-gutter);
   }
 }

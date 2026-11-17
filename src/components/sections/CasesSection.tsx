@@ -1,87 +1,57 @@
-import { Link } from 'react-router-dom'
 import { CaseCard } from '../cards/CaseCard'
 import { getCaseMainVideo } from '../../data/caseVideos'
-import { Container, MaskedLineReveal, WithHeadingDot } from '../ui'
-import { MEET_US_PATH } from '../../lib/routes'
+import { Container, SectionLabel } from '../ui'
 import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
-import { DUR, EASE, STAGGER } from '../../lib/motion'
+import { ProjectCursor } from './ProjectCursor'
 
-/** How many projects the home page shows, one per row. */
-const FEATURED_COUNT = 2
+/**
+ * The grid's rows, in order: two projects of the same size, one across the whole width, then two
+ * of the same size again. `wide` cards are 16:9, the others portrait (4:5).
+ */
+const GRID: { id: string; wide?: boolean }[] = [
+  { id: 'nordwear' },
+  { id: 'offscript' },
+  { id: 'peter-salling', wide: true },
+  { id: 'fresh-cut' },
+  { id: 'det-kollektive-klaedeskab' },
+]
 
+/**
+ * "( Seneste projekter )" over the project grid: images packed with a 6px gap, the title and the
+ * keywords on a soft gradient at the bottom of each picture. Over a picture the pointer turns
+ * into a round "SE PROJEKT" label (ProjectCursor). A click still lifts the picture into the
+ * project page (the shared-image transition).
+ */
 export function CasesSection() {
   const { locale } = useLocale()
   const { cases } = getHomeContent(locale)
-  return (
-    <section
-      id="portfolio"
-      className="home-cases py-section-sm lg:py-section"
-      aria-label={cases.ariaLabel}
-    >
-      <Container columns>
-        <div className="home-cases-intro">
-          <h2 className="home-cases-intro-title">
-            <WithHeadingDot>{cases.intro.title}</WithHeadingDot>
-          </h2>
-          <div className="home-cases-intro-image-wrapper">
-            <img
-              src="/images/gallery-board--16-9.webp"
-              alt="Galleritavle med udvalgt designarbejde fra Frisdahl Studio"
-              width={2000}
-              height={1131}
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-          <div className="home-cases-intro-text-col">
-            <p className="home-cases-intro-text">
-              {cases.intro.textBefore}
-              <Link to={MEET_US_PATH} className="home-cases-intro-link">
-                {cases.intro.name}
-              </Link>
-              {cases.intro.textAfter}
-            </p>
-            <p className="home-cases-intro-text">{cases.intro.textMore}</p>
-          </div>
-        </div>
-        {/* "Seneste projekter" rises line by line when it scrolls into view; the intro above it is
-            plain, static text. The project rows do the same inside CaseCard (revealOnScroll). */}
-        <div className="home-cases-list-head">
-          <MaskedLineReveal
-            as="h2"
-            className="home-cases-list-title"
-            start="top 85%"
-            duration={DUR.line}
-            stagger={STAGGER.lines}
-            ease={EASE.rise}
-            revertWhenDone
-          >
-            <WithHeadingDot>{cases.listTitle}</WithHeadingDot>
-          </MaskedLineReveal>
-          <span className="home-cases-list-count" aria-hidden="true">
-            {String(Math.min(FEATURED_COUNT, cases.items.length)).padStart(2, '0')}
-          </span>
-        </div>
+  const items = GRID.map((slot) => ({ slot, item: cases.items.find((candidate) => candidate.id === slot.id) })).filter(
+    (entry): entry is { slot: (typeof GRID)[number]; item: (typeof cases.items)[number] } => Boolean(entry.item),
+  )
 
-        {/* Inside the content container, so the images line up with the
-            page's side margins like the text above. */}
+  return (
+    <section id="portfolio" className="home-cases" aria-label={cases.ariaLabel}>
+      <Container columns>
+        <SectionLabel className="home-cases-label">{cases.listTitle}</SectionLabel>
         <div className="home-cases-list">
-          {cases.items.slice(0, FEATURED_COUNT).map((item) => (
+          {items.map(({ slot, item }) => (
             <CaseCard
               key={item.id}
+              className={slot.wide ? 'case-card-wide' : undefined}
               client={item.client}
               keywords={item.keywords}
-              imageSrc={item.imageSrc}
+              imageSrc={!slot.wide && 'portraitSrc' in item ? item.portraitSrc : item.imageSrc}
               imageAlt={item.imageAlt}
-              video={getCaseMainVideo(item.id)}
+              video={slot.wide ? getCaseMainVideo(item.id) : undefined}
               href={item.href}
-              metaBelow
+              overlay
               revealOnScroll
             />
           ))}
         </div>
       </Container>
+      <ProjectCursor />
     </section>
   )
 }

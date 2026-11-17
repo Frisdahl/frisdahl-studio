@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion, type Variants } from 'framer-motion'
 import { useLocale } from '../../context/LocaleContext'
 import { getReviewsContent } from '../../data/reviews'
-import { ArrowIcon, Container, MaskedLineReveal, PillButton } from '../ui'
+import { ArrowIcon, Container, MaskedLineReveal, SectionLabel } from '../ui'
 
 /** The person (portrait, name and role) fades out and fades in, without moving. */
 const personVariants: Variants = {
@@ -31,7 +31,7 @@ const swapVariants: Variants = {
  */
 export function ReviewsSection() {
   const { locale } = useLocale()
-  const { ariaLabel, previousLabel, nextLabel, caseLinkLabel, reviews } = getReviewsContent(locale)
+  const { ariaLabel, previousLabel, nextLabel, reviews } = getReviewsContent(locale)
   const reduced = useReducedMotion() === true
   const [index, setIndex] = useState(0)
 
@@ -97,18 +97,13 @@ export function ReviewsSection() {
           {review.role} · {review.company}
         </p>
       </div>
-      {review.caseHref && (
-        <PillButton href={review.caseHref} className="reviews-case-link">
-          {caseLinkLabel}
-        </PillButton>
-      )}
     </>
   )
 
   return (
     <section className="reviews-section" aria-label={ariaLabel}>
       <Container columns>
-        <p className="reviews-eyebrow">{ariaLabel}</p>
+        <SectionLabel className="reviews-label">{ariaLabel}</SectionLabel>
         <div className="reviews-grid">
           <div className="reviews-controls">
             <button

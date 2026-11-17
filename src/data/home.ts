@@ -19,6 +19,8 @@ const homeContent = {
       ariaLabel: "Udvalgte cases",
       // Intro above the projects; the name links to the meet-me page.
       intro: {
+        // The small heading of the statement section: ( Frisdahl Studio ).
+        label: "Frisdahl Studio",
         title: "Et lille studio med store ambitioner og en klar vision for godt design",
         textBefore: "Jeg hedder ",
         name: "Alexander",
@@ -30,6 +32,15 @@ const homeContent = {
       listTitle: "Seneste projekter",
       linkLabel: "Se projekt",
       items: [
+        {
+          id: 'offscript',
+          client: "OFFSCRIPT®",
+          keywords: "Website • Design",
+          // No project page yet: the card is not a link.
+          href: '',
+          imageSrc: "/cases/offscript/phone--4-5.webp",
+          imageAlt: "OFFSCRIPT® på en iPhone",
+        },
         {
           id: 'peter-salling',
           client: "Peter Salling",
@@ -44,6 +55,8 @@ const homeContent = {
           keywords: "E-commerce • Design • Udvikling",
           href: '/cases/nordwear',
           imageSrc: "/cases/nordwear/main--16-9.webp",
+          // The portrait card on the home page shows the phones instead of the laptop.
+          portraitSrc: "/cases/nordwear/iphone-forside--4-3.webp",
           imageAlt: "Nordwear case",
         },
         {

@@ -324,15 +324,32 @@ export async function runSharedCaseTransition(
     // is cut to that and opens up to the full picture as it grows.
     const crop = isNext ? Math.max(0, to.height - from.height / startScale) : 0
     const cropped = crop > 0.5
-    gsap.set(ghost, {
-      width: to.width,
-      height: to.height,
-      scale: startScale,
-      x: from.left,
-      y: from.top,
-      borderRadius: fromRadius / startScale,
-      clipPath: cropped ? `inset(0px 0px ${crop}px 0px)` : 'none',
-    })
+    // A card with another shape than the hero (the home page's portrait cards) can't use the uniform
+    // scale below: its picture is a different crop than the hero's. Those cards grow by size instead:
+    // the ghost starts as the card's own box and opens to the hero's box, and the pictures inside
+    // (object-fit: cover) re-crop smoothly on the way. One short, one-off movement of a fixed layer.
+    const sameShape = isNext || Math.abs(from.width / from.height - to.width / to.height) < 0.03
+    if (sameShape) {
+      gsap.set(ghost, {
+        width: to.width,
+        height: to.height,
+        scale: startScale,
+        x: from.left,
+        y: from.top,
+        borderRadius: fromRadius / startScale,
+        clipPath: cropped ? `inset(0px 0px ${crop}px 0px)` : 'none',
+      })
+    } else {
+      gsap.set(ghost, {
+        width: from.width,
+        height: from.height,
+        scale: 1,
+        x: from.left,
+        y: from.top,
+        borderRadius: fromRadius,
+        clipPath: 'none',
+      })
+    }
     // The text starts a moment before the picture lands, so it doesn't wait for the hand-over.
     let enter: gsap.core.Timeline | null = null
     const entered = new Promise<void>((resolve) => {
@@ -357,8 +374,16 @@ export async function runSharedCaseTransition(
       // Position, size and the crop open together, on one ease, so the picture glides from where it
       // stands to the hero's place and size in a single movement (no slide first and resize after,
       // which read as two moves with a stop between them).
-      grow.to(ghost, { x: to.left, y: to.top, scale: 1, borderRadius: radius, duration: GROW_DURATION }, 0)
-      if (cropped) grow.to(ghost, { clipPath: 'inset(0px 0px 0px 0px)', duration: GROW_DURATION }, 0)
+      if (sameShape) {
+        grow.to(ghost, { x: to.left, y: to.top, scale: 1, borderRadius: radius, duration: GROW_DURATION }, 0)
+        if (cropped) grow.to(ghost, { clipPath: 'inset(0px 0px 0px 0px)', duration: GROW_DURATION }, 0)
+      } else {
+        grow.to(
+          ghost,
+          { x: to.left, y: to.top, width: to.width, height: to.height, borderRadius: radius, duration: GROW_DURATION },
+          0,
+        )
+      }
       if (isNext) {
         // The zoom settles and the dark overlay lifts, so the hero's picture is plain.
         // Fully settled before the swap below, so the two pictures line up exactly.

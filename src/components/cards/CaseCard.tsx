@@ -30,7 +30,13 @@ export interface CaseCardProps {
   imageAlt: string
   /** The image as a clip: plays while the card is on screen and stops when it scrolls out of view. */
   video?: CaseDetailGalleryVideo
+  /** The case page; empty means there is none yet and the card is not a link. */
   href: string
+  /** Title and keywords on the picture (bottom left, on a soft dark gradient) instead of beside it:
+   *  the home page's project grid. The card then has no arrow; the cursor label stands in for it. */
+  overlay?: boolean
+  /** Extra classes for the card (layout modifiers such as the wide card). */
+  className?: string
   /** Put the title and keywords under the image instead of above it. */
   metaBelow?: boolean
   /** The arrow that slides in to the left of the title on hover (default on). */
@@ -63,7 +69,7 @@ function keywordsWithDots(keywords: string) {
  * its full slide in: if the mouse leaves before it has arrived, it finishes arriving
  * and then carries on to the top right.
  */
-export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, metaBelow = false, showArrow = true, revealOnScroll = false }: CaseCardProps) {
+export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, overlay = false, className = '', metaBelow = false, showArrow = true, revealOnScroll = false }: CaseCardProps) {
   // The title's arrow: waits out of sight to the left ('idle'), slides in on hover ('in'),
   // leaves to the right when the mouse does ('out'), then waits again.
   const [arrow, setArrow] = useState<'idle' | 'in' | 'out'>('idle')
@@ -72,11 +78,11 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, me
   const leaveWhenArrived = useRef(false)
 
   return (
-    <div className={`case-card${metaBelow ? ' case-card-meta-below' : ''}`}>
+    <div className={`case-card${metaBelow ? ' case-card-meta-below' : ''}${overlay ? ' case-card-overlay' : ''}${className ? ` ${className}` : ''}`}>
       <div className="case-card-meta">
         {/* Each title is an h3 under the section's "Latest projects" h2. */}
         <div className="case-card-title-row">
-          {showArrow && (
+          {showArrow && !overlay && (
             <span className="case-card-arrow" aria-hidden="true">
               <span
                 className={`case-card-arrow-slider${arrow === 'idle' ? '' : ` is-${arrow}`}`}
@@ -100,15 +106,23 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, me
           )}
           {revealOnScroll ? (
             <MaskedLineReveal as="h3" className="case-card-client" {...ROW_REVEAL}>
-              <Link to={href} className="case-card-title-link">
-                {client}
-              </Link>
+              {href ? (
+                <Link to={href} className="case-card-title-link">
+                  {client}
+                </Link>
+              ) : (
+                client
+              )}
             </MaskedLineReveal>
           ) : (
             <h3 className="case-card-client">
-              <Link to={href} className="case-card-title-link">
-                {client}
-              </Link>
+              {href ? (
+                <Link to={href} className="case-card-title-link">
+                  {client}
+                </Link>
+              ) : (
+                client
+              )}
             </h3>
           )}
         </div>
@@ -123,7 +137,8 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, me
 
       {/* Same target as the title link, so it's left out of the tab order and
           the accessibility tree to avoid a duplicate link. */}
-      <Link
+      {href ? (
+        <Link
         to={href}
         className="case-card-media-link"
         tabIndex={-1}
@@ -166,7 +181,33 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, me
             />
           ) : null}
         </div>
-      </Link>
+        </Link>
+      ) : (
+        <div className="case-card-media-link" data-static>
+        <div className="case-card-media">
+          {imageSrc ? (
+            <img
+              {...responsiveImageProps(imageSrc, IMAGE_SIZES.container)}
+              alt={imageAlt}
+              className="case-card-image"
+              loading="lazy"
+              decoding="async"
+            />
+          ) : null}
+          {imageSrc && video ? (
+            // Over the picture, with its box (and so its hover zoom). The picture stays underneath: the
+            // shared page transition and the layout rely on it.
+            <LoopVideo
+              src={video.src}
+              poster={video.poster}
+              label={imageAlt}
+              className="case-card-image case-card-video"
+              mode="visible"
+            />
+          ) : null}
+        </div>
+        </div>
+      )}
     </div>
   )
 }

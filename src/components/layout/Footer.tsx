@@ -4,7 +4,7 @@ import { useLocale } from '../../context/LocaleContext'
 import { getFooterContent } from '../../data/footer'
 import { CASES_PATH, CONTACT_PATH, MEET_US_PATH } from '../../lib/routes'
 import { scrollToTarget } from '../../lib/scroll'
-import { ArrowIcon, Container, PillButton } from '../ui'
+import { ArrowButton, ArrowIcon, Container, SectionLabel } from '../ui'
 
 type UnderlinePhase = 'idle' | 'in' | 'held' | 'out'
 
@@ -98,91 +98,55 @@ export function Footer() {
   }
 
   const { columnTitles } = footer
-  // The last word of the call to action takes the accent (the hero's red italic).
-  const titleWords = footer.ctaTitle.split(' ')
-  const titleAccent = titleWords.pop()
-  const titleLead = titleWords.join(' ')
 
   return (
     <footer className="site-footer" data-header-theme="dark">
-      {/* Full container so the footer frames the page on the same edges as the header. */}
       <Container fullWidth className="site-footer-inner">
-        <div className="site-footer-top">
-          <div className="site-footer-brand">
-            <h2 className="site-footer-logo">
-              {titleLead} <span className="site-footer-logo-accent">{titleAccent}</span>
-            </h2>
+        <div className="site-footer-grid">
+          <SectionLabel className="site-footer-label">{columnTitles.contact}</SectionLabel>
 
+          <div className="site-footer-main">
+            <h2 className="site-footer-logo">{footer.ctaTitle}</h2>
+            {/* The button is the site's footer button (ArrowButton), inverted for the dark footer; the email stands beside it. */}
             <div className="site-footer-cta-row">
-              <PillButton href={CONTACT_PATH} tone="light">{footer.ctaButton}</PillButton>
-              <ul className="site-footer-links site-footer-cta-links">
-                <li>
-                  <FooterLink href={footer.emailHref} withArrow>
-                    {footer.email}
-                  </FooterLink>
-                </li>
-                {footer.phone && (
-                  <li>
-                    <FooterLink href={footer.phoneHref}>
-                      {footer.phone}
-                    </FooterLink>
-                  </li>
-                )}
-              </ul>
+              <ArrowButton href={CONTACT_PATH}>{footer.ctaButton}</ArrowButton>
+              <FooterLink href={footer.emailHref} className="site-footer-email">
+                {footer.email}
+              </FooterLink>
             </div>
+          </div>
 
-            <div className="site-footer-link-columns">
-              <nav className="site-footer-column" aria-label={footer.navAriaLabel}>
-                <h2 className="site-footer-column-title">{columnTitles.nav}</h2>
-                <ul className="site-footer-links site-footer-links-nav">
-                  {footer.links.map((link) => (
-                    <li key={link.href}>
-                      <FooterLink href={link.href}>
-                        {link.label}
+          <div className="site-footer-link-columns">
+            <nav className="site-footer-column" aria-label={footer.navAriaLabel}>
+              <h2 className="site-footer-column-title">{columnTitles.nav}</h2>
+              <ul className="site-footer-links">
+                {footer.links.map((link) => (
+                  <li key={link.href}>
+                    <FooterLink href={link.href}>{link.label}</FooterLink>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            {footer.socialLinks.length > 0 && (
+              <div className="site-footer-column">
+                <h2 className="site-footer-column-title">{columnTitles.contact}</h2>
+                <ul className="site-footer-links">
+                  {footer.socialLinks.map((social) => (
+                    <li key={social.href}>
+                      <FooterLink href={social.href} target="_blank" rel="noreferrer noopener">
+                        {social.label}
                       </FooterLink>
                     </li>
                   ))}
                 </ul>
-              </nav>
-
-              {footer.socialLinks.length > 0 && (
-                <div className="site-footer-column">
-                  <h2 className="site-footer-column-title">{columnTitles.contact}</h2>
-                  <ul className="site-footer-links">
-                    {footer.socialLinks.map((social) => (
-                      <li key={social.href}>
-                        <FooterLink href={social.href} target="_blank" rel="noreferrer noopener">
-                          {social.label}
-                        </FooterLink>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="site-footer-cta">
-            <img
-              className="site-footer-image"
-              src={footer.image.src}
-              alt={footer.image.alt}
-              width={1496}
-              height={1122}
-              loading="lazy"
-              decoding="async"
-            />
+              </div>
+            )}
           </div>
         </div>
 
-        <p className="site-footer-wordmark" aria-hidden="true">
-          Frisdahl Studio<span className="site-footer-wordmark-dot">.</span>
-        </p>
-
         <div className="site-footer-bottom">
-          <div className="site-footer-bottom-start">
-            <p className="site-footer-copyright">{footer.copyright}</p>
-          </div>
+          <p className="site-footer-copyright">{footer.copyright}</p>
           <button type="button" className="site-footer-top-button" onClick={() => scrollToTarget(0)}>
             {footer.backToTop}
             <ArrowIcon rotate={-90} />
