@@ -6,9 +6,9 @@ import { defaultLocale } from './navigation'
 const contactPageContent = {
   da: {
     headingLine1: 'Lad os skabe',
-    headingLine2: 'noget smukt.',
+    headingLine2: 'noget smukt',
     // The second line swaps between these (the first is the one that is read out).
-    headingPhrases: ['noget smukt.', 'noget unikt.', 'noget bedre.'],
+    headingPhrases: ['noget smukt', 'noget unikt', 'noget bedre'],
     sourceLabel: 'Hvordan fandt du min hjemmeside?',
     sourcePlaceholder: 'Hvilken lille fugl fortalte mig',
     messageLabel: 'Besked*',
