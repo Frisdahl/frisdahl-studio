@@ -12,16 +12,16 @@ import type { SectionLabelHandle } from '../ui/SectionLabel'
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
 /**
- * "( Frisdahl Studio )" and the studio's description, on the dark ground, written out by the scroll.
+ * "( Frisdahl Studio )" and the studio's description, dark on the page's light ground.
  *
- * The section is about two and a half screens tall and its content sits in a frame that sticks to
- * the screen while the section scrolls by. As you scroll, in this order: only the brackets stand
- * there as "( )"; the closing bracket slides right to the end of the label; the label text rises
- * between the brackets; then the big text fades in, character by character, the first line left to
- * right, then the next line, and so on. The rest of the scroll holds the finished section.
+ * The section is almost four screens tall and its content sits in a frame that sticks to the screen
+ * while the section scrolls by. The label opens by itself, on a clock (it does not depend on how
+ * fast you scroll): only "( )" stands there, the closing bracket slides right to the end, then the
+ * label text rises between the brackets. Once the frame is on the screen the big text is written by
+ * the scroll, slowly: each character fades in, the first line left to right, then the next line,
+ * and so on. The rest of the scroll holds the finished section.
  *
- * Reduced motion: everything is shown at once and the section is one screen high. The section is
- * dark, so the header turns light while it is under it (data-header-theme).
+ * Reduced motion: everything is shown at once and the section is one screen high.
  */
 export function StudioStatement() {
   const { locale } = useLocale()
@@ -39,13 +39,21 @@ export function StudioStatement() {
 
     const mm = gsap.matchMedia()
     mm.add('(prefers-reduced-motion: no-preference)', () => {
-      // Characters stay inside their words, so a word never breaks across lines.
+      // The label: on a clock, started when the section is nearly at the top of the screen.
+      gsap.set(parts.text, { yPercent: 115 })
+      const labelOpen = gsap
+        .timeline({ paused: true, defaults: { ease: 'power3.out' } })
+        .fromTo(parts.close, { x: () => -parts.travel() }, { x: 0, duration: 1 }, 0.15)
+        .to(parts.text, { yPercent: 0, duration: 0.7 }, 1)
+      ScrollTrigger.create({ trigger: section, start: 'top 35%', once: true, onEnter: () => labelOpen.play() })
+
+      // The big text: characters stay inside their words, so a word never breaks across lines. They
+      // fade in over the scroll, a few at a time, from the start of the stuck frame; the last tenth of
+      // the scroll holds the whole text.
       const split = SplitText.create(text, { type: 'words,chars' })
       const chars = split.chars
       gsap.set(chars, { opacity: 0 })
-
-      // One scrubbed timeline of length 1: the brackets, the label text, then the writing.
-      const each = 0.68 / Math.max(1, chars.length)
+      const each = 0.8 / Math.max(1, chars.length)
       gsap
         .timeline({
           defaults: { ease: 'none' },
@@ -53,17 +61,16 @@ export function StudioStatement() {
             trigger: section,
             start: 'top top',
             end: 'bottom bottom',
-            scrub: 0.4,
+            scrub: 0.6,
             invalidateOnRefresh: true,
           },
         })
-        .fromTo(parts.close, { x: () => -parts.travel() }, { x: 0, duration: 0.1, ease: 'power3.out' }, 0)
-        .fromTo(parts.text, { yPercent: 115 }, { yPercent: 0, duration: 0.1, ease: 'power3.out' }, 0.1)
-        .to(chars, { opacity: 1, duration: each * 6, stagger: each }, 0.22)
-        .to({}, { duration: 0.1 }, 0.9)
+        .to(chars, { opacity: 1, duration: each * 10, stagger: each }, 0.05)
+        .to({}, { duration: 0.05 }, 0.95)
 
       return () => {
         split.revert()
+        labelOpen.kill()
         gsap.set([parts.close, parts.text], { clearProps: 'transform' })
       }
     })
@@ -71,7 +78,7 @@ export function StudioStatement() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="studio-statement" aria-label={intro.label} data-header-theme="dark">
+    <section ref={sectionRef} className="studio-statement" aria-label={intro.label}>
       {/* One screen high, stuck to the screen while the section scrolls by. */}
       <div className="studio-statement-frame">
         <Container columns className="studio-statement-container" contentClassName="studio-statement-grid">
