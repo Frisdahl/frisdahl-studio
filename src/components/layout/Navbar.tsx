@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { refreshScrollTrigger } from '../../lib/refreshScrollTrigger'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useLocale } from '../../context/LocaleContext'
 import { getFooterContent } from '../../data/footer'
@@ -303,7 +303,7 @@ export function Navbar() {
     root.classList.remove('menu-active', 'menu-open', 'menu-leaving', 'menu-fade')
     if (shell) shell.inert = false
     unlockScroll()
-    ScrollTrigger.refresh()
+    refreshScrollTrigger() // not ScrollTrigger.refresh(): see lib/refreshScrollTrigger.ts
     leavingRef.current = false
   }
 
