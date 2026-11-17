@@ -1,9 +1,12 @@
-import { useEffect, useId, useRef } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef } from 'react'
 import gsap from 'gsap'
-import { motion, useReducedMotion } from 'framer-motion'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useReducedMotion } from 'framer-motion'
 import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
 import { Container, SectionLabel } from '../ui'
+
+gsap.registerPlugin(ScrollTrigger)
 
 // The mark colour (--color-dark). SVG attributes cannot use CSS variables, so
 // the value is repeated here.
@@ -177,50 +180,83 @@ function ColumnIcon({ name, reduced }: { name: IconName; reduced: boolean }) {
 }
 
 /**
- * "What I can offer": the heading is a small ( UPPERCASE ) label on the left that stays on the screen
- * (sticky) while the three offers, stacked one under the other on the right, scroll past it. Each
- * offer has a numbered label, a title, a short list and a looping geometric mark. Stacked on phones
- * and tablets (the label is not sticky there).
+ * "What I can offer": one full-screen card per offer, stacked. The small ( UPPERCASE ) heading stays
+ * in place on the left through all of them; under it each card shows its dot, number and title. On
+ * the right: a big sentence about the offer, its keywords, and its looping mark. Scrolling, the next
+ * card slides up over the previous one (the cards are sticky, each one a screen high), and the card
+ * that is being covered settles back a little (opacity and a small lift, scrubbed to the scroll).
+ * Below 1024px, and with reduced motion, the cards are simply stacked in the page.
  */
 export function AddedValueSection() {
   const { locale } = useLocale()
   const { addedValue } = getHomeContent(locale)
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotion() === true
+  const stackRef = useRef<HTMLDivElement>(null)
+
+  // The card that is being covered by the next one settles back: it fades a little and lifts.
+  useLayoutEffect(() => {
+    const stack = stackRef.current
+    if (!stack) return
+    const mm = gsap.matchMedia()
+    mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
+      const cards = Array.from(stack.querySelectorAll<HTMLElement>('[data-av-card]'))
+      cards.slice(0, -1).forEach((card, index) => {
+        const next = cards[index + 1]
+        const content = card.querySelector<HTMLElement>('[data-av-content]')
+        if (!content) return
+        gsap.to(content, {
+          opacity: 0.25,
+          yPercent: -4,
+          ease: 'none',
+          scrollTrigger: { trigger: next, start: 'top bottom', end: 'top top', scrub: true },
+        })
+      })
+      return () => {
+        stack.querySelectorAll<HTMLElement>('[data-av-content]').forEach((content) => gsap.set(content, { clearProps: 'opacity,transform' }))
+      }
+    })
+    return () => mm.revert()
+  }, [])
 
   return (
     <section className="added-value" aria-label={addedValue.ariaLabel}>
-      <Container columns>
-        <div className="added-value-aside">
-          <SectionLabel className="added-value-label-heading">{addedValue.heading}</SectionLabel>
+      <div ref={stackRef} className="added-value-stack">
+        {/* The heading stays in place over the cards (a sticky element inside a layer as tall as the stack). */}
+        <div className="added-value-rail">
+          <Container columns className="added-value-rail-container">
+            <div className="added-value-aside">
+              <SectionLabel className="added-value-label-heading">{addedValue.heading}</SectionLabel>
+            </div>
+          </Container>
         </div>
 
-        <ol className="added-value-grid">
+        <ol className="added-value-cards">
           {addedValue.columns.map((column, index) => (
-            <motion.li
-              key={column.title}
-              className="added-value-col"
-              initial={reduceMotion ? false : { opacity: 0, y: 32 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '0px 0px -12% 0px' }}
-              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <div className="added-value-head">
-                <span className="added-value-label">
-                  <span className="added-value-dot" aria-hidden="true" />
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <h3 className="added-value-title">{column.title}</h3>
-              </div>
-              <ul className="added-value-items">
-                {column.items.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-              <ColumnIcon name={column.icon as IconName} reduced={Boolean(reduceMotion)} />
-            </motion.li>
+            <li key={column.title} className="added-value-card" data-av-card style={{ zIndex: index + 1 }}>
+              <Container columns className="added-value-card-container" contentClassName="added-value-card-grid">
+                <div data-av-content className="added-value-card-content">
+                  <div className="added-value-head">
+                    <span className="added-value-label">
+                      <span className="added-value-dot" aria-hidden="true" />
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <h3 className="added-value-title">{column.title}</h3>
+                  </div>
+                  <div className="added-value-body">
+                    <p className="added-value-statement">{column.description}</p>
+                    <ul className="added-value-items">
+                      {column.items.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                    <ColumnIcon name={column.icon as IconName} reduced={reduceMotion} />
+                  </div>
+                </div>
+              </Container>
+            </li>
           ))}
         </ol>
-      </Container>
+      </div>
     </section>
   )
 }

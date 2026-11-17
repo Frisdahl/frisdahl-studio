@@ -84,16 +84,25 @@ const homeContent = {
         {
           title: "Brand identitet",
           icon: "brand",
+          // DRAFT copy (written for the redesign, not from the old site): to be approved or rewritten.
+          description:
+            "Et visuelt sprog, der gør din virksomhed let at genkende: fra logo og farver til typografi og retningslinjer, der holder på tværs af alle flader.",
           items: ["Logo", "Farver og typografi", "Visuelt sprog", "Brand guidelines", "Præsentationer"],
         },
         {
           title: "Hjemmeside design",
           icon: "design",
+          // DRAFT copy, see above.
+          description:
+            "Design, der gør det let at forstå, hvad du tilbyder: gennemtænkte brugerflader, et konsekvent designsystem og prototyper, du kan prøve, før noget bliver bygget.",
           items: ["UX / UI-design", "Designsystem", "Landingssider", "Webshops", "Prototyper"],
         },
         {
           title: "Hjemmeside udvikling",
           icon: "development",
+          // DRAFT copy, see above.
+          description:
+            "Hjemmesider kodet fra bunden med fokus på hastighed og tilgængelighed og med et system, der er let at redigere, så siden bliver ved med at fungere, når din virksomhed vokser.",
           items: ["Hurtige hjemmesider", "Tilgængelighed", "CMS og redigering", "Animation", "Vedligeholdelse"],
         },
       ],
