@@ -5,6 +5,7 @@ import { ContactDrawerProvider } from './context/ContactDrawerProvider'
 import { LocaleProvider } from './context/LocaleProvider'
 import { GridOverlay } from './components/ui/GridOverlay'
 import { ScrollPresetSwitcher } from './components/ui/ScrollPresetSwitcher'
+import { SMOOTH_WHEEL_SCROLL } from './lib/scroll'
 import {
   CASES_PATH,
   CONTACT_PATH,
@@ -40,7 +41,7 @@ function App() {
           <SmoothScroll />
           <ScrollToTop />
           {import.meta.env.DEV && <GridOverlay />}
-          {import.meta.env.DEV && <ScrollPresetSwitcher />}
+          {import.meta.env.DEV && SMOOTH_WHEEL_SCROLL && <ScrollPresetSwitcher />}
           <Navbar />
           <PageTransition />
           {/* The page itself: Navbar scales and slides this aside to reveal the menu. */}

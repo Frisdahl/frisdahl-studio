@@ -19,6 +19,16 @@ export const SCROLL_PRESETS = {
 } as const
 export type ScrollPresetName = keyof typeof SCROLL_PRESETS
 
+/**
+ * Whether Lenis takes over the mouse wheel at all. Off (2026-11-17): the page scrolls natively. Lenis sets
+ * the scroll position from JavaScript every frame, in whole pixels, so a glide ends by creeping in 1 px
+ * steps (a large picture such as a project video seems to tick forward after you stop) and any fix for
+ * that either crawls or lurches. Native scrolling has no such tail. Turn this back on to bring the glide
+ * (and the dev-only ScrollPresetSwitcher) back; everything else already works without Lenis (it is also
+ * the reduced-motion path).
+ */
+export const SMOOTH_WHEEL_SCROLL = false
+
 /** How much of a wheel notch's native distance the page moves. */
 const WHEEL_MULTIPLIER = 0.7
 
@@ -78,7 +88,7 @@ export function prefersReducedMotion() {
  * Lenis keeps in real time.
  */
 export function initSmoothScroll() {
-  if (lenis || prefersReducedMotion()) return null
+  if (lenis || prefersReducedMotion() || !SMOOTH_WHEEL_SCROLL) return null
 
   const instance = new Lenis({
     lerp: SCROLL_PRESETS[preset].lerp,
