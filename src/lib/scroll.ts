@@ -23,16 +23,16 @@ export type ScrollPresetName = keyof typeof SCROLL_PRESETS
 const WHEEL_MULTIPLIER = 0.7
 
 /**
- * Lenis eases with an exponential decay, so its last few pixels arrive one at a time, further and
- * further apart: the last 5 px took about 530 ms and the very last pixel came about 245 ms after
- * the one before it. The page then looks as if it has stopped and ticks forward once more, which
- * shows on a large, high-contrast picture such as a project video (and more the bigger the screen).
- * Closer than TAIL_PX to its end, the glide is sped up so those pixels follow on consecutive frames.
+ * Lenis eases with an exponential decay, so near its end the page slows to a crawl and its last
+ * pixels arrive one at a time, further and further apart (the last 5 px took about 530 ms and the
+ * very last pixel came about 245 ms after the one before it). The page then looks as if it has
+ * stopped and ticks forward once more, which shows on a large, high-contrast picture such as a
+ * project video. So the glide may not slow below TAIL_SPEED (px per second): it keeps its natural
+ * slowing down until it reaches that speed, holds it until it lands, and never speeds up again, so
+ * the speed stays continuous (an earlier version that raised the easing rate near the end made the
+ * page lurch forward just before it stopped).
  */
-const TAIL_PX = 12
-const TAIL_LERP = 0.35
-/** The last pixels or two land in one frame: the glide is already moving about a pixel a frame by then. */
-const FINISH_PX = 2.5
+const TAIL_SPEED = 45
 
 export const DEFAULT_SCROLL_PRESET: ScrollPresetName = 'B'
 const PRESET_STORAGE_KEY = 'frisdahl:scroll-preset'
@@ -104,14 +104,22 @@ export function initSmoothScroll() {
   lenis = instance
 
   // Lenis keeps the easing rate of the glide in progress on its private `animate` object, and a rate
-  // changed in `options` only reaches the next glide, so the tail is sped up there (a new wheel
-  // notch starts a new glide with the normal rate again).
+  // changed in `options` only reaches the next glide, so the floor is applied there. A new wheel
+  // notch starts a new glide, and the rate is worked out again from the preset every frame.
   const glide = (instance as unknown as { animate: { isRunning: boolean; lerp?: number; to: number; value: number } }).animate
+  let lastTime = 0
   driveLenis = (time) => {
-    if (glide.isRunning && glide.lerp) {
+    const dt = lastTime ? time - lastTime : 0
+    lastTime = time
+    if (glide.isRunning && glide.lerp && dt > 0 && dt < 0.1) {
+      const base = SCROLL_PRESETS[preset].lerp
       const remaining = Math.abs(glide.to - glide.value)
-      if (remaining < FINISH_PX) glide.lerp = 1
-      else if (remaining < TAIL_PX) glide.lerp = Math.max(glide.lerp, TAIL_LERP)
+      const floorStep = TAIL_SPEED * dt
+      // Lenis moves a fraction 1 - e^(-lerp * 60 * dt) of the remaining distance each frame. If that is
+      // less than the floor, use the rate that gives exactly the floor (all of it when it would land).
+      const fraction = remaining <= floorStep ? 0.999 : floorStep / remaining
+      const floorRate = -Math.log(1 - fraction) / (60 * dt)
+      glide.lerp = Math.max(base, floorRate)
     }
     instance.raf(time * 1000)
   }
