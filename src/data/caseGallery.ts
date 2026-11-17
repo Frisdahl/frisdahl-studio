@@ -3,6 +3,9 @@ import type { Locale } from './navigation'
 
 type CaseGalleryAssets = Omit<CaseDetailGallery, 'ariaLabel'>
 
+/** The grey of a picture that is not made yet. */
+const GREY = 'bg-surface-gray'
+
 const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
   nordwear: {
     // Home page hover: the two phones at the sides, one of the PCs in the middle.
@@ -121,6 +124,42 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
       aspectRatio: '16 / 9',
     },
   },
+  offscript: {
+    // Grey boxes until the real pictures are ready: fill in imageSrc (and drop placeholderClassName).
+    introPair: [
+      { imageSrc: null, imageAlt: 'OFFSCRIPT® forside på en bærbar', aspectRatio: '4 / 3', placeholderClassName: GREY },
+      { imageSrc: null, imageAlt: 'Kunstnerne i rækken på en bærbar', aspectRatio: '4 / 3', placeholderClassName: GREY },
+    ],
+    horizontalTopPair: [
+      { imageSrc: null, imageAlt: 'Kunstnerside på en bærbar', aspectRatio: '3 / 2', placeholderClassName: GREY },
+      { imageSrc: null, imageAlt: 'Genresiden på en bærbar', aspectRatio: '3 / 2', placeholderClassName: GREY },
+    ],
+    // Only supplies the next-project fallback; the page shows the pair above.
+    horizontalTop: { imageSrc: null, imageAlt: 'OFFSCRIPT® forside', aspectRatio: '16 / 9', placeholderClassName: GREY },
+    horizontalBottomPair: [
+      { imageSrc: null, imageAlt: 'OFFSCRIPT® forside på en iPhone', aspectRatio: '4 / 3', placeholderClassName: GREY },
+      { imageSrc: null, imageAlt: 'Kunstnerside på en iPhone', aspectRatio: '4 / 3', placeholderClassName: GREY },
+    ],
+    bottomWide: { imageSrc: null, imageAlt: 'Kontaktformularen på en iPad', aspectRatio: '3 / 2', placeholderClassName: GREY },
+  },
+  'rethink-furniture': {
+    // Grey boxes until the real pictures are ready: fill in imageSrc (and drop placeholderClassName).
+    introPair: [
+      { imageSrc: null, imageAlt: 'Rethink Furniture forside på en bærbar', aspectRatio: '4 / 3', placeholderClassName: GREY },
+      { imageSrc: null, imageAlt: 'Shoppen på en bærbar', aspectRatio: '4 / 3', placeholderClassName: GREY },
+    ],
+    horizontalTopPair: [
+      { imageSrc: null, imageAlt: 'Produktside på en bærbar', aspectRatio: '3 / 2', placeholderClassName: GREY },
+      { imageSrc: null, imageAlt: 'Om os på en bærbar', aspectRatio: '3 / 2', placeholderClassName: GREY },
+    ],
+    // Only supplies the next-project fallback; the page shows the pair above.
+    horizontalTop: { imageSrc: null, imageAlt: 'Rethink Furniture forside', aspectRatio: '16 / 9', placeholderClassName: GREY },
+    horizontalBottomPair: [
+      { imageSrc: null, imageAlt: 'Rethink Furniture forside på en iPhone', aspectRatio: '4 / 3', placeholderClassName: GREY },
+      { imageSrc: null, imageAlt: 'Shoppen på en iPhone', aspectRatio: '4 / 3', placeholderClassName: GREY },
+    ],
+    bottomWide: { imageSrc: null, imageAlt: 'Showroom på en iPad', aspectRatio: '3 / 2', placeholderClassName: GREY },
+  },
   'det-kollektive-klaedeskab': {
     introPair: [
       { imageSrc: '/cases/det-kollektive-klaedeskab/dkk-macbook-forside--5-4.webp', imageAlt: 'Det Kollektive Klædeskabs forside på en bærbar', aspectRatio: '5 / 4', transparent: true },
@@ -151,6 +190,8 @@ const caseGalleryAriaLabels: Record<Locale, Record<string, string>> = {
     nordwear: 'Projektbilleder fra Nordwear',
     'fresh-cut': 'Projektbilleder fra Fresh Cut',
     'peter-salling': 'Projektbilleder fra Peter Salling',
+    offscript: 'Projektbilleder fra OFFSCRIPT®',
+    'rethink-furniture': 'Projektbilleder fra Rethink Furniture',
     'det-kollektive-klaedeskab': 'Projektbilleder fra Det Kollektive Klædeskab',
   },
 }

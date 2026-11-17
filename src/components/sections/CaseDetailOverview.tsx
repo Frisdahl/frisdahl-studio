@@ -1,5 +1,6 @@
 import type { CaseDetailOverview as CaseDetailOverviewContent } from '../../types/caseDetail'
-import { Container } from '../ui'
+import { Container, RevealText } from '../ui'
+import { STAGGER } from '../../lib/motion'
 
 interface CaseDetailOverviewProps {
   overview: CaseDetailOverviewContent
@@ -16,22 +17,33 @@ export function CaseDetailOverview({ overview }: CaseDetailOverviewProps) {
     <section className="case-detail-overview" aria-label={descriptionTitle}>
       <Container>
         <div className="case-detail-overview-row">
-          <h2 className="case-detail-overview-title">{descriptionTitle}</h2>
+          <RevealText as="h2" className="case-detail-overview-title">
+            {descriptionTitle}
+          </RevealText>
           <div className="case-detail-overview-description">
             {description.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
+              <RevealText key={paragraph} as="p">
+                {paragraph}
+              </RevealText>
             ))}
           </div>
         </div>
 
         {details.length > 0 && (
           <div className="case-detail-overview-row">
-            <h2 className="case-detail-overview-title">{detailsTitle}</h2>
+            <RevealText as="h2" className="case-detail-overview-title">
+              {detailsTitle}
+            </RevealText>
             <dl className="case-detail-overview-details">
-              {details.map((fact) => (
+              {details.map((fact, index) => (
                 <div key={fact.label} className="case-detail-overview-detail">
-                  <dt className="case-detail-overview-label">{fact.label}</dt>
-                  <dd className="case-detail-overview-value">{fact.value}</dd>
+                  {/* One after the other, a beat apart: the rows read as a list being written. */}
+                  <RevealText as="dt" className="case-detail-overview-label" delay={index * STAGGER.lines}>
+                    {fact.label}
+                  </RevealText>
+                  <RevealText as="dd" className="case-detail-overview-value" delay={index * STAGGER.lines}>
+                    {fact.value}
+                  </RevealText>
                 </div>
               ))}
             </dl>

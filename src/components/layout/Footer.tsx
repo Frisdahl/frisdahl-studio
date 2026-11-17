@@ -110,7 +110,7 @@ export function Footer() {
             {/* The button is the site's footer button (ArrowButton), inverted for the dark footer; the email stands beside it. */}
             <div className="site-footer-cta-row">
               <ArrowButton href={CONTACT_PATH}>{footer.ctaButton}</ArrowButton>
-              <FooterLink href={footer.emailHref} className="site-footer-email">
+              <FooterLink href={footer.emailHref} className="site-footer-email" withArrow>
                 {footer.email}
               </FooterLink>
             </div>

@@ -63,14 +63,14 @@ function ColumnIcon({ name, reduced }: { name: IconName; reduced: boolean }) {
         const circle = '.av-circle'
         const tri = '.av-triangle'
         gsap.set([hex, circle, tri], { transformOrigin: '50% 50%' })
-        tl.fromTo(hex, { scale: 0.3, rotation: -30, attr: { points: PENTAGON } }, { scale: 1, rotation: 0, duration: 0.45, ease: 'power2.out' }, 0)
+        tl.fromTo(hex, { scale: 0.3, rotation: -30, attr: { points: PENTAGON } }, { scale: 1, rotation: 0, duration: 0.45, ease: 'power3.out' }, 0)
           .to(hex, { rotation: -16, duration: 2.2, ease: 'sine.inOut' }, 0.45)
-          .fromTo(circle, { scale: 0 }, { scale: 1, duration: 0.55, ease: 'power2.out' }, 1.1)
-          .fromTo(tri, { scale: 0, rotation: -40 }, { scale: 1, rotation: 0, duration: 0.4, ease: 'back.out(1.6)' }, 2.15)
-          .to(hex, { attr: { points: SQUARE }, rotation: 22, duration: 0.8, ease: 'power2.inOut' }, 2.4)
-          .to(circle, { scale: 0, duration: 0.4, ease: 'power2.in' }, 2.5)
-          .to(tri, { scale: 0, duration: 0.35, ease: 'power2.in' }, 2.95)
-          .to(hex, { scale: 0, duration: 0.35, ease: 'power2.in' }, 3.15)
+          .fromTo(circle, { scale: 0 }, { scale: 1, duration: 0.55, ease: 'power3.out' }, 1.1)
+          .fromTo(tri, { scale: 0, rotation: -40 }, { scale: 1, rotation: 0, duration: 0.4, ease: 'power3.out' }, 2.15)
+          .to(hex, { attr: { points: SQUARE }, rotation: 22, duration: 0.8, ease: 'power3.inOut' }, 2.4)
+          .to(circle, { scale: 0, duration: 0.4, ease: 'power3.in' }, 2.5)
+          .to(tri, { scale: 0, duration: 0.35, ease: 'power3.in' }, 2.95)
+          .to(hex, { scale: 0, duration: 0.35, ease: 'power3.in' }, 3.15)
           .to({}, { duration: 0.3 }, 3.5)
       } else if (name === 'design') {
         // Two layers of rectangles. The current layout slides up and out
@@ -94,7 +94,7 @@ function ColumnIcon({ name, reduced }: { name: IconName; reduced: boolean }) {
           const t = tl.duration()
           const n = 1 - current
           tl.add(() => place(sets[n], layout), t)
-          tl.to(sets[current], { y: -44, duration: 1, ease: 'power2.inOut' }, t)
+          tl.to(sets[current], { y: -44, duration: 1, ease: 'power3.inOut' }, t)
           const order = layout
             .map((r, i) => ({ r, i }))
             .filter(({ r }) => r.height > 0)
@@ -116,7 +116,7 @@ function ColumnIcon({ name, reduced }: { name: IconName; reduced: boolean }) {
         gsap.set(arrows, { transformOrigin: '50% 50%' })
         const train = { each: 0.08, from: 'end' } as const
         tl.to({}, { duration: 2 })
-          .to(arrows, { x: 24, scaleX: 0.4, duration: 0.7, ease: 'power2.in', stagger: train })
+          .to(arrows, { x: 24, scaleX: 0.4, duration: 0.7, ease: 'power3.in', stagger: train })
           .to(arrows, { opacity: 0, duration: 0.3, ease: 'power1.in', stagger: train }, '<')
           .set(arrows, { x: -24, scaleX: 0.4 })
           .to(arrows, { x: 0, scaleX: 1, duration: 0.8, ease: 'power3.out', stagger: train })

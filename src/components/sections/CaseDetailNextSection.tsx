@@ -77,9 +77,9 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
       if (hasNavigatedRef.current) return
       if (barRef.current) barRef.current.style.transform = `scaleX(${progress})`
       if (!shouldReduceMotion) {
-        const zoom = `scale(${1 + IMAGE_ZOOM * progress})`
-        if (imageRef.current) imageRef.current.style.transform = zoom
-        if (videoRef.current) videoRef.current.style.transform = zoom
+        // Only the still zooms. A playing clip rescaled on every scroll frame shimmers and shakes, so the
+        // clip (which covers the still) stays at scale 1.
+        if (imageRef.current) imageRef.current.style.transform = `scale(${1 + IMAGE_ZOOM * progress})`
       }
 
       // Reduced motion: the bar still shows progress, but the page never
@@ -90,7 +90,6 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
       // that goes with it), and let that full bar be seen before the page moves on.
       if (barRef.current) barRef.current.style.transform = 'scaleX(1)'
       if (imageRef.current) imageRef.current.style.transform = `scale(${1 + IMAGE_ZOOM})`
-      if (videoRef.current) videoRef.current.style.transform = `scale(${1 + IMAGE_ZOOM})`
       // Scrolling stops here, momentum included: the page does not drift on while the bar is held.
       lockScroll()
       holdPendingRef.current = true
@@ -113,12 +112,24 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
   useEffect(() => {
     const root = document.documentElement
     let frame = 0
+    let lastY = window.scrollY
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const update = () => {
       frame = 0
       const card = cardRef.current
       const header = document.querySelector<HTMLElement>('.site-header')
       if (!card) return
       const top = card.getBoundingClientRect().top
+
+      // The clip plays while the visitor scrolls down towards (and through) the card and pauses the
+      // moment they scroll back up. It never starts by itself; it also pauses once off screen (LoopVideo).
+      const y = window.scrollY
+      const video = videoRef.current
+      if (video && !reduced && !hasNavigatedRef.current) {
+        if (y > lastY && top < window.innerHeight * 0.9) void video.play().catch(() => {})
+        else if (y < lastY) video.pause()
+      }
+      lastY = y
       root.classList.toggle('is-next-case-visible', top < window.innerHeight)
       root.classList.toggle('is-next-case-pinned', top <= (header?.offsetHeight ?? 0))
     }
@@ -162,14 +173,14 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
             {image.imageSrc && video ? (
               // The same clip the next case's hero plays, over the same picture, so the card and the
               // hero are alike when the shared transition carries it across: no still turning into
-              // a clip at the last moment. It plays while the card is on screen.
+              // a clip at the last moment. It plays while the visitor scrolls down to it and pauses when they scroll up.
               <LoopVideo
                 ref={videoRef}
                 src={video.src}
                 poster={video.poster}
                 label=""
                 className="case-detail-next-video"
-                mode="visible"
+                mode="manual"
                 preload="auto"
               />
             ) : null}

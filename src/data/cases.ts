@@ -35,6 +35,8 @@ const casesPageContent = {
       industries: [
         { id: 'mode', label: 'Mode', industry: 'Mode' },
         { id: 'movie-industry', label: 'Movie Industry', industry: 'Film' },
+        { id: 'musik', label: 'Musik', industry: 'Musik' },
+        { id: 'moebler', label: 'Møbler', industry: 'Møbler' },
       ],
     },
     items: [
@@ -74,6 +76,30 @@ const casesPageContent = {
         keywords: ['Website', 'Design', 'Content', 'SEO'],
         description:
           'En levende hjemmeside til en lokal salon med tydelig bookingflow og et udtryk, der matcher brandet.',
+      },
+      {
+        id: 'offscript',
+        client: 'OFFSCRIPT®',
+        industry: 'Musik',
+        category: 'website',
+        href: '/cases/offscript',
+        imageSrc: '/cases/offscript/mockup--4-3.webp',
+        imageAlt: 'OFFSCRIPT® case',
+        keywords: ['Website', 'Design', 'Udvikling', 'Animation'],
+        description:
+          'Et redaktionelt site til et uafhængigt kunstnerbureau med store portrætter, store typografiske flader og rolig bevægelse.',
+      },
+      {
+        id: 'rethink-furniture',
+        client: 'Rethink Furniture',
+        industry: 'Møbler',
+        category: 'website',
+        href: '/cases/rethink-furniture',
+        imageSrc: '/cases/rethink-furniture/mockup--4-3.webp',
+        imageAlt: 'Rethink Furniture case',
+        keywords: ['Website', 'Design', 'Udvikling', 'Animation'],
+        description:
+          'Et designkoncept til et fiktivt dansk møbelbrand: et roligt, redaktionelt site med shop, produktsider, showroom og kontakt.',
       },
       {
         id: 'det-kollektive-klaedeskab',

@@ -2,6 +2,8 @@ import { forwardRef, useImperativeHandle, useLayoutEffect, useRef, type ElementT
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
+import { EASE, LABEL } from '../../lib/motion'
+
 gsap.registerPlugin(ScrollTrigger)
 
 /** The moving parts of a label, for a section that drives the opening itself (a scrubbed timeline). */
@@ -76,14 +78,16 @@ export const SectionLabel = forwardRef<SectionLabelHandle, SectionLabelProps>(fu
         paused: true,
         scrollTrigger: {
           trigger: root,
-          start: 'top 80%',
+          start: LABEL.start,
           once: true,
           invalidateOnRefresh: true,
           onEnter: () => tl.play(),
         },
       })
-      tl.fromTo(close, { x: () => -travel() }, { x: 0, duration: 1.2, ease: 'power3.out', immediateRender: true })
-        .to(text, { yPercent: 0, duration: 0.8, ease: 'power3.out' }, '-=0.1')
+      // The site's one label gesture (LABEL in lib/motion.ts): about 1.1 s, the text starting to rise
+      // while the bracket is still gliding, so the two overlap into one movement.
+      tl.fromTo(close, { x: () => -travel() }, { x: 0, duration: LABEL.slide, ease: EASE.rise, immediateRender: true })
+        .to(text, { yPercent: 0, duration: LABEL.rise, ease: EASE.rise }, `-=${LABEL.overlap}`)
       return () => {
         gsap.set([close, text], { clearProps: 'transform' })
       }
