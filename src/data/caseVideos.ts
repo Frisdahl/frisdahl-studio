@@ -9,6 +9,11 @@ const caseMainVideos: Partial<Record<string, CaseDetailGalleryVideo>> = {
     src: '/cases/nordwear/main--16-9.mp4',
     poster: '/cases/nordwear/main--16-9.webp',
   },
+  // A 4:3 clip of the OFFSCRIPT® site on a phone; the home card shows the middle of it (see `focus` in home.ts).
+  offscript: {
+    src: '/cases/offscript/mockup--4-3.mp4',
+    poster: '/cases/offscript/mockup--4-3.webp',
+  },
   'peter-salling': {
     src: '/cases/peter-salling/main--16-9.mp4',
     poster: '/cases/peter-salling/main--16-9.webp',

@@ -38,7 +38,9 @@ const homeContent = {
           keywords: "Website • Design",
           // No project page yet: the card is not a link.
           href: '',
-          imageSrc: "/cases/offscript/phone--4-5.webp",
+          imageSrc: "/cases/offscript/mockup--4-3.webp",
+          // Where the picture is centred in a portrait card: on the phone.
+          focus: "52.4% 50%",
           imageAlt: "OFFSCRIPT® på en iPhone",
         },
         {

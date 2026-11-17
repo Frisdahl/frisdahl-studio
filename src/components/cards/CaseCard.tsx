@@ -37,6 +37,8 @@ export interface CaseCardProps {
   overlay?: boolean
   /** Extra classes for the card (layout modifiers such as the wide card). */
   className?: string
+  /** CSS object-position of the picture and the clip in the card's frame (default: the centre). */
+  focus?: string
   /** Put the title and keywords under the image instead of above it. */
   metaBelow?: boolean
   /** The arrow that slides in to the left of the title on hover (default on). */
@@ -69,7 +71,7 @@ function keywordsWithDots(keywords: string) {
  * its full slide in: if the mouse leaves before it has arrived, it finishes arriving
  * and then carries on to the top right.
  */
-export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, overlay = false, className = '', metaBelow = false, showArrow = true, revealOnScroll = false }: CaseCardProps) {
+export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, overlay = false, className = '', focus, metaBelow = false, showArrow = true, revealOnScroll = false }: CaseCardProps) {
   // The title's arrow: waits out of sight to the left ('idle'), slides in on hover ('in'),
   // leaves to the right when the mouse does ('out'), then waits again.
   const [arrow, setArrow] = useState<'idle' | 'in' | 'out'>('idle')
@@ -78,7 +80,7 @@ export function CaseCard({ client, keywords, imageSrc, imageAlt, video, href, ov
   const leaveWhenArrived = useRef(false)
 
   return (
-    <div className={`case-card${metaBelow ? ' case-card-meta-below' : ''}${overlay ? ' case-card-overlay' : ''}${className ? ` ${className}` : ''}`}>
+    <div style={focus ? ({ '--case-focus': focus } as React.CSSProperties) : undefined} className={`case-card${metaBelow ? ' case-card-meta-below' : ''}${overlay ? ' case-card-overlay' : ''}${className ? ` ${className}` : ''}`}>
       <div className="case-card-meta">
         {/* Each title is an h3 under the section's "Latest projects" h2. */}
         <div className="case-card-title-row">

@@ -7,12 +7,13 @@ import { ProjectCursor } from './ProjectCursor'
 
 /**
  * The grid's rows, in order: two projects of the same size, one across the whole width, then two
- * of the same size again. `wide` cards are 16:9, the others portrait (4:5).
+ * of the same size again. `wide` cards are 16:9, the others portrait (4:5). `clip` cards play their
+ * clip (the others show the still).
  */
-const GRID: { id: string; wide?: boolean }[] = [
+const GRID: { id: string; wide?: boolean; clip?: boolean }[] = [
   { id: 'nordwear' },
-  { id: 'offscript' },
-  { id: 'peter-salling', wide: true },
+  { id: 'offscript', clip: true },
+  { id: 'peter-salling', wide: true, clip: true },
   { id: 'fresh-cut' },
   { id: 'det-kollektive-klaedeskab' },
 ]
@@ -43,7 +44,8 @@ export function CasesSection() {
               keywords={item.keywords}
               imageSrc={!slot.wide && 'portraitSrc' in item ? item.portraitSrc : item.imageSrc}
               imageAlt={item.imageAlt}
-              video={slot.wide ? getCaseMainVideo(item.id) : undefined}
+              video={slot.clip ? getCaseMainVideo(item.id) : undefined}
+              focus={'focus' in item ? item.focus : undefined}
               href={item.href}
               overlay
               revealOnScroll
