@@ -5,6 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
+import { getSmoothScroll } from '../../lib/scroll'
 import { MEET_US_PATH } from '../../lib/routes'
 import { Container, SectionLabel } from '../ui'
 import type { SectionLabelHandle } from '../ui/SectionLabel'
@@ -21,13 +22,17 @@ const START = 'top 68%'
 /**
  * "( Frisdahl Studio )" and the studio's description, dark on the page's light ground.
  *
+ * The section is about two and a half screens tall and its content sits in a half-screen frame that
+ * sticks in the middle of the screen while the section scrolls by, so it follows the screen.
  * Scrolling to the section starts a short sequence that then runs on its own clock (it does not
  * follow the scroll to its end): only "( )" stands there, the closing bracket slides right to the
  * end of the label, the label text rises between the brackets, and then the big text, which has
  * been light grey, turns dark character by character, the first line left to right, then the next
- * line, and so on. It plays once.
+ * line, and so on. It plays once. When the frame lets go (the section's bottom reaches 75% down the
+ * screen) the section shrinks to the frame's height and the scroll position is corrected by the height
+ * removed, so nothing jumps and scrolling back up leaves the section at once.
  *
- * Reduced motion: the finished section at once, no movement.
+ * Reduced motion: the finished section at once, one frame high, no movement.
  */
 export function StudioStatement() {
   const { locale } = useLocale()
@@ -59,9 +64,32 @@ export function StudioStatement() {
         .to(chars, { color: TEXT_INK, duration: 0.4, ease: 'none', stagger: each }, 1.3)
       ScrollTrigger.create({ trigger: section, start: START, once: true, onEnter: () => sequence.play() })
 
+      // When the frame lets go the tall section is no longer needed. At that moment the frame fills
+      // the same place either way, so nothing visible changes; the page below moves up by what is
+      // taken away, so the scroll position moves up by the same amount.
+      ScrollTrigger.create({
+        trigger: section,
+        start: 'bottom 75%',
+        onEnter: () => {
+          if (section.classList.contains('is-written')) return
+          sequence.progress(1)
+          const before = section.offsetHeight
+          section.classList.add('is-written')
+          const delta = before - section.offsetHeight
+          if (delta > 0) {
+            const target = Math.max(0, window.scrollY - delta)
+            const lenis = getSmoothScroll()
+            if (lenis) lenis.scrollTo(target, { immediate: true, force: true })
+            else window.scrollTo(0, target)
+          }
+          ScrollTrigger.refresh()
+        },
+      })
+
       return () => {
         split.revert()
         sequence.kill()
+        section.classList.remove('is-written')
         gsap.set([parts.close, parts.text], { clearProps: 'transform' })
       }
     })
@@ -70,19 +98,22 @@ export function StudioStatement() {
 
   return (
     <section ref={sectionRef} className="studio-statement" aria-label={intro.label}>
-      <Container columns className="studio-statement-container" contentClassName="studio-statement-grid">
-        <SectionLabel ref={labelRef} autoplay={false} className="studio-statement-label">
-          {intro.label}
-        </SectionLabel>
-        <p ref={textRef} className="studio-statement-text">
-          <span className="studio-statement-indent" aria-hidden="true" />
-          {intro.textBefore}
-          <Link to={MEET_US_PATH} className="studio-statement-link">
-            {intro.name}
-          </Link>
-          {intro.textAfter}
-        </p>
-      </Container>
+      {/* Half a screen high, stuck in the middle of the screen while the section scrolls by. */}
+      <div className="studio-statement-frame">
+        <Container columns className="studio-statement-container" contentClassName="studio-statement-grid">
+          <SectionLabel ref={labelRef} autoplay={false} className="studio-statement-label">
+            {intro.label}
+          </SectionLabel>
+          <p ref={textRef} className="studio-statement-text">
+            <span className="studio-statement-indent" aria-hidden="true" />
+            {intro.textBefore}
+            <Link to={MEET_US_PATH} className="studio-statement-link">
+              {intro.name}
+            </Link>
+            {intro.textAfter}
+          </p>
+        </Container>
+      </div>
     </section>
   )
 }
