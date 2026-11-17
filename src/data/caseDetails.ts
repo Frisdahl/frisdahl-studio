@@ -259,7 +259,8 @@ const caseLiveUrls: Record<string, string | null> = {
   nordwear: 'https://nordwear.pages.dev',
   'fresh-cut': null,
   'peter-salling': 'https://petersalling.com',
-  offscript: null,
+  offscript: 'https://offscript.afrisser3.workers.dev',
+  'rethink-furniture': 'https://rethink-furniture.afrisser3.workers.dev',
   'det-kollektive-klaedeskab': null,
 }
 
@@ -438,6 +439,15 @@ const caseTypefaces: Partial<
     },
     fontFamily: "'Geist', sans-serif",
     capHeight: 0.71,
+  },
+  'rethink-furniture': {
+    typeface: 'Instrument Serif',
+    category: { da: 'Display-serif' },
+    description: {
+      da: 'Instrument Serif bærer overskrifter, udsagn og produktnavne – fra den store forsidetitel til hvert enkelt møbel. De slanke former og de skarpe kontraster giver et roligt, redaktionelt udtryk, mens brødtekst, priser og knapper står i den rene sans-serif Hanken Grotesk, så detaljerne er lette at læse.',
+    },
+    fontFamily: "'Instrument Serif', serif",
+    capHeight: 0.72,
   },
   'det-kollektive-klaedeskab': {
     typeface: 'DM Serif Display',
@@ -742,6 +752,6 @@ export function getCaseDetail(
     palette: getCasePalette(locale, caseSlug),
     results: getCaseResults(locale, caseSlug),
     gallery,
-    nextCase,
+    nextCase: { ...nextCase, aspectRatio: caseHeroAspectRatios[nextCase.href.split('/').pop() ?? ''] },
   }
 }

@@ -61,13 +61,16 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     ],
   },
   'rethink-furniture': {
-    // Both clips are recordings of the real site (a stand-in brand I designed and built): its home page with the reveals
-    // that play while scrolling, and the shop's category page, a click on a product and the product page.
+    // The MacBook plays a recording of the real site (a stand-in brand I designed and built): its home page with the
+    // reveals that play while scrolling. The monitor is a still of the shop. Both are zoomed a little (see `zoom` in
+    // types/caseDetail.ts), around the device, so the screens fill more of the frame and read better.
     introPair: [
       {
         imageSrc: '/cases/rethink-furniture/macbook-forside--4-3.webp',
         imageAlt: 'Rethink Furniture forside på en MacBook Pro',
         aspectRatio: '4 / 3',
+        zoom: 1.12,
+        zoomOrigin: '47% 50%',
         video: {
           src: '/cases/rethink-furniture/macbook-forside--4-3.mp4',
           poster: '/cases/rethink-furniture/macbook-forside--poster--4-3.webp',
@@ -75,12 +78,10 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
       },
       {
         imageSrc: '/cases/rethink-furniture/monitor-shop-produkt--4-3.webp',
-        imageAlt: 'Rethink Furniture shop og produktside på en skærm',
+        imageAlt: 'Rethink Furniture shoppen på en skærm',
         aspectRatio: '4 / 3',
-        video: {
-          src: '/cases/rethink-furniture/monitor-shop-produkt--4-3.mp4',
-          poster: '/cases/rethink-furniture/monitor-shop-produkt--poster--4-3.webp',
-        },
+        zoom: 1.15,
+        zoomOrigin: '50% 52%',
       },
     ],
     // Only supplies the next-project preview; the pair above is what the gallery shows.
@@ -162,22 +163,32 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     },
   },
   offscript: {
-    // Grey boxes until the real pictures are ready: fill in imageSrc (and drop placeholderClassName).
+    // The artist section of the home page as a clip on a MacBook (the marquee dragged, an artist opened, the artist page
+    // loading), the site's footer on a second MacBook, then the Kontakt and Genrer pages on two phones. The clip is a
+    // recording of the real site on a fake clock (60 fps, no dropped frames); the menu bar is macOS's dark one.
     introPair: [
-      { imageSrc: null, imageAlt: 'OFFSCRIPT® forside på en bærbar', aspectRatio: '4 / 3', placeholderClassName: GREY },
-      { imageSrc: null, imageAlt: 'Kunstnerne i rækken på en bærbar', aspectRatio: '4 / 3', placeholderClassName: GREY },
+      {
+        imageSrc: '/cases/offscript/artists-macbook--4-3.webp',
+        imageAlt: 'OFFSCRIPT® kunstnerne på en MacBook Pro',
+        aspectRatio: '4 / 3',
+        video: {
+          src: '/cases/offscript/artists-macbook--4-3.mp4',
+          poster: '/cases/offscript/artists-macbook--poster--4-3.webp',
+        },
+      },
+      {
+        imageSrc: '/cases/offscript/footer-macbook--4-3.webp',
+        imageAlt: 'OFFSCRIPT® footer med kontakt og links på en MacBook Pro',
+        aspectRatio: '4 / 3',
+      },
     ],
-    horizontalTopPair: [
-      { imageSrc: null, imageAlt: 'Kunstnerside på en bærbar', aspectRatio: '3 / 2', placeholderClassName: GREY },
-      { imageSrc: null, imageAlt: 'Genresiden på en bærbar', aspectRatio: '3 / 2', placeholderClassName: GREY },
-    ],
-    // Only supplies the next-project fallback; the page shows the pair above.
+    // Only supplies the next-project fallback; the page shows the pairs.
+    horizontalTopHidden: true,
     horizontalTop: { imageSrc: null, imageAlt: 'OFFSCRIPT® forside', aspectRatio: '16 / 9', placeholderClassName: GREY },
     horizontalBottomPair: [
-      { imageSrc: null, imageAlt: 'OFFSCRIPT® forside på en iPhone', aspectRatio: '4 / 3', placeholderClassName: GREY },
-      { imageSrc: null, imageAlt: 'Kunstnerside på en iPhone', aspectRatio: '4 / 3', placeholderClassName: GREY },
+      { imageSrc: '/cases/offscript/phone-kontakt--4-3.webp', imageAlt: 'OFFSCRIPT® kontaktsiden på en iPhone', aspectRatio: '4 / 3' },
+      { imageSrc: '/cases/offscript/phone-genrer--4-3.webp', imageAlt: 'OFFSCRIPT® genrer på en iPhone', aspectRatio: '4 / 3' },
     ],
-    bottomWide: { imageSrc: null, imageAlt: 'Kontaktformularen på en iPad', aspectRatio: '3 / 2', placeholderClassName: GREY },
   },
   'det-kollektive-klaedeskab': {
     introPair: [

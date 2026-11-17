@@ -60,6 +60,16 @@
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
+/* Instrument Serif (SIL OFL 1.1) is Rethink Furniture's typeface, shown in its project page's type specimen;
+   self-hosted in public/fonts. */
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("/fonts/instrument-serif-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ArrowButton hover progress, 0 (dark fill) to 1 (transparent fill). Registered
    so it can be transitioned; the fill and the label colour are both derived
    from it, which keeps them in step however often the hover reverses. */
@@ -1476,8 +1486,14 @@
 
   /* Colour palette: shares the typography split; rounded, borderless swatches
      with the name and hex top left. */
+  /* The same room above as the typography section (they now follow each other), and below it the room the next section
+     needs; the gallery right after it adds none of its own. */
   .case-detail-palette {
-    @apply relative z-[1] pb-section-sm lg:pb-section;
+    @apply relative z-[1] mt-4xl pb-section-sm lg:mt-5xl lg:pb-section;
+  }
+
+  .case-detail-palette + .case-detail-gallery-section {
+    @apply mt-0;
   }
 
   /* An image under the palette (gallery.afterPalette): the palette's own bottom

@@ -1,4 +1,5 @@
-import { useEffect, useImperativeHandle, useRef, type Ref } from 'react'
+import { useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, type Ref } from 'react'
+import { responsiveSrcFor } from '../../lib/responsiveImage'
 
 interface LoopVideoProps {
   src: string
@@ -20,6 +21,12 @@ interface LoopVideoProps {
    * screen (the home page's projects), where decoding all of them together stutters the scroll.
    */
   shared?: boolean
+  /**
+   * A clip with preload 'none' starts loading when it comes within this distance of the screen (an IntersectionObserver
+   * rootMargin), so it is ready by the time it is seen instead of showing its poster while it buffers. Default: 300px
+   * for a clip the parent plays, 800px for one that plays itself. Not for shared (grid) clips, which are scheduled.
+   */
+  warmMargin?: string
   ref?: Ref<HTMLVideoElement>
 }
 
@@ -48,9 +55,35 @@ function prefersReducedMotion() {
  * A muted, looping clip that never plays out of sight: it pauses the moment it leaves the screen,
  * so nothing keeps decoding video behind the visitor's back. Never plays for reduced motion.
  */
-export function LoopVideo({ src, poster, label, className, mode, preload = 'none', shared = false, ref }: LoopVideoProps) {
+export function LoopVideo({ src, poster, label, className, mode, preload = 'none', shared = false, warmMargin, ref }: LoopVideoProps) {
   const element = useRef<HTMLVideoElement>(null)
   useImperativeHandle(ref, () => element.current as HTMLVideoElement)
+
+  // The poster is chosen once the clip's width is known (before the first paint), at the same sizes as the page's
+  // pictures: a 2304 px file is no use on a phone, and the hero's poster is then the very file its <img> already loaded.
+  // A clip that does not load at once (preload 'none') fetches its poster only when it comes near the screen, like
+  // its clip does, so a page of clips does not load every poster at the top. Until then there is no poster attribute.
+  const lazyPoster = preload === 'none' && !(shared && mode === 'visible')
+  const [posterSrc, setPosterSrc] = useState<string | undefined>(undefined)
+  useLayoutEffect(() => {
+    const video = element.current
+    if (!video) return
+    const choose = () => setPosterSrc(responsiveSrcFor(poster, video.clientWidth || window.innerWidth))
+    if (!lazyPoster) {
+      choose()
+      return
+    }
+    const near = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        choose()
+        near.disconnect()
+      },
+      { rootMargin: warmMargin ?? (mode === 'manual' ? '300px 0px' : '800px 0px') },
+    )
+    near.observe(video)
+    return () => near.disconnect()
+  }, [poster, lazyPoster, mode, warmMargin])
 
   useEffect(() => {
     const video = element.current
@@ -81,9 +114,10 @@ export function LoopVideo({ src, poster, label, className, mode, preload = 'none
     )
     visibility.observe(video)
 
-    // A clip that plays on hover is fetched shortly before it scrolls in, so hovering starts it at once.
+    // A clip is fetched shortly before it scrolls in: one that plays on hover starts at once when hovered, one that plays
+    // itself does not sit on its poster while it buffers.
     let warm: IntersectionObserver | null = null
-    if (mode === 'manual' && preload === 'none' && !reduced) {
+    if (preload === 'none' && !reduced && !(shared && mode === 'visible')) {
       warm = new IntersectionObserver(
         ([entry]) => {
           if (!entry.isIntersecting) return
@@ -91,7 +125,7 @@ export function LoopVideo({ src, poster, label, className, mode, preload = 'none
           video.load()
           warm?.disconnect()
         },
-        { rootMargin: '300px 0px' },
+        { rootMargin: warmMargin ?? (mode === 'manual' ? '300px 0px' : '800px 0px') },
       )
       warm.observe(video)
     }
@@ -102,14 +136,14 @@ export function LoopVideo({ src, poster, label, className, mode, preload = 'none
       if (sharedVisible.delete(video)) scheduleShared()
       video.pause()
     }
-  }, [mode, preload, shared])
+  }, [mode, preload, shared, warmMargin])
 
   return (
     <video
       ref={element}
       className={className}
       src={src}
-      poster={poster}
+      poster={posterSrc}
       aria-label={label}
       muted
       loop

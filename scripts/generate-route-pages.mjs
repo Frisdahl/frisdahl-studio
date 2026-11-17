@@ -13,12 +13,13 @@
 // fallback (Cloudflare static assets: not_found_handling = "404-page"). The routes are read from
 // src/lib/routes.ts and the case list in src/data/caseNavigation.ts, so a new route there is
 // picked up without editing this file.
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
-const DIST = join(ROOT, 'dist')
+// DIST can be set to run this on a build somewhere else (a measurement copy, for instance).
+const DIST = process.env.DIST || join(ROOT, 'dist')
 
 const routesSource = await readFile(join(ROOT, 'src/lib/routes.ts'), 'utf8')
 const caseSource = await readFile(join(ROOT, 'src/data/caseNavigation.ts'), 'utf8')
@@ -44,10 +45,60 @@ if (!casesPath) {
 const shell = await readFile(join(DIST, 'index.html'))
 const pages = [...routes, ...caseSlugs.map((slug) => `${casesPath}/${slug}`)]
 
+// A project page's own copy of the shell also starts what the page needs first, in parallel with the main bundle,
+// instead of after it (main bundle, then the route's chunk, then React, and only then the hero picture):
+//   - the route's code chunk and the chunks it imports (modulepreload);
+//   - the page's hero picture, with the same srcset and sizes as its <img> (preload as image, high priority), so the
+//     browser asks for the very file the page will want, and it is already there when the page renders.
+// Both are read from the build itself (dist/assets, the responsive-image manifest and the case data); nothing is listed by hand.
+const assetFiles = await readdir(join(DIST, 'assets')).catch(() => [])
+const chunkImports = async (file, seen = new Set()) => {
+  if (seen.has(file)) return seen
+  seen.add(file)
+  const code = await readFile(join(DIST, 'assets', file), 'utf8')
+  for (const match of code.matchAll(/(?:from|import)\s*["']\.\/([^"']+\.js)["']/g)) await chunkImports(match[1], seen)
+  return seen
+}
+const caseChunk = assetFiles.find((name) => /^CaseDetailPage-.*\.js$/.test(name))
+const caseChunks = caseChunk ? [...(await chunkImports(caseChunk))] : []
+// The main bundle is already loaded by the shell, so it needs no preload of its own.
+const mainChunks = new Set([...shell.toString().matchAll(/assets\/([^"']+\.js)/g)].map((match) => match[1]))
+const preloadChunks = caseChunks.filter((name) => !mainChunks.has(name))
+
+let manifest = {}
+try {
+  manifest = JSON.parse(await readFile(join(ROOT, 'src/data/generated/responsiveImages.json'), 'utf8'))
+} catch {
+  /* no manifest (the images step has not run): the picture is simply not preloaded */
+}
+const detailSource = await readFile(join(ROOT, 'src/data/caseDetails.ts'), 'utf8')
+const containerSizes = (await readFile(join(ROOT, 'src/lib/responsiveImage.ts'), 'utf8')).match(/container:\s*'([^']+)'/)?.[1]
+// Each case's hero picture is the first slide of its hero: `id: 'slug'` ... `slides: [{ imageSrc: '...'`
+const heroPictures = new Map(
+  [...detailSource.matchAll(/id:\s*'([^']+)',[\s\S]*?slides:\s*\[\s*\{\s*imageSrc:\s*'([^']+)'/g)].map((match) => [match[1], match[2]]),
+)
+
+const heroPreload = (slug) => {
+  const src = heroPictures.get(slug)
+  const entry = src ? manifest[src] : undefined
+  if (!src || !entry || !containerSizes) return ''
+  const srcset = entry.variants.map(([width, url]) => `${url} ${width}w`).join(', ')
+  const fallback = entry.variants.find(([width]) => width >= 1080)?.[1] ?? entry.variants[entry.variants.length - 1][1]
+  return `<link rel="preload" as="image" href="${fallback}" imagesrcset="${srcset}" imagesizes="${containerSizes}" fetchpriority="high" />`
+}
+
+const withPreloads = (route) => {
+  const slug = route.startsWith(`${casesPath}/`) ? route.slice(casesPath.length + 1) : null
+  if (!slug) return shell
+  const tags = [...preloadChunks.map((name) => `<link rel="modulepreload" crossorigin href="/assets/${name}" />`), heroPreload(slug)].filter(Boolean)
+  if (tags.length === 0) return shell
+  return Buffer.from(shell.toString().replace('</head>', `    ${tags.join('\n    ')}\n  </head>`))
+}
+
 for (const route of pages) {
   const file = join(DIST, `${route}.html`)
   await mkdir(dirname(file), { recursive: true })
-  await writeFile(file, shell)
+  await writeFile(file, withPreloads(route))
 }
 await writeFile(join(DIST, '404.html'), shell)
 
