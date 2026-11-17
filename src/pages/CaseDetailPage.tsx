@@ -43,6 +43,7 @@ function CaseDetail({ caseSlug }: { caseSlug: string | undefined }) {
       {/* The same order on every project page: overview, the MacBooks, typography, the phones, colour palette, the
           tablet (when there is one), results, a clip under the results (when there is one), the next project. */}
       {detail.typography ? <CaseDetailTypography typography={detail.typography} /> : null}
+      {detail.secondaryTypography ? <CaseDetailTypography typography={detail.secondaryTypography} /> : null}
       <CaseDetailGallery gallery={detail.gallery} />
       {detail.palette ? <CaseDetailPalette palette={detail.palette} /> : null}
       <CaseDetailAfterPalette gallery={detail.gallery} />

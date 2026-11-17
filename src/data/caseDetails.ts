@@ -17,7 +17,7 @@ import { getCaseYear, getNextCasePreview } from './caseNavigation'
 
 type CaseDetailBase = Omit<
   CaseDetailContent,
-  'gallery' | 'nextCase' | 'hero' | 'overview' | 'typography' | 'palette' | 'results'
+  'gallery' | 'nextCase' | 'hero' | 'overview' | 'typography' | 'secondaryTypography' | 'palette' | 'results'
 > & {
   hero: Omit<CaseDetailHero, 'meta' | 'name'>
 }
@@ -401,6 +401,14 @@ const caseTypefaces: Partial<
       description: Record<Locale, string>
       fontFamily: string
       capHeight: number
+      /** A second typeface the case uses, shown as its own specimen right after the first. */
+      secondary?: {
+        typeface: string
+        category: Record<Locale, string>
+        description: Record<Locale, string>
+        fontFamily: string
+        capHeight: number
+      }
     }
   >
 > = {
@@ -444,10 +452,19 @@ const caseTypefaces: Partial<
     typeface: 'Instrument Serif',
     category: { da: 'Display-serif' },
     description: {
-      da: 'Instrument Serif bærer overskrifter, udsagn og produktnavne – fra den store forsidetitel til hvert enkelt møbel. De slanke former og de skarpe kontraster giver et roligt, redaktionelt udtryk, mens brødtekst, priser og knapper står i den rene sans-serif Hanken Grotesk, så detaljerne er lette at læse.',
+      da: 'Instrument Serif bærer overskrifter, udsagn og produktnavne – fra den store forsidetitel til hvert enkelt møbel. De slanke former og de skarpe kontraster giver et roligt, redaktionelt udtryk, der passer til møbler lavet til at holde.',
     },
     fontFamily: "'Instrument Serif', serif",
     capHeight: 0.72,
+    secondary: {
+      typeface: 'Hanken Grotesk',
+      category: { da: 'Grotesk sans-serif' },
+      description: {
+        da: 'Hanken Grotesk bærer brødtekst, priser, materialer og knapper. Den neutrale, åbne form er let at læse i små størrelser og lader serifskriften stå alene om at have personlighed, så detaljerne omkring hvert møbel forbliver rolige og tydelige.',
+      },
+      fontFamily: "'Hanken Grotesk', sans-serif",
+      capHeight: 0.7,
+    },
   },
   'det-kollektive-klaedeskab': {
     typeface: 'DM Serif Display',
@@ -460,10 +477,9 @@ const caseTypefaces: Partial<
   },
 }
 
-function getCaseTypography(locale: Locale, caseSlug: string): CaseDetailTypography | undefined {
-  const font = caseTypefaces[caseSlug]
-  if (!font) return undefined
+type CaseTypeface = NonNullable<(typeof caseTypefaces)[string]>
 
+function toTypography(locale: Locale, font: Pick<CaseTypeface, 'typeface' | 'category' | 'description' | 'fontFamily' | 'capHeight'>): CaseDetailTypography {
   return {
     ...typographyLabels[locale],
     description: font.description[locale],
@@ -472,6 +488,16 @@ function getCaseTypography(locale: Locale, caseSlug: string): CaseDetailTypograp
     fontFamily: font.fontFamily,
     capHeight: font.capHeight,
   }
+}
+
+function getCaseTypography(locale: Locale, caseSlug: string): CaseDetailTypography | undefined {
+  const font = caseTypefaces[caseSlug]
+  return font ? toTypography(locale, font) : undefined
+}
+
+function getCaseSecondaryTypography(locale: Locale, caseSlug: string): CaseDetailTypography | undefined {
+  const font = caseTypefaces[caseSlug]?.secondary
+  return font ? toTypography(locale, font) : undefined
 }
 
 const paletteTitles: Record<Locale, string> = { da: 'Farvepalette',  }
@@ -747,6 +773,7 @@ export function getCaseDetail(
     },
     overview: getCaseOverview(locale, caseSlug, detail.hero.description),
     typography: getCaseTypography(locale, caseSlug),
+    secondaryTypography: getCaseSecondaryTypography(locale, caseSlug),
     palette: getCasePalette(locale, caseSlug),
     results: getCaseResults(locale, caseSlug),
     gallery,
