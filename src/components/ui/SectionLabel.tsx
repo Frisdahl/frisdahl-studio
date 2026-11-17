@@ -1,11 +1,19 @@
-import { useLayoutEffect, useRef, type ElementType, type ReactNode } from 'react'
+import { forwardRef, useImperativeHandle, useLayoutEffect, useRef, type ElementType, type ReactNode } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
+export interface SectionLabelHandle {
+  /** Plays the opening animation (for a label with `autoplay={false}`). */
+  play: () => void
+}
+
 interface SectionLabelProps {
   children: ReactNode
+  /** Start when the label scrolls into view (default). With false it waits for `play()` on the ref,
+   *  for a section that decides itself when its opening begins. */
+  autoplay?: boolean
   /** The heading level the label stands in (it is the section's heading). */
   as?: ElementType
   className?: string
@@ -19,11 +27,17 @@ interface SectionLabelProps {
  * (transform only). Reduced motion: the finished label, no movement. The brackets are
  * decoration, so only the text is the heading's accessible name.
  */
-export function SectionLabel({ children, as: Tag = 'h2', className = '' }: SectionLabelProps) {
+export const SectionLabel = forwardRef<SectionLabelHandle, SectionLabelProps>(function SectionLabel(
+  { children, autoplay = true, as: Tag = 'h2', className = '' },
+  handle,
+) {
   const rootRef = useRef<HTMLElement>(null)
+  const timeline = useRef<gsap.core.Timeline | null>(null)
   const openRef = useRef<HTMLSpanElement>(null)
   const closeRef = useRef<HTMLSpanElement>(null)
   const textRef = useRef<HTMLSpanElement>(null)
+
+  useImperativeHandle(handle, () => ({ play: () => timeline.current?.play() }), [])
 
   useLayoutEffect(() => {
     const root = rootRef.current
@@ -39,22 +53,20 @@ export function SectionLabel({ children, as: Tag = 'h2', className = '' }: Secti
       gsap.set(text, { yPercent: 115 })
       const tl = gsap.timeline({
         paused: true,
-        scrollTrigger: {
-          trigger: root,
-          start: 'top 90%',
-          once: true,
-          invalidateOnRefresh: true,
-          onEnter: () => tl.play(),
-        },
+        scrollTrigger: autoplay
+          ? { trigger: root, start: 'top 90%', once: true, invalidateOnRefresh: true, onEnter: () => tl.play() }
+          : undefined,
       })
+      timeline.current = tl
       tl.fromTo(close, { x: () => -travel() }, { x: 0, duration: 0.9, ease: 'power3.out', immediateRender: true })
         .to(text, { yPercent: 0, duration: 0.55, ease: 'power3.out' }, '-=0.05')
       return () => {
+        timeline.current = null
         gsap.set([close, text], { clearProps: 'transform' })
       }
     })
     return () => mm.revert()
-  }, [])
+  }, [autoplay])
 
   return (
     <Tag ref={rootRef} className={`section-label ${className}`.trim()}>
@@ -71,4 +83,4 @@ export function SectionLabel({ children, as: Tag = 'h2', className = '' }: Secti
       </span>
     </Tag>
   )
-}
+})

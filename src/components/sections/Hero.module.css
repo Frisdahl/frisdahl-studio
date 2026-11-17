@@ -101,7 +101,7 @@
 /* Under the first word, at its left edge. */
 .line {
   position: absolute;
-  top: calc(10.4 * var(--u));
+  top: calc(14.2 * var(--u));
   left: calc(50% - 44.2 * var(--u));
 }
 
