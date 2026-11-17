@@ -800,10 +800,10 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
 
 /* ---------- Meet me (/mod-mig): the homepage's type ---------- */
 
-/* The introduction is set like the statement on the homepage (.studio-statement-text): the same
-   size, weight, line height and tracking, in the ink, with the first line stood in. */
+/* The introduction is set in the ink, with the first line stood in. The size matches the
+   homepage's "Fra idé til lancering" statement (.added-value-statement). */
 .meet-us-intro p {
-  font-size: clamp(1.5rem, 0.7rem + 1.85vw, 2.5rem);
+  font-size: clamp(1.25rem, 0.8rem + 0.95vw, 1.875rem);
   font-weight: 400;
   line-height: 1.28;
   letter-spacing: -0.03em;
