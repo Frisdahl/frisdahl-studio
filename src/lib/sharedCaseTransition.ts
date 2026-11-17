@@ -29,6 +29,12 @@ const NEXT_SETTLE = 0.28
 const NEXT_EXIT_TEXT_DURATION = 0.3
 const NEXT_VEIL_DURATION = 0.2
 const NEXT_OVERLAY_FADE = 0.8
+// A card in the home page's grid (only those; the /cases list and the next-project card keep the leave above):
+// the caption just fades (nothing is split into masks and slid out), the picture is lifted into the ghost, and
+// the whole page fades to the page colour under it in one slow, even fade. Those cards have no hover zoom or
+// arrow to settle, so there is no hold before the lift either.
+const HOME_TEXT_FADE = 0.2
+const HOME_PAGE_FADE = 0.6
 // The case page's text starts this long before the picture has fully landed (s).
 const ENTER_OVERLAP = 0.25
 // The card's zoom is gone by NEXT_ZOOM_SETTLE; only then is the real hero picture faded in.
@@ -139,6 +145,7 @@ export async function runSharedCaseTransition(
 ) {
   const root = document.documentElement
   const isNext = card.classList.contains('case-detail-next')
+  const fromHome = !isNext && Boolean(card.closest('.home-cases'))
   const media = isNext ? card : card.querySelector<HTMLElement>('.case-card-media')!
   const cardImage = card.querySelector<HTMLImageElement>('.case-card-image, .case-detail-next-image')!
   const texts = [
@@ -216,8 +223,9 @@ export async function runSharedCaseTransition(
     else ghostVideo.addEventListener('loadedmetadata', begin, { once: true })
   }
 
-  const split = SplitText.create(texts, { type: 'lines', mask: 'lines' })
-  roomInMasks(split.masks)
+  // The home grid's captions fade as they are; every other card splits them into masks to slide out.
+  const split = fromHome ? null : SplitText.create(texts, { type: 'lines', mask: 'lines' })
+  if (split) roomInMasks(split.masks)
   let nameSplit: SplitText | null = null
   let metaValues: Element[] = []
   let metaLabels: Element[] = []
@@ -232,21 +240,25 @@ export async function runSharedCaseTransition(
     //    then the image is lifted out into the ghost and the page fades under it.
     await new Promise<void>((resolve) => {
       const leave = gsap.timeline({ onComplete: resolve })
-      leave.to(split.lines, { yPercent: -125, duration: isNext ? NEXT_EXIT_TEXT_DURATION : EXIT_TEXT_DURATION, ease: isNext ? 'power2.in' : 'power3.in', stagger: isNext ? 0.03 : 0.05 }, 0)
+      // Lifts the picture into the ghost (the card's clip carries on in it) and lets the card's own clip rest.
+      const lift = () => {
+        if (!ghostVideo || !cardVideo) {
+          document.body.append(ghost)
+          return
+        }
+        // The ghost's clip is already playing, in step with the card's: show it, and let the card's rest.
+        gsap.set(ghost, { opacity: 1 })
+        cardVideo.pause()
+      }
+      if (fromHome) {
+        leave.to(texts, { autoAlpha: 0, duration: HOME_TEXT_FADE, ease: 'power1.out' }, 0)
+        leave.call(lift, [], HOME_TEXT_FADE)
+        leave.to(veil, { autoAlpha: 1, duration: HOME_PAGE_FADE, ease: 'sine.inOut' }, HOME_TEXT_FADE)
+        return
+      }
+      leave.to(split!.lines, { yPercent: -125, duration: isNext ? NEXT_EXIT_TEXT_DURATION : EXIT_TEXT_DURATION, ease: isNext ? 'power2.in' : 'power3.in', stagger: isNext ? 0.03 : 0.05 }, 0)
       if (bar) leave.to(bar, { autoAlpha: 0, duration: 0.4, ease: 'power2.out' }, 0)
-      leave.call(
-        () => {
-          if (!ghostVideo || !cardVideo) {
-            document.body.append(ghost)
-            return
-          }
-          // The ghost's clip is already playing, in step with the card's: show it, and let the card's rest.
-          gsap.set(ghost, { opacity: 1 })
-          cardVideo.pause()
-        },
-        [],
-        settle,
-      )
+      leave.call(lift, [], settle)
       leave.to(veil, { autoAlpha: 1, duration: isNext ? NEXT_VEIL_DURATION : VEIL_DURATION, ease: 'power2.inOut' }, settle)
     })
 
@@ -254,7 +266,7 @@ export async function runSharedCaseTransition(
     // React rewrites its name when the route changes. Its text must be put back to normal
     // first: reverting the split afterwards would write the old project's name back over it.
     // The page is under the veil, so nothing shows.
-    if (isNext) split.revert()
+    if (isNext) split?.revert()
 
     // 2. Go to the case page (hidden under the veil) and measure where its image is.
     const main = await loadPage()
@@ -431,7 +443,8 @@ export async function runSharedCaseTransition(
     if (heroCatchUp) heroCatchUp.playbackRate = 1
     ghostVideo?.pause()
     ghost.remove()
-    split.revert()
+    split?.revert()
+    if (fromHome) gsap.set(texts, { clearProps: 'opacity,visibility' })
     nameSplit?.revert()
     if (metaValues.length) gsap.set(metaValues, { clearProps: 'transform' })
     if (metaLabels.length) gsap.set(metaLabels, { clearProps: 'opacity' })
