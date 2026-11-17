@@ -384,42 +384,6 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
   content: "/";
 }
 
-/* The SE PROJEKT label (ProjectCursor): a white rectangle with dark text and an arrow, a little to the
-   top right of the pointer. The pointer itself stays visible. */
-.project-cursor {
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 30;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.625rem;
-  padding: 0.625rem 0.75rem 0.625rem 0.875rem;
-  border-radius: 4px;
-  background-color: var(--color-light);
-  color: var(--color-dark);
-  box-shadow: 0 6px 20px rgb(0 0 0 / 0.18);
-  font-family: var(--font-heading);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  pointer-events: none;
-  transform: scale(0);
-}
-
-.project-cursor-arrow {
-  font-size: 0.9375rem;
-}
-
-@media (hover: none), (pointer: coarse) {
-  .project-cursor {
-    display: none;
-  }
-}
-
 /* ---------- Reviews ---------- */
 
 .reviews-section {
