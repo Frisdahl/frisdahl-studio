@@ -347,10 +347,12 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
 .case-card-overlay .case-card-title-row,
 .case-card-overlay .case-card-client {
   color: var(--color-light);
-  font-size: clamp(1.375rem, 0.9rem + 1vw, 1.875rem);
+  /* Uppercase, and a little smaller than before (was 22 to 30px). */
+  font-size: clamp(1.125rem, 0.8rem + 0.7vw, 1.5rem);
   font-weight: 500;
-  line-height: 1.05;
-  letter-spacing: -0.035em;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
 }
 
 .case-card-overlay .case-card-keywords {
