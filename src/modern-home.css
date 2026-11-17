@@ -150,33 +150,37 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
 /* ---------- Statement: ( Frisdahl Studio ) + the description, written out by the scroll ---------- */
 
 .studio-statement {
+  /* The sticky frame is half a screen high and sits in the middle of the screen (25svh from the top), so
+     there is little empty room above and below the text. The section is that frame plus the stretch it
+     stays stuck for while the text is written (280svh). StudioStatement's triggers use the same two
+     numbers: 'top 25%' and 'bottom 75%'. */
+  --statement-frame: 50svh;
+  --statement-top: 25svh;
   position: relative;
-  /* Almost four screens tall: the frame inside sticks to the screen for the extra three while the
-     text is written out slowly (StudioStatement). `clip`, not `hidden`, so the sticky frame still
-     works. The ground is the page's own. */
-  min-height: 380svh;
+  min-height: calc(var(--statement-frame) + 280svh);
+  /* `clip`, not `hidden`, so the sticky frame still works. */
   overflow: clip;
   color: var(--color-dark);
 }
 
-/* Scrolled past: the section needs only one screen (StudioStatement adds this class). */
+/* Scrolled past: the section needs only the frame (StudioStatement adds this class). */
 .studio-statement.is-written {
-  min-height: 100svh;
+  min-height: var(--statement-frame);
 }
 
-/* One screen high; it stays on the screen while the section scrolls past. */
+/* Half a screen high; it stays on the screen while the section scrolls past. */
 .studio-statement-frame {
   position: sticky;
-  top: 0;
+  top: var(--statement-top);
   display: flex;
   align-items: center;
-  height: 100svh;
+  height: var(--statement-frame);
 }
 
-/* Reduced motion: nothing is written out, so the section is just one screen with the finished text. */
+/* Reduced motion: nothing is written out, so the section is just the frame with the finished text. */
 @media (prefers-reduced-motion: reduce) {
   .studio-statement {
-    min-height: 100svh;
+    min-height: var(--statement-frame);
   }
 
   .studio-statement-frame {
@@ -240,7 +244,7 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
 .home-cases {
   position: relative;
   z-index: 1;
-  padding-top: clamp(4rem, 7vw, 6.25rem);
+  padding-top: clamp(2rem, 4vw, 3.5rem);
   padding-bottom: clamp(4rem, 10vw, 10rem);
   background-color: var(--color-home-page);
 }

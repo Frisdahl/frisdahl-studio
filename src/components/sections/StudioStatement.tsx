@@ -15,8 +15,8 @@ gsap.registerPlugin(ScrollTrigger, SplitText)
 /**
  * "( Frisdahl Studio )" and the studio's description, dark on the page's light ground.
  *
- * The section is almost four screens tall and its content sits in a frame that sticks to the screen
- * while the section scrolls by. The label opens by itself, on a clock (it does not depend on how
+ * The section is about three and a half screens tall and its content sits in a half-screen frame that
+ * sticks in the middle of the screen while the section scrolls by. The label opens by itself, on a clock (it does not depend on how
  * fast you scroll): only "( )" stands there, the closing bracket slides right to the end, then the
  * label text rises between the brackets. Once the frame is on the screen the big text is written by
  * the scroll, slowly: each character fades in, the first line left to right, then the next line,
@@ -67,8 +67,9 @@ export function StudioStatement() {
       let furthest = 0
       ScrollTrigger.create({
         trigger: section,
-        start: 'top top',
-        end: 'bottom bottom',
+        // The frame sticks 25% down the screen and lets go at 75% (see --statement-top in the CSS).
+        start: 'top 25%',
+        end: 'bottom 75%',
         invalidateOnRefresh: true,
         onUpdate: (self) => {
           if (self.progress <= furthest) return
@@ -77,14 +78,14 @@ export function StudioStatement() {
         },
       })
 
-      // When the writing is done and the frame lets go (the section's bottom reaches the bottom of the
+      // When the writing is done and the frame lets go (the section's bottom reaches 75% down the
       // screen), the tall section is no longer needed: it shrinks to one screen. At that moment the
       // frame fills the screen either way, so nothing visible changes; the page below moves up by what
       // was taken away, so the scroll position is moved up by the same amount. Scrolling back up then
       // leaves the section at once instead of through the whole stuck stretch.
       ScrollTrigger.create({
         trigger: section,
-        start: 'bottom bottom',
+        start: 'bottom 75%',
         onEnter: () => {
           if (section.classList.contains('is-written')) return
           gsap.set(chars, { opacity: 1 })
