@@ -57,8 +57,6 @@ const homeContent = {
           keywords: "E-commerce • Design • Udvikling",
           href: '/cases/nordwear',
           imageSrc: "/cases/nordwear/main--16-9.webp",
-          // The portrait card on the home page shows the phones instead of the laptop.
-          portraitSrc: "/cases/nordwear/iphone-forside--4-3.webp",
           imageAlt: "Nordwear case",
         },
         {

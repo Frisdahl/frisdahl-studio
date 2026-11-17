@@ -1,14 +1,18 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
+import { ArrowIcon } from '../ui'
+
+/** How far the label stands from the pointer, to the right and up (px). */
+const OFFSET_X = 16
+const OFFSET_Y = 16
 
 /**
- * The round "SE PROJEKT" pointer shown over the project pictures. It is white with
- * mix-blend-mode: difference, so it inverts the picture under it; the label inside is black, which
- * the blend leaves unchanged, so the text shows the picture itself. It scales in when the pointer
- * enters a picture, follows the pointer with a short lag (gsap.quickTo, transform only) and
- * scales out when it leaves. Only for a real mouse (hover and a fine pointer); touch has no
- * pointer to follow, and a tap just follows the link. Reduced motion: it follows without scaling
- * or lag.
+ * The "SE PROJEKT" label shown over the project pictures: a white rectangle with dark text and an
+ * arrow, standing a little to the top right of the pointer (the pointer itself stays). It grows out
+ * of its bottom left corner when the pointer enters a picture, follows the pointer with a short lag
+ * (gsap.quickTo, transform only) and shrinks away when it leaves. Only for a real mouse (hover and a
+ * fine pointer); touch has no pointer to follow, and a tap just follows the link. Reduced motion:
+ * it follows without growing or lag.
  */
 export function ProjectCursor() {
   const cursorRef = useRef<HTMLDivElement>(null)
@@ -20,9 +24,10 @@ export function ProjectCursor() {
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    gsap.set(cursor, { xPercent: -50, yPercent: -50, scale: 0, x: 0, y: 0 })
-    const moveX = gsap.quickTo(cursor, 'x', { duration: reduced ? 0 : 0.35, ease: 'power3.out' })
-    const moveY = gsap.quickTo(cursor, 'y', { duration: reduced ? 0 : 0.35, ease: 'power3.out' })
+    // The label's bottom left corner is its anchor: it sits at the pointer plus the offset.
+    gsap.set(cursor, { yPercent: -100, transformOrigin: '0% 100%', scale: 0, x: 0, y: 0 })
+    const moveX = gsap.quickTo(cursor, 'x', { duration: reduced ? 0 : 0.3, ease: 'power3.out' })
+    const moveY = gsap.quickTo(cursor, 'y', { duration: reduced ? 0 : 0.3, ease: 'power3.out' })
     let over = false
 
     const show = (visible: boolean) => {
@@ -30,7 +35,7 @@ export function ProjectCursor() {
       over = visible
       gsap.to(cursor, {
         scale: visible ? 1 : 0,
-        duration: reduced ? 0 : visible ? 0.45 : 0.3,
+        duration: reduced ? 0 : visible ? 0.4 : 0.25,
         ease: visible ? 'expo.out' : 'power3.in',
         overwrite: 'auto',
       })
@@ -41,8 +46,8 @@ export function ProjectCursor() {
       const target = event.target instanceof Element ? event.target.closest('.case-card-media-link') : null
       // A card without a project page has nothing to open.
       show(Boolean(target) && !target?.hasAttribute('data-static'))
-      moveX(event.clientX)
-      moveY(event.clientY)
+      moveX(event.clientX + OFFSET_X)
+      moveY(event.clientY - OFFSET_Y)
     }
     const onLeave = () => show(false)
 
@@ -58,11 +63,8 @@ export function ProjectCursor() {
 
   return (
     <div ref={cursorRef} className="project-cursor" aria-hidden="true">
-      <span>
-        Se
-        <br />
-        projekt
-      </span>
+      <span>Se projekt</span>
+      <ArrowIcon className="project-cursor-arrow" rotate={-45} />
     </div>
   )
 }

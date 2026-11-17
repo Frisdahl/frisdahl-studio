@@ -6,16 +6,18 @@ import { getHomeContent } from '../../data/home'
 import { ProjectCursor } from './ProjectCursor'
 
 /**
- * The grid's rows, in order: two projects of the same size, one across the whole width, then two
- * of the same size again. `wide` cards are 16:9, the others portrait (4:5). `clip` cards play their
- * clip (the others show the still).
+ * The grid's rows, in order (a six-column grid with a 6px gap):
+ *   1. Nordwear, 16:9 across four columns, with OFFSCRIPT® beside it, as tall as Nordwear, across two;
+ *   2. Peter Salling, 16:9 across all six;
+ *   3. Fresh Cut and Det Kollektive Klædeskab, the same size, across three each (portrait, 4:5).
+ * `clip` cards play their clip (the others show the still).
  */
-const GRID: { id: string; wide?: boolean; clip?: boolean }[] = [
-  { id: 'nordwear' },
-  { id: 'offscript', clip: true },
-  { id: 'peter-salling', wide: true, clip: true },
-  { id: 'fresh-cut' },
-  { id: 'det-kollektive-klaedeskab' },
+const GRID: { id: string; span: 2 | 3 | 4 | 6; shape: 'wide' | 'stretch' | 'portrait'; clip?: boolean }[] = [
+  { id: 'nordwear', span: 4, shape: 'wide', clip: true },
+  { id: 'offscript', span: 2, shape: 'stretch', clip: true },
+  { id: 'peter-salling', span: 6, shape: 'wide', clip: true },
+  { id: 'fresh-cut', span: 3, shape: 'portrait' },
+  { id: 'det-kollektive-klaedeskab', span: 3, shape: 'portrait' },
 ]
 
 /**
@@ -39,10 +41,10 @@ export function CasesSection() {
           {items.map(({ slot, item }) => (
             <CaseCard
               key={item.id}
-              className={slot.wide ? 'case-card-wide' : undefined}
+              className={`case-card-span-${slot.span} case-card-${slot.shape}`}
               client={item.client}
               keywords={item.keywords}
-              imageSrc={!slot.wide && 'portraitSrc' in item ? item.portraitSrc : item.imageSrc}
+              imageSrc={item.imageSrc}
               imageAlt={item.imageAlt}
               video={slot.clip ? getCaseMainVideo(item.id) : undefined}
               focus={'focus' in item ? item.focus : undefined}

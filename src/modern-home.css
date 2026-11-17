@@ -285,25 +285,37 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
 .home-cases-list {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 6px;
 }
 
+.home-cases-list .case-card-span-2 {
+  grid-column: span 2;
+}
+
+.home-cases-list .case-card-span-3 {
+  grid-column: span 3;
+}
+
+.home-cases-list .case-card-span-4 {
+  grid-column: span 4;
+}
+
+.home-cases-list .case-card-span-6 {
+  grid-column: 1 / -1;
+}
+
 @media (max-width: 639px) {
-  .home-cases-list {
-    grid-template-columns: minmax(0, 1fr);
+  /* One column: every card full width, in its own shape. */
+  .home-cases-list .case-card {
+    grid-column: 1 / -1;
   }
 }
 
 .home-cases-list .case-card {
   position: relative;
   display: block;
-  grid-column: auto;
   margin: 0;
-}
-
-.home-cases-list .case-card-wide {
-  grid-column: 1 / -1;
 }
 
 .case-card-overlay .case-card-media {
@@ -312,6 +324,29 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
 
 .case-card-overlay.case-card-wide .case-card-media {
   aspect-ratio: 16 / 9;
+}
+
+/* A card beside a wide one is as tall as that one (the row's height), whatever its own shape. */
+.case-card-overlay.case-card-stretch,
+.case-card-overlay.case-card-stretch .case-card-media-link {
+  height: 100%;
+}
+
+.case-card-overlay.case-card-stretch .case-card-media {
+  height: 100%;
+  aspect-ratio: auto;
+}
+
+@media (max-width: 639px) {
+  .case-card-overlay.case-card-stretch,
+  .case-card-overlay.case-card-stretch .case-card-media-link {
+    height: auto;
+  }
+
+  .case-card-overlay.case-card-stretch .case-card-media {
+    height: auto;
+    aspect-ratio: 4 / 5;
+  }
 }
 
 /* A soft dark gradient at the foot of the picture keeps the caption readable on any image. */
@@ -380,35 +415,34 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
   content: "/";
 }
 
-/* The round SE PROJEKT pointer (ProjectCursor): white + difference, label cut out in black. */
+/* The SE PROJEKT label (ProjectCursor): a white rectangle with dark text and an arrow, a little to the
+   top right of the pointer. The pointer itself stays visible. */
 .project-cursor {
   position: fixed;
   left: 0;
   top: 0;
   z-index: 30;
-  display: grid;
-  width: 8.25rem;
-  height: 8.25rem;
-  place-items: center;
-  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.625rem 0.75rem 0.625rem 0.875rem;
+  border-radius: 4px;
   background-color: var(--color-light);
-  color: #000;
-  mix-blend-mode: difference;
+  color: var(--color-dark);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.18);
   font-family: var(--font-heading);
   font-size: 0.8125rem;
   font-weight: 500;
-  line-height: 1.3;
+  line-height: 1;
   letter-spacing: 0.04em;
-  text-align: center;
   text-transform: uppercase;
+  white-space: nowrap;
   pointer-events: none;
   transform: scale(0);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .home-cases-list .case-card-media-link:not([data-static]) {
-    cursor: none;
-  }
+.project-cursor-arrow {
+  font-size: 0.9375rem;
 }
 
 @media (hover: none), (pointer: coarse) {
