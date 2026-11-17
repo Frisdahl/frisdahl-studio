@@ -259,8 +259,8 @@ const caseLiveUrls: Record<string, string | null> = {
   nordwear: 'https://nordwear.pages.dev',
   'fresh-cut': null,
   'peter-salling': 'https://petersalling.com',
-  offscript: 'https://offscript.afrisser3.workers.dev',
-  'rethink-furniture': 'https://rethink-furniture.afrisser3.workers.dev',
+  offscript: 'https://offscript.frisdahlstudio.workers.dev',
+  'rethink-furniture': 'https://rethink-furniture.frisdahlstudio.workers.dev',
   'det-kollektive-klaedeskab': null,
 }
 
@@ -554,11 +554,9 @@ const resultsTitles: Record<Locale, string> = { da: 'Resultater' }
  * Measured on the live site with Lighthouse 13 CLI: 5 cold runs per page, mobile (simulated Slow 4G, 4x CPU) and desktop preset.
  * Mobile LCP was 4.1 s on the home page and 2.9 s on project pages (Google's "good" is 2.5 s): not shown as a tile.
  * Only cases with real measurements have an entry; re-measure before changing a figure.
- * Peter Salling was measured on its live site. OFFSCRIPT and Rethink Furniture have no live site, so they were
- * measured on a local production build (vite build, served with vite preview on localhost, 2026-11-17, Lighthouse
- * 13.5, same settings): the same code and files, but not a CDN, so a real host could differ a little. Nordwear was
- * measured live on https://nordwear.pages.dev (2026-11-17, same settings); its product page is weak (CLS 0.77, mobile
- * performance 58) and the figures are shown as measured.
+ * Every case is measured on its live site (Lighthouse 13.5, 2026-11-17, three pages, mobile with Slow 4G and 4x CPU
+ * and desktop; medians). Peter Salling, OFFSCRIPT and Rethink Furniture: 3-5 runs per page; Nordwear: five. Nordwear's
+ * product page is weak (CLS 0.77, mobile performance 58) and the figures are shown as measured.
  */
 const caseResults: Partial<Record<string, Record<Locale, Omit<CaseDetailResults, 'title'>>>> = {
   'peter-salling': {
@@ -590,27 +588,27 @@ const caseResults: Partial<Record<string, Record<Locale, Omit<CaseDetailResults,
   offscript: {
     da: {
       description:
-        'Sitet har ikke noget live domæne endnu, så det er målt som en produktionsbygning på min egen maskine: forsiden, en kunstnerside og kontaktsiden, fem målinger på hver, på mobil med netværks- og CPU-begrænsning og på desktop. Forsiden på mobil er den langsomste (LCP ca. 5 s, den åbner med en preloader og vejer 1,2 MB), mens kunstnersiden og kontaktsiden indlæses hurtigt.',
+        'Sitet er målt live på offscript.frisdahlstudio.workers.dev: forsiden, en kunstnerside og kontaktsiden, tre målinger på hver, på mobil med netværks- og CPU-begrænsning og på desktop. Forsiden på mobil er den langsomste (score 70, LCP ca. 5,4 s, den åbner med en preloader og vejer 1,2 MB), mens kunstnersiden og kontaktsiden indlæses hurtigt (score 91 og 92).',
       metrics: [
-        { label: 'Hastighed', value: '76–97', detail: 'Lighthouse-score for ydelse på mobil (76 på forsiden), 99–100 på desktop.' },
+        { label: 'Hastighed', value: '70–92', detail: 'Lighthouse-score for ydelse på mobil (70 på forsiden), 99–100 på desktop.' },
         { label: 'Stabilitet', value: '0,00', detail: 'Praktisk talt ingen layout-skift (CLS højst 0,003).' },
         { label: 'Kvalitet', value: '96–100', detail: 'Lighthouse-tilgængelighed: 96 på forsiden, 100 på de to andre sider. Best practice: 96–100.' },
         { label: 'SEO', value: '91–92', detail: 'Lighthouse-score for søgemaskineoptimering på alle tre sider.' },
       ],
-      note: 'Lighthouse 13, median af fem målinger pr. side, målt på en lokal produktionsbygning (ikke et live site), november 2026.',
+      note: 'Lighthouse 13, median af tre målinger pr. side, målt live på offscript.frisdahlstudio.workers.dev, november 2026.',
     },
   },
   'rethink-furniture': {
     da: {
       description:
-        'Sitet har ikke noget live domæne, så det er målt som en produktionsbygning på min egen maskine: forsiden, shoppen og en produktside, fem målinger på hver, på mobil med netværks- og CPU-begrænsning og på desktop. Forsiden er tungest på mobil (LCP ca. 5,6 s og 1,2 MB, med en preloader og store billeder), produktsiden og shoppen er hurtigere, og layoutet står helt stille.',
+        'Sitet er målt live på rethink-furniture.frisdahlstudio.workers.dev: forsiden, shoppen og en produktside, tre målinger på hver, på mobil med netværks- og CPU-begrænsning og på desktop. Forsiden vejer mest (1,2 MB), men åbner hurtigt (LCP ca. 3,2 s). Shoppen er langsomst på mobil (score 81, LCP ca. 4,2 s, mange produktbilleder), og layoutet står helt stille på alle tre sider.',
       metrics: [
-        { label: 'Hastighed', value: '74–92', detail: 'Lighthouse-score for ydelse på mobil (74 på forsiden), 98–100 på desktop.' },
+        { label: 'Hastighed', value: '81–87', detail: 'Lighthouse-score for ydelse på mobil (81 på shoppen), 98–99 på desktop.' },
         { label: 'Stabilitet', value: '0,00', detail: 'Ingen layout-skift på de tre sider (CLS 0).' },
         { label: 'Kvalitet', value: '92–94', detail: 'Lighthouse-tilgængelighed: 93 på forsiden, 92 på shoppen og 94 på produktsiden. Best practice: 100.' },
         { label: 'SEO', value: '92', detail: 'Lighthouse-score for søgemaskineoptimering på alle tre sider.' },
       ],
-      note: 'Lighthouse 13, median af fem målinger pr. side, målt på en lokal produktionsbygning (ikke et live site), november 2026.',
+      note: 'Lighthouse 13, median af tre målinger pr. side, målt live på rethink-furniture.frisdahlstudio.workers.dev, november 2026.',
     },
   },
 }

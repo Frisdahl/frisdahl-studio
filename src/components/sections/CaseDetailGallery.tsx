@@ -185,7 +185,7 @@ export function CaseDetailGallery({ gallery }: CaseDetailGalleryProps) {
   )
 }
 
-/** The image after the phones (under the gallery), when a case has one (afterPalette): the tablet. */
+/** The image under the colour palette, when a case has one (afterPalette): the tablet. */
 export function CaseDetailAfterPalette({ gallery }: CaseDetailGalleryProps) {
   if (!gallery.afterPalette) return null
 
