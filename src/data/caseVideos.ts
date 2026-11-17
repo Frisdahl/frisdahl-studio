@@ -28,3 +28,18 @@ const caseMainVideos: Partial<Record<string, CaseDetailGalleryVideo>> = {
 export function getCaseMainVideo(caseSlug: string): CaseDetailGalleryVideo | undefined {
   return caseMainVideos[caseSlug]
 }
+
+/**
+ * The shape (width / height) of each case's main clip and still, as the files are made. A card that shows
+ * the whole clip needs it (the /cases grid); keep it in step with the files above.
+ */
+const caseMainAspects: Partial<Record<string, number>> = {
+  nordwear: 16 / 9,
+  offscript: 4 / 3,
+  'rethink-furniture': 4 / 3,
+  'peter-salling': 16 / 9,
+}
+
+export function getCaseMainAspect(caseSlug: string): number {
+  return caseMainAspects[caseSlug] ?? 16 / 9
+}

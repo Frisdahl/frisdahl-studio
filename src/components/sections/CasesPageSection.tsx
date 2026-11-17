@@ -1,10 +1,11 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { gsap } from 'gsap'
-import { CaseCard } from '../cards/CaseCard'
-import { getCaseMainVideo } from '../../data/caseVideos'
+import { ProjectCard } from '../cards/ProjectCard'
+import { getCaseMainAspect } from '../../data/caseVideos'
+import '../../cases-page.css'
 import { useLocale } from '../../context/LocaleContext'
 import { getCasesPageContent } from '../../data/cases'
-import { Container, WithHeadingDot } from '../ui'
+import { Container } from '../ui'
 
 interface FilterGroupProps {
   title: string
@@ -46,6 +47,34 @@ function FilterGroup({ title, allLabel, options, active, onChange }: FilterGroup
 const CLIP_HIDDEN = 'inset(50% 50% 50% 50%)'
 const CLIP_SHOWN = 'inset(0% 0% 0% 0%)'
 
+/**
+ * Pairs the cards so that every row fills the width: a wide card (16:9) beside a narrow one (4:3), the way the
+ * home grid does. Each card takes the first card of the other shape that is left as its row mate; with no mate it
+ * stands alone. The order of the list otherwise stays.
+ */
+function arrangeInRows<T extends { id: string }>(items: readonly T[]): T[] {
+  const left = [...items]
+  const out: T[] = []
+  while (left.length) {
+    const first = left.shift() as T
+    out.push(first)
+    const wide = getCaseMainAspect(first.id) > 1.5
+    const mate = left.findIndex((item) => getCaseMainAspect(item.id) > 1.5 !== wide)
+    if (mate >= 0) out.push(...left.splice(mate, 1))
+  }
+  return out
+}
+
+/**
+ * How wide a card draws its picture, so the browser fetches the smallest file that is still sharp on a retina
+ * screen instead of the full-width one: a wide card (16:9) and a narrow one (4:3) take 57% and 43% of the
+ * content width from tablet up (see cases-page.css), the whole width on a phone.
+ */
+const CARD_SIZES = {
+  wide: '(min-width: 48rem) min(1040px, 57vw), 100vw',
+  narrow: '(min-width: 48rem) min(780px, 43vw), 100vw',
+} as const
+
 interface Selection {
   service: string | null
   industry: string | null
@@ -82,7 +111,7 @@ export function CasesPageSection() {
         (!activeIndustry || item.industry === activeIndustry.industry),
     )
   }
-  const filteredItems = filterItems(shown)
+  const filteredItems = arrangeInRows(filterItems(shown))
   // The effects below read the latest filter without re-running when it is rebuilt.
   const filterRef = useRef(filterItems)
   useEffect(() => {
@@ -203,16 +232,12 @@ export function CasesPageSection() {
       <Container className="relative z-[1]">
         <div className="cases-page-intro">
           <h1 className="cases-page-title">
-            {titleLines.map((line, index) =>
-              index === titleLines.length - 1 ? (
-                <WithHeadingDot key={line}>{line}</WithHeadingDot>
-              ) : (
-                <span key={line}>
-                  {line}
-                  <br />
-                </span>
-              ),
-            )}
+            {titleLines.map((line, index) => (
+              <span key={line}>
+                {line}
+                {index < titleLines.length - 1 ? <br /> : null}
+              </span>
+            ))}
           </h1>
           <p className="cases-page-description">{description}</p>
         </div>
@@ -241,16 +266,17 @@ export function CasesPageSection() {
 
         {filteredItems.length > 0 ? (
           <ul ref={gridRef} className="cases-page-grid" aria-label={titleLines.join(' ')}>
-            {filteredItems.map((item) => (
-              <li key={item.id} data-case-id={item.id}>
-                <CaseCard
+            {filteredItems.map((item, index) => (
+              <li key={item.id} data-case-id={item.id} style={{ '--case-aspect': getCaseMainAspect(item.id) } as CSSProperties}>
+                <ProjectCard
+                  id={item.id}
                   client={item.client}
-                  keywords={item.keywords.join(' • ')}
+                  keywords={item.keywords}
                   imageSrc={item.imageSrc}
                   imageAlt={item.imageAlt}
-                  video={getCaseMainVideo(item.id)}
                   href={item.href}
-                  metaBelow
+                  imageSizes={getCaseMainAspect(item.id) > 1.5 ? CARD_SIZES.wide : CARD_SIZES.narrow}
+                  priority={index < 2}
                 />
               </li>
             ))}

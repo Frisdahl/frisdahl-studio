@@ -1,0 +1,41 @@
+/* The /cases page's grid of project cards. The cards themselves are the site's ProjectCard (CaseCard and
+   CaseMedia, drawn by modern-home.css and index.css); this only gives them their place. Unlayered, with
+   selectors more specific than the card's own, so it wins over the home rules.
+
+   Every card has the shape of its own clip (--case-aspect, set on the list item from caseVideos.ts), so the whole
+   clip shows, never cropped and never scaled up past what is shown: a wide 16:9 card beside a narrow 4:3 one, all
+   the same height. A card's width is its aspect over the sum of a wide and a narrow one (16/9 + 4/3), so the width
+   divided by the aspect, the height, is the same for every card and a wide + narrow pair fills the row exactly
+   (the 0.1px keeps rounding from pushing the second card down). One card per row on a phone. */
+.cases-page-grid {
+  --cases-gap: 1.25rem;
+  --cases-pair: 3.1111;
+}
+
+.cases-page-grid .case-card-overlay {
+  /* The caption sits on the card (absolute), so the card is its anchor, as in the home grid. */
+  position: relative;
+  height: auto;
+}
+
+.cases-page-grid .case-card-overlay .case-card-media-link {
+  height: auto;
+}
+
+.cases-page-grid .case-card-overlay .case-card-media {
+  height: auto;
+  aspect-ratio: var(--case-aspect, 16 / 9);
+}
+
+@media (min-width: 768px) {
+  .cases-page-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--cases-gap);
+  }
+
+  .cases-page-grid > li {
+    flex: 0 0 auto;
+    width: calc((100% - var(--cases-gap)) * var(--case-aspect, 1.7778) / var(--cases-pair) - 0.1px);
+  }
+}
