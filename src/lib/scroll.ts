@@ -14,10 +14,13 @@ let driveLenis: ((time: number) => void) | null = null
  */
 export const SCROLL_PRESETS = {
   A: { label: 'Responsive', lerp: 0.14 },
-  B: { label: 'Balanced', lerp: 0.1 },
+  B: { label: 'Balanced', lerp: 0.075 },
   C: { label: 'Cinematic', lerp: 0.07 },
 } as const
 export type ScrollPresetName = keyof typeof SCROLL_PRESETS
+
+/** How much of a wheel notch's native distance the page moves. */
+const WHEEL_MULTIPLIER = 0.7
 
 export const DEFAULT_SCROLL_PRESET: ScrollPresetName = 'B'
 const PRESET_STORAGE_KEY = 'frisdahl:scroll-preset'
@@ -62,8 +65,8 @@ export function prefersReducedMotion() {
 }
 
 /**
- * Smooth scroll for mouse wheels (the active preset's lerp; 0.1 by default, which
- * is Lenis's own default: the page eases out over about half a second). Touch
+ * Smooth scroll for mouse wheels (the active preset's lerp; 0.075 by default: the page
+ * eases out over about two thirds of a second, and each wheel notch moves it 70% of the native distance). Touch
  * and reduced motion stay native.
  *
  * Lenis has no loop of its own (autoRaf is off): GSAP's ticker calls it, so
@@ -79,7 +82,9 @@ export function initSmoothScroll() {
 
   const instance = new Lenis({
     lerp: SCROLL_PRESETS[preset].lerp,
-    wheelMultiplier: 1,
+    // Each wheel notch moves the page 70% of what it would natively: a flick of the wheel no longer
+    // throws the page past the sections, and the headings' animations have time to play.
+    wheelMultiplier: WHEEL_MULTIPLIER,
     smoothWheel: true,
     syncTouch: false,
     autoRaf: false,
