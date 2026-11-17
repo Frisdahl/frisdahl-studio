@@ -68,7 +68,8 @@ export function LoopVideo({ src, poster, label, className, mode, preload = 'none
   useLayoutEffect(() => {
     const video = element.current
     if (!video) return
-    const choose = () => setPosterSrc(responsiveSrcFor(poster, video.clientWidth || window.innerWidth))
+    // No poster given (the still under the clip is the same picture): nothing to choose or fetch.
+    const choose = () => setPosterSrc(poster ? responsiveSrcFor(poster, video.clientWidth || window.innerWidth) : undefined)
     if (!lazyPoster) {
       choose()
       return
