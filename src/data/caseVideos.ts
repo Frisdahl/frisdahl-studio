@@ -14,6 +14,11 @@ const caseMainVideos: Partial<Record<string, CaseDetailGalleryVideo>> = {
     src: '/cases/offscript/mockup--4-3.mp4',
     poster: '/cases/offscript/mockup--4-3.webp',
   },
+  // A 4:3 clip of the Rethink Furniture site (preloader through to the hero) on an iPad Pro; the home card shows the middle of it.
+  'rethink-furniture': {
+    src: '/cases/rethink-furniture/mockup--4-3.mp4',
+    poster: '/cases/rethink-furniture/mockup--4-3.webp',
+  },
   'peter-salling': {
     src: '/cases/peter-salling/main--16-9.mp4',
     poster: '/cases/peter-salling/main--16-9.webp',

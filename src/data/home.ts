@@ -60,14 +60,15 @@ const homeContent = {
           imageAlt: "Nordwear case",
         },
         {
-          id: 'fresh-cut',
-          client: "Fresh Cut",
-          keywords: "Website • Branding • Booking",
-          href: '/cases/fresh-cut',
-          imageSrc: "/cases/fresh-cut/official--16-9.webp",
-          // Where the picture is centred in a narrow card: on the start of the headline and the barber.
-          focus: "38% 50%",
-          imageAlt: "Fresh Cut case",
+          id: 'rethink-furniture',
+          client: "Rethink Furniture",
+          keywords: "Website • Design • Udvikling",
+          // No project page yet: the card is not a link.
+          href: '',
+          imageSrc: "/cases/rethink-furniture/mockup--4-3.webp",
+          // Where the picture is centred in a narrow card: on the iPad.
+          focus: "52.7% 50%",
+          imageAlt: "Rethink Furniture på en iPad Pro på en sten",
         },
         {
           id: 'det-kollektive-klaedeskab',
