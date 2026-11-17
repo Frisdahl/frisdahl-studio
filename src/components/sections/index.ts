@@ -1,7 +1,7 @@
 export { Hero } from './Hero'
 export { MeetUsPageSection } from './MeetUsPageSection'
 export { CaseDetailNextSection } from './CaseDetailNextSection'
-export { CaseDetailAfterPalette, CaseDetailGallery, CaseDetailIntroPair } from './CaseDetailGallery'
+export { CaseDetailAfterPalette, CaseDetailAfterResults, CaseDetailGallery, CaseDetailIntroPair } from './CaseDetailGallery'
 export { CaseDetailHero } from './CaseDetailHero'
 export { CaseDetailOverview } from './CaseDetailOverview'
 export { CaseDetailPalette } from './CaseDetailPalette'

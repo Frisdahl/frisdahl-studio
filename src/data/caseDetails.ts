@@ -590,27 +590,27 @@ const caseResults: Partial<Record<string, Record<Locale, Omit<CaseDetailResults,
   offscript: {
     da: {
       description:
-        'Sitet har ikke noget live domæne endnu, så det er målt som en produktionsbygning på min egen maskine: forsiden, en kunstnerside og kontaktsiden, fem målinger på hver, på mobil med netværks- og CPU-begrænsning og på desktop. Forsiden på mobil er den langsomste (LCP ca. 5 s, den åbner med en preloader og vejer 1,2 MB), mens kunstnersiden og kontaktsiden indlæses hurtigt.',
+        'Sitet er målt som en produktionsbygning på min egen maskine, før det kom online: forsiden, en kunstnerside og kontaktsiden, fem målinger på hver, på mobil med netværks- og CPU-begrænsning og på desktop. Forsiden på mobil er den langsomste (LCP ca. 5 s, den åbner med en preloader og vejer 1,2 MB), mens kunstnersiden og kontaktsiden indlæses hurtigt.',
       metrics: [
         { label: 'Hastighed', value: '76–97', detail: 'Lighthouse-score for ydelse på mobil (76 på forsiden), 99–100 på desktop.' },
         { label: 'Stabilitet', value: '0,00', detail: 'Praktisk talt ingen layout-skift (CLS højst 0,003).' },
         { label: 'Kvalitet', value: '96–100', detail: 'Lighthouse-tilgængelighed: 96 på forsiden, 100 på de to andre sider. Best practice: 96–100.' },
         { label: 'SEO', value: '91–92', detail: 'Lighthouse-score for søgemaskineoptimering på alle tre sider.' },
       ],
-      note: 'Lighthouse 13, median af fem målinger pr. side, målt på en lokal produktionsbygning (ikke et live site), november 2026.',
+      note: 'Lighthouse 13, median af fem målinger pr. side, målt på en lokal produktionsbygning (før sitet kom online), november 2026.',
     },
   },
   'rethink-furniture': {
     da: {
       description:
-        'Sitet har ikke noget live domæne, så det er målt som en produktionsbygning på min egen maskine: forsiden, shoppen og en produktside, fem målinger på hver, på mobil med netværks- og CPU-begrænsning og på desktop. Forsiden er tungest på mobil (LCP ca. 5,6 s og 1,2 MB, med en preloader og store billeder), produktsiden og shoppen er hurtigere, og layoutet står helt stille.',
+        'Sitet er målt som en produktionsbygning på min egen maskine, før det kom online: forsiden, shoppen og en produktside, fem målinger på hver, på mobil med netværks- og CPU-begrænsning og på desktop. Forsiden er tungest på mobil (LCP ca. 5,6 s og 1,2 MB, med en preloader og store billeder), produktsiden og shoppen er hurtigere, og layoutet står helt stille.',
       metrics: [
         { label: 'Hastighed', value: '74–92', detail: 'Lighthouse-score for ydelse på mobil (74 på forsiden), 98–100 på desktop.' },
         { label: 'Stabilitet', value: '0,00', detail: 'Ingen layout-skift på de tre sider (CLS 0).' },
         { label: 'Kvalitet', value: '92–94', detail: 'Lighthouse-tilgængelighed: 93 på forsiden, 92 på shoppen og 94 på produktsiden. Best practice: 100.' },
         { label: 'SEO', value: '92', detail: 'Lighthouse-score for søgemaskineoptimering på alle tre sider.' },
       ],
-      note: 'Lighthouse 13, median af fem målinger pr. side, målt på en lokal produktionsbygning (ikke et live site), november 2026.',
+      note: 'Lighthouse 13, median af fem målinger pr. side, målt på en lokal produktionsbygning (før sitet kom online), november 2026.',
     },
   },
 }
