@@ -123,10 +123,11 @@ export function Hero() {
           if (cancelled) return
           shortPose() // measured again: the font changes the width of the line
           context.add?.(() => {
-            const PICTURE_AT = 0.8 // the words have all but settled (they ease out)
-            const PICTURE_DURATION = 1.1
+            // About 20% quicker than the first version (3.4 s -> 2.8 s): every part is shorter, same order and hand-offs.
+            const PICTURE_AT = 0.65 // the words have all but settled (they ease out)
+            const PICTURE_DURATION = 0.9
             const LINE_AT = PICTURE_AT + PICTURE_DURATION * 0.85
-            const LINE_PART = 0.9
+            const LINE_PART = 0.72
             const tl = gsap.timeline({
               onComplete: () => {
                 if (media) gsap.set(media, { clearProps: 'clipPath' })
@@ -134,13 +135,13 @@ export function Hero() {
                 finish()
               },
             })
-            tl.to(words, { yPercent: 0, duration: 1.2, ease: 'expo.out', stagger: 0.12 }, 0.1)
+            tl.to(words, { yPercent: 0, duration: 1, ease: 'expo.out', stagger: 0.1 }, 0.08)
             if (media) tl.to(media, { clipPath: 'inset(0% 0% 0% 0%)', duration: PICTURE_DURATION, ease: 'expo.inOut' }, PICTURE_AT)
             if (line) {
               tl.to(line, { autoAlpha: 1, duration: 0.01 }, LINE_AT)
               if (lineBrackets.length === 2 && lineText) {
                 tl.to(lineBrackets, { x: 0, duration: LINE_PART, ease: 'expo.inOut' }, LINE_AT)
-                  .to(lineText, { yPercent: 0, duration: 0.8, ease: 'expo.out' }, LINE_AT + LINE_PART)
+                  .to(lineText, { yPercent: 0, duration: 0.65, ease: 'expo.out' }, LINE_AT + LINE_PART)
               }
             }
           })
