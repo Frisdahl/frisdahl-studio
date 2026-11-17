@@ -76,14 +76,14 @@ export const SectionLabel = forwardRef<SectionLabelHandle, SectionLabelProps>(fu
         paused: true,
         scrollTrigger: {
           trigger: root,
-          start: 'top 90%',
+          start: 'top 80%',
           once: true,
           invalidateOnRefresh: true,
           onEnter: () => tl.play(),
         },
       })
-      tl.fromTo(close, { x: () => -travel() }, { x: 0, duration: 0.9, ease: 'power3.out', immediateRender: true })
-        .to(text, { yPercent: 0, duration: 0.55, ease: 'power3.out' }, '-=0.05')
+      tl.fromTo(close, { x: () => -travel() }, { x: 0, duration: 1.2, ease: 'power3.out', immediateRender: true })
+        .to(text, { yPercent: 0, duration: 0.8, ease: 'power3.out' }, '-=0.1')
       return () => {
         gsap.set([close, text], { clearProps: 'transform' })
       }

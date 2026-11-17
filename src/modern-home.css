@@ -157,6 +157,7 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
   --statement-frame: 50svh;
   --statement-top: 25svh;
   position: relative;
+  margin-top: clamp(0.5rem, 2vw, 2rem);
   min-height: calc(var(--statement-frame) + 280svh);
   /* `clip`, not `hidden`, so the sticky frame still works. */
   overflow: clip;
@@ -244,7 +245,9 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
 .home-cases {
   position: relative;
   z-index: 1;
-  padding-top: clamp(2rem, 4vw, 3.5rem);
+  /* Room above the label, so the gap from the statement text to this heading matches the gap from the
+     hero to the statement (about 340px at 1440 wide). */
+  padding-top: clamp(4rem, 14.5vw, 14rem);
   padding-bottom: clamp(4rem, 10vw, 10rem);
   background-color: var(--color-home-page);
 }
