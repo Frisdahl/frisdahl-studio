@@ -23,7 +23,7 @@ function Plus({ className }: { className: string }) {
 
 /**
  * "( Frisdahl Studio )" and the studio's description, centred on the screen, over a full-screen
- * picture under a dark overlay, a plus in each corner. The picture is taller than the section and
+ * picture under a dark overlay, a plus in each corner. The picture is a little taller than the section and
  * drifts slower than the page (parallax: translateY only, scrubbed to the scroll). The label opens
  * (the closing bracket slides right, then the text rises) when it comes into view. Reduced motion:
  * a still picture. The section is dark, so the header turns light while it is under it
@@ -43,12 +43,12 @@ export function StudioStatement() {
 
     const mm = gsap.matchMedia()
     mm.add('(prefers-reduced-motion: no-preference)', () => {
-      // The picture is 120% of the section and centred, so it has 10% to move either way.
+      // The picture is 112% of the section and centred, so it has 6% of the section to move either way.
       gsap.fromTo(
         image,
-        { yPercent: -8.33 },
+        { yPercent: -5.36 },
         {
-          yPercent: 8.33,
+          yPercent: 5.36,
           ease: 'none',
           scrollTrigger: { trigger: section, start: 'top bottom', end: 'bottom top', scrub: true },
         },
