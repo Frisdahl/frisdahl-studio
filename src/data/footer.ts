@@ -41,19 +41,15 @@ const footerContent = {
     email: 'hello@frisdahlstudio.dk',
     emailHref: 'mailto:hello@frisdahlstudio.dk',
     copyright: '© Frisdahl Studio. Alle rettigheder forbeholdes.',
-    // PLACEHOLDER profile URLs — replace with the verified profiles before launch.
+    // Instagram is added when the profile is ready.
     socialLinks: [
       {
         label: 'Facebook',
-        href: 'https://www.facebook.com/frisdahlstudio',
-      },
-      {
-        label: 'Instagram',
-        href: 'https://www.instagram.com/frisdahlstudio',
+        href: 'https://www.facebook.com/alexander.j.frisdahl/?locale=da_DK',
       },
       {
         label: 'GitHub',
-        href: 'https://github.com/frisdahlstudio',
+        href: 'https://github.com/Frisdahl',
       },
     ] as FooterSocialLink[],
   },
