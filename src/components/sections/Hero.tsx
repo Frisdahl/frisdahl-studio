@@ -2,7 +2,9 @@ import { useLayoutEffect, useMemo, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useLocale } from '../../context/LocaleContext'
+import { markHeroIntroPlayed, shouldPlayHeroIntro } from '../../lib/heroIntro'
 import { whenPageRevealed } from '../../lib/pageReveal'
+import { lockScroll, unlockScroll } from '../../lib/scroll'
 import { responsiveImageProps } from '../../lib/responsiveImage'
 import { BracketLine } from '../ui'
 import styles from './Hero.module.css'
@@ -48,9 +50,12 @@ const MEDIA_SIZES = '(min-width: 1024px) 25vw, 46vw'
  * on the white page, light on the dark parts of a mockup, tinted over a colour. A line in
  * brackets sits under the first word.
  *
- * Motion: the words rise out of their masks when the page is uncovered, and the picture changes
- * with a wipe from the bottom, one mockup after the other (paused while the hero is off screen).
- * Reduced motion: everything is shown at once and the first picture stays.
+ * Motion, first load of a visit to the home page (the intro): "( )" in the middle of the screen parts to
+ * the sides, "Beyond Digital" rises between them, the brackets fade and the words scale out to their
+ * places, the picture falls in from the top, then the line's brackets part, its text rises and the
+ * header fades in. Scrolling is locked meanwhile. Otherwise the words just rise out of their masks.
+ * The picture changes with a wipe from the top, one mockup after the other (paused while the hero is
+ * off screen). Reduced motion: everything is shown at once and the first picture stays.
  */
 export function Hero() {
   const { locale } = useLocale()
@@ -58,27 +63,135 @@ export function Hero() {
   const sectionRef = useRef<HTMLElement>(null)
   const mediaRef = useRef<HTMLDivElement>(null)
   const wordsRef = useRef<HTMLHeadingElement>(null)
+  const stageRef = useRef<HTMLDivElement>(null)
+  const bracketsRef = useRef<HTMLDivElement>(null)
+  // Resolves when the first-load intro has finished (right away when there is none).
+  const introDone = useRef<Promise<void>>(Promise.resolve())
   // Resolves when the page is uncovered (right away unless a transition is running).
   const revealed = useMemo(() => whenPageRevealed(), [])
 
-  // Entrance: the words rise out of their masks, the bracketed line fades in.
+  // Entrance. On the first load of a visit to the home page: the intro (below). Otherwise: the words
+  // rise out of their masks and the bracketed line fades in.
   useLayoutEffect(() => {
     const words = wordsRef.current ? Array.from(wordsRef.current.querySelectorAll<HTMLElement>('[data-word]')) : []
-    const line = sectionRef.current?.querySelector<HTMLElement>('[data-hero-line]')
+    const line = sectionRef.current?.querySelector<HTMLElement>('[data-hero-line]') ?? null
     if (words.length === 0) return
+    const play = shouldPlayHeroIntro()
+    let finish: () => void = () => {}
+    if (play) introDone.current = new Promise<void>((resolve) => (finish = resolve))
 
     const mm = gsap.matchMedia()
     let cancelled = false
     mm.add('(prefers-reduced-motion: no-preference)', (context) => {
+      const stage = stageRef.current
+      const media = mediaRef.current
+      const brackets = bracketsRef.current ? Array.from(bracketsRef.current.querySelectorAll<SVGElement>('svg')) : []
+      const masks = words.map((word) => word.parentElement as HTMLElement)
+      const header = document.querySelector<HTMLElement>('.site-header')
+      const lineBrackets = line ? Array.from(line.querySelectorAll<SVGElement>('.bracket-line-bracket')) : []
+      const lineText = line?.querySelector<HTMLElement>('.bracket-line-text') ?? null
+      const lineBox = line?.querySelector<HTMLElement>('.bracket-line') ?? null
+
+      if (!play || !stage || !media || brackets.length < 2 || lineBrackets.length < 2 || !lineText || !lineBox || !line) {
+        // The short entrance.
+        gsap.set(words, { yPercent: 110 })
+        if (line) gsap.set(line, { autoAlpha: 0 })
+        void revealed.then(() => {
+          if (cancelled) return
+          context.add?.(() => {
+            gsap.to(words, { yPercent: 0, duration: 1.2, ease: 'expo.out', stagger: 0.12, delay: 0.1 })
+            if (line) gsap.to(line, { autoAlpha: 1, duration: 0.9, ease: 'power2.out', delay: 0.7 })
+          })
+        })
+        return
+      }
+
+      // ---- The intro. Measure everything with nothing moved, then put it all in its first pose.
+      gsap.set([...masks, ...words, media, line, ...lineBrackets, lineText, ...brackets], { clearProps: 'all' })
+      const fontSize = parseFloat(getComputedStyle(words[0]).fontSize)
+      const small = Math.min(44, Math.max(26, window.innerWidth * 0.03))
+      const scale = small / fontSize
+      const stageRect = stage.getBoundingClientRect()
+      const cx = stageRect.left + stageRect.width / 2
+      const cy = stageRect.top + stageRect.height / 2
+      const rects = masks.map((mask) => mask.getBoundingClientRect())
+      const gap = small * 0.3
+      const lineWidth = (rects[0].width + rects[1].width) * scale + gap
+      const textHeight = (rects[0].height - fontSize * 0.18) * scale
+      const left = [cx - lineWidth / 2, cx - lineWidth / 2 + rects[0].width * scale + gap]
+
+      // "Beyond Digital" as one small line in the middle of the screen (top left corner as the origin).
+      masks.forEach((mask, i) => {
+        gsap.set(mask, { transformOrigin: '0 0', x: left[i] - rects[i].left, y: cy - textHeight / 2 - rects[i].top, scale })
+      })
       gsap.set(words, { yPercent: 110 })
-      if (line) gsap.set(line, { autoAlpha: 0 })
+
+      // The two brackets: together in the middle, as tall as that line.
+      const bracketHeight = small * 1.5
+      const bracketWidth = bracketHeight / 3
+      brackets.forEach((bracket) => {
+        gsap.set(bracket, { width: bracketWidth, height: bracketHeight, xPercent: -50, yPercent: -50, visibility: 'visible', opacity: 0 })
+      })
+      const together = bracketWidth * 0.7
+      const apart = lineWidth / 2 + small * 0.55 + bracketWidth / 2
+      gsap.set(brackets[0], { x: -together })
+      gsap.set(brackets[1], { x: together })
+
+      // The line under "Beyond": its brackets together in the middle of the line, the text under its mask.
+      const box = lineBox.getBoundingClientRect()
+      const lb = lineBrackets.map((bracket) => bracket.getBoundingClientRect())
+      const boxCenter = box.left + box.width / 2
+      const lineTogether = lb[0].width * 0.6
+      gsap.set(lineBrackets[0], { x: boxCenter - lineTogether - (lb[0].left + lb[0].width / 2) })
+      gsap.set(lineBrackets[1], { x: boxCenter + lineTogether - (lb[1].left + lb[1].width / 2) })
+      gsap.set(lineText, { yPercent: 115 })
+      gsap.set(line, { autoAlpha: 0 })
+
+      // The picture waits above its place; the header waits invisible.
+      gsap.set(media, { clipPath: 'inset(0% 0% 100% 0%)' })
+      if (header) gsap.set(header, { opacity: 0, transition: 'none' })
+      lockScroll()
+
+      const tidy = () => {
+        gsap.set([...masks, ...words, media, line, lineText, ...lineBrackets], { clearProps: 'all' })
+        gsap.set(brackets, { visibility: 'hidden' })
+        if (header) gsap.set(header, { clearProps: 'opacity,transition' })
+        unlockScroll()
+      }
+
       void revealed.then(() => {
         if (cancelled) return
         context.add?.(() => {
-          gsap.to(words, { yPercent: 0, duration: 1.2, ease: 'expo.out', stagger: 0.12, delay: 0.1 })
-          if (line) gsap.to(line, { autoAlpha: 1, duration: 0.9, ease: 'power2.out', delay: 0.7 })
+          const tl = gsap.timeline({
+            onComplete: () => {
+              tidy()
+              markHeroIntroPlayed()
+              finish()
+            },
+          })
+          tl.to(brackets, { opacity: 1, duration: 0.35, ease: 'power1.out' }, 0.1)
+            // ( ) part to the sides ...
+            .to(brackets[0], { x: -apart, duration: 1.2, ease: 'expo.inOut' }, 0.5)
+            .to(brackets[1], { x: apart, duration: 1.2, ease: 'expo.inOut' }, 0.5)
+            // ... "Beyond Digital" rises between them ...
+            .to(words, { yPercent: 0, duration: 1, ease: 'expo.out', stagger: 0.1 }, 1.1)
+            // ... the brackets fade and the words scale out to their places ...
+            .to(brackets, { opacity: 0, duration: 0.5, ease: 'power2.inOut' }, 2.2)
+            .to(masks, { x: 0, y: 0, scale: 1, duration: 1.4, ease: 'expo.inOut' }, 2.2)
+            // ... the picture falls from the top ...
+            .to(media, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.3, ease: 'expo.inOut' }, 3.0)
+            // ... the line's brackets part and its text rises, as the header fades in.
+            .set(line, { autoAlpha: 1 }, 4.0)
+            .to(lineBrackets, { x: 0, duration: 1.1, ease: 'expo.inOut' }, 4.0)
+            .to(lineText, { yPercent: 0, duration: 0.9, ease: 'expo.out' }, 4.5)
+            .to(header, { opacity: 1, duration: 0.9, ease: 'power2.out' }, 4.0)
         })
       })
+
+      return () => {
+        tidy()
+        finish()
+      }
     })
     return () => {
       cancelled = true
@@ -86,7 +199,8 @@ export function Hero() {
     }
   }, [revealed])
 
-  // The centre picture: each mockup wipes in over the one before it, from the bottom.
+  // The centre picture: each mockup falls in over the one before it, from the top. It waits for the
+  // intro (if there is one) and only runs while the hero is on screen.
   useLayoutEffect(() => {
     const media = mediaRef.current
     const section = sectionRef.current
@@ -97,21 +211,25 @@ export function Hero() {
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       gsap.set(slides, { zIndex: 0 })
       gsap.set(slides[0], { zIndex: 1 })
-      slides.slice(1).forEach((slide) => gsap.set(slide, { clipPath: 'inset(100% 0% 0% 0%)' }))
+      slides.slice(1).forEach((slide) => gsap.set(slide, { clipPath: 'inset(0% 0% 100% 0%)' }))
       const tl = gsap.timeline({ repeat: -1, paused: true })
       slides.forEach((slide, index) => {
         const next = slides[(index + 1) % slides.length]
-        tl.set(next, { zIndex: 2, clipPath: 'inset(100% 0% 0% 0%)' }, `+=${HOLD}`)
+        tl.set(next, { zIndex: 2, clipPath: 'inset(0% 0% 100% 0%)' }, `+=${HOLD}`)
           .to(next, { clipPath: 'inset(0% 0% 0% 0%)', duration: WIPE, ease: 'expo.inOut' })
           .set(slide, { zIndex: 0 })
           .set(next, { zIndex: 1 })
       })
-      // Only runs while the hero is on screen.
+      let ready = false
       const trigger = ScrollTrigger.create({
         trigger: section,
         start: 'top bottom',
         end: 'bottom top',
-        onToggle: (self) => (self.isActive ? tl.play() : tl.pause()),
+        onToggle: (self) => (self.isActive && ready ? tl.play() : tl.pause()),
+      })
+      void introDone.current.then(() => {
+        ready = true
+        if (trigger.isActive) tl.play()
       })
       return () => {
         trigger.kill()
@@ -124,7 +242,16 @@ export function Hero() {
 
   return (
     <section ref={sectionRef} className={styles.hero} aria-labelledby="home-hero-title" data-page-entrance="own">
-      <div className={styles.stage}>
+      <div ref={stageRef} className={styles.stage}>
+        {/* The two brackets of the first-load intro (sized and moved by the script). */}
+        <div ref={bracketsRef} aria-hidden="true">
+          <svg className={styles.preBracket} viewBox="0 0 6 18" focusable="false">
+            <path d="M5 1 C 1 4, 1 14, 5 17" />
+          </svg>
+          <svg className={styles.preBracket} viewBox="0 0 6 18" focusable="false">
+            <path d="M1 1 C 5 4, 5 14, 1 17" />
+          </svg>
+        </div>
         <div className={styles.block}>
           <div ref={mediaRef} className={styles.media}>
             {heroSlides.map((slide, index) => (

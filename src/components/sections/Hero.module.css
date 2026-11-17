@@ -53,9 +53,26 @@
   pointer-events: none;
 }
 
-/* Only the first picture shows until the script takes over (and for ever with reduced motion). */
+/* Only the first picture shows until the script takes over (and for ever with reduced motion). The
+   next picture falls in from the top: its clip opens downwards. */
 .slide:not(:first-child) {
-  clip-path: inset(100% 0% 0% 0%);
+  clip-path: inset(0% 0% 100% 0%);
+}
+
+/* The brackets of the first-load intro: two thin brackets that start together in the middle of the
+   screen and part to make room for the words (Hero.tsx sets their size and position). */
+.preBracket {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: block;
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  overflow: visible;
+  pointer-events: none;
+  visibility: hidden;
 }
 
 /* White type, difference blend: it inverts the picture (and the page) behind it. The blend
