@@ -259,8 +259,8 @@ const caseLiveUrls: Record<string, string | null> = {
   nordwear: 'https://nordwear.pages.dev',
   'fresh-cut': null,
   'peter-salling': 'https://petersalling.com',
-  offscript: 'https://offscript.afrisser3.workers.dev',
-  'rethink-furniture': 'https://rethink-furniture.afrisser3.workers.dev',
+  offscript: 'https://offscript.frisdahlstudio.workers.dev',
+  'rethink-furniture': 'https://rethink-furniture.frisdahlstudio.workers.dev',
   'det-kollektive-klaedeskab': null,
 }
 
