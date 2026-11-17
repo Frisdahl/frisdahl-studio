@@ -17,7 +17,7 @@ const TEXT_GREY = '#bababa'
 const TEXT_INK = '#131313'
 
 /** Scrolling this far into the screen starts it (the section's top at this share of the screen's height). */
-const START = 'top 78%'
+const START = 'top 68%'
 
 /**
  * "( Frisdahl Studio )" and the studio's description, dark on the page's light ground.
@@ -101,7 +101,7 @@ export function StudioStatement() {
       {/* Half a screen high, stuck in the middle of the screen while the section scrolls by. */}
       <div className="studio-statement-frame">
         <Container columns className="studio-statement-container" contentClassName="studio-statement-grid">
-          <SectionLabel ref={labelRef} autoplay={false} early={false} className="studio-statement-label">
+          <SectionLabel ref={labelRef} autoplay={false} className="studio-statement-label">
             {intro.label}
           </SectionLabel>
           <p ref={textRef} className="studio-statement-text">

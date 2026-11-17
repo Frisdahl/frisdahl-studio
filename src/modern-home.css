@@ -79,12 +79,6 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
 
 /* ---------- Section labels: ( LABEL ) ---------- */
 
-/* The label's box in the page grid. It never moves; the label inside it is lifted while it holds. */
-.section-label-anchor {
-  min-width: 0;
-  color: var(--color-dark);
-}
-
 .section-label {
   display: inline-flex;
   align-items: center;
@@ -96,7 +90,7 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
   line-height: 1.3;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: inherit;
+  color: var(--color-dark);
 }
 
 .section-label-paren {
