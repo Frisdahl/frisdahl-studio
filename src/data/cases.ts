@@ -102,7 +102,6 @@ const casesPageContent = {
           'Et redaktionelt site til et uafhængigt kunstnerbureau med store portrætter, store typografiske flader og rolig bevægelse.',
       },
       {
-      {
         id: 'det-kollektive-klaedeskab',
         client: 'Det Kollektive Klædeskab',
         industry: 'Cirkulær mode',
