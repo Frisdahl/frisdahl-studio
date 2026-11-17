@@ -9,7 +9,7 @@ interface CaseDetailHeroProps {
 }
 
 export function CaseDetailHero({ hero }: CaseDetailHeroProps) {
-  const { title, name, slides, meta, video } = hero
+  const { title, name, slides, meta, video, aspectRatio } = hero
   const image = slides[0]
 
   return (
@@ -56,7 +56,7 @@ export function CaseDetailHero({ hero }: CaseDetailHeroProps) {
           )}
 
           {image?.imageSrc && (
-            <figure className="case-detail-hero-image">
+            <figure className="case-detail-hero-image" style={aspectRatio ? { aspectRatio } : undefined}>
               <img
                 {...responsiveImageProps(image.imageSrc, IMAGE_SIZES.container)}
                 alt={image.imageAlt}

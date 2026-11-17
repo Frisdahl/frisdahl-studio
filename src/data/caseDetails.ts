@@ -697,6 +697,16 @@ export function getCasePreviewImages(locale: Locale, caseSlug: string): CasePrev
   return result
 }
 
+/**
+ * Cases whose main picture needs a hero other than 16:9. OFFSCRIPT's clip is a phone that fills 75% of
+ * the height of its 4:3 frame, exactly what a 16:9 window shows, so in a 16:9 hero the phone touched
+ * (and, with the transition's crop, was cut by) the top and bottom edges. 3:2 shows 89% of the height:
+ * the whole phone with air above and below, from the same centred crop the transition uses.
+ */
+const caseHeroAspectRatios: Partial<Record<string, string>> = {
+  offscript: '3 / 2',
+}
+
 /** A case's main image: the first slide of its hero, the image at the top of its page. */
 function getCaseMainImage(locale: Locale, caseSlug: string) {
   const localeDetails = caseDetails[locale] as Record<string, CaseDetailBase>
@@ -725,6 +735,7 @@ export function getCaseDetail(
       name: getCaseItemSummary(locale, caseSlug)?.client ?? detail.hero.title,
       meta: getCaseHeroMeta(locale, caseSlug),
       video: getCaseMainVideo(caseSlug),
+      aspectRatio: caseHeroAspectRatios[caseSlug],
     },
     overview: getCaseOverview(locale, caseSlug, detail.hero.description),
     typography: getCaseTypography(locale, caseSlug),

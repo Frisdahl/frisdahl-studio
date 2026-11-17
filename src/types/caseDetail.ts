@@ -19,6 +19,8 @@ export interface CaseDetailHero {
   meta: CaseDetailHeroMeta[]
   /** The main image as a clip: plays in the hero image while it is on screen. */
   video?: CaseDetailGalleryVideo
+  /** The hero image's shape when it is not the default 16:9 (CSS `aspect-ratio`, e.g. '3 / 2'). */
+  aspectRatio?: string
 }
 
 /** One project detail; cases only list the details they have. */
