@@ -418,7 +418,6 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
 
 .added-value-card {
   padding: 2rem 0 3rem;
-  border-top: 1px solid var(--color-border);
   background-color: var(--color-home-page);
 }
 
@@ -479,12 +478,12 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
 /* The keywords, in columns under a hairline. */
 .added-value-items {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  /* Two keywords side by side, row after row. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.5rem 1.5rem;
   margin: 0;
-  padding: 1.25rem 0 0;
+  padding: 0;
   list-style: none;
-  border-top: 1px solid var(--color-border);
   font-size: 1rem;
   line-height: 1.5;
   color: var(--color-muted);
@@ -511,6 +510,8 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
     min-height: 36rem;
     padding: calc(var(--site-header-height) + var(--header-gap) + 3rem) 0 3rem;
     box-sizing: border-box;
+    /* No border: the card that comes up over the one before it casts a soft shadow upwards instead. */
+    box-shadow: 0 -1.5rem 3rem rgb(19 19 19 / 0.1);
   }
 
   .added-value-card-container,
@@ -527,13 +528,13 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
   }
 
   /* The dot, number and a large title on the left; the text in a narrower column on the right
-     (columns 6-11), so the title is the main thing and the sentence is the detail. */
+     (columns 6-10), so the title is the main thing and the sentence is the detail. */
   .added-value-head {
     grid-column: 1 / span 4;
   }
 
   .added-value-body {
-    grid-column: 6 / span 6;
+    grid-column: 6 / span 5;
     gap: 2rem;
   }
 

@@ -184,7 +184,7 @@ function ColumnIcon({ name, reduced }: { name: IconName; reduced: boolean }) {
  * Each card shows its dot and number and a large title on the left; on the right, in a narrower
  * column, a sentence about the offer, its keywords, and its looping mark. Scrolling, the next
  * card slides up over the previous one (the cards are sticky, each one a screen high), and the card
- * that is being covered settles back a little (opacity and a small lift, scrubbed to the scroll).
+ * that is being covered fades its content out and lifts a little (scrubbed to the scroll).
  * Below 1024px, and with reduced motion, the cards are simply stacked in the page.
  */
 export function AddedValueSection() {
@@ -193,7 +193,7 @@ export function AddedValueSection() {
   const reduceMotion = useReducedMotion() === true
   const stackRef = useRef<HTMLDivElement>(null)
 
-  // The card that is being covered by the next one settles back: it fades a little and lifts.
+  // The card that is being covered by the next one fades its content out and lifts a little.
   useLayoutEffect(() => {
     const stack = stackRef.current
     if (!stack) return
@@ -205,7 +205,7 @@ export function AddedValueSection() {
         const content = card.querySelector<HTMLElement>('[data-av-content]')
         if (!content) return
         gsap.to(content, {
-          opacity: 0.25,
+          opacity: 0,
           yPercent: -4,
           ease: 'none',
           scrollTrigger: { trigger: next, start: 'top bottom', end: 'top top', scrub: true },
