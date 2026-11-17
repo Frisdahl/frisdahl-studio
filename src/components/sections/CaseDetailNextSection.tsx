@@ -23,6 +23,9 @@ const TRIGGER_PROGRESS = 0.985
 // How long the full bar stays on screen before the transition starts (ms). The transition hides
 // the card in the frame it begins, so started at once the full bar would never be painted.
 const FULL_BAR_HOLD = 100
+// The next case's clip and hero picture are fetched when the card is this far from the screen (a little under two
+// screens above it), not when this page loads: until then they would compete with this page's own pictures.
+const NEXT_WARM_MARGIN = '1800px 0px'
 
 /**
  * The next case at the end of the page. The card sticks while the section's
@@ -31,7 +34,7 @@ const FULL_BAR_HOLD = 100
  * next case's hero (the shared-image transition) and the page moves on.
  */
 export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) {
-  const { href, name, label, image, video, ariaLabel } = nextCase
+  const { href, name, label, image, video, ariaLabel, aspectRatio } = nextCase
   const trackRef = useRef<HTMLElement>(null)
   const cardRef = useRef<HTMLAnchorElement>(null)
   const barRef = useRef<HTMLSpanElement>(null)
@@ -57,18 +60,29 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
     }
   }, [href])
 
-  // The next case's hero picture is fetched and decoded now, while the card is on its way up,
+  // The next case's hero picture is fetched and decoded while the card is on its way up (not at page load),
   // so the transition doesn't stand still waiting for it once the page changes.
   useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
     const slug = href.split('/').pop()
     const src = slug ? getCaseDetail(locale, slug)?.hero.slides[0]?.imageSrc : null
     if (!src) return
-    const props = responsiveImageProps(src, IMAGE_SIZES.container)
-    const warm = new Image()
-    if (props.srcSet) warm.srcset = props.srcSet
-    if (props.sizes) warm.sizes = props.sizes
-    warm.src = props.src
-    warm.decode().catch(() => {})
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        observer.disconnect()
+        const props = responsiveImageProps(src, IMAGE_SIZES.container)
+        const warm = new Image()
+        if (props.srcSet) warm.srcset = props.srcSet
+        if (props.sizes) warm.sizes = props.sizes
+        warm.src = props.src
+        warm.decode().catch(() => {})
+      },
+      { rootMargin: NEXT_WARM_MARGIN },
+    )
+    observer.observe(track)
+    return () => observer.disconnect()
   }, [href, locale])
 
   const onProgress = useCallback(
@@ -152,7 +166,7 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
     <section ref={trackRef} className="case-detail-next-section" aria-label={label}>
       <div className="case-detail-next-sticky">
         <Container>
-          <Link ref={cardRef} to={href} className="case-detail-next" aria-label={ariaLabel}>
+          <Link ref={cardRef} to={href} className="case-detail-next" aria-label={ariaLabel} style={aspectRatio ? { aspectRatio } : undefined}>
             {/* The picture, its clip and the dark layer: the same piece as every project card (CaseMedia). The clip is
                 the one the next case's hero plays, over the same picture, so the card and the hero are alike when
                 the shared transition carries it across: no still turning into a clip at the last moment. It plays
@@ -168,7 +182,8 @@ export function CaseDetailNextSection({ nextCase }: CaseDetailNextSectionProps) 
               placeholderClassName={image.placeholderClassName ?? 'bg-peach'}
               scrim="flat"
               videoMode="manual"
-              preload="auto"
+              preload="none"
+              videoWarmMargin={NEXT_WARM_MARGIN}
               videoLabel=""
             />
 

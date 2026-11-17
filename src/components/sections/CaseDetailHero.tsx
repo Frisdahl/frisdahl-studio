@@ -62,6 +62,7 @@ export function CaseDetailHero({ hero }: CaseDetailHeroProps) {
                 alt={image.imageAlt}
                 className="h-full w-full object-cover"
                 decoding="async"
+                fetchPriority="high"
               />
               {video ? (
                 // Plays while the hero is on screen, over the picture (which the shared transition

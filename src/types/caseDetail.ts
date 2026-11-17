@@ -114,6 +114,14 @@ export interface CaseDetailGalleryImage {
   aspectRatio?: string
   /** For images with a transparent background: no frame colour or shadow behind them. */
   transparent?: boolean
+  /**
+   * Enlarges the picture (or clip) inside its frame, cropping its edges: a mockup's screen then fills more
+   * of the frame and reads better, and the edge of the picture can never show a hairline of the frame
+   * behind it. 1 = as it is; 1.1 is about 10% closer.
+   */
+  zoom?: number
+  /** Where the zoom is centred, as a CSS transform-origin (default the middle): the device, not the frame. */
+  zoomOrigin?: string
 }
 
 export interface CaseDetailGallery {
@@ -165,4 +173,7 @@ export interface CaseDetailNext {
   /** The case's main clip, when it has one: it plays on the card, as it does in the case page's hero. */
   video?: CaseDetailGalleryVideo
   ariaLabel: string
+  /** The next case's hero shape when it is not 16:9 (CSS `aspect-ratio`): the card is the same shape, so the picture
+   *  only slides into the hero and never changes size or crop on the way. */
+  aspectRatio?: string
 }

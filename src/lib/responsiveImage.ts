@@ -29,6 +29,18 @@ export function responsiveImageProps(src: string, sizes: string) {
 }
 
 /**
+ * The smallest generated size of `src` that is at least `cssWidth` px wide on this screen (its width times the
+ * device pixel ratio), or the largest one; the original file when it has no sizes. For pictures that cannot use
+ * srcset: a video's `poster` is one URL, so the page picks the size itself, at the same sizes the <img>s use.
+ */
+export function responsiveSrcFor(src: string, cssWidth: number, pixelRatio = window.devicePixelRatio || 1) {
+  const entry = images[src]
+  if (!entry || entry.variants.length === 0) return src
+  const wanted = cssWidth * pixelRatio
+  return (entry.variants.find(([width]) => width >= wanted) ?? entry.variants[entry.variants.length - 1])[1]
+}
+
+/**
  * `sizes` for the common layouts. From desktop the container stops growing at
  * 120rem (1920px, --content-max-width), reached at about 125rem with the
  * gutters, so above that the largest images never need more than its width.

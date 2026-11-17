@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import type { CaseDetailGallery, CaseDetailGalleryImage } from '../../types/caseDetail'
 import { IMAGE_SIZES, responsiveImageProps } from '../../lib/responsiveImage'
 import { Container } from '../ui'
@@ -17,6 +17,14 @@ interface GalleryFigureProps {
 
 // How long each picture stays before the next one fades in (ms).
 const SLIDE_DWELL = 3400
+
+/**
+ * A zoomed picture is drawn larger than its frame, so the browser should pick a bigger file for it:
+ * every width in `sizes` (vw and rem, the rest of the media conditions are left alone) is multiplied.
+ */
+function zoomedSizes(sizes: string, zoom: number) {
+  return sizes.replace(/(\d+(?:\.\d+)?)(vw|rem)(?=,|$)/g, (_, amount: string, unit: string) => `calc(${amount}${unit} * ${zoom})`)
+}
 
 /**
  * Crossfades through a case's pictures, one after another. The next one fades (and settles from a
@@ -68,10 +76,11 @@ function GallerySlideshow({ slides }: { slides: CaseDetailGalleryImage[] }) {
 function GalleryFigure({ image, variant, background }: GalleryFigureProps) {
   return (
     <figure
-      className={`case-detail-gallery-item case-detail-gallery-item-${variant}${image.transparent ? ' case-detail-gallery-item-transparent' : ''}`}
+      className={`case-detail-gallery-item case-detail-gallery-item-${variant}${image.transparent ? ' case-detail-gallery-item-transparent' : ''}${image.zoom ? ' case-detail-gallery-item-zoomed' : ''}`}
       style={{
         aspectRatio: image.aspectRatio,
         backgroundColor: image.transparent ? background : undefined,
+        ...(image.zoom ? ({ '--media-zoom': image.zoom, '--media-zoom-origin': image.zoomOrigin } as CSSProperties) : null),
       }}
     >
       {image.slideshow ? (
@@ -89,7 +98,10 @@ function GalleryFigure({ image, variant, background }: GalleryFigureProps) {
           {...responsiveImageProps(
             image.imageSrc,
             // Horizontal images span the container; vertical ones come in pairs.
-            variant === 'horizontal' ? IMAGE_SIZES.container : IMAGE_SIZES.halfContainer,
+            (() => {
+              const sizes = variant === 'horizontal' ? IMAGE_SIZES.container : IMAGE_SIZES.halfContainer
+              return image.zoom ? zoomedSizes(sizes, image.zoom) : sizes
+            })(),
           )}
           alt={image.imageAlt}
           className="h-full w-full object-cover"
@@ -173,7 +185,7 @@ export function CaseDetailGallery({ gallery }: CaseDetailGalleryProps) {
   )
 }
 
-/** The image under the colour palette, when a case has one (afterPalette). */
+/** The image after the phones (under the gallery), when a case has one (afterPalette): the tablet. */
 export function CaseDetailAfterPalette({ gallery }: CaseDetailGalleryProps) {
   if (!gallery.afterPalette) return null
 

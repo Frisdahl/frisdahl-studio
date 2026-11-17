@@ -26,6 +26,8 @@ export interface CaseMediaProps {
   sharedDecoder?: boolean
   /** The clip's accessible name (default: the picture's description). */
   videoLabel?: string
+  /** How early a clip with preload 'none' starts loading (see LoopVideo's warmMargin). */
+  videoWarmMargin?: string
 }
 
 /**
@@ -48,6 +50,7 @@ export function CaseMedia({
   preload,
   sharedDecoder = false,
   videoLabel,
+  videoWarmMargin,
 }: CaseMediaProps) {
   return (
     <>
@@ -74,6 +77,7 @@ export function CaseMedia({
           mode={videoMode}
           preload={preload}
           shared={sharedDecoder}
+          warmMargin={videoWarmMargin}
         />
       ) : null}
 

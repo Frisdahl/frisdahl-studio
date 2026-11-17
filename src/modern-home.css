@@ -871,3 +871,13 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
   line-height: inherit;
   letter-spacing: inherit;
 }
+
+/* ---------- Gallery pictures that are zoomed (image.zoom in caseGallery.ts) ---------- */
+
+/* The picture or clip is drawn a little larger than its frame, around the device (--media-zoom-origin),
+   and the frame crops it: the screen fills more of the frame, and no edge of the picture can show a
+   hairline of the frame's white behind it. */
+.case-detail-gallery-item-zoomed :is(img, video) {
+  transform: scale(var(--media-zoom, 1));
+  transform-origin: var(--media-zoom-origin, 50% 50%);
+}
