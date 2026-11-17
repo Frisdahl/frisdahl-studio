@@ -5,6 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 import { useLocale } from '../../context/LocaleContext'
 import { getHomeContent } from '../../data/home'
+import { getSmoothScroll } from '../../lib/scroll'
 import { MEET_US_PATH } from '../../lib/routes'
 import { Container, SectionLabel } from '../ui'
 import type { SectionLabelHandle } from '../ui/SectionLabel'
@@ -19,7 +20,9 @@ gsap.registerPlugin(ScrollTrigger, SplitText)
  * fast you scroll): only "( )" stands there, the closing bracket slides right to the end, then the
  * label text rises between the brackets. Once the frame is on the screen the big text is written by
  * the scroll, slowly: each character fades in, the first line left to right, then the next line,
- * and so on. The rest of the scroll holds the finished section.
+ * and so on. It only ever moves forward: scrolling up does not unwrite it. After you have scrolled
+ * past, the section shrinks to one screen (class is-written) and the scroll position is corrected
+ * by the height removed, so there is no jump and no long stretch to scroll back through.
  *
  * Reduced motion: everything is shown at once and the section is one screen high.
  */
@@ -54,23 +57,54 @@ export function StudioStatement() {
       const chars = split.chars
       gsap.set(chars, { opacity: 0 })
       const each = 0.8 / Math.max(1, chars.length)
-      gsap
-        .timeline({
-          defaults: { ease: 'none' },
-          scrollTrigger: {
-            trigger: section,
-            start: 'top top',
-            end: 'bottom bottom',
-            scrub: 0.6,
-            invalidateOnRefresh: true,
-          },
-        })
+      const writing = gsap
+        .timeline({ paused: true, defaults: { ease: 'none' } })
         .to(chars, { opacity: 1, duration: each * 10, stagger: each }, 0.05)
         .to({}, { duration: 0.05 }, 0.95)
+
+      // One way only: the scroll can push the writing forward but never back. What is written stays
+      // written when you scroll up; the tween follows the furthest point reached, a little behind it.
+      let furthest = 0
+      ScrollTrigger.create({
+        trigger: section,
+        start: 'top top',
+        end: 'bottom bottom',
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          if (self.progress <= furthest) return
+          furthest = self.progress
+          gsap.to(writing, { progress: furthest, duration: 0.6, ease: 'none', overwrite: true })
+        },
+      })
+
+      // After you have scrolled past, the tall section is no longer needed: it shrinks to one screen
+      // (the finished text, at normal height, if you come back). The page below moves up by what was
+      // taken away, so the scroll position is moved up by the same amount and nothing jumps.
+      ScrollTrigger.create({
+        trigger: section,
+        start: 'bottom top',
+        onEnter: () => {
+          if (section.classList.contains('is-written')) return
+          gsap.set(chars, { opacity: 1 })
+          writing.progress(1)
+          const before = section.offsetHeight
+          section.classList.add('is-written')
+          const delta = before - section.offsetHeight
+          if (delta > 0) {
+            const target = Math.max(0, window.scrollY - delta)
+            const lenis = getSmoothScroll()
+            if (lenis) lenis.scrollTo(target, { immediate: true, force: true })
+            else window.scrollTo(0, target)
+          }
+          ScrollTrigger.refresh()
+        },
+      })
 
       return () => {
         split.revert()
         labelOpen.kill()
+        writing.kill()
+        section.classList.remove('is-written')
         gsap.set([parts.close, parts.text], { clearProps: 'transform' })
       }
     })

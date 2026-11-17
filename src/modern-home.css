@@ -18,6 +18,9 @@
 /* The home page starts at the very top: the hero fills the first screen under the header. */
 .home-page.page-surface {
   padding-top: 0;
+  /* The statement section shrinks after it has been scrolled past and the scroll position is corrected
+     in code; the browser's own scroll anchoring must not correct it a second time. */
+  overflow-anchor: none;
 }
 
 /* ---------- Header: no chips, no background, plain wordmark ---------- */
@@ -154,6 +157,11 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
   min-height: 380svh;
   overflow: clip;
   color: var(--color-dark);
+}
+
+/* Scrolled past: the section needs only one screen (StudioStatement adds this class). */
+.studio-statement.is-written {
+  min-height: 100svh;
 }
 
 /* One screen high; it stays on the screen while the section scrolls past. */
