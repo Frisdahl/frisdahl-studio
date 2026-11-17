@@ -4,7 +4,7 @@ import { responsiveSrcFor } from '../../lib/responsiveImage'
 interface LoopVideoProps {
   src: string
   /** Shown until the clip plays, and instead of it when the visitor prefers reduced motion. */
-  poster: string
+  poster?: string
   /** Accessible name; the clip is decoration of the image it replaces. */
   label: string
   className?: string
