@@ -149,23 +149,12 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
 .studio-statement {
   position: relative;
   isolation: isolate;
-  /* Two and a half screens tall: the picture is as tall, and the frame inside sticks to the
-     screen for the extra one and a half. `clip`, not `hidden`, so the sticky frame still works. */
-  min-height: 260svh;
-  overflow: clip;
+  display: flex;
+  align-items: center;
+  min-height: 100svh;
+  overflow: hidden;
   background-color: var(--color-dark);
   color: var(--color-light);
-}
-
-/* One screen high; it stays on the screen while the section scrolls past. The plus marks are its
-   corners. The label and the text start high on the screen. */
-.studio-statement-frame {
-  position: sticky;
-  top: 0;
-  display: flex;
-  align-items: flex-start;
-  height: 100svh;
-  padding-top: clamp(7rem, 24svh, 14rem);
 }
 
 .studio-statement-media {
@@ -229,7 +218,7 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
 }
 
 .studio-statement-grid {
-  align-items: start;
+  align-items: center;
   row-gap: 2rem;
 }
 
