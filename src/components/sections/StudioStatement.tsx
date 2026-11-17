@@ -20,9 +20,9 @@ gsap.registerPlugin(ScrollTrigger, SplitText)
  * fast you scroll): only "( )" stands there, the closing bracket slides right to the end, then the
  * label text rises between the brackets. Once the frame is on the screen the big text is written by
  * the scroll, slowly: each character fades in, the first line left to right, then the next line,
- * and so on. It only ever moves forward: scrolling up does not unwrite it. After you have scrolled
- * past, the section shrinks to one screen (class is-written) and the scroll position is corrected
- * by the height removed, so there is no jump and no long stretch to scroll back through.
+ * and so on. It only ever moves forward: scrolling up does not unwrite it. When the frame lets go
+ * the section shrinks to one screen (class is-written) and the scroll position is corrected by the
+ * height removed, so there is no jump and no long stretch to scroll back through.
  *
  * Reduced motion: everything is shown at once and the section is one screen high.
  */
@@ -77,12 +77,14 @@ export function StudioStatement() {
         },
       })
 
-      // After you have scrolled past, the tall section is no longer needed: it shrinks to one screen
-      // (the finished text, at normal height, if you come back). The page below moves up by what was
-      // taken away, so the scroll position is moved up by the same amount and nothing jumps.
+      // When the writing is done and the frame lets go (the section's bottom reaches the bottom of the
+      // screen), the tall section is no longer needed: it shrinks to one screen. At that moment the
+      // frame fills the screen either way, so nothing visible changes; the page below moves up by what
+      // was taken away, so the scroll position is moved up by the same amount. Scrolling back up then
+      // leaves the section at once instead of through the whole stuck stretch.
       ScrollTrigger.create({
         trigger: section,
-        start: 'bottom top',
+        start: 'bottom bottom',
         onEnter: () => {
           if (section.classList.contains('is-written')) return
           gsap.set(chars, { opacity: 1 })
