@@ -235,7 +235,7 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
   grid-column: 1 / -1;
   margin: 0;
   font-size: clamp(1.5rem, 0.7rem + 1.85vw, 2.5rem);
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.28;
   letter-spacing: -0.03em;
   color: var(--color-light);
