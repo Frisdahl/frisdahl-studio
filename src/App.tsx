@@ -4,6 +4,7 @@ import { Footer, GlobalLayout, Navbar, PageTransition, ScrollToTop, SkipLink, Sm
 import { ContactDrawerProvider } from './context/ContactDrawerProvider'
 import { LocaleProvider } from './context/LocaleProvider'
 import { GridOverlay } from './components/ui/GridOverlay'
+import { Toaster } from './components/ui/Toaster'
 import { ScrollPresetSwitcher } from './components/ui/ScrollPresetSwitcher'
 import { SMOOTH_WHEEL_SCROLL } from './lib/scroll'
 import {
@@ -63,6 +64,8 @@ function App() {
               <Footer />
             </GlobalLayout>
           </div>
+          {/* Outside the page shell: that element is scaled when the menu opens, and a toast must not move with it. */}
+          <Toaster />
         </BrowserRouter>
       </ContactDrawerProvider>
     </LocaleProvider>
