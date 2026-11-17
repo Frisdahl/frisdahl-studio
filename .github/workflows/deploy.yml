@@ -1,0 +1,32 @@
+# Deploys the site to Cloudflare Workers whenever the `prod` branch is pushed.
+# Needs two repository secrets: CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID.
+name: Deploy to production
+
+on:
+  push:
+    branches: [prod]
+  workflow_dispatch:
+
+# One deploy at a time; a newer push waits instead of cancelling a running deploy.
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      # tsc, vite build, route pages (the prebuild step also generates the responsive images)
+      - run: npm run build
+      - run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
