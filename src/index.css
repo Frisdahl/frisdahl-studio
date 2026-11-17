@@ -1150,11 +1150,11 @@
 
   /* Keywords spread edge to edge with equal gaps between them. */
   .case-detail-hero-meta {
-    @apply mt-8 grid grid-cols-2 gap-x-6 gap-y-md lg:mt-10 lg:flex lg:items-start lg:justify-between;
+    @apply mt-5 grid grid-cols-2 gap-x-6 gap-y-md lg:mt-6 lg:flex lg:items-start lg:justify-between;
   }
 
   .case-detail-hero-image {
-    @apply relative mt-xl w-full overflow-hidden;
+    @apply relative mt-lg w-full overflow-hidden;
     aspect-ratio: 16 / 9;
   }
 
