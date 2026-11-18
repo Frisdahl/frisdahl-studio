@@ -94,8 +94,10 @@ export function LoopVideo({ src, poster, label, className, mode, preload = 'none
     // Play (visible mode) and, above all, pause with the screen. A shared clip is played by the
     // scheduler above instead, which keeps the number of playing clips down.
     const useScheduler = shared && mode === 'visible' && !reduced
+    let onScreen = false
     const visibility = new IntersectionObserver(
       ([entry]) => {
+        onScreen = entry.isIntersecting
         if (useScheduler) {
           if (entry.intersectionRatio >= SHARED_MIN_VISIBLE) sharedVisible.set(video, entry.intersectionRatio)
           else {
@@ -124,6 +126,24 @@ export function LoopVideo({ src, poster, label, className, mode, preload = 'none
           if (!entry.isIntersecting) return
           video.preload = 'auto'
           video.load()
+          // Starting a clip for the first time stalls for a moment (the decoder starts up: `playing`, then `waiting`, and a
+          // dropped frame), and that happened just as it scrolled into view. So the decoder is started here, while the clip
+          // is still off screen: it plays for an instant, is paused again and goes back to its first frame (the poster's).
+          video.addEventListener(
+            'canplay',
+            () => {
+              if (onScreen) return
+              void video
+                .play()
+                .then(() => {
+                  if (onScreen) return
+                  video.pause()
+                  video.currentTime = 0
+                })
+                .catch(() => {})
+            },
+            { once: true },
+          )
           warm?.disconnect()
         },
         { rootMargin: warmMargin ?? (mode === 'manual' ? '300px 0px' : '800px 0px') },
