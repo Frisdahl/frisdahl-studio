@@ -33,6 +33,10 @@ One set of rules for every animation on the site. The values live in `src/lib/mo
 - Home: `Hero`, `StudioStatement` (scrubbed), `CasesSection`, `AddedValueSection` (stacked cards and the three marks), `ReviewsSection` (pinned, the footer slides over it), `Footer`.
 - Project pages and Mød mig: `RevealText` for text, `useMediaReveal` for pictures and panels, `SectionLabel` for headings.
 
+## The next-project card (end of every project page)
+
+The text is centred on the part of the card that is on the screen (`.case-detail-next-content`), so it is in the same place for every project, also where the next project's picture is taller than the screen. Leaving for the next project runs in this order (`lib/sharedCaseTransition.ts`): the card's text slides down out of its masks, the dark overlay lifts (its own 0.45 s, while the next page loads under the veil), the picture grows into the next hero, and the new page's heading and meta rise into place.
+
 ## Rules for new animation
 
 - Use the tokens; do not write new bare numbers or `power2` / `sine` / `back` for movement.

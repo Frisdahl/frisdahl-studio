@@ -1728,9 +1728,14 @@
     will-change: transform;
   }
 
+  /* The text is centred on the part of the card that is on the screen: where the picture is taller than the screen
+     (a 4:3 card on a laptop) the card runs off the bottom, and centring on the whole card put the text low. The box
+     is the card's height, but never more than the screen between the gutters, from the card's top (which is the top
+     gutter then), so the text sits on the centre of the screen for every project. */
   .case-detail-next-content {
     z-index: 2;
-    @apply absolute inset-0 flex flex-col items-center justify-center px-6 text-center;
+    @apply absolute inset-x-0 top-0 flex flex-col items-center justify-center px-6 text-center;
+    height: min(100%, calc(100svh - 2 * var(--page-gutter)));
     color: var(--color-light);
   }
 
