@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { CaseCard } from '../cards/CaseCard'
 import { getCaseMainVideo } from '../../data/caseVideos'
 import { Container, SectionLabel } from '../ui'
@@ -36,6 +37,22 @@ function clipFor(id: string) {
  */
 export function CasesSection() {
   const { locale } = useLocale()
+
+  // Loads the project page's code once the hero intro is over and the browser is idle, so a click
+  // does not pay for fetching and running it in the middle of the page transition.
+  useEffect(() => {
+    let idle: number | undefined
+    const timer = window.setTimeout(() => {
+      const load = () => void import('../../pages/CaseDetailPage')
+      if ('requestIdleCallback' in window) idle = window.requestIdleCallback(load, { timeout: 4000 })
+      else load()
+    }, 7000)
+    return () => {
+      window.clearTimeout(timer)
+      if (idle !== undefined) window.cancelIdleCallback(idle)
+    }
+  }, [])
+
   const { cases } = getHomeContent(locale)
   const items = GRID.map((slot) => ({ slot, item: cases.items.find((candidate) => candidate.id === slot.id) })).filter(
     (entry): entry is { slot: (typeof GRID)[number]; item: (typeof cases.items)[number] } => Boolean(entry.item),
