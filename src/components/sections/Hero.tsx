@@ -267,8 +267,8 @@ export function Hero() {
   }, [revealed])
 
   // The centre picture: the next scene rises from the bottom behind a clip while the one it covers
-  // drifts up a little and the new picture settles from a slight zoom. It waits for the intro (if
-  // there is one) and only runs while the hero is on screen.
+  // drifts up a little. The pictures are never scaled (that blurred them until the animation ended).
+  // It waits for the intro (if there is one) and only runs while the hero is on screen.
   useLayoutEffect(() => {
     const media = mediaRef.current
     const section = sectionRef.current
@@ -277,21 +277,16 @@ export function Hero() {
 
     const mm = gsap.matchMedia()
     mm.add('(prefers-reduced-motion: no-preference)', () => {
-      const imageOf = (slide: HTMLElement) => slide.querySelector<HTMLElement>('[data-slide-img]')
       gsap.set(slides, { zIndex: 0 })
       gsap.set(slides[0], { zIndex: 1 })
       slides.slice(1).forEach((slide) => gsap.set(slide, { clipPath: 'inset(100% 0% 0% 0%)' }))
       const tl = gsap.timeline({ repeat: -1, paused: true })
       slides.forEach((slide, index) => {
         const next = slides[(index + 1) % slides.length]
-        const nextImage = imageOf(next)
         tl.set(next, { zIndex: 2, clipPath: 'inset(100% 0% 0% 0%)', yPercent: 0 }, `+=${HOLD}`)
-          .to(next, { clipPath: 'inset(0% 0% 0% 0%)', duration: WIPE, ease: 'expo.inOut' })
-          .to(slide, { yPercent: -16, duration: WIPE, ease: 'expo.inOut' }, '<')
-        if (nextImage) {
-          tl.fromTo(nextImage, { scale: 1.22 }, { scale: 1, duration: WIPE * 1.3, ease: 'expo.out' }, '<')
-        }
-        tl.set(slide, { zIndex: 0, yPercent: 0 }, `>-${WIPE * 0.3}`)
+          .to(next, { clipPath: 'inset(0% 0% 0% 0%)', duration: WIPE, ease: 'power4.inOut' })
+          .to(slide, { yPercent: -16, duration: WIPE, ease: 'power4.inOut' }, '<')
+        tl.set(slide, { zIndex: 0, yPercent: 0 })
           .set(next, { zIndex: 1 })
       })
       let ready = false
@@ -309,7 +304,6 @@ export function Hero() {
         trigger.kill()
         tl.kill()
         gsap.set(slides, { clearProps: 'clipPath,zIndex,yPercent' })
-        gsap.set(slides.map(imageOf), { clearProps: 'scale' })
       }
     })
     return () => mm.revert()
@@ -329,14 +323,12 @@ export function Hero() {
         </div>
         <div className={styles.block}>
           <div ref={mediaRef} className={styles.media}>
-            {heroSlides.map((slide, index) => (
+            {heroSlides.map((slide) => (
               <div key={slide.imageSrc} data-slide className={styles.slide}>
                 <img
-                  data-slide-img
                   className={styles.slideImage}
                   {...responsiveImageProps(slide.imageSrc, MEDIA_SIZES)}
                   alt={slide.alt[locale]}
-                  loading={index === 0 ? 'eager' : 'lazy'}
                   decoding="async"
                   draggable={false}
                 />
