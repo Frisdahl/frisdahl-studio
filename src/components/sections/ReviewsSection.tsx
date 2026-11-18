@@ -5,7 +5,7 @@ import { AnimatePresence, motion, useReducedMotion, type Variants } from 'framer
 import { useLocale } from '../../context/LocaleContext'
 import { getReviewsContent } from '../../data/reviews'
 import { EASE_EXIT_BEZIER, EASE_SMOOTH_BEZIER } from '../../lib/motion'
-import { ArrowIcon, Container, MaskedLineReveal, SectionLabel } from '../ui'
+import { ArrowIcon, Container, MaskedLineReveal } from '../ui'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -131,32 +131,21 @@ export function ReviewsSection() {
   return (
     <section ref={sectionRef} className="reviews-section" aria-label={ariaLabel}>
       <Container columns>
-        <SectionLabel className="reviews-label">{ariaLabel}</SectionLabel>
         <div className="reviews-grid">
-          <div className="reviews-controls">
-            <button
-              type="button"
-              className="reviews-arrow"
-              aria-label={previousLabel}
-              onClick={() => goTo(index - 1)}
-            >
-              <ArrowIcon rotate={180} />
-            </button>
-            <button
-              type="button"
-              className="reviews-arrow"
-              aria-label={nextLabel}
-              onClick={() => goTo(index + 1)}
-            >
-              <ArrowIcon />
-            </button>
-            {/* The position (01 / 03), only when there is more than one review. */}
-            {count > 1 && (
+          {/* The arrows and the position only show once there is more than one review. */}
+          {count > 1 && (
+            <div className="reviews-controls">
+              <button type="button" className="reviews-arrow" aria-label={previousLabel} onClick={() => goTo(index - 1)}>
+                <ArrowIcon rotate={180} />
+              </button>
+              <button type="button" className="reviews-arrow" aria-label={nextLabel} onClick={() => goTo(index + 1)}>
+                <ArrowIcon />
+              </button>
               <span className="reviews-count" aria-hidden="true">
                 {String(index + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}
               </span>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* One presence for both: the quote lines and the person switch
               together. The wrapper has no box (display: contents), so the quote
