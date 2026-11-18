@@ -87,7 +87,7 @@ const homeContent = {
           icon: "development",
           description:
             "Hvert projekt følger samme forløb: brugerbehov og krav, wireframes og designsystem i Figma, komponentbaseret udvikling og test i rigtige browsere på alle skærmstørrelser, før noget går live. Build og udgivelse kører automatiseret med CI/CD, så en ændring går fra Git til live uden manuelle trin.",
-          items: ["Brugerbehov og krav", "Wireframes og prototyper", "Designsystem og tokens", "Responsive breakpoints", "CI/CD og deploy til Cloudflare"],
+          items: ["Brugerbehov og krav", "Wireframes og prototyper", "Designsystem og tokens", "Responsive breakpoints", "CI/CD og deploy til Cloudflare", "Cloud deployment og hosting", "Environment management"],
         },
         {
           title: "Min AI-struktur",
@@ -101,7 +101,7 @@ const homeContent = {
           icon: "brand",
           description:
             "React, TypeScript og Tailwind i bunden. Claude er koblet direkte til mine værktøjer via MCP og plugins: Figma til design, en rigtig browser til test og Lighthouse til performance. Jeg specificerer, reviewer og verificerer, før jeg kalder noget færdigt.",
-          items: ["React 19 og TypeScript", "Claude Code plugins og skills", "MCP: Figma og browser", "Chrome DevTools og Playwright", "WCAG og Lighthouse"],
+          items: ["React 19 og TypeScript", "REST API og backend-integration", "Database design og ORM", "Docker og containerisering", "Claude Code plugins og skills", "MCP: Figma og browser", "Chrome DevTools og Playwright", "WCAG og Lighthouse"],
         },
       ],
     },
