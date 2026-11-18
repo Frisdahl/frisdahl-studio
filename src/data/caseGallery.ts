@@ -48,10 +48,10 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     // Under the colour palette: the shop's way through to payment, recorded on a MacBook Pro (a product, a size, into the cart,
     // the cart drawer, "Gå til betaling", and the checkout page once it has loaded).
     afterPalette: {
-      imageSrc: '/cases/nordwear/macbook-kasse--3-2.webp',
+      imageSrc: '/cases/nordwear/macbook-kasse-v2--3-2.webp',
       imageAlt: 'Nordwear: fra produkt til kurv og betaling på en MacBook Pro',
       aspectRatio: '3 / 2',
-      video: { src: '/cases/nordwear/macbook-kasse--3-2.mp4', poster: '/cases/nordwear/macbook-kasse--poster--3-2.webp' },
+      video: { src: '/cases/nordwear/macbook-kasse-v2--3-2.mp4', poster: '/cases/nordwear/macbook-kasse-v2--poster--3-2.webp' },
     },
     horizontalBottomPair: [
       {
@@ -94,7 +94,7 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     // Only supplies the next-project preview; the pair above is what the gallery shows.
     horizontalTopHidden: true,
     horizontalTop: {
-      imageSrc: '/cases/rethink-furniture/macbook-main--4-3.webp',
+      imageSrc: '/cases/rethink-furniture/macbook-main-v2--4-3.webp',
       imageAlt: 'Rethink Furniture på en MacBook Pro',
       aspectRatio: '4 / 3',
     },
@@ -181,12 +181,12 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     // recording of the real site on a fake clock (60 fps, no dropped frames); the menu bar is macOS's dark one.
     introPair: [
       {
-        imageSrc: '/cases/offscript/artists-macbook--4-3.webp',
+        imageSrc: '/cases/offscript/artists-macbook-v2--4-3.webp',
         imageAlt: 'OFFSCRIPT® kunstnerne på en MacBook Pro',
         aspectRatio: '4 / 3',
         video: {
-          src: '/cases/offscript/artists-macbook--4-3.mp4',
-          poster: '/cases/offscript/artists-macbook--poster--4-3.webp',
+          src: '/cases/offscript/artists-macbook-v2--4-3.mp4',
+          poster: '/cases/offscript/artists-macbook-v2--poster--4-3.webp',
         },
       },
       {
@@ -205,12 +205,12 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     // Under the results: a recording of the real site on a MacBook (the genres on the home page hovered, a click, the page
     // transition and the genre page loading).
     afterResults: {
-      imageSrc: '/cases/offscript/macbook-genrer--4-3.webp',
+      imageSrc: '/cases/offscript/macbook-genrer-v2--4-3.webp',
       imageAlt: 'OFFSCRIPT®: genrerne på forsiden, et klik og overgangen til genresiden på en MacBook',
       aspectRatio: '4 / 3',
       video: {
-        src: '/cases/offscript/macbook-genrer--4-3.mp4',
-        poster: '/cases/offscript/macbook-genrer--poster--4-3.webp',
+        src: '/cases/offscript/macbook-genrer-v2--4-3.mp4',
+        poster: '/cases/offscript/macbook-genrer-v2--poster--4-3.webp',
       },
     },
   },
