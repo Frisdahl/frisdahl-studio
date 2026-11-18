@@ -45,7 +45,14 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
         ],
       },
     ],
-    afterPalette: { imageSrc: '/cases/nordwear/ipad-glas--3-2.webp', imageAlt: 'Nordwear forside på en iPad Pro', aspectRatio: '3 / 2' },
+    // Under the colour palette: the shop's way through to payment, recorded on a MacBook Pro (a product, a size, into the cart,
+    // the cart drawer, "Gå til betaling", and the checkout page once it has loaded).
+    afterPalette: {
+      imageSrc: '/cases/nordwear/macbook-kasse--3-2.webp',
+      imageAlt: 'Nordwear: fra produkt til kurv og betaling på en MacBook Pro',
+      aspectRatio: '3 / 2',
+      video: { src: '/cases/nordwear/macbook-kasse--3-2.mp4', poster: '/cases/nordwear/macbook-kasse--poster--3-2.webp' },
+    },
     horizontalBottomPair: [
       {
         imageSrc: '/cases/nordwear/iphone-produktside-video-v2--poster--4-3.webp',
