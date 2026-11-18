@@ -2,6 +2,8 @@
 // and handles POST /api/contact, which sends the contact form through Resend. The API key
 // is a Worker secret (RESEND_API_KEY) and never reaches the browser.
 
+import { emailSubject, renderContactEmail } from './email'
+
 interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> }
   RESEND_API_KEY: string
@@ -23,9 +25,6 @@ const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } })
 
 const text = (value: unknown, max: number) => (typeof value === 'string' ? value.trim().slice(0, max) : '')
-
-const ESCAPES: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
-const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (char) => ESCAPES[char])
 
 async function handleContact(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'POST') return json({ error: 'method_not_allowed' }, 405)
@@ -49,21 +48,8 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
 
   if (!name || !message || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json({ error: 'invalid_fields' }, 422)
 
-  const sender = company ? `${name}, ${company}` : name
-  const rows = (
-    [
-      ['Navn', name],
-      ['Virksomhed', company],
-      ['Email', email],
-      ['Telefon', phone],
-      ['Fandt siden via', source],
-    ] as [string, string][]
-  ).filter(([, value]) => value)
-
-  const html =
-    `<p style="white-space:pre-wrap">${escapeHtml(message)}</p><hr>` +
-    rows.map(([label, value]) => `<p><strong>${label}:</strong> ${escapeHtml(value)}</p>`).join('')
-  const plain = [message, '', ...rows.map(([label, value]) => `${label}: ${value}`)].join('\n')
+  const contact = { name, company, email, phone, source, message }
+  const { html, text: plain } = renderContactEmail(contact)
 
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
@@ -72,7 +58,7 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
       from: env.CONTACT_FROM,
       to: [env.CONTACT_TO],
       reply_to: email,
-      subject: `Ny henvendelse fra ${sender}`.replace(/[\r\n]+/g, ' '),
+      subject: emailSubject(contact),
       html,
       text: plain,
     }),

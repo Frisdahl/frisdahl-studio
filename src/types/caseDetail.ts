@@ -158,6 +158,8 @@ export interface CaseDetailContent {
   hero: CaseDetailHero
   overview: CaseDetailOverview
   typography?: CaseDetailTypography
+  /** A second typeface, as another specimen right after the first (a case that uses two fonts). */
+  secondaryTypography?: CaseDetailTypography
   palette?: CaseDetailPalette
   results?: CaseDetailResults
   columns: [CaseDetailColumn, CaseDetailColumn, CaseDetailColumn]

@@ -55,7 +55,7 @@ const homeContent = {
           client: "Nordwear",
           keywords: "E-commerce • Design • Udvikling",
           href: '/cases/nordwear',
-          imageSrc: "/cases/nordwear/main--16-9.webp",
+          imageSrc: "/cases/nordwear/main-v2--16-9.webp",
           imageAlt: "Nordwear case",
         },
         {
@@ -63,10 +63,10 @@ const homeContent = {
           client: "Rethink Furniture",
           keywords: "Website • Design • Udvikling",
           href: '/cases/rethink-furniture',
-          imageSrc: "/cases/rethink-furniture/mockup--4-3.webp",
-          // Where the picture is centred in a narrow card: on the iPad (the clip is framed with the iPad in the middle).
+          imageSrc: "/cases/rethink-furniture/macbook-main--4-3.webp",
+          // Where the picture is centred in a narrow card: on the MacBook (the clip is framed with the laptop in the middle).
           focus: "50% 50%",
-          imageAlt: "Rethink Furniture på en iPad Pro på en sten",
+          imageAlt: "Rethink Furniture på en MacBook Pro",
         },
         {
           id: 'det-kollektive-klaedeskab',

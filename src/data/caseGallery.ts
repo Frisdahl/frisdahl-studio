@@ -16,7 +16,7 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     ],
     // Only supplies the next-project preview; the pair below is what the gallery shows.
     horizontalTop: {
-      imageSrc: '/cases/nordwear/main--16-9.webp',
+      imageSrc: '/cases/nordwear/main-v2--16-9.webp',
       imageAlt: 'Nordwear forside på en MacBook Pro',
     },
     horizontalTopPair: [
@@ -61,19 +61,19 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     ],
   },
   'rethink-furniture': {
-    // The MacBook plays a recording of the real site (a stand-in brand I designed and built): its home page with the
-    // reveals that play while scrolling. The monitor is a still of the shop. Both are zoomed a little (see `zoom` in
+    // The MacBook plays a recording of the real site (a stand-in brand I designed and built): a product page (the main
+    // clip, hero and cards, shows the home page). The monitor is a still of the shop. Both are zoomed a little (see `zoom` in
     // types/caseDetail.ts), around the device, so the screens fill more of the frame and read better.
     introPair: [
       {
-        imageSrc: '/cases/rethink-furniture/macbook-forside--4-3.webp',
-        imageAlt: 'Rethink Furniture forside på en MacBook Pro',
+        imageSrc: '/cases/rethink-furniture/macbook-produkt--4-3.webp',
+        imageAlt: 'Rethink Furniture produktside på en MacBook Pro',
         aspectRatio: '4 / 3',
         zoom: 1.12,
         zoomOrigin: '47% 50%',
         video: {
-          src: '/cases/rethink-furniture/macbook-forside--4-3.mp4',
-          poster: '/cases/rethink-furniture/macbook-forside--poster--4-3.webp',
+          src: '/cases/rethink-furniture/macbook-produkt--4-3.mp4',
+          poster: '/cases/rethink-furniture/macbook-produkt--poster--4-3.webp',
         },
       },
       {
@@ -87,19 +87,19 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     // Only supplies the next-project preview; the pair above is what the gallery shows.
     horizontalTopHidden: true,
     horizontalTop: {
-      imageSrc: '/cases/rethink-furniture/mockup--4-3.webp',
-      imageAlt: 'Rethink Furniture på en iPad Pro',
+      imageSrc: '/cases/rethink-furniture/macbook-main--4-3.webp',
+      imageAlt: 'Rethink Furniture på en MacBook Pro',
       aspectRatio: '4 / 3',
     },
     // The mobile layout: the shop's product grid and the home page's collections, each on an iPhone (the screens are the
     // real site at 425 px wide; cropped in a little so the screens read well).
     horizontalBottomPair: [
       {
-        imageSrc: '/cases/rethink-furniture/iphone-produkter--4-3.webp',
+        imageSrc: '/cases/rethink-furniture/iphone-produkter-v2--4-3.webp',
         imageAlt: 'Rethink Furniture shop med produkter på en iPhone',
         aspectRatio: '4 / 3',
         // A recording of the real shop page scrolling on the phone (top, down through the products, and back).
-        video: { src: '/cases/rethink-furniture/iphone-produkter--4-3.mp4', poster: '/cases/rethink-furniture/iphone-produkter--poster--4-3.webp' },
+        video: { src: '/cases/rethink-furniture/iphone-produkter-v2--4-3.mp4', poster: '/cases/rethink-furniture/iphone-produkter-v2--poster--4-3.webp' },
       },
       { imageSrc: '/cases/rethink-furniture/iphone-kollektioner--4-3.webp', imageAlt: 'Rethink Furniture kollektioner på en iPhone', aspectRatio: '4 / 3' },
     ],

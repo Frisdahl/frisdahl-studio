@@ -28,7 +28,10 @@ const SETTLE = 0.4
 const NEXT_SETTLE = 0.28
 const NEXT_EXIT_TEXT_DURATION = 0.3
 const NEXT_VEIL_DURATION = 0.2
-const NEXT_OVERLAY_FADE = 0.8
+// The next-project card in order: its text slides down out of its masks, then the dark overlay lifts (it starts the
+// moment the picture is lifted into the ghost, while the next page loads under the veil, and the grow waits for it),
+// then the picture grows into the hero, then the new page's text rises into place.
+const NEXT_OVERLAY_FADE = 0.45
 // A card in the home page's grid (only those; the /cases list and the next-project card keep the leave above):
 // the caption just fades (nothing is split into masks and slid out), the picture is lifted into the ghost, and
 // the whole page fades to the page colour under it in one slow, even fade. Those cards have no hover zoom or
@@ -231,6 +234,7 @@ export async function runSharedCaseTransition(
   let metaLabels: Element[] = []
   let metaItems: HTMLElement[] = []
   let heroCatchUp: HTMLVideoElement | null = null
+  let overlayFade: gsap.core.Tween | null = null
 
   try {
     // A slow frame must not make the motion skip ahead (see setTransitionLagSmoothing); undone in `finally`.
@@ -242,6 +246,8 @@ export async function runSharedCaseTransition(
       const leave = gsap.timeline({ onComplete: resolve })
       // Lifts the picture into the ghost (the card's clip carries on in it) and lets the card's own clip rest.
       const lift = () => {
+        // The dark overlay lifts as soon as the picture is in the ghost: its own beat after the text has left.
+        if (overlay) overlayFade = gsap.to(overlay, { opacity: 0, duration: NEXT_OVERLAY_FADE, ease: 'power1.inOut' })
         if (!ghostVideo || !cardVideo) {
           document.body.append(ghost)
           return
@@ -256,7 +262,8 @@ export async function runSharedCaseTransition(
         leave.to(veil, { autoAlpha: 1, duration: HOME_PAGE_FADE, ease: 'sine.inOut' }, HOME_TEXT_FADE)
         return
       }
-      leave.to(split!.lines, { yPercent: -125, duration: isNext ? NEXT_EXIT_TEXT_DURATION : EXIT_TEXT_DURATION, ease: isNext ? 'power2.in' : 'power3.in', stagger: isNext ? 0.03 : 0.05 }, 0)
+      // The next-project card's text slides down out of its masks; every other card's slides up.
+      leave.to(split!.lines, { yPercent: isNext ? 125 : -125, duration: isNext ? NEXT_EXIT_TEXT_DURATION : EXIT_TEXT_DURATION, ease: isNext ? 'power2.in' : 'power3.in', stagger: isNext ? 0.03 : 0.05 }, 0)
       if (bar) leave.to(bar, { autoAlpha: 0, duration: 0.4, ease: 'power2.out' }, 0)
       leave.call(lift, [], settle)
       leave.to(veil, { autoAlpha: 1, duration: isNext ? NEXT_VEIL_DURATION : VEIL_DURATION, ease: 'power2.inOut' }, settle)
@@ -385,6 +392,8 @@ export async function runSharedCaseTransition(
     // Revealing the case page under the veil is the heaviest frame of the whole transition (style,
     // layout, paint). Let it happen now, so it is not spent inside the grow and cut the start off.
     await nextFrames(2)
+    // The overlay has been lifting since the picture left the card; the grow starts once it is gone.
+    if (overlayFade) await overlayFade
     await new Promise<void>((resolve) => {
       const grow = gsap.timeline({ onComplete: resolve, defaults: { ease: GROW_EASE } })
       // Position, size and the crop open together, on one ease, so the picture glides from where it
@@ -401,11 +410,10 @@ export async function runSharedCaseTransition(
         )
       }
       if (isNext) {
-        // The zoom settles and the dark overlay lifts, so the hero's picture is plain.
+        // The zoom settles (the dark overlay has already lifted, see `lift`), so the hero's picture is plain.
         // Fully settled before the swap below, so the two pictures line up exactly.
         // (Not for a clip: it is already at 1 and must never be rescaled while it plays.)
         if (!ghostVideo) grow.to(fromImage, { scale: 1, duration: NEXT_ZOOM_SETTLE, ease: 'power2.out' }, 0)
-        if (overlay) grow.to(overlay, { opacity: 0, duration: NEXT_OVERLAY_FADE, ease: 'power1.inOut' }, 0)
       }
       const swapAt = isNext ? NEXT_SWAP_AT : SWAP_AT
       // A playing clip is the same picture as the hero's, so nothing is swapped over it: it just keeps playing.
