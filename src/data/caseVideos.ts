@@ -18,8 +18,8 @@ const caseMainVideos: Partial<Record<string, CaseDetailGalleryVideo>> = {
   // through the first part of the page and back; its last half second dissolves into the first frame (a seamless loop).
   // The still and the poster are the loaded hero. The home card shows the middle of it.
   'rethink-furniture': {
-    src: '/cases/rethink-furniture/macbook-main--4-3.mp4',
-    poster: '/cases/rethink-furniture/macbook-main--poster--4-3.webp',
+    src: '/cases/rethink-furniture/macbook-main-v2--4-3.mp4',
+    poster: '/cases/rethink-furniture/macbook-main-v2--poster--4-3.webp',
   },
   'peter-salling': {
     src: '/cases/peter-salling/main--16-9.mp4',

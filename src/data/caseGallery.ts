@@ -94,7 +94,7 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     // Only supplies the next-project preview; the pair above is what the gallery shows.
     horizontalTopHidden: true,
     horizontalTop: {
-      imageSrc: '/cases/rethink-furniture/macbook-main--4-3.webp',
+      imageSrc: '/cases/rethink-furniture/macbook-main-v2--4-3.webp',
       imageAlt: 'Rethink Furniture på en MacBook Pro',
       aspectRatio: '4 / 3',
     },
