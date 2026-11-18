@@ -10,8 +10,8 @@
   },
   "vars": {
     "CONTACT_TO": "hello@frisdahlstudio.dk",
-    // Resend's shared sender until frisdahlstudio.dk is verified in Resend; then use "Frisdahl Studio <hello@frisdahlstudio.dk>".
-    "CONTACT_FROM": "Frisdahl Studio <onboarding@resend.dev>"
+    // frisdahlstudio.dk is verified in Resend (2026-11-18), so the form sends from the domain.
+    "CONTACT_FROM": "Frisdahl Studio <hello@frisdahlstudio.dk>"
   },
   // Persist the Worker's logs (Workers & Pages > frisdahl-studio > Logs), so a failed contact form shows
   // Resend's answer ("Resend failed <status> <body>", from worker/index.ts).
