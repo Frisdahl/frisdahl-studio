@@ -4,6 +4,7 @@ import { getContactPageContent } from '../../data/contact'
 import { getHomeContent } from '../../data/home'
 import { ArrowButton } from '../ui'
 import { toast } from '../../lib/toast'
+import { launchConfetti } from '../../lib/confetti'
 
 /** Copy with every "*" in the accent red (the required-field marker). */
 function WithRequiredMark({ text }: { text: string }) {
@@ -59,7 +60,8 @@ function Field({ id, label, value, onChange, placeholder, type = 'text', autoCom
 /**
  * The contact page form. Sending posts it to the site's Worker (worker/index.ts, POST
  * /api/contact), which emails it through Resend. Name, e-mail and message are checked
- * here and answered with toasts at the bottom centre (missing, sending, sent, failed); the hidden "website" field is a honeypot for bots.
+ * here and answered with toasts at the bottom centre (missing, sending, sent, failed); a sent message also fires a short
+ * confetti burst from the send button (lib/confetti.ts). The hidden "website" field is a honeypot for bots.
  */
 export function ContactForm() {
   const { locale } = useLocale()
@@ -80,6 +82,7 @@ export function ContactForm() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (status === 'sending') return
+    const form = event.currentTarget
     const missing = [
       !name.trim() && 'contact-name',
       !email.trim() && 'contact-email',
@@ -110,6 +113,9 @@ export function ContactForm() {
       })
       if (!response.ok) throw new Error(String(response.status))
       toast.show({ id: 'contact', kind: 'success', label: t.sentLabel, closeLabel: t.close, title: t.sentTitle, text: copy.sent })
+      // The burst leaves the send button (reduced motion: nothing, the toast says it).
+      const button = form.querySelector<HTMLElement>('[type="submit"]')?.getBoundingClientRect()
+      launchConfetti(button ? { origin: { x: button.left + button.width / 2, y: button.top + button.height / 2 } } : undefined)
       setName('')
       setCompany('')
       setEmail('')
