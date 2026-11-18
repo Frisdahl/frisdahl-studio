@@ -86,8 +86,8 @@ const homeContent = {
           title: "Fra idé til lancering",
           icon: "development",
           description:
-            "Hvert projekt følger samme forløb: brugerbehov og krav, wireframes og designsystem i Figma, komponentbaseret udvikling og test i rigtige browsere på alle skærmstørrelser, før noget går live.",
-          items: ["Brugerbehov og krav", "Wireframes og prototyper", "Designsystem og tokens", "Responsive breakpoints", "Build og deploy til Cloudflare"],
+            "Hvert projekt følger samme forløb: brugerbehov og krav, wireframes og designsystem i Figma, komponentbaseret udvikling og test i rigtige browsere på alle skærmstørrelser, før noget går live. Build og udgivelse kører automatiseret med CI/CD, så en ændring går fra Git til live uden manuelle trin.",
+          items: ["Brugerbehov og krav", "Wireframes og prototyper", "Designsystem og tokens", "Responsive breakpoints", "CI/CD og deploy til Cloudflare"],
         },
         {
           title: "Min AI-struktur",
