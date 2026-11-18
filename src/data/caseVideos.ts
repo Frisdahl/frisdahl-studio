@@ -14,10 +14,12 @@ const caseMainVideos: Partial<Record<string, CaseDetailGalleryVideo>> = {
     src: '/cases/offscript/mockup--4-3.mp4',
     poster: '/cases/offscript/mockup--4-3.webp',
   },
-  // A 4:3 clip (2560x1920) of the Rethink Furniture home page, scrolling, on a MacBook Pro; the home card shows the middle of it.
+  // A 4:3 clip (2560x1920) of the Rethink Furniture home page on a MacBook Pro: the site's preloader, the hero, then a scroll
+  // through the first part of the page and back; its last half second dissolves into the first frame (a seamless loop).
+  // The still and the poster are the loaded hero. The home card shows the middle of it.
   'rethink-furniture': {
-    src: '/cases/rethink-furniture/macbook-forside-v3--4-3.mp4',
-    poster: '/cases/rethink-furniture/macbook-forside-v3--poster--4-3.webp',
+    src: '/cases/rethink-furniture/macbook-main--4-3.mp4',
+    poster: '/cases/rethink-furniture/macbook-main--poster--4-3.webp',
   },
   'peter-salling': {
     src: '/cases/peter-salling/main--16-9.mp4',

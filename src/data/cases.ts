@@ -71,7 +71,7 @@ const casesPageContent = {
         industry: 'Møbler',
         category: 'website',
         href: '/cases/rethink-furniture',
-        imageSrc: '/cases/rethink-furniture/macbook-forside-v3--4-3.webp',
+        imageSrc: '/cases/rethink-furniture/macbook-main--4-3.webp',
         imageAlt: 'Rethink Furniture case',
         keywords: ['Website', 'Design', 'Udvikling', 'Animation'],
         description:

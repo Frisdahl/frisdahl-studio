@@ -63,7 +63,7 @@ const homeContent = {
           client: "Rethink Furniture",
           keywords: "Website • Design • Udvikling",
           href: '/cases/rethink-furniture',
-          imageSrc: "/cases/rethink-furniture/macbook-forside-v3--4-3.webp",
+          imageSrc: "/cases/rethink-furniture/macbook-main--4-3.webp",
           // Where the picture is centred in a narrow card: on the MacBook (the clip is framed with the laptop in the middle).
           focus: "50% 50%",
           imageAlt: "Rethink Furniture på en MacBook Pro",

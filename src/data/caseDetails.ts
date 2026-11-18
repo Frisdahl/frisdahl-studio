@@ -69,7 +69,7 @@ const caseDetails = {
           'En rolig webshop til et dansk møbelbrand, hvor store billeder, serif-typografi og stille animationer lader materialer og håndværk tale.',
         sliderAriaLabel: 'Automatisk gennemløb af Rethink Furniture case-billeder',
         slides: [
-          { imageSrc: '/cases/rethink-furniture/macbook-forside-v3--4-3.webp', imageAlt: 'Rethink Furniture på en MacBook Pro' },
+          { imageSrc: '/cases/rethink-furniture/macbook-main--4-3.webp', imageAlt: 'Rethink Furniture på en MacBook Pro' },
         ],
       },
       columns: [
