@@ -23,8 +23,24 @@ const IMAGE_DURATION = 1.2
 const CONTROL_DELAY = 0.6
 const CONTROL_DURATION = 0.9
 
+/**
+ * How a page's images come in. 'center' (the default) opens from the vertical centre. 'top' is the
+ * home hero's picture: the frame is uncovered from its top edge downwards, 0.9 s, expo.inOut.
+ */
+export type ImageReveal = 'center' | 'top'
+
+const IMAGE_CLIPS: Record<ImageReveal, { closed: string; duration: number; ease: string }> = {
+  center: { closed: 'inset(50% 0% 50% 0%)', duration: IMAGE_DURATION, ease: 'expo.out' },
+  top: { closed: 'inset(0% 0% 100% 0%)', duration: 0.9, ease: 'expo.inOut' },
+}
+
 /** Returns a function that stops the entrance and puts the page's DOM back as it was. */
-export function prepareAndPlayPageEntrance(main: HTMLElement, revealed: Promise<void>): () => void {
+export function prepareAndPlayPageEntrance(
+  main: HTMLElement,
+  revealed: Promise<void>,
+  imageReveal: ImageReveal = 'center',
+): () => void {
+  const imageClip = IMAGE_CLIPS[imageReveal]
   const textBlocks = collectTextBlocks(main)
     .filter((block) => !block.closest('button, [class*="btn"], [class*="chip"], [class*="pill"]'))
     .sort((a, b) => {
@@ -87,7 +103,7 @@ export function prepareAndPlayPageEntrance(main: HTMLElement, revealed: Promise<
   }
 
   // (GSAP warns when it is given no targets, as on a page with no images or no buttons.)
-  if (imageFrames.length) gsap.set(imageFrames, { clipPath: 'inset(50% 0% 50% 0%)' })
+  if (imageFrames.length) gsap.set(imageFrames, { clipPath: imageClip.closed })
   if (controls.length) gsap.set(controls, { autoAlpha: 0 })
 
   const tweens: gsap.core.Tween[] = []
@@ -112,12 +128,12 @@ export function prepareAndPlayPageEntrance(main: HTMLElement, revealed: Promise<
       tweens.push(
         gsap.fromTo(
           frame,
-          { clipPath: 'inset(50% 0% 50% 0%)' },
+          { clipPath: imageClip.closed },
           {
             clipPath: 'inset(0% 0% 0% 0%)',
-            duration: IMAGE_DURATION,
+            duration: imageClip.duration,
             delay: IMAGE_DELAY + Math.min(index * IMAGE_STAGGER, STAGGER_CAP),
-            ease: 'expo.out',
+            ease: imageClip.ease,
             clearProps: 'clipPath',
           },
         ),
