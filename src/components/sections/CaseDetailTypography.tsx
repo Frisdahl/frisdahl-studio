@@ -3,6 +3,8 @@ import type { CaseDetailTypography as CaseDetailTypographyContent } from '../../
 import { Container } from '../ui'
 
 interface CaseDetailTypographyProps {
+  /** A second specimen right after the first (a project with two typefaces): it has no heading of its own. */
+  continued?: boolean
   typography: CaseDetailTypographyContent
 }
 
@@ -18,7 +20,7 @@ const SPECIMEN_WIDTH = 2.1 * EM
  * letter drawn large between a cap-height and a baseline rule; an a–z grid on
  * the right picks the letter (hover, focus or click).
  */
-export function CaseDetailTypography({ typography }: CaseDetailTypographyProps) {
+export function CaseDetailTypography({ typography, continued = false }: CaseDetailTypographyProps) {
   const [active, setActive] = useState('a')
   const {
     title,
@@ -42,7 +44,7 @@ export function CaseDetailTypography({ typography }: CaseDetailTypographyProps) 
       <Container>
         <div className="case-detail-typography-grid">
           <div className="case-detail-typography-info">
-            <h2 className="case-detail-overview-title">{title}</h2>
+            {continued ? null : <h2 className="case-detail-overview-title">{title}</h2>}
             <p className="case-detail-typography-description">{description}</p>
 
             <dl className="case-detail-typography-facts">
