@@ -1422,6 +1422,25 @@
     }
   }
 
+  /* The letter grid stays at least 4rem short of the middle: the left column is half the content width, and on a laptop the
+     grid (up to 46rem) used to meet it with next to no room between. Where there is room (wide desktops) it is still 46rem. */
+  @media (min-width: 1280px) {
+    .case-detail-typography .case-detail-typography-grid {
+      grid-template-columns: calc(50% - var(--image-gap) / 2) minmax(0, min(46rem, calc(50% - 4rem)));
+    }
+  }
+
+  /* Laptops (1280 to 1599px): the big glyph and the letters are a bit smaller too. */
+  @media (min-width: 1280px) and (max-width: 1599px) {
+    .case-detail-typography .case-detail-typography-glyph {
+      max-width: 23rem;
+    }
+
+    .case-detail-typography .case-detail-typography-letter {
+      font-size: 1.125rem;
+    }
+  }
+
   /* Stacked (the letter grid below the text): from 1024px the rules still end under the
      left picture's edge. Narrower, the specimen keeps the full width, or its letter gets too small. */
   @media (min-width: 1024px) and (max-width: 1279px) {
