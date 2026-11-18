@@ -23,14 +23,16 @@ const heroContent = {
 interface HeroSlide {
   imageSrc: string
   alt: { da: string }
+  /** Where the 4:3 picture sits in the narrower frame (object-position). */
+  position: string
 }
 
-/** The centre picture switches between these scenes. */
+/** The centre picture switches between branding and mockups, starting with the red billboard. */
 const heroSlides: HeroSlide[] = [
-  { imageSrc: '/images/hero/hero-d1-telefon-paa-sort-stol.webp', alt: { da: 'En iPhone med et typografisk design hvilende på armlænet af en sort stol' } },
-  { imageSrc: '/images/hero/hero-d2-visitkort-i-kromramme.webp', alt: { da: 'Et sort visitkort svævende i en krom-ramme' } },
-  { imageSrc: '/images/hero/hero-d3-telefon-paa-gitter.webp', alt: { da: 'En iPhone med et typografisk design på en gitterflade' } },
-  { imageSrc: '/images/hero/hero-d4-plakat-i-traadstativ.webp', alt: { da: 'En typografisk plakat i et gennemsigtigt trådstativ' } },
+  { imageSrc: '/images/hero/hero-1-branding-billboard.webp', position: '70% 50%', alt: { da: 'Rødt Frisdahl Studio-plakatdesign i en sort ramme på en betonvæg' } },
+  { imageSrc: '/images/hero/hero-2-mockup-offscript-kontakt.webp', position: '50% 50%', alt: { da: 'Kontaktsiden for OFFSCRIPT® på en iPhone på en hvid, foldet flade med et limegrønt bånd' } },
+  { imageSrc: '/images/hero/hero-3-branding-visitkort.webp', position: '52% 50%', alt: { da: 'Frisdahl Studio-visitkort svævende i en kromramme' } },
+  { imageSrc: '/images/hero/hero-4-mockup-offscript-genrer.webp', position: '52% 50%', alt: { da: 'Genre-siden for OFFSCRIPT® på en iPhone på en hvid sokkel' } },
 ]
 
 /** Seconds a picture stays before the next one rises in, and how long that takes. */
@@ -330,6 +332,8 @@ export function Hero() {
                   {...responsiveImageProps(slide.imageSrc, MEDIA_SIZES)}
                   alt={slide.alt[locale]}
                   decoding="async"
+                  fetchPriority={slide.imageSrc === heroSlides[0].imageSrc ? 'high' : 'low'}
+                  style={{ objectPosition: slide.position }}
                   draggable={false}
                 />
               </div>
