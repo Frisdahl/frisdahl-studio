@@ -3103,7 +3103,10 @@
       /* The heading's top lines up with the form's first labels. */
       align-items: start;
       align-content: center;
-      column-gap: clamp(4rem, 9vw, 10rem);
+      column-gap: clamp(4rem, 7vw, 8rem);
+      /* A pair centred and 80% of the screen (64rem to 120rem), so on a laptop the heading and the form sit together in the middle of the page
+         instead of at its two edges. */
+      max-width: clamp(64rem, 80vw, 120rem);
       min-height: calc(100svh - var(--site-header-height));
       padding-block: 4rem;
     }
