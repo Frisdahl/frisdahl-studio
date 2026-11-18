@@ -10,7 +10,7 @@ export function GridOverlay() {
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key.toLowerCase() !== 'g' || event.metaKey || event.ctrlKey || event.altKey) return
+      if (typeof event.key !== 'string' || event.key.toLowerCase() !== 'g' || event.metaKey || event.ctrlKey || event.altKey) return
       const target = event.target as HTMLElement | null
       if (target?.closest('input, textarea, select, [contenteditable="true"]')) return
       setVisible((current) => !current)
