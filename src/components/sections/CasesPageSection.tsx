@@ -50,19 +50,23 @@ const CLIP_SHOWN = 'inset(0% 0% 0% 0%)'
 /**
  * Pairs the cards so that every row fills the width: a wide card (16:9) beside a narrow one (4:3), the way the
  * home grid does. Each card takes the first card of the other shape that is left as its row mate; with no mate it
- * stands alone. The order of the list otherwise stays.
+ * stands alone. The rows alternate, so the first has the wide card first and the second the narrow one first,
+ * and so on. The order of the list otherwise stays.
  */
 function arrangeInRows<T extends { id: string }>(items: readonly T[]): T[] {
+  const isWide = (item: T) => getCaseMainAspect(item.id) > 1.5
   const left = [...items]
-  const out: T[] = []
+  const rows: T[][] = []
   while (left.length) {
     const first = left.shift() as T
-    out.push(first)
-    const wide = getCaseMainAspect(first.id) > 1.5
-    const mate = left.findIndex((item) => getCaseMainAspect(item.id) > 1.5 !== wide)
-    if (mate >= 0) out.push(...left.splice(mate, 1))
+    const mate = left.findIndex((item) => isWide(item) !== isWide(first))
+    const row = mate >= 0 ? [first, ...left.splice(mate, 1)] : [first]
+    // Even rows (the 1st, 3rd, ...) start with the wide card, odd rows with the narrow one.
+    const wideFirst = rows.length % 2 === 0
+    if (row.length === 2 && isWide(row[0]) !== wideFirst) row.reverse()
+    rows.push(row)
   }
-  return out
+  return rows.flat()
 }
 
 /**
