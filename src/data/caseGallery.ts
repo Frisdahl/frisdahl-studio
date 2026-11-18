@@ -61,19 +61,19 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     ],
   },
   'rethink-furniture': {
-    // The MacBook plays a recording of the real site (a stand-in brand I designed and built): its home page with the
-    // reveals that play while scrolling. The monitor is a still of the shop. Both are zoomed a little (see `zoom` in
+    // The MacBook plays a recording of the real site (a stand-in brand I designed and built): a product page (the main
+    // clip, hero and cards, shows the home page). The monitor is a still of the shop. Both are zoomed a little (see `zoom` in
     // types/caseDetail.ts), around the device, so the screens fill more of the frame and read better.
     introPair: [
       {
-        imageSrc: '/cases/rethink-furniture/macbook-forside-v2--4-3.webp',
-        imageAlt: 'Rethink Furniture forside på en MacBook Pro',
+        imageSrc: '/cases/rethink-furniture/macbook-produkt--4-3.webp',
+        imageAlt: 'Rethink Furniture produktside på en MacBook Pro',
         aspectRatio: '4 / 3',
         zoom: 1.12,
         zoomOrigin: '47% 50%',
         video: {
-          src: '/cases/rethink-furniture/macbook-forside-v2--4-3.mp4',
-          poster: '/cases/rethink-furniture/macbook-forside-v2--poster--4-3.webp',
+          src: '/cases/rethink-furniture/macbook-produkt--4-3.mp4',
+          poster: '/cases/rethink-furniture/macbook-produkt--poster--4-3.webp',
         },
       },
       {
