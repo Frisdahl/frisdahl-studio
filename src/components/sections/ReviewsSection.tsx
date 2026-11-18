@@ -115,6 +115,8 @@ export function ReviewsSection() {
       <img
         className="reviews-avatar"
         src={review.imageSrc}
+        srcSet={review.imageSrcSet}
+        sizes="210px"
         alt={review.imageAlt}
         loading="lazy"
         decoding="async"
