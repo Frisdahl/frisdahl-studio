@@ -30,6 +30,18 @@
   height: calc(36.4 * var(--u));
 }
 
+/* "Beyond" is wider than "Digital", and both hang from the middle of the screen, so the group (the
+   first word's left edge to the second word's right edge) sat to the left of the centre: 95px against
+   185px at 1440 wide. Moving the whole block right by half the difference, 3.125u (the same share at
+   every size, as the words scale with u), gives the group equal space on both sides. Phones and tablets
+   put the words at the page edges and are left alone. */
+@media (min-width: 1024px) {
+  .block {
+    left: calc(3.125 * var(--u));
+    right: calc(-3.125 * var(--u));
+  }
+}
+
 .media {
   position: absolute;
   left: 50%;
