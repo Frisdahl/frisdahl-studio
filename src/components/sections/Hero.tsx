@@ -5,7 +5,6 @@ import { useLocale } from '../../context/LocaleContext'
 import { markHeroIntroPlayed, shouldPlayHeroIntro } from '../../lib/heroIntro'
 import { whenPageRevealed } from '../../lib/pageReveal'
 import { lockScroll, unlockScroll } from '../../lib/scroll'
-import { responsiveImageProps } from '../../lib/responsiveImage'
 import { BracketLine } from '../ui'
 import styles from './Hero.module.css'
 
@@ -21,18 +20,26 @@ const heroContent = {
 } as const
 
 interface HeroSlide {
-  imageSrc: string
+  /** File name in /images/hero/slides/ without the width and extension. */
+  name: string
   alt: { da: string }
-  /** Where the 4:3 picture sits in the narrower frame (object-position). */
-  position: string
 }
+
+/**
+ * The pictures are cut to the frame's exact shape from the 3680 px originals and saved at the widths the
+ * frame needs on 1x to 2x screens, with a light sharpen: a mockup's small text turns soft when the
+ * browser has to shrink a large picture (or one that is a few pixels off) itself.
+ */
+const SLIDE_WIDTHS = [480, 720, 960, 1280]
+const slideSrcSet = (name: string) =>
+  SLIDE_WIDTHS.map((width) => `/images/hero/slides/${name}-${width}w.webp ${width}w`).join(', ')
 
 /** The centre picture switches between branding and mockups, starting with the red billboard. */
 const heroSlides: HeroSlide[] = [
-  { imageSrc: '/images/hero/hero-1-branding-billboard.webp', position: '70% 50%', alt: { da: 'Rødt Frisdahl Studio-plakatdesign i en sort ramme på en betonvæg' } },
-  { imageSrc: '/images/hero/hero-2-mockup-offscript-kontakt.webp', position: '50% 50%', alt: { da: 'Kontaktsiden for OFFSCRIPT® på en iPhone på en hvid, foldet flade med et limegrønt bånd' } },
-  { imageSrc: '/images/hero/hero-3-branding-visitkort.webp', position: '52% 50%', alt: { da: 'Frisdahl Studio-visitkort svævende i en kromramme' } },
-  { imageSrc: '/images/hero/hero-4-mockup-offscript-genrer.webp', position: '52% 50%', alt: { da: 'Genre-siden for OFFSCRIPT® på en iPhone på en hvid sokkel' } },
+  { name: 'billboard', alt: { da: 'Rødt Frisdahl Studio-plakatdesign i en sort ramme på en betonvæg' } },
+  { name: 'offscript-kontakt', alt: { da: 'Kontaktsiden for OFFSCRIPT® på en iPhone på en hvid, foldet flade med et limegrønt bånd' } },
+  { name: 'visitkort', alt: { da: 'Frisdahl Studio-visitkort svævende i en kromramme' } },
+  { name: 'offscript-genrer', alt: { da: 'Genre-siden for OFFSCRIPT® på en iPhone på en hvid sokkel' } },
 ]
 
 /** Seconds a picture stays before the next one rises in, and how long that takes. */
@@ -326,14 +333,17 @@ export function Hero() {
         <div className={styles.block}>
           <div ref={mediaRef} className={styles.media}>
             {heroSlides.map((slide) => (
-              <div key={slide.imageSrc} data-slide className={styles.slide}>
+              <div key={slide.name} data-slide className={styles.slide}>
                 <img
                   className={styles.slideImage}
-                  {...responsiveImageProps(slide.imageSrc, MEDIA_SIZES)}
+                  src={`/images/hero/slides/${slide.name}-960w.webp`}
+                  srcSet={slideSrcSet(slide.name)}
+                  sizes={MEDIA_SIZES}
+                  width={960}
+                  height={1013}
                   alt={slide.alt[locale]}
                   decoding="async"
-                  fetchPriority={slide.imageSrc === heroSlides[0].imageSrc ? 'high' : 'low'}
-                  style={{ objectPosition: slide.position }}
+                  fetchPriority={slide.name === heroSlides[0].name ? 'high' : 'low'}
                   draggable={false}
                 />
               </div>
