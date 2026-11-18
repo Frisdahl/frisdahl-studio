@@ -50,13 +50,14 @@ export function ReviewsSection() {
   // The footer slides up over this section instead of pushing it up: from the moment the section's
   // bottom reaches the bottom of the screen (which is when the footer starts to come in) it stays where
   // it is, and the footer, which sits above it, covers it as the page scrolls on. No extra scroll
-  // distance is added (pinSpacing: false), so the page is as long as before. Reduced motion: normal flow.
+  // distance is added (pinSpacing: false), so the page is as long as before. Phones (under 768px) and reduced
+  // motion: normal flow, the footer simply follows the section.
   const sectionRef = useRef<HTMLElement>(null)
   useLayoutEffect(() => {
     const section = sectionRef.current
     if (!section || !document.querySelector('footer.site-footer')) return
     const mm = gsap.matchMedia()
-    mm.add('(prefers-reduced-motion: no-preference)', () => {
+    mm.add('(min-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
       const trigger = ScrollTrigger.create({
         trigger: section,
         start: 'bottom bottom',
