@@ -12,5 +12,26 @@
     "CONTACT_TO": "hello@frisdahlstudio.dk",
     // Resend's shared sender until frisdahlstudio.dk is verified in Resend; then use "Frisdahl Studio <hello@frisdahlstudio.dk>".
     "CONTACT_FROM": "Frisdahl Studio <onboarding@resend.dev>"
+  },
+  // Persist the Worker's logs (Workers & Pages > frisdahl-studio > Logs), so a failed contact form shows
+  // Resend's answer ("Resend failed <status> <body>", from worker/index.ts).
+  "observability": {
+    "enabled": false,
+    "head_sampling_rate": 1,
+    "redact_query_string": false,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "invocation_logs": true,
+      "persist": true
+    },
+    "traces": {
+      "enabled": false,
+      "head_sampling_rate": 1,
+      "persist": true
+    },
+    "issues": {
+      "enabled": true
+    }
   }
 }
