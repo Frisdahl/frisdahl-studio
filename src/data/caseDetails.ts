@@ -582,7 +582,9 @@ const resultsTitles: Record<Locale, string> = { da: 'Resultater' }
  * Only cases with real measurements have an entry; re-measure before changing a figure.
  * Every case is measured on its live site (Lighthouse 13.5, 2026-11-17, three pages, mobile with Slow 4G and 4x CPU
  * and desktop; medians). Peter Salling, OFFSCRIPT and Rethink Furniture: 3-5 runs per page; Nordwear: five. Nordwear's
- * product page is weak (CLS 0.77, mobile performance 58) and the figures are shown as measured.
+ * figures were weak (product page CLS 0.77, mobile performance 58); after the fixes in the shop (2026-11-18: a skeleton
+ * for the loading product page, the header measured before paint, a meta description and robots.txt, named buttons)
+ * they were measured again live.
  */
 const caseResults: Partial<Record<string, Record<Locale, Omit<CaseDetailResults, 'title'>>>> = {
   'peter-salling': {
@@ -601,12 +603,12 @@ const caseResults: Partial<Record<string, Record<Locale, Omit<CaseDetailResults,
   nordwear: {
     da: {
       description:
-        'Butikken er målt live på nordwear.pages.dev: forsiden, en kategoriside og en produktside, fem målinger på hver, på mobil med netværks- og CPU-begrænsning og på desktop. Forsiden og kategorisiden klarer sig godt på desktop (95 og 94), mens produktsiden er den svageste: på mobil er ydelsen 58, og siden flytter sig tydeligt, mens den indlæses.',
+        'Butikken er målt live på nordwear.pages.dev efter en gennemgang af koden: forsiden, en kategoriside og en produktside, fem målinger på hver, på mobil med netværks- og CPU-begrænsning og på desktop. Før var produktsiden den svageste (ydelse 58 på mobil, og siden hoppede, mens den indlæstes). Det er løst: siden holder nu fast i sin form, mens produktet hentes, og headeren måles, før siden males. Den langsomste side er forsiden på mobil (score 77, LCP ca. 4,9 s, fordi hovedbilledet og produkterne hentes fra en server, der skal svare først).',
       metrics: [
-        { label: 'Hastighed', value: '58–86', detail: 'Lighthouse-score for ydelse på mobil (58 på produktsiden), 75–95 på desktop.' },
-        { label: 'Stabilitet', value: '0,10–0,78', detail: 'Layout-skift (CLS): 0,10–0,15 på forsiden og kategorisiden, 0,78 på produktsiden. Under 0,1 er godt.' },
-        { label: 'Kvalitet', value: '86–95', detail: 'Lighthouse-tilgængelighed: 95 på forsiden, 92 på kategorisiden, 86 på produktsiden. Best practice: 96.' },
-        { label: 'SEO', value: '75–83', detail: 'Lighthouse-score for søgemaskineoptimering: 83 på forsiden og kategorisiden, 75 på produktsiden.' },
+        { label: 'Hastighed', value: '77–98', detail: 'Lighthouse-score for ydelse: 77–90 på mobil (77 på forsiden), 97–98 på desktop.' },
+        { label: 'Stabilitet', value: '0,00–0,02', detail: 'Layout-skift (CLS) højst 0,022 på alle tre sider, mod 0,10–0,78 før. Under 0,1 er godt.' },
+        { label: 'Kvalitet', value: '98–100', detail: 'Lighthouse-tilgængelighed: 100 på forsiden og kategorisiden, 98 på produktsiden. Best practice: 96.' },
+        { label: 'SEO', value: '100', detail: 'Fuld score i Lighthouse på alle tre sider (før 75–83: der manglede en beskrivelse og en robots.txt).' },
       ],
       note: 'Lighthouse 13, median af fem målinger pr. side, målt live på nordwear.pages.dev, november 2026.',
     },
