@@ -19,6 +19,16 @@ const GRID: { id: string; span: 5 | 7 | 12; shape: 'wide' | 'stretch' | 'portrai
 ]
 
 /**
+ * Smaller copies of the case clips for the cards (1280 wide, about a tenth of the size: the Rethink clip
+ * is 6 MB at 2560x1920, a card shows it at under 700 px). The case pages keep using the full clips.
+ */
+const CARD_CLIPS: Partial<Record<string, string>> = {
+  'peter-salling': '/cases/peter-salling/main--16-9--card.mp4',
+  'rethink-furniture': '/cases/rethink-furniture/macbook-main--4-3--card.mp4',
+  nordwear: '/cases/nordwear/main-v2--16-9--card.mp4',
+}
+
+/**
  * The card's clip without a poster. Every card already draws its picture as an <img> under the clip (lazy,
  * in the right size for the screen), and the clip's poster is the very same picture. A poster is fetched at
  * page load even for a card far down the page, and as the full-size original: four of them were 600 kB, 80%
@@ -27,7 +37,7 @@ const GRID: { id: string; span: 5 | 7 | 12; shape: 'wide' | 'stretch' | 'portrai
  */
 function clipFor(id: string) {
   const video = getCaseMainVideo(id)
-  return video ? { ...video, poster: '' } : undefined
+  return video ? { ...video, src: CARD_CLIPS[id] ?? video.src, poster: '' } : undefined
 }
 
 /**
