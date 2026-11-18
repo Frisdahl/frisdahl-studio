@@ -6,8 +6,10 @@ export interface ReviewItem {
   name: string
   role: string
   company: string
-  /** The reviewer's portrait. */
+  /** The reviewer's portrait (the portrait frame's 4:5 shape, cut to it). */
   imageSrc: string
+  /** The same portrait at 210, 420 and 498 px wide: the frame is 210 px wide on every screen. */
+  imageSrcSet?: string
   imageAlt: string
   /** The project the review is about: a link under the review. */
   caseHref?: string
@@ -35,7 +37,9 @@ const reviewsContent: Record<Locale, ReviewsContent> = {
         name: 'Peter Salling',
         role: 'Filmproducer',
         company: 'petersalling.com',
-        imageSrc: '/images/reviews/peter-salling.webp',
+        imageSrc: '/images/reviews/peter-salling-420w.webp',
+        imageSrcSet:
+          '/images/reviews/peter-salling-210w.webp 210w, /images/reviews/peter-salling-420w.webp 420w, /images/reviews/peter-salling-498w.webp 498w',
         imageAlt: 'Portræt af filmproducer Peter Salling',
         caseHref: '/cases/peter-salling',
       },

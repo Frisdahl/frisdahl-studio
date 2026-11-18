@@ -5,7 +5,6 @@ import { useLocale } from '../../context/LocaleContext'
 import { markHeroIntroPlayed, shouldPlayHeroIntro } from '../../lib/heroIntro'
 import { whenPageRevealed } from '../../lib/pageReveal'
 import { lockScroll, unlockScroll } from '../../lib/scroll'
-import { responsiveImageProps } from '../../lib/responsiveImage'
 import { BracketLine } from '../ui'
 import styles from './Hero.module.css'
 
@@ -21,24 +20,31 @@ const heroContent = {
 } as const
 
 interface HeroSlide {
-  imageSrc: string
+  /** File name in /images/hero/slides/ without the width and extension. */
+  name: string
   alt: { da: string }
 }
 
-/** The centre picture switches between these mockups. */
+/**
+ * The pictures are cut to the frame's exact shape from the 3680 px originals and saved at the widths the
+ * frame needs on 1x to 2x screens, with a light sharpen: a mockup's small text turns soft when the
+ * browser has to shrink a large picture (or one that is a few pixels off) itself.
+ */
+const SLIDE_WIDTHS = [480, 720, 960, 1280]
+const slideSrcSet = (name: string) =>
+  SLIDE_WIDTHS.map((width) => `/images/hero/slides/${name}-${width}w.webp ${width}w`).join(', ')
+
+/** The centre picture switches between branding and mockups, starting with the red billboard. */
 const heroSlides: HeroSlide[] = [
-  { imageSrc: '/images/hero/pass-mockup--4-3.webp', alt: { da: 'Rød PASS-badge på en lanyard' } },
-  { imageSrc: '/images/hero/hero-2-montra-iphone.webp', alt: { da: 'Landingsside-koncept for Montra på en iPhone op ad en riflet væg' } },
-  { imageSrc: '/images/hero/hero-1-noma-living-macbook.webp', alt: { da: 'Landingsside-koncept for Noma Living på en MacBook på en sofa' } },
-  { imageSrc: '/images/hero/hero-4-auren-iphone.webp', alt: { da: 'Landingsside-koncept for Auren på en iPhone på en grå puf' } },
-  { imageSrc: '/images/hero/hero-3-rethink-furniture-macbook.webp', alt: { da: 'Landingsside-koncept for Rethink Furniture på en MacBook på en polstret stol' } },
-  { imageSrc: '/images/hero/hero-5-elina-vestergaard-macbook.webp', alt: { da: 'Landingsside-koncept for Elina Vestergaard på en MacBook på en stenblok' } },
-  { imageSrc: '/images/hero/hero-6-noma-living-iphone.webp', alt: { da: 'Landingsside-koncept for Noma Living på en iPhone i et hjørne' } },
+  { name: 'billboard', alt: { da: 'Rødt Frisdahl Studio-plakatdesign i en sort ramme på en betonvæg' } },
+  { name: 'offscript-kontakt', alt: { da: 'Kontaktsiden for OFFSCRIPT® på en iPhone på en hvid, foldet flade med et limegrønt bånd' } },
+  { name: 'visitkort', alt: { da: 'Frisdahl Studio-visitkort svævende i en kromramme' } },
+  { name: 'offscript-genrer', alt: { da: 'Genre-siden for OFFSCRIPT® på en iPhone på en hvid sokkel' } },
 ]
 
-/** Seconds a picture stays before the next one wipes in, and how long the wipe takes. */
-const HOLD = 2.2
-const WIPE = 0.9
+/** Seconds a picture stays before the next one rises in, and how long that takes. */
+const HOLD = 1.5
+const WIPE = 0.8
 
 /** Rendered width of the centre picture (25vw on desktop, 46vw below 1024px). */
 const MEDIA_SIZES = '(min-width: 1024px) 25vw, 46vw'
@@ -269,8 +275,9 @@ export function Hero() {
     }
   }, [revealed])
 
-  // The centre picture: each mockup falls in over the one before it, from the top. It waits for the
-  // intro (if there is one) and only runs while the hero is on screen.
+  // The centre picture: the next scene rises from the bottom behind a clip while the one it covers
+  // drifts up a little. The pictures are never scaled (that blurred them until the animation ended).
+  // It waits for the intro (if there is one) and only runs while the hero is on screen.
   useLayoutEffect(() => {
     const media = mediaRef.current
     const section = sectionRef.current
@@ -281,13 +288,14 @@ export function Hero() {
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       gsap.set(slides, { zIndex: 0 })
       gsap.set(slides[0], { zIndex: 1 })
-      slides.slice(1).forEach((slide) => gsap.set(slide, { clipPath: 'inset(0% 0% 100% 0%)' }))
+      slides.slice(1).forEach((slide) => gsap.set(slide, { clipPath: 'inset(100% 0% 0% 0%)' }))
       const tl = gsap.timeline({ repeat: -1, paused: true })
       slides.forEach((slide, index) => {
         const next = slides[(index + 1) % slides.length]
-        tl.set(next, { zIndex: 2, clipPath: 'inset(0% 0% 100% 0%)' }, `+=${HOLD}`)
-          .to(next, { clipPath: 'inset(0% 0% 0% 0%)', duration: WIPE, ease: 'expo.inOut' })
-          .set(slide, { zIndex: 0 })
+        tl.set(next, { zIndex: 2, clipPath: 'inset(100% 0% 0% 0%)', yPercent: 0 }, `+=${HOLD}`)
+          .to(next, { clipPath: 'inset(0% 0% 0% 0%)', duration: WIPE, ease: 'power4.inOut' })
+          .to(slide, { yPercent: -16, duration: WIPE, ease: 'power4.inOut' }, '<')
+        tl.set(slide, { zIndex: 0, yPercent: 0 })
           .set(next, { zIndex: 1 })
       })
       let ready = false
@@ -304,7 +312,7 @@ export function Hero() {
       return () => {
         trigger.kill()
         tl.kill()
-        gsap.set(slides, { clearProps: 'clipPath,zIndex' })
+        gsap.set(slides, { clearProps: 'clipPath,zIndex,yPercent' })
       }
     })
     return () => mm.revert()
@@ -324,17 +332,21 @@ export function Hero() {
         </div>
         <div className={styles.block}>
           <div ref={mediaRef} className={styles.media}>
-            {heroSlides.map((slide, index) => (
-              <img
-                key={slide.imageSrc}
-                data-slide
-                className={styles.slide}
-                {...responsiveImageProps(slide.imageSrc, MEDIA_SIZES)}
-                alt={slide.alt[locale]}
-                loading={index === 0 ? 'eager' : 'lazy'}
-                decoding="async"
-                draggable={false}
-              />
+            {heroSlides.map((slide) => (
+              <div key={slide.name} data-slide className={styles.slide}>
+                <img
+                  className={styles.slideImage}
+                  src={`/images/hero/slides/${slide.name}-960w.webp`}
+                  srcSet={slideSrcSet(slide.name)}
+                  sizes={MEDIA_SIZES}
+                  width={960}
+                  height={1013}
+                  alt={slide.alt[locale]}
+                  decoding="async"
+                  fetchPriority={slide.name === heroSlides[0].name ? 'high' : 'low'}
+                  draggable={false}
+                />
+              </div>
             ))}
           </div>
 
