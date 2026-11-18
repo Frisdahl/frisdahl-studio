@@ -12,7 +12,7 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
     hoverTrio: [
       { imageSrc: '/cases/nordwear/iphone-forside--4-3.webp', imageAlt: 'Nordwear forside på en iPhone' },
       { imageSrc: '/cases/nordwear/macbook-alle-produkter--3-2.webp', imageAlt: 'Nordwear produktoversigt på en MacBook Pro' },
-      { imageSrc: '/cases/nordwear/iphone-produktside--4-3.webp', imageAlt: 'Nordwear produktside på en iPhone' },
+      { imageSrc: '/cases/nordwear/iphone-kurv--4-3.webp', imageAlt: 'Nordwear indkøbskurv på en iPhone' },
     ],
     // Only supplies the next-project preview; the pair below is what the gallery shows.
     horizontalTop: {
@@ -57,7 +57,7 @@ const caseGalleryAssets: Record<string, CaseGalleryAssets> = {
           poster: '/cases/nordwear/iphone-produktside-video-v2--poster--4-3.webp',
         },
       },
-      { imageSrc: '/cases/nordwear/iphone-produktside--4-3.webp', imageAlt: 'Nordwear produktside på en iPhone', aspectRatio: '4 / 3' },
+      { imageSrc: '/cases/nordwear/iphone-kurv--4-3.webp', imageAlt: 'Nordwear indkøbskurv på en iPhone', aspectRatio: '4 / 3' },
     ],
   },
   'rethink-furniture': {
