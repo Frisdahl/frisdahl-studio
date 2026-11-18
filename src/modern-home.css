@@ -457,6 +457,77 @@ html[data-header-ink="light"] .site-header :is(.site-header-logo, .header-menu-t
   margin-left: -0.5rem;
 }
 
+/* Phones and tablets: a step to read, not a wall of text. The statement is a calm paragraph, the keywords
+   are the scannable steps (one per hairline row) and the mark sits small at the top right, next to the number. */
+@media (max-width: 1023.98px) {
+  .added-value-card {
+    padding: 2.25rem 0 2.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .added-value-card-content {
+    position: relative;
+    gap: 1.25rem;
+  }
+
+  .added-value-head {
+    gap: 0.875rem;
+    padding-right: 4rem;
+  }
+
+  .added-value-body {
+    gap: 1.5rem;
+  }
+
+  .added-value-statement {
+    font-size: 1.0625rem;
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: -0.005em;
+    color: var(--color-muted);
+  }
+
+  .added-value-items {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-dark);
+  }
+
+  .added-value-items li {
+    padding: 0.8125rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .added-value-icon,
+  .added-value-icon--brand,
+  .added-value-icon--design,
+  .added-value-icon--development {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 3.25rem;
+    height: 3.25rem;
+    margin: 0;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .added-value-items {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1.5rem;
+    border-bottom: 0;
+  }
+
+  .added-value-items li:nth-last-child(-n + 2) {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .added-value-items li:nth-child(odd):last-child {
+    border-bottom: 1px solid var(--color-border);
+  }
+}
+
 @media (min-width: 1024px) {
   /* One card is one screen: it sticks to the top, so the next card slides up over it. */
   .added-value-card {
