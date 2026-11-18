@@ -59,9 +59,9 @@ const MEDIA_SIZES = '(min-width: 1024px) 25vw, 46vw'
  * Motion, first load of a visit to the home page (the intro): "( )" in the middle of the screen parts to
  * the sides, and once they have finished "Beyond Digital" rises between them, both words together, the
  * brackets fade and the words scale out to their
- * places, the picture falls in from the top, then the line's brackets part, its text rises and the
+ * places, the picture rises from the bottom, then the line's brackets part, its text rises and the
  * header fades in. Scrolling is locked meanwhile. Otherwise the words just rise out of their masks.
- * The picture changes with a wipe from the top, one mockup after the other (paused while the hero is
+ * The picture changes with a rise from the bottom, one mockup after the other (paused while the hero is
  * off screen). Reduced motion: everything is shown at once and the first picture stays.
  */
 export function Hero() {
@@ -115,10 +115,10 @@ export function Hero() {
 
       if (!play || !stage || !media || brackets.length < 2 || lineBrackets.length < 2 || !lineText || !lineBox || !line) {
         // The short entrance (arriving from another page, or coming back to the home page): the words rise,
-        // then the picture falls in from the top, then the line's ( ) part and its text rises, last.
+        // then the picture rises from the bottom, then the line's ( ) part and its text rises, last.
         const shortPose = () => {
           gsap.set(words, { yPercent: 110 })
-          if (media) gsap.set(media, { clipPath: 'inset(0% 0% 100% 0%)' })
+          if (media) gsap.set(media, { clipPath: 'inset(100% 0% 0% 0%)' })
           if (line) {
             gsap.set(line, { autoAlpha: 0 })
             if (lineBrackets.length === 2 && lineText && lineBox) poseLine()
@@ -211,7 +211,7 @@ export function Hero() {
         gsap.set(line, { autoAlpha: 0 })
 
         // The picture waits above its place; the header waits invisible.
-        gsap.set(media, { clipPath: 'inset(0% 0% 100% 0%)' })
+        gsap.set(media, { clipPath: 'inset(100% 0% 0% 0%)' })
         if (header) gsap.set(header, { opacity: 0, transition: 'none' })
       }
       pose()
@@ -253,7 +253,7 @@ export function Hero() {
             // ... the brackets fade and the words scale out to their places ...
             .to(brackets, { opacity: 0, duration: 0.5, ease: 'power2.inOut' }, AFTER_WORDS)
             .to(masks, { x: 0, y: 0, scale: 1, duration: 1.4, ease: 'expo.inOut' }, AFTER_WORDS)
-            // ... the picture falls from the top ...
+            // ... the picture rises from the bottom ...
             .to(media, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.3, ease: 'expo.inOut' }, AFTER_WORDS + 0.8)
             // ... the line's brackets part and, once they have finished, its text rises; the header fades in.
             .set(line, { autoAlpha: 1 }, LINE_AT)
