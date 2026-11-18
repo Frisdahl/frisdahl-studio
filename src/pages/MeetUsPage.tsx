@@ -10,7 +10,7 @@ export function MeetUsPage() {
 
   return (
     <main id="main-content" className="page-surface bg-background">
-      <PageEntrance />
+      <PageEntrance imageReveal="top" />
       <PageMeta title={titles.meetUs} />
       <MeetUsPageSection />
     </main>

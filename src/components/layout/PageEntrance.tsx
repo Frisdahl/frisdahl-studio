@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { prepareAndPlayPageEntrance } from '../../lib/pageEntrance'
+import { prepareAndPlayPageEntrance, type ImageReveal } from '../../lib/pageEntrance'
 import { whenPageRevealed } from '../../lib/pageReveal'
 import { prefersReducedMotion } from '../../lib/scroll'
 
@@ -10,7 +10,7 @@ import { prefersReducedMotion } from '../../lib/scroll'
  * layout effect so the hidden state is in place before the first paint. A page that arrives
  * through the shared-image transition does its own.
  */
-export function PageEntrance() {
+export function PageEntrance({ imageReveal }: { imageReveal?: ImageReveal } = {}) {
   const { pathname } = useLocation()
 
   useLayoutEffect(() => {
@@ -20,8 +20,8 @@ export function PageEntrance() {
     if (root.classList.contains('is-shared-transition') || root.classList.contains('is-shared-image')) return
     // Tells the transitions (menu, logo) that this page brings itself in.
     main.dataset.pageEntrance = 'own'
-    return prepareAndPlayPageEntrance(main, whenPageRevealed())
-  }, [pathname])
+    return prepareAndPlayPageEntrance(main, whenPageRevealed(), imageReveal)
+  }, [pathname, imageReveal])
 
   return null
 }
